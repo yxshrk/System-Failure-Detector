@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-133-withdraw",
+ "model": "claude-sonnet-5-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `balance` is an integer with 0 <= balance <= 1000\n- `amount` is an integer with 0 <= amount <= 1000\n- `overdraft` is a bool\n\n```python\ndef withdraw(balance, amount, overdraft):\n    \"\"\"Process a withdrawal of `amount` from an account holding `balance`. A withdrawal\n    of 100 or more is free; a smaller withdrawal costs a fee of 2, also taken from\n    the account. Reject the withdrawal (return None) if `amount` is not positive, or\n    if the resulting balance would be below 0 when `overdraft` is False, or below\n    -500 when `overdraft` is True. Otherwise return the resulting balance.\n    \"\"\"\n    if amount <= 0:\n        return None\n    fee = 0 if amount >= 100 else 2\n    new_balance = balance - amount - fee\n    limit = -500 if overdraft else 0\n    if new_balance < limit:\n        return None\n    return new_balance\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"balance\": ..., \"amount\": ..., \"overdraft\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "I'll compare the code against each clause of the docstring.\n\n- **Non-positive amount:** `amount <= 0` returns None. This matches \"reject if `amount` is not positive\".\n- **Fee:** the fee is 0 when `amount >= 100` and 2 otherwise. This matches \"100 or more is free; smaller costs 2\".\n- **Resulting balance:** `balance - amount - fee` includes the fee, as the docstring says (\"also taken from the account\").\n- **Limit:** it is -500 with overdraft and 0 without. The rejection test is `new_balance < limit`, which matches \"below 0\" and \"below -500\". A result exactly at the limit is allowed.\n- **Return value:** otherwise it returns `new_balance`.\n\nBoundary checks:\n- balance=0, amount=100, overdraft=False: new_balance = -100, which is below 0, so None. Correct.\n- balance=98, amount=96, overdraft=False: fee 2, new_balance 0, allowed and returns 0. Correct.\n- amount=99: fee 2, handled. amount=100: no fee, handled.\n- overdraft=True, balance=0, amount=498: new_balance = -500, allowed. Correct. amount=499 gives -501, so None. Correct.\n- amount=0 returns None, as specified.\n\nNo exceptions are possible with integer and bool inputs, and every clause is implemented as written.\n\n```json\n{\"verdict\": \"no_bug\"}\n```",
+  "model": "claude-sonnet-5-5",
+  "input_tokens": 1238,
+  "output_tokens": 478,
+  "thinking_tokens": 0,
+  "cost_usd": 0.009728,
+  "seconds": 8.864796874986496,
+  "cached": false,
+  "error": null
+ }
+}

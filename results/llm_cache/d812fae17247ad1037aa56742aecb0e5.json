@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-006-has_near_pair",
+ "model": "claude-sonnet-5-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `vals` is a list of 0 to 6 integers, each between -20 and 20 inclusive\n- `gap` is an integer with 0 <= gap <= 6\n\n```python\ndef has_near_pair(vals, gap):\n    \"\"\"Return True if there are two different positions i and j in `vals` whose\n    values differ by strictly less than `gap` (that is, abs(vals[i] - vals[j]) < gap),\n    and False otherwise.\n    \"\"\"\n    for i in range(1, len(vals)):\n        for j in range(i + 1, len(vals)):\n            if abs(vals[i] - vals[j]) < gap:\n                return True\n    return False\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"vals\": ..., \"gap\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "The outer loop starts at index 1, so position 0 is never compared with any other position. The docstring requires every pair of different positions (i, j) to be considered, so any pair involving index 0 is missed.\n\nCounterexample: vals = [0, 0], gap = 1.\n- Positions 0 and 1 hold values 0 and 0, so the difference is 0, which is less than 1. The docstring requires True.\n- The code runs `range(1, 2)`, so i = 1. The inner loop `range(2, 2)` is empty. The function returns False.\n\nThe valid-input constraints are met: the list has 2 integers in range, and gap = 1 is within 0..6.\n\n```json\n{\"verdict\": \"bug\", \"failing_input\": {\"vals\": [0, 0], \"gap\": 1}, \"expected\": true, \"actual\": false}\n```",
+  "model": "claude-sonnet-5-5",
+  "input_tokens": 1116,
+  "output_tokens": 268,
+  "thinking_tokens": 0,
+  "cost_usd": 0.0071400000000000005,
+  "seconds": 6.093989458982833,
+  "cached": false,
+  "error": null
+ }
+}

@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-087-best_window_sum",
+ "model": "claude-haiku-4-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `xs` is a list of 1 to 6 integers, each between -10 and 10 inclusive\n\n```python\ndef best_window_sum(xs):\n    \"\"\"`xs` is non-empty. Return the largest possible sum of a non-empty run of\n    consecutive elements of `xs`.\n    \"\"\"\n    best = xs[1]\n    cur = 0\n    for x in xs:\n        cur = max(x, cur + x)\n        best = max(best, cur)\n    return best\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"xs\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "# Pre-mortem Analysis: `best_window_sum`\n\nLet me trace through this code carefully against the docstring specification.\n\nThe docstring requires: \"Return the largest possible sum of a non-empty run of consecutive elements of `xs`.\"\n\nValid inputs include lists of **1 to 6 integers**, so single-element lists are valid.\n\n## Testing with a single-element list\n\nLet me try `xs = [5]`:\n\n1. Line: `best = xs[1]`\n   - This attempts to access index 1 of the list\n   - But `xs = [5]` only has index 0\n   - This raises an **IndexError**\n\nThe function should return `5` (the only consecutive run is `[5]` with sum 5), but instead it crashes.\n\n## Verification with another single-element case\n\nTry `xs = [-3]`:\n- Same issue: `best = xs[1]` fails with IndexError\n- Expected: `-3`\n- Actual: IndexError\n\n## Root cause\n\nThe initialization `best = xs[1]` is incorrect. It should be `best = xs[0]` to handle all valid inputs including single-element lists. The current code only works when `len(xs) >= 2`.\n\n```json\n{\"verdict\": \"bug\", \"failing_input\": {\"xs\": [5]}, \"expected\": 5, \"actual\": \"exception\"}\n```",
+  "model": "claude-haiku-4-5",
+  "input_tokens": 868,
+  "output_tokens": 1832,
+  "thinking_tokens": 1506,
+  "cost_usd": 0.010028,
+  "seconds": 15.60755087499274,
+  "cached": false,
+  "error": null
+ }
+}

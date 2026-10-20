@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-translate:sp1-030-largest_proper_divisor:0",
+ "model": "claude-opus-5-5",
+ "system": "You are a formal-methods engineer. You translate informal specifications into precise, machine-checkable pre- and postconditions for an automatic verifier.",
+ "prompt": "Below is a Python function whose docstring is its specification. Do NOT judge the code yourself. Instead, translate the docstring into a formal specification that an automatic bounded verifier will check the code against.\n\nValid inputs:\n- `n` is an integer with 2 <= n <= 120\n\n```python\ndef largest_proper_divisor(n):\n    \"\"\"Return the largest integer d with 1 <= d < n that divides `n` exactly.\n    \"\"\"\n    best = 1\n    for d in range(0, n):\n        if n % d == 0:\n            best = d\n    return best\n```\n\nWrite two Python functions:\n\n    def pre(n):            # -> bool: True for inputs the docstring's contract covers (you may just return True)\n    def post(n, result):   # -> bool: True exactly when `result` is what the docstring requires for these inputs\n\nHow the verifier works: it symbolically executes `largest_proper_divisor` on every valid input (lists up to their maximum length; loops unrolled up to 120 iterations) and asks the Z3 SMT solver for an input where pre(...) is True but `largest_proper_divisor` raises an exception or post(...) is False. Any such input is reported as a failure.\n\nThe verifier understands only this subset of Python, for pre, post and any helper functions you define:\n- values: ints, bools, None, lists of ints, tuples (no strings, floats, dicts, sets, lambdas, classes, imports, recursion)\n- statements: assignment, augmented assignment, if/elif/else, for over range(...)/lists/enumerate(...)/zip(...), while, break, continue, return, assert\n- built-ins: len, abs, min, max, sum, sorted, reversed, range, list, all, any, enumerate, zip, divmod; list methods append, pop, insert, count, index, copy, extend, remove, sort, reverse\n- integer arithmetic only: use // and %, never /\nGuidance:\n- Specify the docstring's intended behaviour, not what the code happens to do.\n- Computing the required answer independently (for example with a simple loop) and comparing it with `result` is a good strategy.\n- `post` receives the original, unmodified inputs.\n\nAnswer with one ```python block containing pre, post and any helpers.",
+ "completion": {
+  "text": "```python\ndef pre(n):\n    return 2 <= n <= 120\n\n\ndef post(n, result):\n    # Independently compute the largest d with 1 <= d < n that divides n.\n    expected = 1\n    for d in range(1, n):\n        if n % d == 0:\n            expected = d\n    return result == expected\n```\n\nThe implementation's loop starts at `d = 0`, so `n % 0` raises `ZeroDivisionError` on every valid input. The verifier should report this as a failure.",
+  "model": "claude-opus-5-5",
+  "input_tokens": 1392,
+  "output_tokens": 194,
+  "thinking_tokens": 37,
+  "cost_usd": 0.015008,
+  "seconds": 5.935235583980102,
+  "cached": false,
+  "error": null
+ }
+}

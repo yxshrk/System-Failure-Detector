@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-093-rotate_left",
+ "model": "claude-haiku-4-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `xs` is a list of 0 to 6 integers, each between -9 and 9 inclusive\n- `k` is an integer with 0 <= k <= 12\n\n```python\ndef rotate_left(xs, k):\n    \"\"\"Return a new list equal to `xs` rotated left by `k` positions: the element at\n    position i of the result is xs[(i + k) % len(xs)]. An empty list gives an empty\n    list.\n    \"\"\"\n    if not xs:\n        return []\n    k = k % len(xs)\n    return xs[k:] + xs[:k]\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"xs\": ..., \"k\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "# Pre-Mortem Code Review: rotate_left\n\nLet me analyze this function systematically against its docstring specification.\n\n## Understanding the Specification\n\nThe docstring requires:\n1. Return a new list representing `xs` rotated left by `k` positions\n2. The element at position `i` of the result is `xs[(i + k) % len(xs)]`\n3. Empty lists return empty lists\n\n## Verifying the Implementation\n\nLet me trace through the logic:\n\n**Empty list case:**\n- Input: `xs = []`\n- Code: `if not xs: return []` \u2713\n- Matches spec\n\n**Non-empty cases:**\nThe code does: `k = k % len(xs)` then `xs[k:] + xs[:k]`\n\nThis concatenates:\n- `xs[k:]`: elements from index k to end\n- `xs[:k]`: elements from index 0 to k-1\n\n**Verification with example:** `xs = [1, 2, 3, 4]`, `k = 1`\n\nCode result: `xs[1:] + xs[:1] = [2, 3, 4] + [1] = [2, 3, 4, 1]`\n\nDocstring formula:\n- Position 0: `xs[(0 + 1) % 4] = xs[1] = 2` \u2713\n- Position 1: `xs[(1 + 1) % 4] = xs[2] = 3` \u2713\n- Position 2: `xs[(2 + 1) % 4] = xs[3] = 4` \u2713\n- Position 3: `xs[(3 + 1) % 4] = xs[0] = 1` \u2713\n\n**General proof:** For any position `i`:\n- If `i + k < len(xs)`: result[i] = `xs[k + i] = xs[i + k]` \u2713\n- If `i + k \u2265 len(xs)`: result[i] = `xs[i - (len(xs) - k)] = xs[i + k - len(xs)] = xs[(i + k) % len(xs)]` \u2713\n\n**Edge cases:**\n- `k = 0`: returns `xs[0:] + xs[:0] = xs` (unchanged) \u2713\n- `k \u2265 len(xs)`: normalized by modulo before division \u2713\n- Single element: always returns that element \u2713\n- No division-by-zero error (checked before modulo operation) \u2713\n\nAll valid inputs (0-6 integers, each in [-9, 9], k in [0, 12]) are handled correctly.\n\n```json\n{\"verdict\": \"no_bug\"}\n```",
+  "model": "claude-haiku-4-5",
+  "input_tokens": 901,
+  "output_tokens": 5342,
+  "thinking_tokens": 4680,
+  "cost_usd": 0.027611,
+  "seconds": 35.0012622079812,
+  "cached": false,
+  "error": null
+ }
+}

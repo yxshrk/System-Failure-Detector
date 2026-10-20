@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-140-sort4",
+ "model": "claude-sonnet-5-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `a` is an integer with 0 <= a <= 9\n- `b` is an integer with 0 <= b <= 9\n- `c` is an integer with 0 <= c <= 9\n- `d` is an integer with 0 <= d <= 9\n\n```python\ndef sort4(a, b, c, d):\n    \"\"\"Return the four integers a, b, c, d as a tuple in non-decreasing order.\n    \"\"\"\n    if a > b:\n        a, b = (b, a)\n    if c > d:\n        c, d = (d, c)\n    if a > c:\n        a, c = (c, a)\n    if b > d:\n        b, d = (d, b)\n    if b > c:\n        b, c = (c, b)\n    return (a, b, c, d)\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"a\": ..., \"b\": ..., \"c\": ..., \"d\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "I traced the function as a sorting network and found no valid input where it deviates from the docstring.\n\n1. After the first two comparisons, `a <= b` and `c <= d`.\n2. The third step makes `a = min(a, c)`. Since `a` and `c` were the smaller elements of their pairs, `a` is now the global minimum. The larger of the two moves into position `c`.\n3. The fourth step makes `d = max(b, d)`. Since `b` and `d` were the larger elements of their pairs, `d` is now the global maximum. The smaller of the two moves into position `b`.\n4. The last step orders `b` and `c`, which hold the two remaining middle values. This gives `a <= b <= c <= d`.\n\nEvery step only swaps values, so the multiset is preserved. The code does no arithmetic, indexing, or anything else that could raise an exception for digits 0\u20139.\n\n```json\n{\"verdict\": \"no_bug\"}\n```",
+  "model": "claude-sonnet-5-5",
+  "input_tokens": 1150,
+  "output_tokens": 636,
+  "thinking_tokens": 330,
+  "cost_usd": 0.010955999999999999,
+  "seconds": 11.925771999987774,
+  "cached": false,
+  "error": null
+ }
+}

@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-117-median_of_three",
+ "model": "claude-opus-5-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `a` is an integer with -20 <= a <= 20\n- `b` is an integer with -20 <= b <= 20\n- `c` is an integer with -20 <= c <= 20\n\n```python\ndef median_of_three(a, b, c):\n    \"\"\"Return the median of the three integers a, b and c: the value that is in the\n    middle once the three are sorted (ties allowed).\n    \"\"\"\n    if a <= b <= c or c <= b <= a:\n        return b\n    if b <= a <= c:\n        return a\n    return c\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"a\": ..., \"b\": ..., \"c\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "**Analysis**\n\nThe function covers these orderings:\n- `a <= b <= c` or `c <= b <= a`, which returns `b`\n- `b <= a <= c`, which returns `a`\n- everything else, which returns `c`\n\nThe case `c <= a <= b` is never checked. In that ordering `a` is the median, but the code falls through to `return c`.\n\n**Example:** `a=2, b=3, c=1`\n- `2 <= 3 <= 1` is false. `1 <= 3 <= 2` is false.\n- `3 <= 2 <= 1` is false.\n- The function returns `c = 1`.\n\nSorted, the values are `[1, 2, 3]`, so the median is `2`. The function returns `1`, which is wrong.\n\n```json\n{\"verdict\": \"bug\", \"failing_input\": {\"a\": 2, \"b\": 3, \"c\": 1}, \"expected\": 2, \"actual\": 1}\n```",
+  "model": "claude-opus-5-5",
+  "input_tokens": 1074,
+  "output_tokens": 382,
+  "thinking_tokens": 82,
+  "cost_usd": 0.016224000000000002,
+  "seconds": 7.163543166010641,
+  "cached": false,
+  "error": null
+ }
+}

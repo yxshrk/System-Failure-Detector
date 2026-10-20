@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-063-letter_grade",
+ "model": "claude-sonnet-5-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `score` is an integer with 0 <= score <= 100\n\n```python\ndef letter_grade(score):\n    \"\"\"Map an exam score to a grade point: 4 for a score of 90 or more, 3 for 80 to 89,\n    2 for 70 to 79, 1 for 60 to 69, and 0 below 60.\n    \"\"\"\n    if score >= 90:\n        return 4\n    if score <= 80:\n        return 3\n    if score >= 70:\n        return 2\n    if score >= 60:\n        return 1\n    return 0\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"score\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "The second condition is `score <= 80`, but it should be `score >= 80`. Because of this, every score below 90 that is 80 or lower returns 3, including scores that should map to 2, 1, or 0.\n\nTracing a few inputs:\n- score = 90 or more: returns 4, which is correct.\n- score = 85: it fails `>= 90` and fails `<= 80`, so it goes on to `>= 70` and returns 2. The spec requires 3, so this is wrong.\n- score = 80: it returns 3, which is correct.\n- score = 75: it fails `>= 90`, and also fails `<= 80`? No, 75 <= 80 is true, so it returns 3. The spec requires 2, so this is wrong too.\n\nThe simplest failing input is 85, which returns 2 instead of 3. Scores like 70, 60, and 0 are also wrong, since they all return 3.\n\n```json\n{\"verdict\": \"bug\", \"failing_input\": {\"score\": 85}, \"expected\": 3, \"actual\": 2}\n```",
+  "model": "claude-sonnet-5-5",
+  "input_tokens": 1069,
+  "output_tokens": 335,
+  "thinking_tokens": 0,
+  "cost_usd": 0.007622,
+  "seconds": 7.154145457956474,
+  "cached": false,
+  "error": null
+ }
+}

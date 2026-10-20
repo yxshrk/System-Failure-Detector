@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-054-triangle_kind",
+ "model": "claude-haiku-4-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `a` is an integer with 1 <= a <= 15\n- `b` is an integer with 1 <= b <= 15\n- `c` is an integer with 1 <= c <= 15\n\n```python\ndef triangle_kind(a, b, c):\n    \"\"\"Classify side lengths a, b, c. Return 0 if they do not form a valid triangle,\n    meaning some side is greater than or equal to the sum of the other two. Otherwise\n    return 3 if all three sides are equal, 2 if exactly two sides are equal, and 1 if\n    all sides are different.\n    \"\"\"\n    if a + b <= c or a + c <= b or b + c <= a:\n        return 0\n    if a == b and b == c:\n        return 3\n    if a == b or b == c:\n        return 2\n    return 1\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"a\": ..., \"b\": ..., \"c\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "Let me trace through the code carefully against the docstring specification.\n\nThe function should:\n1. Return 0 if invalid triangle\n2. Return 3 if all three sides equal\n3. Return 2 if exactly two sides equal\n4. Return 1 if all sides different\n\nLet me test the case where **a=3, b=4, c=3** (a valid input):\n\n**Triangle validity check:**\n- a + b <= c? \u2192 3 + 4 <= 3? \u2192 7 <= 3? \u2192 No\n- a + c <= b? \u2192 3 + 3 <= 4? \u2192 6 <= 4? \u2192 No  \n- b + c <= a? \u2192 4 + 3 <= 3? \u2192 7 <= 3? \u2192 No\n\nSo it's a valid triangle; we don't return 0.\n\n**Check if all three equal:**\n- a == b and b == c? \u2192 3 == 4 and 4 == 3? \u2192 No\n\n**Check if exactly two equal:**\n- a == b or b == c? \u2192 3 == 4 or 4 == 3? \u2192 No\n\nThe function returns **1**.\n\nHowever, we have **a == c** (both equal 3), which means exactly two sides are equal. According to the docstring, the function should return **2** for this case, not 1.\n\nThe bug is that the condition `a == b or b == c` doesn't check for `a == c`. It should be `a == b or b == c or a == c`.\n\n```json\n{\"verdict\": \"bug\", \"failing_input\": {\"a\": 3, \"b\": 4, \"c\": 3}, \"expected\": 2, \"actual\": 1}\n```",
+  "model": "claude-haiku-4-5",
+  "input_tokens": 968,
+  "output_tokens": 1516,
+  "thinking_tokens": 1098,
+  "cost_usd": 0.008548,
+  "seconds": 13.295523249951657,
+  "cached": false,
+  "error": null
+ }
+}

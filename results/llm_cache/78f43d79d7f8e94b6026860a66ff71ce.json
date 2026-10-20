@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-043-is_leap",
+ "model": "claude-haiku-4-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `year` is an integer with 1 <= year <= 3000\n\n```python\ndef is_leap(year):\n    \"\"\"Return True if `year` is a leap year in the Gregorian calendar: years divisible\n    by 4 are leap years, except years divisible by 100, which are not, except years\n    divisible by 400, which are.\n    \"\"\"\n    if year % 400 == 0:\n        return True\n    if year // 100 == 0:\n        return False\n    return year % 4 == 0\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"year\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "Looking at this code carefully, I need to trace through the logic against the specification.\n\nThe specification says:\n1. Divisible by 400 \u2192 leap year\n2. Divisible by 100 (but not 400) \u2192 NOT a leap year\n3. Divisible by 4 (but not 100) \u2192 leap year\n4. Otherwise \u2192 NOT a leap year\n\nNow let me examine the code:\n\n```python\nif year % 400 == 0:\n    return True                    # \u2713 Correct\nif year // 100 == 0:               # \u274c PROBLEM HERE\n    return False\nreturn year % 4 == 0\n```\n\nThe bug is in line 2: `year // 100 == 0` \n\nThis checks if year < 100 (integer division), NOT if year is divisible by 100. The correct check should be `year % 100 == 0`.\n\n**Test case: year = 100**\n- 100 % 400 = 100 (not 0) \u2192 first condition False\n- 100 // 100 = 1 (not 0) \u2192 second condition False  \n- 100 % 4 = 0 \u2192 returns **True**\n\nBut according to the spec: 100 is divisible by 100 but not by 400, so it should return **False**.\n\n**Test case: year = 4** (also fails)\n- 4 % 400 = 4 (not 0) \u2192 first condition False\n- 4 // 100 = 0 \u2192 second condition **True** \u2192 returns **False**\n\nBut according to the spec: 4 is divisible by 4 (and not by 100), so it should return **True**.\n\n```json\n{\"verdict\": \"bug\", \"failing_input\": {\"year\": 100}, \"expected\": false, \"actual\": true}\n```",
+  "model": "claude-haiku-4-5",
+  "input_tokens": 874,
+  "output_tokens": 2171,
+  "thinking_tokens": 1726,
+  "cost_usd": 0.011729,
+  "seconds": 17.043205457972363,
+  "cached": false,
+  "error": null
+ }
+}

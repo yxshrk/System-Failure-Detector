@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-013-running_peak",
+ "model": "claude-opus-5-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `vals` is a list of 0 to 6 integers, each between -10 and 10 inclusive\n\n```python\ndef running_peak(vals):\n    \"\"\"Return a list of the same length as `vals` whose element at position k is the\n    largest value among vals[0], ..., vals[k]. An empty input gives an empty list.\n    \"\"\"\n    out = []\n    best = None\n    for v in vals:\n        if best is None or v > best:\n            best = v\n        out.append(best)\n    return out\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"vals\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "No valid input breaks this function; it is correct.\n\n**Why it works:**\n- **Empty input:** the loop never runs, so it returns `[]`, as the docstring requires.\n- **First element:** `best` starts as `None`, so the `best is None` check sets `best = vals[0]` and appends it. That is correct because the maximum of `vals[0..0]` is `vals[0]`. Using `None` as the starting value instead of something like `0` means all-negative inputs work. For example, `[-5, -3, -7]` gives `[-5, -3, -3]`.\n- **Each later step:** `best` is updated only when `v > best`. So after processing `vals[k]`, `best` equals `max(vals[0..k])`. That holds by induction: if `best` was the maximum of the first k elements, then `max(best, v)` is the maximum of the first k+1. Ties leave `best` unchanged, which is still the right value.\n- **Output length:** exactly one element is appended per input element, so the output has the same length as `vals`.\n- **Exceptions:** none are possible. Valid elements are integers, never `None`, so the `None` check cannot misfire, and comparing integers cannot raise.\n\n```json\n{\"verdict\": \"no_bug\"}\n```",
+  "model": "claude-opus-5-5",
+  "input_tokens": 1045,
+  "output_tokens": 444,
+  "thinking_tokens": 37,
+  "cost_usd": 0.017232,
+  "seconds": 8.010312957980204,
+  "cached": false,
+  "error": null
+ }
+}

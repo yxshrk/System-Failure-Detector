@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-046-is_leap",
+ "model": "claude-sonnet-5-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `year` is an integer with 1 <= year <= 3000\n\n```python\ndef is_leap(year):\n    \"\"\"Return True if `year` is a leap year in the Gregorian calendar: years divisible\n    by 4 are leap years, except years divisible by 100, which are not, except years\n    divisible by 400, which are.\n    \"\"\"\n    return year % 4 == 0 and (year % 100 != 0 or year % 400 == 0)\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"year\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "I checked the function against the docstring's rule.\n\nThe expression is `year % 4 == 0 and (year % 100 != 0 or year % 400 == 0)`.\n\n- If the year is not divisible by 4, the first clause is False, so the result is False. This matches the docstring.\n- If the year is divisible by 4 but not by 100, then `year % 100 != 0` is True, so the result is True. This matches.\n- If the year is divisible by 100 but not by 400 (for example 1900 or 2100), both inner clauses are False, so the result is False. This matches.\n- If the year is divisible by 400 (for example 2000), then `year % 400 == 0` is True, so the result is True. This matches.\n\nThe function always returns a bool, since `and` and `or` here produce the bool results of the comparisons. For integers in 1..3000 the modulo operations cannot raise, so there are no exceptions.\n\nThe code implements the spec exactly for every valid input.\n\n```json\n{\"verdict\": \"no_bug\"}\n```",
+  "model": "claude-sonnet-5-5",
+  "input_tokens": 1041,
+  "output_tokens": 325,
+  "thinking_tokens": 0,
+  "cost_usd": 0.00741,
+  "seconds": 6.980995792022441,
+  "cached": false,
+  "error": null
+ }
+}

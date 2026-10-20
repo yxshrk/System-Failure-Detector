@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-translate:sp1-149-median5:0",
+ "model": "claude-sonnet-5-5",
+ "system": "You are a formal-methods engineer. You translate informal specifications into precise, machine-checkable pre- and postconditions for an automatic verifier.",
+ "prompt": "Below is a Python function whose docstring is its specification. Do NOT judge the code yourself. Instead, translate the docstring into a formal specification that an automatic bounded verifier will check the code against.\n\nValid inputs:\n- `a` is an integer with 0 <= a <= 5\n- `b` is an integer with 0 <= b <= 5\n- `c` is an integer with 0 <= c <= 5\n- `d` is an integer with 0 <= d <= 5\n- `e` is an integer with 0 <= e <= 5\n\n```python\ndef median5(a, b, c, d, e):\n    \"\"\"Return the median of the five integers a, b, c, d, e (the third smallest, counting repeats).\n    \"\"\"\n    if a > b:\n        a, b = (b, a)\n    if d > e:\n        d, e = (e, d)\n    if c > e:\n        c, e = (e, c)\n    if c > d:\n        c, d = (d, c)\n    if a > d:\n        a, d = (d, a)\n    if a > c:\n        a, c = (c, a)\n    if b > e:\n        b, e = (e, b)\n    if b > d:\n        b, d = (d, b)\n    if b > c:\n        b, c = (c, b)\n    return c\n```\n\nWrite two Python functions:\n\n    def pre(a, b, c, d, e):            # -> bool: True for inputs the docstring's contract covers (you may just return True)\n    def post(a, b, c, d, e, result):   # -> bool: True exactly when `result` is what the docstring requires for these inputs\n\nHow the verifier works: it symbolically executes `median5` on every valid input (lists up to their maximum length; loops unrolled up to 8 iterations) and asks the Z3 SMT solver for an input where pre(...) is True but `median5` raises an exception or post(...) is False. Any such input is reported as a failure.\n\nThe verifier understands only this subset of Python, for pre, post and any helper functions you define:\n- values: ints, bools, None, lists of ints, tuples (no strings, floats, dicts, sets, lambdas, classes, imports, recursion)\n- statements: assignment, augmented assignment, if/elif/else, for over range(...)/lists/enumerate(...)/zip(...), while, break, continue, return, assert\n- built-ins: len, abs, min, max, sum, sorted, reversed, range, list, all, any, enumerate, zip, divmod; list methods append, pop, insert, count, index, copy, extend, remove, sort, reverse\n- integer arithmetic only: use // and %, never /\nGuidance:\n- Specify the docstring's intended behaviour, not what the code happens to do.\n- Computing the required answer independently (for example with a simple loop) and comparing it with `result` is a good strategy.\n- `post` receives the original, unmodified inputs.\n\nAnswer with one ```python block containing pre, post and any helpers.",
+ "completion": {
+  "text": "```python\ndef pre(a, b, c, d, e):\n    return True\n\ndef post(a, b, c, d, e, result):\n    s = sorted([a, b, c, d, e])\n    return result == s[2]\n```",
+  "model": "claude-sonnet-5-5",
+  "input_tokens": 1616,
+  "output_tokens": 68,
+  "thinking_tokens": 0,
+  "cost_usd": 0.00714,
+  "seconds": 4.66427599999588,
+  "cached": false,
+  "error": null
+ }
+}

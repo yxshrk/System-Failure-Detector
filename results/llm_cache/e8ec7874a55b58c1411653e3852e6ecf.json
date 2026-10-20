@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-102-is_monotone",
+ "model": "claude-haiku-4-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `xs` is a list of 0 to 6 integers, each between -5 and 5 inclusive\n\n```python\ndef is_monotone(xs):\n    \"\"\"Return True if `xs` is entirely non-decreasing or entirely non-increasing (lists\n    with fewer than two elements count as both), and False otherwise.\n    \"\"\"\n    inc = True\n    dec = True\n    for i in range(1, len(xs)):\n        if xs[i] < xs[i - 1]:\n            inc = False\n        if xs[i] > xs[i - 1]:\n            dec = False\n    return inc or dec\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"xs\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "Looking at this function, I need to verify it against the docstring specification:\n\n**What the docstring requires:**\n- Return `True` if `xs` is entirely non-decreasing (xs[i] \u2265 xs[i-1] for all consecutive pairs)\n- OR entirely non-increasing (xs[i] \u2264 xs[i-1] for all consecutive pairs)\n- Lists with fewer than 2 elements should return `True`\n- Otherwise return `False`\n\n**How the code works:**\n- `inc` tracks whether the sequence is non-decreasing: it stays `True` only if we never find xs[i] < xs[i-1]\n- `dec` tracks whether the sequence is non-increasing: it stays `True` only if we never find xs[i] > xs[i-1]\n- For lists with < 2 elements, the loop doesn't execute, both flags stay `True`, returns `True` \u2713\n\n**Testing some cases:**\n\n1. `[]` or `[5]` \u2192 Loop doesn't run, returns `True` \u2713\n2. `[1, 2, 3]` \u2192 Only encounters xs[i] > xs[i-1], so inc=True, dec=False, returns `True` \u2713\n3. `[3, 2, 1]` \u2192 Only encounters xs[i] < xs[i-1], so inc=False, dec=True, returns `True` \u2713\n4. `[3, 3, 3]` \u2192 Never finds < or >, so inc=True, dec=True, returns `True` \u2713\n5. `[1, 3, 2]` \u2192 Finds both < and >, so inc=False, dec=False, returns `False` \u2713\n\nThe logic is sound. The code correctly:\n- Detects violations of non-decreasing (when a smaller element follows a larger)\n- Detects violations of non-increasing (when a larger element follows a smaller)\n- Returns `True` if the sequence satisfies at least one property\n- Handles short sequences correctly\n\n```json\n{\"verdict\": \"no_bug\"}\n```",
+  "model": "claude-haiku-4-5",
+  "input_tokens": 894,
+  "output_tokens": 2733,
+  "thinking_tokens": 2231,
+  "cost_usd": 0.014559,
+  "seconds": 19.165252957958728,
+  "cached": false,
+  "error": null
+ }
+}

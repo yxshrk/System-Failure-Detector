@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-079-unique_in_order",
+ "model": "claude-haiku-4-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `xs` is a list of 0 to 6 integers, each between -5 and 5 inclusive\n\n```python\ndef unique_in_order(xs):\n    \"\"\"Return a list of the distinct values of `xs`, each appearing once, in the order of\n    their first occurrence in `xs`.\n    \"\"\"\n    out = []\n    for x in xs:\n        if x not in out:\n            out.append(x)\n    return out\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"xs\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "Looking at this function, I need to verify that it correctly implements the specification: return distinct values from `xs` in order of first occurrence.\n\nLet me trace through the logic:\n\n1. Initialize an empty output list\n2. For each element `x` in `xs`:\n   - If `x` is not already in `out`, append it\n3. Return `out`\n\nThis algorithm:\n- Preserves the order of elements as they appear in `xs` \u2713\n- Only adds each value once (only adds if not already present) \u2713\n- Returns the correct list \u2713\n\nLet me verify with some test cases:\n\n**Test 1**: `xs = [1, 2, 1, 3]`\n- x=1: not in [], append \u2192 [1]\n- x=2: not in [1], append \u2192 [1, 2]\n- x=1: in [1, 2], skip\n- x=3: not in [1, 2], append \u2192 [1, 2, 3]\n- Returns [1, 2, 3] \u2713 (correct distinct values in order)\n\n**Test 2**: `xs = [-5, 0, -5, 5]`\n- x=-5: not in [], append \u2192 [-5]\n- x=0: not in [-5], append \u2192 [-5, 0]\n- x=-5: in [-5, 0], skip\n- x=5: not in [-5, 0], append \u2192 [-5, 0, 5]\n- Returns [-5, 0, 5] \u2713 (correct, with negative integers)\n\n**Test 3**: `xs = []`\n- No iterations\n- Returns [] \u2713\n\n**Test 4**: `xs = [1, 1, 1]`\n- x=1: not in [], append \u2192 [1]\n- x=1: in [1], skip\n- x=1: in [1], skip\n- Returns [1] \u2713\n\nThe `in` operator works correctly for all integers (including negative ones), checking equality properly. The algorithm is straightforward and correct.\n\n```json\n{\"verdict\": \"no_bug\"}\n```",
+  "model": "claude-haiku-4-5",
+  "input_tokens": 856,
+  "output_tokens": 2236,
+  "thinking_tokens": 1728,
+  "cost_usd": 0.012036000000000002,
+  "seconds": 17.22168254200369,
+  "cached": false,
+  "error": null
+ }
+}

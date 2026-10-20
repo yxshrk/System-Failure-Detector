@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-048-days_in_month",
+ "model": "claude-sonnet-5-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `month` is an integer with 1 <= month <= 12\n- `year` is an integer with 1 <= year <= 3000\n\n```python\ndef leap(y):\n    return y % 4 == 0 and (y % 100 != 0 or y % 400 == 0)\n\ndef days_in_month(month, year):\n    \"\"\"Return the number of days in month `month` (1 = January, ..., 12 = December) of\n    year `year` in the Gregorian calendar. February has 29 days in leap years (years\n    divisible by 4, except years divisible by 100 unless also divisible by 400) and\n    28 otherwise; April, June, September and November have 30; all others have 31.\n    \"\"\"\n    if month == 2:\n        return 29 if leap(year) else 28\n    if month in (4, 6, 11):\n        return 30\n    return 31\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"month\": ..., \"year\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "The docstring says April, June, September and November have 30 days. The code checks `month in (4, 6, 11)`, which leaves out September (month 9). So September falls through to `return 31`.\n\nChecking the other months:\n- February is handled correctly by `leap`, which matches the stated rule.\n- Months 4, 6 and 11 return 30, which is correct.\n- Months 1, 3, 5, 7, 8, 10 and 12 return 31, which is correct.\n\nThe failing input is month=9, any year, for example year 2024. The docstring requires 30, and the code returns 31.\n\n```json\n{\"verdict\": \"bug\", \"failing_input\": {\"month\": 9, \"year\": 2024}, \"expected\": 30, \"actual\": 31}\n```",
+  "model": "claude-sonnet-5-5",
+  "input_tokens": 1171,
+  "output_tokens": 239,
+  "thinking_tokens": 0,
+  "cost_usd": 0.00707,
+  "seconds": 5.71704941696953,
+  "cached": false,
+  "error": null
+ }
+}

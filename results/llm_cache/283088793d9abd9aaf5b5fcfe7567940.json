@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-translate:sp1-006-has_near_pair:0",
+ "model": "claude-sonnet-5-5",
+ "system": "You are a formal-methods engineer. You translate informal specifications into precise, machine-checkable pre- and postconditions for an automatic verifier.",
+ "prompt": "Below is a Python function whose docstring is its specification. Do NOT judge the code yourself. Instead, translate the docstring into a formal specification that an automatic bounded verifier will check the code against.\n\nValid inputs:\n- `vals` is a list of 0 to 6 integers, each between -20 and 20 inclusive\n- `gap` is an integer with 0 <= gap <= 6\n\n```python\ndef has_near_pair(vals, gap):\n    \"\"\"Return True if there are two different positions i and j in `vals` whose\n    values differ by strictly less than `gap` (that is, abs(vals[i] - vals[j]) < gap),\n    and False otherwise.\n    \"\"\"\n    for i in range(1, len(vals)):\n        for j in range(i + 1, len(vals)):\n            if abs(vals[i] - vals[j]) < gap:\n                return True\n    return False\n```\n\nWrite two Python functions:\n\n    def pre(vals, gap):            # -> bool: True for inputs the docstring's contract covers (you may just return True)\n    def post(vals, gap, result):   # -> bool: True exactly when `result` is what the docstring requires for these inputs\n\nHow the verifier works: it symbolically executes `has_near_pair` on every valid input (lists up to their maximum length; loops unrolled up to 8 iterations) and asks the Z3 SMT solver for an input where pre(...) is True but `has_near_pair` raises an exception or post(...) is False. Any such input is reported as a failure.\n\nThe verifier understands only this subset of Python, for pre, post and any helper functions you define:\n- values: ints, bools, None, lists of ints, tuples (no strings, floats, dicts, sets, lambdas, classes, imports, recursion)\n- statements: assignment, augmented assignment, if/elif/else, for over range(...)/lists/enumerate(...)/zip(...), while, break, continue, return, assert\n- built-ins: len, abs, min, max, sum, sorted, reversed, range, list, all, any, enumerate, zip, divmod; list methods append, pop, insert, count, index, copy, extend, remove, sort, reverse\n- integer arithmetic only: use // and %, never /\nGuidance:\n- Specify the docstring's intended behaviour, not what the code happens to do.\n- Computing the required answer independently (for example with a simple loop) and comparing it with `result` is a good strategy.\n- `post` receives the original, unmodified inputs.\n\nAnswer with one ```python block containing pre, post and any helpers.",
+ "completion": {
+  "text": "The docstring requires considering all pairs of different positions, including index 0. The code starts `i` at 1, so it skips position 0. The spec follows the docstring, so the verifier should flag that bug.\n\n```python\ndef pre(vals, gap):\n    return True\n\ndef post(vals, gap, result):\n    expected = False\n    n = len(vals)\n    for i in range(n):\n        for j in range(i + 1, n):\n            if abs(vals[i] - vals[j]) < gap:\n                expected = True\n    return result == expected\n```",
+  "model": "claude-sonnet-5-5",
+  "input_tokens": 1503,
+  "output_tokens": 170,
+  "thinking_tokens": 0,
+  "cost_usd": 0.007708,
+  "seconds": 6.815454416035209,
+  "cached": false,
+  "error": null
+ }
+}

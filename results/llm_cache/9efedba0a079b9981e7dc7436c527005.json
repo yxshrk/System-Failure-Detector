@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-125-bulk_price",
+ "model": "claude-haiku-4-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `unit_cents` is an integer with 1 <= unit_cents <= 500\n- `qty` is an integer with 1 <= qty <= 200\n\n```python\ndef bulk_price(unit_cents, qty):\n    \"\"\"Return the price in cents of `qty` items costing `unit_cents` each. The gross\n    price is unit_cents * qty. Orders of 100 or more items get 15% off and orders of\n    50 to 99 items get 10% off; the discount amount is rounded down to a whole number\n    of cents and subtracted from the gross price.\n    \"\"\"\n    gross = unit_cents * qty\n    if qty >= 100:\n        pct = 15\n    elif qty >= 50:\n        pct = 10\n    else:\n        pct = 1\n    return gross - gross * pct // 100\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"unit_cents\": ..., \"qty\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "Looking at this function, I need to check whether the code correctly implements the docstring specification.\n\nLet me trace through the logic:\n\n**The docstring specifies:**\n- Orders of 100+ items get 15% off\n- Orders of 50-99 items get 10% off\n- No discount is mentioned for orders with fewer than 50 items\n\n**The code does:**\n- For qty >= 100: applies 15% discount \u2713\n- For 50 <= qty < 100: applies 10% discount \u2713\n- For qty < 50: applies 1% discount \u2717\n\nThe problem is in the `else` clause. For quantities less than 50, the code sets `pct = 1`, which applies a 1% discount. However, the docstring only specifies discounts for orders of 50 or more items. By implication, orders with fewer than 50 items should have **no discount**.\n\nLet me test with a concrete example:\n\n**Input: unit_cents = 100, qty = 1**\n- Valid input: 1 \u2264 100 \u2264 500 \u2713 and 1 \u2264 1 \u2264 200 \u2713\n- Gross price: 100 \u00d7 1 = 100\n- **Expected (per docstring):** 100 (no discount mentioned for qty < 50)\n- **Actual (code returns):** 100 - (100 \u00d7 1 // 100) = 100 - 1 = 99\n\nThe function applies an unspecified 1% discount to small orders.\n\n```json\n{\"verdict\": \"bug\", \"failing_input\": {\"unit_cents\": 100, \"qty\": 1}, \"expected\": 100, \"actual\": 99}\n```",
+  "model": "claude-haiku-4-5",
+  "input_tokens": 958,
+  "output_tokens": 2430,
+  "thinking_tokens": 2009,
+  "cost_usd": 0.013108,
+  "seconds": 19.289816834032536,
+  "cached": false,
+  "error": null
+ }
+}

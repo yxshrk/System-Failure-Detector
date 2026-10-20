@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-050-days_in_month",
+ "model": "claude-sonnet-5-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `month` is an integer with 1 <= month <= 12\n- `year` is an integer with 1 <= year <= 3000\n\n```python\ndef leap(y):\n    return y % 4 == 0 and (y % 100 != 0 or y % 400 == 1)\n\ndef days_in_month(month, year):\n    \"\"\"Return the number of days in month `month` (1 = January, ..., 12 = December) of\n    year `year` in the Gregorian calendar. February has 29 days in leap years (years\n    divisible by 4, except years divisible by 100 unless also divisible by 400) and\n    28 otherwise; April, June, September and November have 30; all others have 31.\n    \"\"\"\n    if month == 2:\n        return 29 if leap(year) else 28\n    if month in (4, 6, 9, 11):\n        return 30\n    return 31\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"month\": ..., \"year\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "The `leap` helper has a typo: it checks `y % 400 == 1` where the correct condition is `y % 400 == 0`.\n\nIts behavior for different years:\n\n- **Years divisible by 400 (e.g. 2000):** `y % 4 == 0` is true. `y % 100 != 0` is false. `y % 400 == 1` is false because 2000 % 400 = 0. So `leap(2000)` returns False, but 2000 is a leap year.\n- **Years where y % 400 == 1:** These are odd, so `y % 4 == 0` is false and the result is False. The typo has no effect here.\n- **Other years:** Years divisible by 4 but not by 100 are leap, which is correct. Years divisible by 100 but not by 400 are non-leap, which is correct.\n\nSo the only wrong results are years divisible by 400, such as 400, 800, 1200, 1600, 2000, 2400 and 2800.\n\nConcrete failing input: month=2, year=2000. The docstring requires 29 days (divisible by 400), and the code returns 28.\n\n```json\n{\"verdict\": \"bug\", \"failing_input\": {\"month\": 2, \"year\": 2000}, \"expected\": 29, \"actual\": 28}\n```",
+  "model": "claude-sonnet-5-5",
+  "input_tokens": 1169,
+  "output_tokens": 400,
+  "thinking_tokens": 0,
+  "cost_usd": 0.008672,
+  "seconds": 6.313785791979171,
+  "cached": false,
+  "error": null
+ }
+}

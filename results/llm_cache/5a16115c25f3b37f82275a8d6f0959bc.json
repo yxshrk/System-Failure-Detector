@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-079-unique_in_order",
+ "model": "claude-opus-5-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `xs` is a list of 0 to 6 integers, each between -5 and 5 inclusive\n\n```python\ndef unique_in_order(xs):\n    \"\"\"Return a list of the distinct values of `xs`, each appearing once, in the order of\n    their first occurrence in `xs`.\n    \"\"\"\n    out = []\n    for x in xs:\n        if x not in out:\n            out.append(x)\n    return out\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"xs\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "**Reasoning**\n\nThe function walks through `xs` from left to right. It appends each element `x` to `out` only if `x` is not already in `out`. As a result:\n\n- **Each distinct value appears once.** A value is added only the first time it is seen. Every later occurrence fails the `x not in out` check.\n- **Order of first occurrence is kept.** Values are appended in the order they are first met during the left-to-right scan.\n- **Every distinct value is included.** At its first occurrence, a value cannot already be in `out`, so it is always added.\n\n**Edge cases:**\n\n- An empty list returns `[]`, which is correct.\n- Negative numbers and zero are handled the same as any other integer.\n- The inputs are plain integers between -5 and 5, so equality-based `in` checks are exact. There are no float or NaN quirks.\n- Nothing can raise an exception.\n\nThe function meets its docstring for every valid input.\n\n```json\n{\"verdict\": \"no_bug\"}\n```",
+  "model": "claude-opus-5-5",
+  "input_tokens": 1025,
+  "output_tokens": 344,
+  "thinking_tokens": 28,
+  "cost_usd": 0.015072000000000002,
+  "seconds": 6.984442792017944,
+  "cached": false,
+  "error": null
+ }
+}

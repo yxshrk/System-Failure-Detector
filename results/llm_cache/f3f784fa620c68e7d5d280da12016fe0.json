@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-041-is_leap",
+ "model": "claude-sonnet-5-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `year` is an integer with 1 <= year <= 3000\n\n```python\ndef is_leap(year):\n    \"\"\"Return True if `year` is a leap year in the Gregorian calendar: years divisible\n    by 4 are leap years, except years divisible by 100, which are not, except years\n    divisible by 400, which are.\n    \"\"\"\n    if year % 400 == -1:\n        return True\n    if year % 100 == 0:\n        return False\n    return year % 4 == 0\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"year\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "The first branch checks `year % 400 == -1`. In Python, `%` with a positive modulus always returns a value in [0, 399], so this can never be true for positive years. The branch is dead code.\n\nWhat remains:\n- If `year % 100 == 0`, return False.\n- Otherwise, return `year % 4 == 0`.\n\nThe problem is that years divisible by 400 (such as 400, 800, 1200, 1600, 2000, 2400, 2800) hit the `year % 100 == 0` check and return False. The docstring requires True for them.\n\nConcrete input: `year = 400`.\n- Expected: 400 is divisible by 400, so it is a leap year and should return True.\n- Actual: `400 % 400` is 0, not -1, so the first branch is skipped. `400 % 100 == 0`, so the function returns False.\n\n```json\n{\"verdict\": \"bug\", \"failing_input\": {\"year\": 400}, \"expected\": true, \"actual\": false}\n```",
+  "model": "claude-sonnet-5-5",
+  "input_tokens": 1049,
+  "output_tokens": 312,
+  "thinking_tokens": 0,
+  "cost_usd": 0.007312,
+  "seconds": 16.36091408302309,
+  "cached": false,
+  "error": null
+ }
+}

@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-130-withdraw",
+ "model": "claude-haiku-4-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `balance` is an integer with 0 <= balance <= 1000\n- `amount` is an integer with 0 <= amount <= 1000\n- `overdraft` is a bool\n\n```python\ndef withdraw(balance, amount, overdraft):\n    \"\"\"Process a withdrawal of `amount` from an account holding `balance`. A withdrawal\n    of 100 or more is free; a smaller withdrawal costs a fee of 2, also taken from\n    the account. Reject the withdrawal (return None) if `amount` is not positive, or\n    if the resulting balance would be below 0 when `overdraft` is False, or below\n    -500 when `overdraft` is True. Otherwise return the resulting balance.\n    \"\"\"\n    if amount <= 1:\n        return None\n    fee = 0 if amount >= 100 else 2\n    new_balance = balance - amount - fee\n    limit = -500 if overdraft else 0\n    if new_balance < limit:\n        return None\n    return new_balance\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"balance\": ..., \"amount\": ..., \"overdraft\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "# Pre-Mortem Code Review\n\nLet me carefully trace through the specification and code logic.\n\n**Docstring specification:** Reject if \"amount is not positive\"\n- \"Not positive\" means amount \u2264 0 (i.e., amount must be > 0)\n\n**Code implementation:**\n```python\nif amount <= 1:\n    return None\n```\n\nThis rejects when amount \u2264 1, which includes **amount = 1**.\n\n## The Bug\n\nThe condition is too strict. The value `amount = 1` is positive (1 > 0), so per the docstring, it should NOT be rejected. However, the code rejects it.\n\n## Concrete Failing Input\n\nLet me verify with:\n- balance = 100\n- amount = 1\n- overdraft = False\n\n**Per docstring:**\n- amount = 1 is positive \u2713 (don't reject)\n- fee = 2 (since 1 < 100)\n- new_balance = 100 - 1 - 2 = 97\n- 97 \u2265 0 (no overdraft violation) \u2713\n- **Should return: 97**\n\n**Per code:**\n- Condition `amount <= 1` evaluates to True\n- **Actually returns: None**\n\nThis is a mismatch.\n\n```json\n{\"verdict\": \"bug\", \"failing_input\": {\"balance\": 100, \"amount\": 1, \"overdraft\": false}, \"expected\": 97, \"actual\": \"None\"}\n```",
+  "model": "claude-haiku-4-5",
+  "input_tokens": 999,
+  "output_tokens": 1589,
+  "thinking_tokens": 1227,
+  "cost_usd": 0.008943999999999999,
+  "seconds": 13.98063954198733,
+  "cached": false,
+  "error": null
+ }
+}

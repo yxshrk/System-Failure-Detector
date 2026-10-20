@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-035-count_sevens",
+ "model": "claude-sonnet-5-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `n` is an integer with 0 <= n <= 300\n\n```python\ndef count_sevens(n):\n    \"\"\"Consider every integer i with 0 <= i < n that is divisible by 11 or by 13.\n    Return the total number of times the digit 7 appears in the decimal\n    representations of those integers.\n    \"\"\"\n    count = 0\n    for i in range(n - 1):\n        if i % 11 == 0 or i % 13 == 0:\n            x = i\n            while x > 0:\n                if x % 10 == 7:\n                    count += 1\n                x //= 10\n    return count\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"n\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "The loop uses `range(n - 1)`, which covers i from 0 to n-2. The spec requires 0 <= i < n, i.e. i up to n-1. So the last value, i = n-1, is skipped.\n\nThis only matters if n-1 is divisible by 11 or 13 and contains a 7. Candidates are multiples of 11 or 13 that contain a 7:\n- 77 (11\u00b77): with n = 78, i = 77 should be included. The code only iterates up to 76, so it misses 77.\n\nCheck n = 78:\n- Expected: multiples of 11 or 13 below 78 containing a 7: 77 contributes 2 sevens. Others: 0, 11, 22, 33, 44, 55, 66 have none. 13, 26, 39, 52, 65, 78 (excluded) have none. So the multiples below 78 contain 2 sevens in total (from 77 alone).\n- Actual: the loop covers i up to 76, so 77 is skipped and the result is 0.\n\nThe code returns 0 where the docstring requires 2.\n\n```json\n{\"verdict\": \"bug\", \"failing_input\": {\"n\": 78}, \"expected\": 2, \"actual\": 0}\n```",
+  "model": "claude-sonnet-5-5",
+  "input_tokens": 1084,
+  "output_tokens": 388,
+  "thinking_tokens": 0,
+  "cost_usd": 0.008212,
+  "seconds": 6.159626624954399,
+  "cached": false,
+  "error": null
+ }
+}

@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-translate:sp1-172-can_split_evenly:0",
+ "model": "claude-sonnet-5-5",
+ "system": "You are a formal-methods engineer. You translate informal specifications into precise, machine-checkable pre- and postconditions for an automatic verifier.",
+ "prompt": "Below is a Python function whose docstring is its specification. Do NOT judge the code yourself. Instead, translate the docstring into a formal specification that an automatic bounded verifier will check the code against.\n\nValid inputs:\n- `xs` is a list of 0 to 5 integers, each between 0 and 6 inclusive\n\n```python\ndef can_split_evenly(xs):\n    \"\"\"Return True if the values in `xs` can be divided into two groups with equal sums,\n    each value going to exactly one of the groups (a group may be empty), and False\n    otherwise.\n    \"\"\"\n    total = sum(xs)\n    if total % 2 == 1:\n        return False\n    target = total // 2\n    reachable = [True] + [False] * target\n    for x in xs:\n        for s in range(target, x - 1, -1):\n            if reachable[s - x]:\n                reachable[s] = True\n    return reachable[target]\n```\n\nWrite two Python functions:\n\n    def pre(xs):            # -> bool: True for inputs the docstring's contract covers (you may just return True)\n    def post(xs, result):   # -> bool: True exactly when `result` is what the docstring requires for these inputs\n\nHow the verifier works: it symbolically executes `can_split_evenly` on every valid input (lists up to their maximum length; loops unrolled up to 16 iterations) and asks the Z3 SMT solver for an input where pre(...) is True but `can_split_evenly` raises an exception or post(...) is False. Any such input is reported as a failure.\n\nThe verifier understands only this subset of Python, for pre, post and any helper functions you define:\n- values: ints, bools, None, lists of ints, tuples (no strings, floats, dicts, sets, lambdas, classes, imports, recursion)\n- statements: assignment, augmented assignment, if/elif/else, for over range(...)/lists/enumerate(...)/zip(...), while, break, continue, return, assert\n- built-ins: len, abs, min, max, sum, sorted, reversed, range, list, all, any, enumerate, zip, divmod; list methods append, pop, insert, count, index, copy, extend, remove, sort, reverse\n- integer arithmetic only: use // and %, never /\nGuidance:\n- Specify the docstring's intended behaviour, not what the code happens to do.\n- Computing the required answer independently (for example with a simple loop) and comparing it with `result` is a good strategy.\n- `post` receives the original, unmodified inputs.\n\nAnswer with one ```python block containing pre, post and any helpers.",
+ "completion": {
+  "text": "```python\ndef pre(xs):\n    return True\n\ndef post(xs, result):\n    total = sum(xs)\n    sums = [0]\n    for x in xs:\n        new = []\n        for s in sums:\n            new.append(s + x)\n        sums = sums + new\n    found = False\n    for s in sums:\n        if 2 * s == total:\n            found = True\n    return result == found\n```",
+  "model": "claude-sonnet-5-5",
+  "input_tokens": 1508,
+  "output_tokens": 342,
+  "thinking_tokens": 222,
+  "cost_usd": 0.009448,
+  "seconds": 6.733534542028792,
+  "cached": false,
+  "error": null
+ }
+}

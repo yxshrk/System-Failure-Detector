@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-065-letter_grade",
+ "model": "claude-sonnet-5-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `score` is an integer with 0 <= score <= 100\n\n```python\ndef letter_grade(score):\n    \"\"\"Map an exam score to a grade point: 4 for a score of 90 or more, 3 for 80 to 89,\n    2 for 70 to 79, 1 for 60 to 69, and 0 below 60.\n    \"\"\"\n    return max(0, min(4, (score - 50) // 10))\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"score\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "The function matches its docstring for every valid input. I checked it by reasoning through each grade band, since I can't run it.\n\nThe expression is `(score - 50) // 10`, clamped to the range 0 to 4.\n\n- **90 to 100:** `(score - 50) // 10` is 4 for 90 to 99 and 5 for 100. The `min(4, ...)` clamp turns the 5 into 4, which is correct.\n- **80 to 89:** `(score - 50)` runs from 30 to 39, so the floor division gives 3, which is correct.\n- **70 to 79:** the difference runs from 20 to 29, giving 2, which is correct.\n- **60 to 69:** the difference runs from 10 to 19, giving 1, which is correct.\n- **50 to 59:** the difference runs from 0 to 9, giving 0, which is correct.\n- **0 to 49:** the difference is negative, so floor division gives -5 to -1. The `max(0, ...)` clamp turns that into 0, which is correct.\n\nThe boundaries 59/60, 69/70, 79/80, 89/90 and 100 all land on the right side. Integer input never raises an exception.\n\n```json\n{\"verdict\": \"no_bug\"}\n```",
+  "model": "claude-sonnet-5-5",
+  "input_tokens": 1028,
+  "output_tokens": 558,
+  "thinking_tokens": 157,
+  "cost_usd": 0.009687999999999999,
+  "seconds": 9.216765541990753,
+  "cached": false,
+  "error": null
+ }
+}

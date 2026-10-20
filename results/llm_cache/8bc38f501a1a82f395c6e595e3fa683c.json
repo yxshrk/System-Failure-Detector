@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-085-best_window_sum",
+ "model": "claude-sonnet-5-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `xs` is a list of 1 to 6 integers, each between -10 and 10 inclusive\n\n```python\ndef best_window_sum(xs):\n    \"\"\"`xs` is non-empty. Return the largest possible sum of a non-empty run of\n    consecutive elements of `xs`.\n    \"\"\"\n    best = xs[0]\n    cur = 0\n    for x in xs:\n        cur = max(0, cur + x)\n        best = max(best, cur)\n    return best\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"xs\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "Consider an all-negative input, e.g. `xs = [-3]`.\n\nThe function sets `best = xs[0] = -3` and `cur = 0`. In the loop, `cur = max(0, 0 + -3) = 0`, then `best = max(-3, 0) = 0`. It returns 0.\n\nThe docstring requires a non-empty run, so the correct answer is -3. The function returns 0, which corresponds to an empty window. The bug is that `cur` is clamped to 0 and `best` is then updated from that clamped value.\n\nThe same happens for `[-1, -2]`: the expected result is -1, but the function returns 0.\n\n```json\n{\"verdict\": \"bug\", \"failing_input\": {\"xs\": [-3]}, \"expected\": -3, \"actual\": 0}\n```",
+  "model": "claude-sonnet-5-5",
+  "input_tokens": 1052,
+  "output_tokens": 253,
+  "thinking_tokens": 0,
+  "cost_usd": 0.006734,
+  "seconds": 22.699045583955012,
+  "cached": false,
+  "error": null
+ }
+}

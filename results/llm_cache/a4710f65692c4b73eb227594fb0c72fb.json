@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-057-triangle_kind",
+ "model": "claude-sonnet-5-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `a` is an integer with 1 <= a <= 15\n- `b` is an integer with 1 <= b <= 15\n- `c` is an integer with 1 <= c <= 15\n\n```python\ndef triangle_kind(a, b, c):\n    \"\"\"Classify side lengths a, b, c. Return 0 if they do not form a valid triangle,\n    meaning some side is greater than or equal to the sum of the other two. Otherwise\n    return 3 if all three sides are equal, 2 if exactly two sides are equal, and 1 if\n    all sides are different.\n    \"\"\"\n    if a + b <= c and a + c <= b and (b + c <= a):\n        return 0\n    if a == b and b == c:\n        return 3\n    if a == b or b == c or a == c:\n        return 2\n    return 1\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"a\": ..., \"b\": ..., \"c\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "The invalidity check uses `and` where it should use `or`. The docstring says the triangle is invalid if some side is >= the sum of the other two, so any one of the three conditions should trigger a return of 0.\n\nWith `and`, all three conditions must hold at once. For positive sides that is essentially impossible: if a+b<=c and a+c<=b, adding them gives 2a+b+c <= b+c, so a<=0, which contradicts a>=1. So the function never returns 0.\n\nCounterexample: a=1, b=1, c=2. Here a+b = 2 <= c, so the triangle is degenerate and the expected result is 0. The check is a+b<=c (true), a+c<=b (3<=1, false), so the `and` fails and the check doesn't fire. Then a==b but b!=c, so a==b or ... is true and the function returns 2.\n\n```json\n{\"verdict\": \"bug\", \"failing_input\": {\"a\": 1, \"b\": 1, \"c\": 2}, \"expected\": 0, \"actual\": 2}\n```",
+  "model": "claude-sonnet-5-5",
+  "input_tokens": 1167,
+  "output_tokens": 334,
+  "thinking_tokens": 0,
+  "cost_usd": 0.008004,
+  "seconds": 6.186607958981767,
+  "cached": false,
+  "error": null
+ }
+}

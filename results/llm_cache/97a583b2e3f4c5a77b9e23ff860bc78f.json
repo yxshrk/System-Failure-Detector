@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-171-can_split_evenly",
+ "model": "claude-sonnet-5-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `xs` is a list of 0 to 5 integers, each between 0 and 6 inclusive\n\n```python\ndef can_split_evenly(xs):\n    \"\"\"Return True if the values in `xs` can be divided into two groups with equal sums,\n    each value going to exactly one of the groups (a group may be empty), and False\n    otherwise.\n    \"\"\"\n    total = sum(xs)\n    if total % 2 == 1:\n        return False\n    target = total // 2\n    reachable = [True] + [False] * target\n    for x in xs:\n        for s in range(target, x, -1):\n            if reachable[s - x]:\n                reachable[s] = True\n    return reachable[target]\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"xs\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "The inner loop is `range(target, x, -1)`, which runs `s` from `target` down to `x + 1`. It never reaches `s == x`. That is the case where a single element `x` is added to the empty subset (`reachable[0]`) to make sum `x`. The standard 0/1 knapsack loop needs `range(target, x - 1, -1)`.\n\nSums of exactly `x` can therefore only be built through a previously reachable nonzero sum, never from zero.\n\nTrace for `xs = [2, 2]`:\n- `total = 4`, `target = 2`, `reachable = [True, False, False]`.\n- For the first `x = 2`, `range(2, 2, -1)` is empty, so nothing changes.\n- The second `x = 2` is the same.\n- The function returns `reachable[2]`, which is `False`.\n\nThe docstring requires `True`, since the groups `[2]` and `[2]` have equal sums.\n\n```json\n{\"verdict\": \"bug\", \"failing_input\": {\"xs\": [2, 2]}, \"expected\": true, \"actual\": false}\n```",
+  "model": "claude-sonnet-5-5",
+  "input_tokens": 1110,
+  "output_tokens": 549,
+  "thinking_tokens": 198,
+  "cost_usd": 0.009926,
+  "seconds": 7.739322208042722,
+  "cached": false,
+  "error": null
+ }
+}

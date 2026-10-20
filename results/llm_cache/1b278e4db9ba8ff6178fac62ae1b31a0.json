@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-029-is_prime",
+ "model": "claude-haiku-4-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `n` is an integer with 0 <= n <= 250\n\n```python\ndef is_prime(n):\n    \"\"\"Return True if `n` is a prime number (an integer greater than 1 whose only\n    positive divisors are 1 and itself), and False otherwise.\n    \"\"\"\n    if n < 2:\n        return False\n    d = 2\n    while d + d <= n:\n        if n % d == 0:\n            return False\n        d += 1\n    return True\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"n\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "Looking at this code, I need to verify that the trial division algorithm correctly identifies primes according to the specification.\n\nLet me trace through the logic:\n\n**Algorithm analysis:**\n- Returns `False` for n < 2 \u2713 (correctly excludes 0, 1, and negatives)\n- Checks divisibility by integers d from 2 onwards\n- Loop condition: `d + d <= n` means we check while `d \u2264 n/2`\n- If any divisor is found, returns `False`\n- If no divisor is found, returns `True`\n\n**Why the loop condition works:**\nAny composite number must have at least one divisor d where 2 \u2264 d \u2264 n/2. If d > n/2, then n/d < 2, meaning d = n (which is trivial). So checking up to n/2 is sufficient.\n\n**Testing key cases:**\n\n- **n = 2**: `2 + 2 \u2264 2`? No, skip loop \u2192 return `True` \u2713\n- **n = 3**: `2 + 2 \u2264 3`? No, skip loop \u2192 return `True` \u2713  \n- **n = 4**: `2 + 2 \u2264 4`? Yes. `4 % 2 == 0`? Yes \u2192 return `False` \u2713\n- **n = 9**: Check d=2 (no match), d=3: `6 \u2264 9`? Yes. `9 % 3 == 0`? Yes \u2192 return `False` \u2713\n- **n = 97**: Check all divisors 2-48, none divide 97 \u2192 return `True` \u2713\n- **n = 0, 1**: Both < 2 \u2192 return `False` \u2713\n\n**Checking for exceptions:**\n- All operations are on integers (no division by zero risk since d starts at 2)\n- No index access or other runtime errors possible\n\nThe algorithm is a standard, correct trial division implementation. It properly checks all necessary divisors and handles all edge cases according to the specification.\n\n```json\n{\"verdict\": \"no_bug\"}\n```",
+  "model": "claude-haiku-4-5",
+  "input_tokens": 869,
+  "output_tokens": 5945,
+  "thinking_tokens": 5422,
+  "cost_usd": 0.030593999999999996,
+  "seconds": 39.17280041601043,
+  "cached": false,
+  "error": null
+ }
+}

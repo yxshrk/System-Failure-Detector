@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-translate:sp1-135-run_length:0",
+ "model": "claude-sonnet-5-5",
+ "system": "You are a formal-methods engineer. You translate informal specifications into precise, machine-checkable pre- and postconditions for an automatic verifier.",
+ "prompt": "Below is a Python function whose docstring is its specification. Do NOT judge the code yourself. Instead, translate the docstring into a formal specification that an automatic bounded verifier will check the code against.\n\nValid inputs:\n- `xs` is a list of 0 to 5 integers, each between 0 and 3 inclusive\n\n```python\ndef run_length(xs):\n    \"\"\"Run-length encode `xs`: split it into maximal runs of equal consecutive values and\n    return a flat list [v1, c1, v2, c2, ...] where run number k consists of ck copies\n    of the value vk, in order.\n    \"\"\"\n    out = []\n    i = 0\n    while i <= len(xs):\n        j = i\n        while j < len(xs) and xs[j] == xs[i]:\n            j += 1\n        out.append(xs[i])\n        out.append(j - i)\n        i = j\n    return out\n```\n\nWrite two Python functions:\n\n    def pre(xs):            # -> bool: True for inputs the docstring's contract covers (you may just return True)\n    def post(xs, result):   # -> bool: True exactly when `result` is what the docstring requires for these inputs\n\nHow the verifier works: it symbolically executes `run_length` on every valid input (lists up to their maximum length; loops unrolled up to 6 iterations) and asks the Z3 SMT solver for an input where pre(...) is True but `run_length` raises an exception or post(...) is False. Any such input is reported as a failure.\n\nThe verifier understands only this subset of Python, for pre, post and any helper functions you define:\n- values: ints, bools, None, lists of ints, tuples (no strings, floats, dicts, sets, lambdas, classes, imports, recursion)\n- statements: assignment, augmented assignment, if/elif/else, for over range(...)/lists/enumerate(...)/zip(...), while, break, continue, return, assert\n- built-ins: len, abs, min, max, sum, sorted, reversed, range, list, all, any, enumerate, zip, divmod; list methods append, pop, insert, count, index, copy, extend, remove, sort, reverse\n- integer arithmetic only: use // and %, never /\nGuidance:\n- Specify the docstring's intended behaviour, not what the code happens to do.\n- Computing the required answer independently (for example with a simple loop) and comparing it with `result` is a good strategy.\n- `post` receives the original, unmodified inputs.\n\nAnswer with one ```python block containing pre, post and any helpers.",
+ "completion": {
+  "text": "```python\ndef pre(xs):\n    return True\n\ndef post(xs, result):\n    expected = []\n    n = len(xs)\n    i = 0\n    while i < n:\n        j = i\n        while j < n and xs[j] == xs[i]:\n            j += 1\n        expected.append(xs[i])\n        expected.append(j - i)\n        i = j\n    if len(result) != len(expected):\n        return False\n    for k in range(len(expected)):\n        if result[k] != expected[k]:\n            return False\n    return True\n```",
+  "model": "claude-sonnet-5-5",
+  "input_tokens": 1487,
+  "output_tokens": 165,
+  "thinking_tokens": 0,
+  "cost_usd": 0.007594,
+  "seconds": 5.179707542003598,
+  "cached": false,
+  "error": null
+ }
+}

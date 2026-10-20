@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-045-is_leap",
+ "model": "claude-haiku-4-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `year` is an integer with 1 <= year <= 3000\n\n```python\ndef is_leap(year):\n    \"\"\"Return True if `year` is a leap year in the Gregorian calendar: years divisible\n    by 4 are leap years, except years divisible by 100, which are not, except years\n    divisible by 400, which are.\n    \"\"\"\n    if year % 400 == 0:\n        return True\n    if year % 100 == 0:\n        return False\n    return year % 4 == 0\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"year\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "# Analysis\n\nLet me trace through the logic systematically against the specification.\n\nThe docstring specifies the rule:\n1. Divisible by 400 \u2192 leap year (True)\n2. Divisible by 100 (but not 400) \u2192 not a leap year (False)\n3. Divisible by 4 (but not 100) \u2192 leap year (True)\n4. Otherwise \u2192 not a leap year (False)\n\nThe code checks in this order:\n```python\nif year % 400 == 0:        # Check 400-divisible first\n    return True\nif year % 100 == 0:        # Check 100-divisible (not caught above)\n    return False\nreturn year % 4 == 0       # Check 4-divisible (not caught above)\n```\n\nTesting key cases within 1 \u2264 year \u2264 3000:\n\n- **2000** (\u00f7400): First condition True \u2192 returns True \u2713\n- **1900** (\u00f7100, not \u00f7400): First condition False, second condition True \u2192 returns False \u2713\n- **2024** (\u00f74, not \u00f7100): Both conditions False, third statement \u2192 returns True \u2713\n- **2001** (not \u00f74): All conditions False \u2192 returns False \u2713\n- **3000** (\u00f7100, not \u00f7400): First False, second True \u2192 returns False \u2713\n\nThe order of checks is crucial and correct:\n1. Most specific case (400-divisible) checked first\n2. Medium specificity (100-divisible, excluding 400-divisible) checked second\n3. General case (4-divisible, excluding 100-divisible) checked last\n\nThe code correctly implements the Gregorian calendar leap year rule for all valid inputs.\n\n```json\n{\"verdict\": \"no_bug\"}\n```",
+  "model": "claude-haiku-4-5",
+  "input_tokens": 876,
+  "output_tokens": 1571,
+  "thinking_tokens": 1132,
+  "cost_usd": 0.008731,
+  "seconds": 13.080613041005563,
+  "cached": false,
+  "error": null
+ }
+}

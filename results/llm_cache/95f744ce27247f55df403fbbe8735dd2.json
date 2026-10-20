@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-031-largest_proper_divisor",
+ "model": "claude-sonnet-5-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `n` is an integer with 2 <= n <= 120\n\n```python\ndef largest_proper_divisor(n):\n    \"\"\"Return the largest integer d with 1 <= d < n that divides `n` exactly.\n    \"\"\"\n    best = 1\n    for d in range(1, n):\n        if n % d != 0:\n            best = d\n    return best\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"n\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "The function sets `best = d` whenever `n % d != 0`, which is the opposite of the condition it needs: it tracks the largest non-divisor, not the largest divisor.\n\nTake n = 6. The proper divisors are 1, 2 and 3, so the docstring requires 3. The loop runs over d = 1..5:\n- d=1: 6%1 == 0, no update.\n- d=2: divides, no update.\n- d=3: divides, no update.\n- d=4: 6%4 = 2 != 0, so best = 4.\n- d=5: 6%5 = 1 != 0, so best = 5.\n\nThe function returns 5 instead of 3.\n\nA smaller case also fails. For n = 2, the loop only visits d=1, which divides 2, so best stays 1. That is correct, so n = 2 does not expose the bug, but n = 6 does.\n\n```json\n{\"verdict\": \"bug\", \"failing_input\": {\"n\": 6}, \"expected\": 3, \"actual\": 5}\n```",
+  "model": "claude-sonnet-5-5",
+  "input_tokens": 1005,
+  "output_tokens": 322,
+  "thinking_tokens": 0,
+  "cost_usd": 0.007236,
+  "seconds": 5.96148129098583,
+  "cached": false,
+  "error": null
+ }
+}

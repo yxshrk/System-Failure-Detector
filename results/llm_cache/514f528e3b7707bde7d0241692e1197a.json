@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-033-largest_proper_divisor",
+ "model": "claude-sonnet-5-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `n` is an integer with 2 <= n <= 120\n\n```python\ndef largest_proper_divisor(n):\n    \"\"\"Return the largest integer d with 1 <= d < n that divides `n` exactly.\n    \"\"\"\n    best = 1\n    for d in range(1, n):\n        if n % d == 0:\n            best = d\n    return best\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"n\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "The loop iterates d from 1 to n-1 in increasing order, and `best` is overwritten each time `d` divides `n`. After the loop, `best` holds the largest divisor in [1, n-1].\n\nChecking edge cases:\n- Prime n (e.g., 2, 3, 7): only d=1 divides n, so best=1. This is correct, since the largest proper divisor is 1.\n- n=2: range(1,2) gives d=1, so best=1. Correct.\n- Composite n (e.g., 12): the divisors 1, 2, 3, 4, 6 are encountered in order, so best=6. Correct.\n- Perfect squares (e.g., 9): the divisors 1 and 3 are found, so best=3. Correct.\n\nNo exceptions are possible, since all inputs are integers in the valid range, and the loop is always well-defined. The initial value of 1 is always a valid answer, because 1 divides every n \u2265 2 and 1 < n.\n\nThe function meets its docstring for every valid input.\n\n```json\n{\"verdict\": \"no_bug\"}\n```",
+  "model": "claude-sonnet-5-5",
+  "input_tokens": 1008,
+  "output_tokens": 351,
+  "thinking_tokens": 0,
+  "cost_usd": 0.0075379999999999996,
+  "seconds": 8.351833624998108,
+  "cached": false,
+  "error": null
+ }
+}

@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-129-withdraw",
+ "model": "claude-opus-5-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `balance` is an integer with 0 <= balance <= 1000\n- `amount` is an integer with 0 <= amount <= 1000\n- `overdraft` is a bool\n\n```python\ndef withdraw(balance, amount, overdraft):\n    \"\"\"Process a withdrawal of `amount` from an account holding `balance`. A withdrawal\n    of 100 or more is free; a smaller withdrawal costs a fee of 2, also taken from\n    the account. Reject the withdrawal (return None) if `amount` is not positive, or\n    if the resulting balance would be below 0 when `overdraft` is False, or below\n    -500 when `overdraft` is True. Otherwise return the resulting balance.\n    \"\"\"\n    if amount <= 0:\n        return None\n    fee = 0 if amount >= 100 else 2\n    new_balance = balance - amount - fee\n    limit = -499 if overdraft else 0\n    if new_balance < limit:\n        return None\n    return new_balance\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"balance\": ..., \"amount\": ..., \"overdraft\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "Yes, there is a bug: the overdraft limit is off by one.\n\n**What the spec says:** with `overdraft=True`, reject only if the resulting balance would be *below* -500. So a resulting balance of exactly -500 is allowed and should be returned.\n\n**What the code does:** it sets `limit = -499` and rejects when `new_balance < limit`. That rejects -500, because -500 < -499.\n\n**Failing input:** `balance=0, amount=500, overdraft=True`\n\n- `amount` is 500, so it is positive and the fee is 0.\n- `new_balance = 0 - 500 - 0 = -500`.\n- -500 is not below -500, so the spec requires returning **-500**.\n- The code computes `-500 < -499`, which is true, so it returns **None**.\n\n**Other branches are correct:**\n- Rejecting non-positive amounts matches the spec.\n- The fee rule (0 when amount \u2265 100, otherwise 2) matches the spec.\n- With `overdraft=False`, the code rejects when `new_balance < 0`, which matches.\n\n**Fix:** set `limit = -500 if overdraft else 0`.\n\n```json\n{\"verdict\": \"bug\", \"failing_input\": {\"balance\": 0, \"amount\": 500, \"overdraft\": true}, \"expected\": -500, \"actual\": null}\n```",
+  "model": "claude-opus-5-5",
+  "input_tokens": 1231,
+  "output_tokens": 522,
+  "thinking_tokens": 85,
+  "cost_usd": 0.02028,
+  "seconds": 9.433872624998912,
+  "cached": false,
+  "error": null
+ }
+}

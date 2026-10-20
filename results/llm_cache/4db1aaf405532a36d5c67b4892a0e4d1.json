@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-044-is_leap",
+ "model": "claude-opus-5-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `year` is an integer with 1 <= year <= 3000\n\n```python\ndef is_leap(year):\n    \"\"\"Return True if `year` is a leap year in the Gregorian calendar: years divisible\n    by 4 are leap years, except years divisible by 100, which are not, except years\n    divisible by 400, which are.\n    \"\"\"\n    if year // 400 == 0:\n        return True\n    if year % 100 == 0:\n        return False\n    return year % 4 == 0\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"year\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "**Yes, there is a bug.** The first check uses floor division (`//`) where it should use modulo (`%`).\n\n- `year // 400 == 0` is true for every year from 1 to 399. So any of those years returns `True` immediately. For example, year 1 should not be a leap year, but the function returns `True`.\n- `year // 400` is never 0 for years of 400 or more. So years divisible by 400 skip the first branch. They then hit `year % 100 == 0` and return `False`. For example, 400 and 2000 should be leap years but return `False`.\n\n**Failing input:** `year = 1`\n- Not divisible by 4, so the docstring requires `False`.\n- `1 // 400 == 0`, so the code returns `True`.\n\n**Fix:** change the first line to `if year % 400 == 0:`.\n\n```json\n{\"verdict\": \"bug\", \"failing_input\": {\"year\": 1}, \"expected\": false, \"actual\": true}\n```",
+  "model": "claude-opus-5-5",
+  "input_tokens": 1048,
+  "output_tokens": 378,
+  "thinking_tokens": 70,
+  "cost_usd": 0.015936000000000002,
+  "seconds": 10.555453291977756,
+  "cached": false,
+  "error": null
+ }
+}

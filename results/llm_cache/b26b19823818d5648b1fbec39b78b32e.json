@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-035-count_sevens",
+ "model": "claude-opus-5-5",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `n` is an integer with 0 <= n <= 300\n\n```python\ndef count_sevens(n):\n    \"\"\"Consider every integer i with 0 <= i < n that is divisible by 11 or by 13.\n    Return the total number of times the digit 7 appears in the decimal\n    representations of those integers.\n    \"\"\"\n    count = 0\n    for i in range(n - 1):\n        if i % 11 == 0 or i % 13 == 0:\n            x = i\n            while x > 0:\n                if x % 10 == 7:\n                    count += 1\n                x //= 10\n    return count\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"n\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "**Yes, there is a bug.** The loop uses `range(n - 1)`, which stops at `n - 2`. The docstring requires every `i` with `0 <= i < n`, which is `range(n)`. So the code never examines `i = n - 1`. The result is wrong whenever `n - 1` is divisible by 11 or 13 and contains the digit 7.\n\n**Failing input: `n = 78`**, so `n - 1 = 77 = 11 \u00d7 7`.\n\n- **Required:** The multiples of 11 or 13 below 78 are 0, 11, 13, 22, 26, 33, 39, 44, 52, 55, 65, 66 and 77. Only 77 contains a 7, and it contains two. The expected result is **2**.\n- **Returned:** The loop never reaches 77, so the function returns **0**.\n\n**Fix:** change `range(n - 1)` to `range(n)`.\n\n```json\n{\"verdict\": \"bug\", \"failing_input\": {\"n\": 78}, \"expected\": 2, \"actual\": 0}\n```",
+  "model": "claude-opus-5-5",
+  "input_tokens": 1079,
+  "output_tokens": 517,
+  "thinking_tokens": 175,
+  "cost_usd": 0.018964,
+  "seconds": 9.05680266598938,
+  "cached": false,
+  "error": null
+ }
+}

@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-translate:sp1-069-find_index:0",
+ "model": "claude-sonnet-5-5",
+ "system": "You are a formal-methods engineer. You translate informal specifications into precise, machine-checkable pre- and postconditions for an automatic verifier.",
+ "prompt": "Below is a Python function whose docstring is its specification. Do NOT judge the code yourself. Instead, translate the docstring into a formal specification that an automatic bounded verifier will check the code against.\n\nValid inputs:\n- `xs` is a list of 0 to 7 integers, each between -20 and 20 inclusive, sorted in strictly increasing order\n- `target` is an integer with -20 <= target <= 20\n\n```python\ndef find_index(xs, target):\n    \"\"\"`xs` is sorted in strictly increasing order. Return the position i such that\n    xs[i] == target, or -1 if `target` does not occur in `xs`.\n    \"\"\"\n    lo = 0\n    hi = len(xs) - 1\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if xs[mid] == target:\n            return mid\n        if xs[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid - 1\n    return -1\n```\n\nWrite two Python functions:\n\n    def pre(xs, target):            # -> bool: True for inputs the docstring's contract covers (you may just return True)\n    def post(xs, target, result):   # -> bool: True exactly when `result` is what the docstring requires for these inputs\n\nHow the verifier works: it symbolically executes `find_index` on every valid input (lists up to their maximum length; loops unrolled up to 5 iterations) and asks the Z3 SMT solver for an input where pre(...) is True but `find_index` raises an exception or post(...) is False. Any such input is reported as a failure.\n\nThe verifier understands only this subset of Python, for pre, post and any helper functions you define:\n- values: ints, bools, None, lists of ints, tuples (no strings, floats, dicts, sets, lambdas, classes, imports, recursion)\n- statements: assignment, augmented assignment, if/elif/else, for over range(...)/lists/enumerate(...)/zip(...), while, break, continue, return, assert\n- built-ins: len, abs, min, max, sum, sorted, reversed, range, list, all, any, enumerate, zip, divmod; list methods append, pop, insert, count, index, copy, extend, remove, sort, reverse\n- integer arithmetic only: use // and %, never /\nGuidance:\n- Specify the docstring's intended behaviour, not what the code happens to do.\n- Computing the required answer independently (for example with a simple loop) and comparing it with `result` is a good strategy.\n- `post` receives the original, unmodified inputs.\n\nAnswer with one ```python block containing pre, post and any helpers.",
+ "completion": {
+  "text": "```python\ndef pre(xs, target):\n    # Contract: xs sorted in strictly increasing order\n    for i in range(len(xs) - 1):\n        if xs[i] >= xs[i + 1]:\n            return False\n    return True\n\n\ndef post(xs, target, result):\n    # Since xs is strictly increasing, target occurs at most once.\n    found = False\n    for i in range(len(xs)):\n        if xs[i] == target:\n            found = True\n    if found:\n        if result < 0 or result >= len(xs):\n            return False\n        return xs[result] == target\n    return result == -1\n```",
+  "model": "claude-sonnet-5-5",
+  "input_tokens": 1525,
+  "output_tokens": 190,
+  "thinking_tokens": 0,
+  "cost_usd": 0.007996,
+  "seconds": 4.771381166996434,
+  "cached": false,
+  "error": null
+ }
+}

@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-translate:sp1-089-best_window_sum:0",
+ "model": "claude-sonnet-5-5",
+ "system": "You are a formal-methods engineer. You translate informal specifications into precise, machine-checkable pre- and postconditions for an automatic verifier.",
+ "prompt": "Below is a Python function whose docstring is its specification. Do NOT judge the code yourself. Instead, translate the docstring into a formal specification that an automatic bounded verifier will check the code against.\n\nValid inputs:\n- `xs` is a list of 1 to 6 integers, each between -10 and 10 inclusive\n\n```python\ndef best_window_sum(xs):\n    \"\"\"`xs` is non-empty. Return the largest possible sum of a non-empty run of\n    consecutive elements of `xs`.\n    \"\"\"\n    best = xs[0]\n    cur = -1\n    for x in xs:\n        cur = max(x, cur + x)\n        best = max(best, cur)\n    return best\n```\n\nWrite two Python functions:\n\n    def pre(xs):            # -> bool: True for inputs the docstring's contract covers (you may just return True)\n    def post(xs, result):   # -> bool: True exactly when `result` is what the docstring requires for these inputs\n\nHow the verifier works: it symbolically executes `best_window_sum` on every valid input (lists up to their maximum length; loops unrolled up to 8 iterations) and asks the Z3 SMT solver for an input where pre(...) is True but `best_window_sum` raises an exception or post(...) is False. Any such input is reported as a failure.\n\nThe verifier understands only this subset of Python, for pre, post and any helper functions you define:\n- values: ints, bools, None, lists of ints, tuples (no strings, floats, dicts, sets, lambdas, classes, imports, recursion)\n- statements: assignment, augmented assignment, if/elif/else, for over range(...)/lists/enumerate(...)/zip(...), while, break, continue, return, assert\n- built-ins: len, abs, min, max, sum, sorted, reversed, range, list, all, any, enumerate, zip, divmod; list methods append, pop, insert, count, index, copy, extend, remove, sort, reverse\n- integer arithmetic only: use // and %, never /\nGuidance:\n- Specify the docstring's intended behaviour, not what the code happens to do.\n- Computing the required answer independently (for example with a simple loop) and comparing it with `result` is a good strategy.\n- `post` receives the original, unmodified inputs.\n\nAnswer with one ```python block containing pre, post and any helpers.",
+ "completion": {
+  "text": "```python\ndef pre(xs):\n    return len(xs) >= 1\n\ndef post(xs, result):\n    n = len(xs)\n    best = None\n    for i in range(n):\n        s = 0\n        for j in range(i, n):\n            s += xs[j]\n            if best is None or s > best:\n                best = s\n    return result == best\n```",
+  "model": "claude-sonnet-5-5",
+  "input_tokens": 1439,
+  "output_tokens": 106,
+  "thinking_tokens": 0,
+  "cost_usd": 0.0068119999999999995,
+  "seconds": 4.089583416993264,
+  "cached": false,
+  "error": null
+ }
+}
