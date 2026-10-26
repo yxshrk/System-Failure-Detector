@@ -7,7 +7,7 @@ import pytest
 from premortem.sp1 import domain as D
 from premortem.sp1.benchmarks import BENCHMARKS
 from premortem.sp1.concrete import run
-from premortem.sp1.solve import concretize, diff_check, evaluate_outcome
+from premortem.sp1.solve import concretize, diff_check, evaluate_outcome, unwind_possible
 from premortem.sp1.symexec import concrete as known
 
 
@@ -47,3 +47,9 @@ def test_hand_mutants_have_confirmed_witnesses(b):
 def test_reference_equivalent_to_itself(b):
     r = diff_check(b.reference, b.reference, b.name, b.params, b.loop_bound)
     assert r.status == "no_witness", r
+
+
+@pytest.mark.parametrize("b", BENCHMARKS, ids=lambda b: b.name)
+def test_reference_loops_fit_the_unroll_bound(b):
+    """Theorem 1's bounded completeness is only meaningful if the reference never needs more than k iterations."""
+    assert not unwind_possible(b.reference, b.name, b.params, b.loop_bound)

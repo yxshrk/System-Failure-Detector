@@ -182,6 +182,9 @@ def select(pool, rng: random.Random):
 
 def main():
     DATA.mkdir(parents=True, exist_ok=True)
+    for b in BENCHMARKS:  # gold labels are bounded: the reference itself must fit the unroll bound
+        if unwind_possible(b.reference, b.name, b.params, b.loop_bound):
+            raise AssertionError(f"{b.name}: loop_bound {b.loop_bound} is too small for the reference")
     tasks = candidate_tasks()
     print(f"evaluating {len(tasks)} candidates ...", file=sys.stderr)
     with ProcessPoolExecutor(max_workers=10) as ex:

@@ -2,8 +2,9 @@
 # Assemble the full report from its sections and export it to Word (pandoc; no LaTeX needed).
 set -euo pipefail
 cd "$(dirname "$0")"
+(cd .. && .venv/bin/python -m experiments.encodings > report/encodings.md)   # Appendix B, generated from the code
 sed '/<!-- RESULTS -->/d' report.md > full.md
-for part in results.md discussion.md tail.md references.md appendix.md; do
+for part in results.md discussion.md tail.md references.md appendix.md encodings.md; do
   printf '\n\n' >> full.md
   cat "$part" >> full.md
 done

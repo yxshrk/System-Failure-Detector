@@ -15,6 +15,10 @@ Haiku 4.5, Sonnet 5.5 and Opus 5.5, each answering directly or translating for Z
 * *SP2.* The 5.5 models are perfect in both arms up to 27-event traces. Haiku's Direct answers misread designs: 55% false alarms on correct designs, cut to 20% by translation. When names give no hints, Opus Direct also fails where Opus Translate does not.
 * *Translation's risks.* Specifications that copy the bug, permissive models that planners exploit, and solver blow-up (state explosion in certification).
 
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
 # 1. Motivation and research questions
 
 A *pre-mortem* asks how a design will fail before it ships. Failures that matter are often reachable
@@ -40,126 +44,213 @@ sub-problem, **SP3**, scores the translations themselves.
 
 # 2. Formulation
 
-Both scales reduce to one course idea: *system ⊨ spec iff system ∧ ¬spec is unsatisfiable*
-(PropLogic p.28, p.35; R&N Ch. 7 [3]). Any model of system ∧ ¬spec lies in M(system) \ M(spec) and
-is a failure. For a contract ∀x (pre(x) ⇒ post(x, f(x))), the negation is ∃x (pre(x) ∧ ¬post(x, f(x))),
-and existential instantiation (FOL p.18) yields the concrete failing input.
+Both scales rest on $\alpha \models \beta$ iff $\alpha \land \lnot\beta$ is unsatisfiable (PropLogic
+p.28, p.35), with $\alpha$ = "the system as implemented" and $\beta$ = "the requirement". A model of
+$\alpha \land \lnot\beta$ is a run that breaks the requirement: a *failure witness*. For a contract
+$\forall x\,(pre \Rightarrow post)$, the negation is $\exists x\,(pre \land \lnot post)$ (FOL p.12), and
+the solver's value for $x$ is the witness (existential instantiation, FOL p.18).
 
-## 2.1 SP1: CSP/SMT over a bounded program
+## 2.1 SP1: a function as a CSP, solved by SMT
 
-**Variables and domains.** The CSP variables (X, D, C) (CSP p.7) are the function's inputs, with finite
-domains stated in the task, plus intermediate values. Integers range over intervals. A list is a
-symbolic length n ∈ [min, max] together with `max` element variables. Sorted or distinct lists add
-ordering constraints.
+**CSP.** Each instance is a CSP $(X, D, C)$ (CSP p.7).
 
-**Constraints.** The code's semantics comes from our bounded symbolic executor (`premortem/sp1/symexec.py`),
-which compiles a Python subset into Z3 terms. It merges paths instead of forking them: both sides of a
-symbolic branch are executed and the variable environments are joined with If(c, a, b). Each
-program point carries an *alive* condition (its path condition), so `return`, `break`, `continue` and
-exceptions simply shrink it. The formula therefore grows linearly in program size × unrolling depth,
-avoiding the exponential path explosion of classic forking symbolic execution. Python semantics are
-modelled exactly where it matters: floor division and modulo on negatives, `IndexError` on symbolic
-indices, `UnboundLocalError`, `None` on some paths only, and short-circuit `and`/`or`.
+* **Variables $X$:** the function's inputs. An integer input is one variable. A list input is a length variable $n$ plus element variables $e_0, \dots, e_{m-1}$, where $m$ is the maximum length.
+* **Domains $D$:** the stated ranges, e.g. $1 \le month \le 12$, $0 \le n \le m$, and each $e_i \in [lo, hi]$. Sorted or distinct lists add ordering or inequality constraints.
+* **Constraints $C$:** $\llbracket f \rrbracket(x, r) \land \lnot spec(x, r)$, where $\llbracket f \rrbracket(x, r)$ holds iff $r$ is what $f$ returns on $x$.
 
-**Bounds.** Loops over symbolic ranges and `while` loops are unrolled k times. Paths that would need
-more iterations are collected in an *unwind* condition that is assumed false, so an UNSAT answer means
-"no failure within the bounds", the same caveat as bounded PlanSAT (Planning p.38).
+Intermediate values are shared sub-terms of one formula DAG, which play the role of auxiliary
+variables (CSP p.13). The domains are finite, so this is a finite CSP: NP-complete (CSP p.8).
 
-**Queries.**
+**Building $\llbracket f \rrbracket$: bounded symbolic execution** (`sp1/symexec.py`). The executor
+walks the syntax tree once with a symbolic environment $\rho$ (variable → Z3 term) and a *path
+condition* $\pi$ (when control reaches the statement):
 
-* Gold labels: `diff_check` asks whether ∃x ∈ D with outcome(mutant, x) ≠ outcome(reference, x).
-* Arm B: `spec_check` asks whether ∃x ∈ D with pre(x) ∧ (raises(f, x) ∨ ¬post(x, f(x))).
+| construct | rule |
+|---|---|
+| `x = e` | $\rho[x] \leftarrow \llbracket e \rrbracket_\rho$ |
+| `if c: S1 else: S2` | run S1 from $(\rho, \pi \land c)$ and S2 from $(\rho, \pi \land \lnot c)$, reaching $(\rho_1, \pi_1)$ and $(\rho_2, \pi_2)$; join to $\rho[x] = \mathit{If}(\pi_1, \rho_1[x], \rho_2[x])$ and $\pi = \pi_1 \lor \pi_2$ |
+| `return e` | $ret \leftarrow \mathit{If}(\pi, \llbracket e \rrbracket, ret)$, then $\pi \leftarrow \bot$ |
+| operation that raises when $b$ (index out of range, `x // 0`, unbound local, …) | $exc \leftarrow exc \lor (\pi \land b)$, then $\pi \leftarrow \pi \land \lnot b$ |
+| loop | unrolled $k$ times; iteration $j$ runs under $\pi \land cond_j$; afterwards $unwind \leftarrow unwind \lor (\pi \land cond_k)$ |
 
-Z3 decides both. Finite-domain CSP is NP-complete (CSP p.8), and SAT is NP-complete (Planning p.31).
+`break`/`continue` states re-join like `if`. The result is three terms over $X$: $ret$, $exc$
+("raises") and $unwind$ ("needs more than $k$ iterations"). Integers are unbounded and `//`, `%`
+follow Python's floor semantics.
 
-**Executor correctness.** It is tested differentially against real Python on every benchmark and
-hand mutant: 25 random inputs each, with return values and exceptions compared (`tests/test_symexec.py`).
-While building the instance set it caught one soundness bug of its own, a missing
-`UnboundLocalError` model, which an assertion detected when Z3 called a mutant "equivalent" but random
-testing disagreed.
+**Lemma 1 (encoding correctness).** Let $x_0 \in D$ be an input whose execution needs at most $k$
+iterations of every loop. Then:
 
-## 2.2 SP2: STRIPS planning over a design
+* $unwind[x_0] = \bot$;
+* $exc[x_0] = \top$ iff $f(x_0)$ raises;
+* otherwise $ret[x_0] = f(x_0)$.
 
-Each design family is a STRIPS domain (Planning p.7–12).
+If the execution needs more than $k$ iterations, $unwind[x_0] = \top$.
 
-* **Fluents** are system state, e.g. `(waiting o1 a0)` or `(record o1)`.
-* **Actions** are events from every actor: client sends and retries, network loss, server steps, timer ticks, crashes, lease expiry.
-* **Goal** is a violation fluent such as `(charged-twice o1)`.
-* **Timers** are STRIPS counters, e.g. `(next-tick t0 t1)`.
+*Proof sketch.* Induction over statements, with the invariant: $\pi[x_0] = \top$ iff the concrete run
+on $x_0$ reaches this point, and in that case $\rho[x][x_0]$ is the concrete value of $x$.
 
-Variants of one family differ *only* in nullary design facts in the initial state, such as
-`(dedup-racy)` versus `(dedup-atomic)`. The design text therefore determines a small set of facts
-that the translation must get right.
+* Assignment preserves the invariant.
+* At an `if` exactly one of $\pi \land c$ and $\pi \land \lnot c$ is true at $x_0$, so the join selects the environment of the branch actually taken.
+* `return` and raising operations record the outcome under exactly the path condition of the run that performs them, then disable that path.
+* Unrolling reproduces each concrete iteration, and $cond_k$ is true exactly when a $(k{+}1)$-th iteration would start. ∎
 
-Two solvers are used:
+**The two queries.**
 
-* **SATPlan** (Planning p.31–37) for the shortest failure trace. Our encoding uses fluent and action variables per step, a fully specified initial state, precondition and effect axioms, explanatory frame axioms, and exactly one action per step, with planning-graph-style layer pruning. The horizon is iterated T = 0, 1, … up to T_max.
-* **Greedy best-first search with h_FF** (relaxed planning graph, Hoffmann & Nebel [7]; R&N §11.3) with a closed list, for *certification*. FF's own enforced hill-climbing is incomplete, so we use a complete search: when the open list empties, the violation is provably unreachable in the model.
+$$\Phi_{spec} = D(x) \land \lnot unwind_f \land \lnot unwind_{spec} \land pre(x) \land \big(exc_f \lor \lnot post(x, ret_f)\big)$$
 
-We built every fixed variant so that the violating action stays reachable in the delete relaxation (h_FF(init) is finite). Proving a fix therefore needs exhaustive search, not a static check. Both PlanSAT and bounded PlanSAT are in PSPACE, and both stay NP-hard even without negative effects (Planning p.38). Bylander (1994) shows PlanSAT is PSPACE-complete.
+$$\Phi_{gold} = D(x) \land \lnot unwind_{ref} \land \lnot unwind_{mut} \land \big((exc_{ref} \oplus exc_{mut}) \lor (\lnot exc_{ref} \land \lnot exc_{mut} \land ret_{ref} \ne ret_{mut})\big)$$
+
+**Theorem 1 (soundness and bounded completeness).** Apply Lemma 1 to $f$ and to the model-written `pre`
+and `post`, which are compiled the same way. Then:
+
+* $\Phi_{spec}$ is satisfiable iff some $x_0 \in D$ within the bound satisfies $pre$ while $f$ raises or violates $post$. A $pre$ that raises counts as false, and a $post$ that raises counts as violated, exactly as `spec_check` encodes them.
+* Every model of $\Phi_{spec}$ is such an $x_0$.
+
+Equivalently, $\Phi_{spec}$ is unsatisfiable iff $f \models spec$ on all inputs within the bound,
+which is the entailment theorem applied to the bounded program. The same argument covers
+$\Phi_{gold}$ with "behaves differently from the reference" in place of "violates the spec". UNSAT
+therefore means "no failure within the bound", the same caveat as bounded PlanSAT (Planning p.38).
+The build checks that no reference loop can exceed its bound, and accepts a mutant as equivalent only
+if its domain was enumerated or $unwind_{mut}$ is unsatisfiable.
+
+**The solver.** Z3 [4] is an SMT ("SAT modulo theories") solver, used as a Python library
+(`Solver().add(Φ)`, `check()`, `model()`). It decides satisfiability with the DPLL(T) architecture: a
+CDCL SAT core (DPLL with clause learning, PropLogic p.35) searches the Boolean skeleton, and
+integer-arithmetic theory solvers check each candidate and return conflict clauses. Non-linear terms
+(products or moduli of variables) can make Z3 answer *unknown*, which we count as no failure found.
+Every model is re-executed in real Python before it counts. Lemma 1 is also checked empirically: on
+every benchmark and hand-written mutant, the symbolic outcome must equal real execution on 25 random
+inputs (`tests/test_symexec.py`). Appendix B.1 shows a complete instance and query.
+
+## 2.2 SP2: a design as a STRIPS planning problem
+
+**STRIPS task** (Planning p.7–11). Each family is a typed PDDL domain and each variant/size a
+problem; grounding gives $\Pi = (F, A, I, G)$:
+
+* $F$ is the set of ground facts.
+* A state $s \subseteq F$ is the set of facts that hold. The closed world assumption makes everything else false.
+* $I$ is the initial state: the design facts, e.g. `(dedup-racy)`, the counters `(next-tick t0 t1)`, and the starting situation.
+* $G$ is the violation, e.g. `{(charged-twice o1)}`.
+* Each action $a \in A$ has $pre(a)$, $add(a)$ and $del(a)$. It is applicable in $s$ iff $pre(a) \subseteq s$, and then $\mathrm{RESULT}(s, a) = (s \setminus del(a)) \cup add(a)$ (Planning p.9).
+
+A plan reaching $s_n \supseteq G$ is a failure trace. For example, `accept-new-racy o1 a1` has
+$pre = \{$`dedup-racy`, `in-flight o1 a1`, `no-record o1`$\}$, $add = \{$`approved o1 a1`$\}$ and
+$del = \{$`in-flight o1 a1`$\}$. It does *not* delete `no-record o1`, so a second request can pass the
+lookup before the first charge records the key.
+
+**Modelling assumptions:** events interleave one at a time; effects are deterministic; the
+environment can do exactly the failure events in the domain (loss, delay, pauses, crashes, ticks); and
+object counts are finite. The state space is therefore finite. PlanSAT is in PSPACE and NP-hard even
+without negative effects (Planning p.38); it is PSPACE-complete [10].
+
+**SATPlan encoding** (Planning p.31–37; `planning/satplan.py`). For horizon $T$: a variable $f^t$ per
+fact and step $t \le T$, and $a^t$ per action and step $t < T$, with clauses:
+
+1. **initial state:** $f^0$ for $f \in I$ and $\lnot f^0$ for $f \notin I$;
+2. **goal:** $g^T$ for each $g \in G$;
+3. **preconditions:** $a^t \Rightarrow p^t$ for each $p \in pre(a)$;
+4. **effects:** $a^t \Rightarrow f^{t+1}$ for $f \in add(a)$, and $a^t \Rightarrow \lnot f^{t+1}$ for $f \in del(a) \setminus add(a)$;
+5. **explanatory frame axioms:** $f^t \land \lnot f^{t+1} \Rightarrow \bigvee\{a^t : f \in del(a) \setminus add(a)\}$ and $\lnot f^t \land f^{t+1} \Rightarrow \bigvee\{a^t : f \in add(a)\}$;
+6. **exactly one action per step:** a cardinality constraint (sequential-counter encoding).
+
+As a sound optimisation, facts that cannot yet be true (or false) at step $t$ become constants, and
+actions that cannot yet be applicable get no variable. This uses relaxed layers, which over-approximate
+the states reachable in $t$ steps.
+
+**Lemma 2.** Under (6), clauses (4)–(5) are equivalent to the lecture's successor-state axioms
+$F^{t+1} \Leftrightarrow ActionCausesF^t \lor (F^t \land \lnot ActionCausesNotF^t)$ (Planning p.34).
+*Proof.* Let $a$ be the single action at step $t$.
+
+* If $f \in add(a)$, (4) forces $f^{t+1}$.
+* If $f \in del(a) \setminus add(a)$, (4) forces $\lnot f^{t+1}$.
+* Otherwise no active action adds or deletes $f$, so both clauses in (5) force $f^{t+1} = f^t$.
+
+Hence $s_{t+1} = \mathrm{RESULT}(s_t, a)$, and (3) makes $a$ applicable in $s_t$. ∎
+
+**Theorem 2.** The horizon-$T$ formula is satisfiable iff a plan of exactly $T$ actions reaches $G$,
+and the true action variables of a model form one. Iterating $T = 0, 1, 2, \dots$ returns a *shortest*
+failure trace; decoded plans are re-validated. UNSAT for all $T \le T_{max}$ proves only bounded safety.
+
+**Certifying safety: greedy best-first search with $h_{FF}$** (`premortem/planning/search.py`).
+
+$h_{FF}(s)$ is the length of a relaxed plan extracted from the relaxed planning graph with delete lists
+ignored (Planning p.28; [7]), or $\infty$ if $G$ is unreachable even in the relaxation. GBFS expands states
+in order of $h_{FF}$, never revisits a state, tests for the goal on generation, and discards states with
+$h_{FF} = \infty$.
+
+**Theorem 3.** If GBFS returns *unsolvable*, $G$ is unreachable from $I$.
+*Proof.* The state space is finite and each state is queued at most once, so the search terminates.
+When the queue empties, every generated state has been expanded or discarded and none was a goal. So
+any path from $I$ to a goal would have to pass through a discarded state. Discarding is safe: ignoring
+delete lists only adds behaviour, so if $G$ is unreachable from $s$ in the relaxation, it is unreachable
+from $s$ in the real task. ∎
+
+By the same argument GBFS finds a plan whenever one exists, though not always a shortest one. FF's
+enforced hill-climbing is incomplete and could not certify. Every fixed variant has finite $h_{FF}(I)$,
+so certification needs the exhaustive search. **Pipeline:** in the Translate arm GBFS decides
+reachability on the model's problem; if a plan exists, SATPlan with $T_{max}$ = the GBFS length returns
+a shortest trace. Appendix B.2–B.3 print real clauses, the horizon iteration and a GBFS certificate.
 
 # 3. Problem instances
 
 ## 3.1 SP1: 174 function instances
 
-**Benchmarks.** We use 27 base functions and 10 hard functions.
+**Benchmarks.** There are 27 base functions and 10 hard ones.
 
-* *Base*: HumanEval/EvalPlus-style tasks [8] such as `below_zero`, `has_close_elements`, `is_prime`, `fizz_buzz` and rolling max, plus business rules (calendar, grade bands, volume discount, account withdrawal).
-* *Hard*: functions where a witness must be *constructed* rather than read off the changed line. These are sorting networks, median selection by comparators, sliding-window and token-bucket rate limiters, a button debouncer, the Luhn checksum, Zeller's congruence, banker's rounding, and subset-sum DP.
+* *Base:* HumanEval/EvalPlus-style tasks [8] (`below_zero`, `is_prime`, `fizz_buzz`, …) plus business rules (calendar, grade bands, discounts, withdrawals).
+* *Hard:* functions where a witness must be *constructed*: sorting networks, comparator medians, sliding-window and token-bucket rate limiters, a debouncer, Luhn, Zeller's congruence, banker's rounding, subset-sum DP.
 
-Following the contamination mitigation in the proposal, identifiers are renamed and every docstring is
-rewritten. Docstrings contain no examples, and each one fully determines the return value on the stated
-domain, so the docstring *is* the specification.
+As planned in the proposal, identifiers are renamed and docstrings rewritten without examples. Each
+docstring fully determines the return value on the stated domain, so the docstring *is* the
+specification.
 
-**Mutants.**
+**Mutants and labels.** The candidates are:
 
-* *Automatic*: the classic first-order operators (ROR, AOR, CRP, LCR, condition negation, range off-by-one, statement deletion) give 808 candidates.
-* *Hand-written*: 42 realistic bugs, such as a hard-coded capacity, a window-limited dedupe, a forgotten 400-year rule, a lost refill remainder, and a comparator dropped as an "optimisation".
-* *Rewrites*: 9 pieces of equivalent code that looks suspicious.
+* 808 automatic first-order mutants (operators ROR, AOR, CRP, LCR, condition negation, range off-by-one, statement deletion);
+* 42 hand-written realistic bugs, such as a forgotten 400-year rule, a lost token-bucket remainder, or a comparator dropped as an "optimisation";
+* 9 equivalent rewrites.
 
-**Labelling each candidate.**
+Each candidate is labelled in four steps. Its *trigger rarity* is the probability that a uniformly
+random in-domain input exposes it, computed exhaustively for integer domains up to 70k points and
+from 5,000 samples otherwise. $\Phi_{gold}$ is then solved, every Z3 witness is confirmed by real
+execution, and equivalence is accepted only under the conditions of §2.1. Rarity buckets are common
+(≥10%), uncommon (1–10%), rare (0.1–1%) and very rare (<0.1%).
 
-1. *Rarity*: we measure trigger rarity, the probability that a uniformly random in-domain input exposes the bug. It is computed exhaustively for integer domains up to 70k points and from 5,000 samples otherwise.
-2. *Z3 check*: we run `diff_check`.
-3. *Confirmation*: every Z3 witness is confirmed by real execution.
-4. *Equivalence*: a mutant is an equivalent control only if Z3 proves equivalence and either the domain was enumerated or no path exceeds the unrolling bound.
+**Selection.** For each function we keep every hand bug, fill the rarity buckets with automatic mutants
+(preferring rare ones), and add two controls: the clean reference, plus an equivalent mutant when one
+exists. These are deliberately hard controls; for example, dropping comparator (a, c) leaves a
+median-of-5 network correct.
 
-Non-terminating mutants are excluded. Rarity buckets are common (≥10%), uncommon (1–10%), rare (0.1–1%)
-and very rare (<0.1%).
+**Result.** 174 instances:
 
-**Selection.** Per function we keep all hand bugs and fill the rarity buckets with automatic mutants, preferring rare ones and operator diversity. We add two controls per function: the clean reference, and an equivalent mutant or rewrite when one exists. Equivalent mutants are deliberately hard controls; for example, removing comparator (a, c) from the 5-input network leaves the median unchanged.
+* 115 bugs: 67 common, 19 uncommon, 21 rare, 8 very rare;
+* 59 controls: 37 clean, 22 provably equivalent.
 
-**Result.** 174 instances: 115 bugs (42 hand-written and 73 automatic; 67 common, 19 uncommon, 21 rare,
-8 very rare) and 59 controls (37 clean, 22 provably equivalent). Of the 859 candidates, 728 were bugs,
-72 were equivalent and 59 were dropped (non-terminating or not encodable). The median Z3 equivalence
-query took 0.04 s.
+Of the 859 candidates, 59 were dropped as non-terminating or not encodable. The median Z3 query took
+0.04 s.
 
-## 3.2 SP2: 60 design instances, plus 30 stress and 60 opaque-vocabulary variants
+## 3.2 SP2: 60 designs, plus 30 stress and 60 opaque variants
 
 | family | violation | flawed | subtle (looks fixed) | fixed | size knob |
 |---|---|---|---|---|---|
-| payments | card charged twice | provider never deduplicates | idempotency key looked up, recorded only after the charge (check-then-act race) | atomic insert-if-absent reservation | client timeout 1–7 ticks |
-| inventory | more sales than stock | read-modify-write stock update (lost update) | atomic decrement, but payment accepted after the hold expired | atomic decrement + payment checks hold | stock and hold length 1–4 |
-| lock | stale write applied after newer holder's | no fencing, no lease check | lease checked right before writing (pause after check) | fencing tokens | lease 1–7 ticks |
-| queue | payout performed twice | no consumer dedup | dedup ids in process memory (lost on crash) | dedup id written in the same DB transaction | visibility timeout 1–7 |
-| cache | cache older than DB after all writes | update DB then delete cache | delete cache then update DB | leases revoked by delete | 1–4 sequential updates |
+| payments | charged twice | no deduplication | key looked up, recorded only after the charge | atomic insert-if-absent | timeout 1–7 ticks |
+| inventory | sold > stock | read-modify-write stock (lost update) | payment accepted after hold expiry | atomic decrement + hold check | stock 1–4 |
+| lock | stale write after newer one | no fencing, no lease check | lease checked just before writing | fencing tokens | lease 1–7 ticks |
+| queue | payout twice | no consumer dedup | dedup ids in process memory | dedup id in the same DB transaction | visibility 1–7 |
+| cache | cache older than DB at end | update DB, then delete cache | delete cache, then update DB | leases revoked by delete | 1–4 updates |
 
-Each instance comes with a design document of roughly 250 words. It describes the components, the
-failure model (loss, delay, pauses, crashes) and the mechanism, without judging it. The subtle variants
-are written the way an engineer would describe a fix they believe works. Gold shortest traces have 6–15
-events.
+Each design document (about 250 words) states the components, the failure model and the mechanism
+without judging it; subtle variants read like a fix the engineer believes works. Gold shortest traces
+are 6–15 events. Two further sets were added:
 
-Two further sets probe RQ1 and validity. The *stress* set (sizes 6 and 8) lengthens the shortest
-violation to 17–27 events. In the *opaque* set the main instances are rewritten so that design facts and
-design-specific events have neutral names (`mode-2`, `accept-3`) and no comments. Semantics are
-unchanged, but a model can no longer map "racy" in the text to `(dedup-racy)` by word matching.
+* *Stress* (sizes 6 and 8): 17–27 events.
+* *Opaque:* the main set with design facts and design-specific events renamed (`mode-2`, `accept-3`) and their comments removed. The semantics are unchanged, but "racy" in the text can no longer be matched to `(dedup-racy)` by name.
 
 # 4. Method
 
-**Model access.** Both arms call the same models: Claude Haiku 4.5, Sonnet 5.5 and Opus 5.5, with their
-default extended thinking. Calls go through the Claude Code CLI in headless mode with *all tools
-disabled* and the system prompt replaced, so the Direct arm cannot run code. Arms see identical
-information:
+**Models.** Claude Haiku 4.5, Sonnet 5.5 and Opus 5.5 with default extended thinking, called through
+the Claude Code CLI with *all tools disabled* (so Direct cannot run code). Both arms see the same
+inputs:
 
 * SP1: the code with its docstring, plus the input domain.
 * SP2: the design document, the family's PDDL domain (the event vocabulary, with comments) and the object names.
@@ -188,13 +279,12 @@ Outcomes are *valid witness*, *fabricated* (invalid witness, or a false alarm on
 
 # 5. Results
 
-All numbers come from `experiments/analyze.py`; the full tables are in `results/tables.md`. Brackets
-give 95% Wilson intervals. "Fabricated" means a claimed witness that does not reproduce on the gold
-model.
+All numbers come from `experiments/analyze.py` (full tables in `results/tables.md`). Brackets are 95%
+Wilson intervals. "Fabricated" means a claimed witness that does not reproduce on the gold model.
 
-## 5.1 SP1: functions (174 instances; 115 bugs, 59 controls)
+## 5.1 SP1: functions (115 bugs, 59 controls)
 
-| model | arm | base bugs found (95) | hard bugs found (20) | fabricated | false alarms (59 controls) | checker timeouts | $/instance | output tokens |
+| model | arm | base bugs found (95) | hard bugs found (20) | fabricated | false alarms (59) | checker timeouts | $/inst. | out tokens |
 |---|---|---|---|---|---|---|---|---|
 | Haiku 4.5 | Direct | 100% [96–100] | 95% [76–99] | 0 | 0 | – | 0.025 | 4,838 |
 | Haiku 4.5 | Translate | 98% [93–99] | 95% [76–99] | 1 | 0 | 0 | 0.026 | 4,968 |
@@ -203,36 +293,29 @@ model.
 | Opus 5.5 | Direct | 100% | 100% | 0 | 0 | – | 0.018 | 470 |
 | Opus 5.5 | Translate | 100% | 95% | 0 | 0 | 2 | 0.021 | 383 |
 
-*Table 1.* SP1 outcomes. The Translate arm's repair loop matters here: using only the first
-specification, valid witnesses drop to 106/115 (Haiku), 113/115 (Sonnet) and 104/115 (Opus). Opus in
-particular often reached for unsupported constructs first.
+*Table 1.* SP1 outcomes.
 
-The Direct arm's token cost tracks difficulty: hard-tier answers cost 2–3× the base-tier ones for every
-model.
+* *The repair loop matters.* Using only the first specification, valid witnesses drop to 106 (Haiku), 113 (Sonnet) and 104 (Opus) of 115.
+* *Direct's cost tracks difficulty.* Hard-tier answers cost 2–3× the tokens of base-tier ones for every model.
 
-**RQ1 (SP1).** Every model finds a valid witness for essentially every bug, in both arms and on both
-tiers, and the rate does not depend on trigger rarity (Fig. 1). Random testing on the same bugs depends
-on rarity sharply. With 100 random inputs it catches 34% of the rare bugs and 5% of the very rare ones;
-with 1,000 inputs, 93% and 36%. Rarity is therefore a property that defeats *testing*, not code
-*reading* or symbolic search.
+**RQ1.** Every model finds essentially every bug in both arms, independently of trigger rarity (Fig. 1).
+Random testing on the same bugs is a different story: 100 inputs catch 34% of rare and 5% of very rare
+bugs, and 1,000 inputs catch 93% and 36%. Rarity defeats *testing*, not code reading or symbolic search.
 
-**RQ2 (SP1).** No model raised a single false alarm in either arm on the 59 controls. That includes
-the 22 equivalent mutants built to look buggy, such as a 5-input sorting network with a different but
-still valid comparator, or a median network with a provably redundant comparator removed. A Direct
-"no bug" is an unverifiable claim, yet it was right every time here.
+**RQ2.** No model raised a false alarm in either arm on the 59 controls. These include 22 equivalent
+mutants built to look buggy, such as a sorting network with a different but still valid comparator.
 
-**Where the SP1 failures are.** Every Translate failure traces back to the specification or to the
-tool, never to the search.
+**Translate failures.** Every one comes from the specification or the tool, never from the search:
 
-* Two Haiku misses come from postconditions that copied the code's bug (§A.2).
-* One fabricated witness comes from a spec that raised an exception (§A.3).
-* The remaining no-answers are checker timeouts on the subset-sum DP, where the model's own DP specification made symbolic execution blow up. These are reported separately as *tool timeouts*.
+* two postconditions copied the code's bug (§A.2);
+* one spec raised an exception and produced a fabricated witness (§A.3);
+* three checker timeouts, all on the subset-sum DP specs.
 
-![Fig. 1: SP1 base tier. Bugs with a valid witness vs. trigger rarity: both LLM arms (pooled over the three models) against random testing with 100 and 1,000 uniform inputs.](../results/figures/sp1_rarity.png){width=78%}
+![Fig. 1: SP1 base tier. Bugs with a valid witness vs. trigger rarity: both LLM arms (pooled over the three models) against random testing with 100 and 1,000 uniform inputs.](../results/figures/sp1_rarity.png){width=62%}
 
-## 5.2 SP2: designs (60 main + 30 stress + 60 opaque instances)
+## 5.2 SP2: designs (60 main + 30 stress + 60 opaque)
 
-| model | arm | main: valid traces (40) | main: false alarms (20) | stress: valid (20) | stress: false alarms (10) | opaque: valid (40) | opaque: false alarms (20) | $/instance (main) |
+| model | arm | main: valid (40) | main: false alarms (20) | stress: valid (20) | stress: false alarms (10) | opaque: valid (40) | opaque: false alarms (20) | $/inst. |
 |---|---|---|---|---|---|---|---|---|
 | Haiku 4.5 | Direct | 80% [65–90] | 55% [34–74] | 80% | 60% | 62% | 85% | 0.063 |
 | Haiku 4.5 | Translate | 82% [68–91] | **20%** [8–42] | 90% | **10%** | 68% | **40%** | 0.050 |
@@ -244,17 +327,15 @@ tool, never to the search.
 *Table 2.* SP2 outcomes. "Valid" = a trace that replays on the gold problem and reaches the violation
 (flawed + subtle designs). "False alarm" = a violation claimed on a fixed design.
 
-**RQ1 (SP2).** For Sonnet 5.5 and Opus 5.5, trace length does not matter in either arm: every trace
-was valid, from 6 events up to the 27-event stress instances (Fig. 2). Haiku's valid rate stays near
-80% with no clear trend from 6 to 27 events. Its errors point to *design misreading* rather than an
-inability to carry a long trace (Table 3). Translate's gain for Haiku is concentrated on the fixed
-designs. Paired over all 150 SP2 instances, Haiku is correct in 46 cases where only Translate is right
-and in 20 where only Direct is right (per-set exact McNemar p = 0.15, 0.09 and 0.06; small samples).
+**RQ1.** Sonnet 5.5 and Opus 5.5 produced a valid trace every time, from 6 up to 27 events (Fig. 2).
+Haiku stays near 80% with no length trend; its errors are design misreadings (Table 3). Paired over all
+150 designs, Haiku is right in 46 cases where only Translate is right and in 20 where only Direct is
+(per-set exact McNemar p = 0.15, 0.09, 0.06).
 
-**RQ2 (SP2).** Fabrication separates the arms.
+**RQ2.** Fabrication separates the arms.
 
-* **Haiku.** Direct claims a violation on 55% of the fixed designs (60% on the stress set). Translate cuts this to 20% (10%).
-* **Opaque vocabulary.** With descriptive names removed, Haiku Direct's false-alarm rate rises to 85%. Opus Direct produces its only errors of the study: three false alarms on the durable-dedup queue design, where it applied the in-memory mechanism. Opus Translate, with the same inputs, is perfect.
+* *Haiku Direct* claims violations on 55% of fixed designs (60% stress, 85% opaque). Translate cuts this to 20% (10%, 40%).
+* *Opus Direct* made its only errors of the study with opaque names: three false alarms on the durable-dedup queue design, where it applied the in-memory mechanism. Opus Translate was perfect on the same inputs.
 
 | failure cause (Direct traces that do not replay) | Haiku main | Haiku opaque | Opus opaque |
 |---|---|---|---|
@@ -262,29 +343,28 @@ and in 20 where only Direct is right (per-set exact McNemar p = 0.15, 0.09 and 0
 | vocabulary / arity error | 1 | 1 | 0 |
 
 *Table 3.* Every failing Direct trace that reached a precondition check failed on a design fact: the
-model reasoned about the wrong mechanism, typically the familiar failure pattern (§A.4).
+model reasoned about the wrong mechanism, typically a familiar failure pattern (§A.4).
 
 **SP3 (translation quality).**
 
-* *Sonnet and Opus.* On the main and stress sets, both reproduced the gold initial state exactly in all 90 problems. On the opaque set they omitted one fact in 8/60 problems. That fact (`pay-checks-hold`) appears in no action's precondition, so the problems remain semantically equivalent to gold.
-* *Haiku.* The design facts were exact in 52/60 main problems and 32/60 opaque ones. The non-design errors were permissive initial facts, such as a lease clock already running, which the planner exploited (§A.5).
-* *Repair loop.* Only 1 of the 450 SP2 translations needed a repair to parse, so in SP2 every error that mattered was semantic.
+* *Sonnet and Opus* reproduced the gold initial state exactly in all 90 main and stress problems. On the opaque set they omitted one fact in 8/60, but that fact (`pay-checks-hold`) is in no action's precondition, so the problems stay equivalent to gold.
+* *Haiku's design facts* were exact in 52/60 main and 32/60 opaque problems. Its other errors were permissive initial facts that the planner exploited (§A.5).
+* *Repairs:* only 1 of 450 SP2 translations needed a repair to parse.
 
-![Fig. 2: SP2 valid traces vs. shortest violating-trace length (main + stress sets). Sonnet 5.5 and Opus 5.5 are at 100% throughout.](../results/figures/sp2_length.png){width=95%}
+![Fig. 2: SP2 valid traces vs. shortest violating-trace length (main + stress sets). Sonnet 5.5 and Opus 5.5 are at 100% throughout.](../results/figures/sp2_length.png){width=62%}
 
-**Cost.**
-
-* *Translate is cheaper on SP2 for every model.* Writing a problem file takes about 500 output tokens for Sonnet and Opus, against about 1,200 for a Direct trace. The search is done by the planner.
-* *Haiku spends 10–15k tokens per Direct answer and is still the least accurate.* Thinking volume did not buy correctness.
-* *Total usage.* Across both sub-problems it was US$57 list-price equivalent for 1,999 calls (Haiku $28, Opus $20, Sonnet $9), including pilots.
+**Cost.** Translate is cheaper on SP2 for every model: about 500 output tokens against about 1,200 for a
+Direct trace, because the planner does the search. Haiku spent 10–15k tokens per Direct answer and was
+still the least accurate. Total usage was US$57 (list-price equivalent) for 1,999 calls, including
+pilots.
 
 ## 5.3 The classical tools
 
-* *SATPlan* finds every shortest trace in milliseconds for four families. On inventory, where symmetric customers interleave, it needs 1.1 s at size 3 and about 2 minutes at size 4, and it times out (300 s) at sizes 6 and 8.
-* *GBFS with h_FF* finds a violating trace within a few dozen expansions, though not always the shortest one (29 events where 21 suffice on inventory size 6). It also proves the fixed designs safe.
-* *Certification scales with the reachable state space* (Fig. 3): 9,026 expansions for inventory size 4, 2.7 M (177 s) for size 6. At size 8 our 3 M-expansion / 5-minute budget runs out, so that design cannot be certified. Every Translate run on it therefore returned "no violation found within the search limit", not a proof.
+* *SATPlan* finds shortest traces in milliseconds for four families. On inventory, where symmetric customers interleave, it takes 1.1 s at size 3, about 2 minutes at size 4, and times out (300 s) at sizes 6 and 8.
+* *GBFS with h_FF* finds a trace within a few dozen expansions, though not always a shortest one (29 events where 21 suffice at inventory size 6).
+* *Certification scales with the reachable state space* (Fig. 3): 9,026 expansions at inventory size 4 and 2.7 M (177 s) at size 6. At size 8 our 3 M-expansion / 5-minute budget runs out, so every Translate run there returned "no violation within the search limit", not a proof.
 
-![Fig. 3: Certifying the fixed designs. Left: SATPlan exhausting T ≤ 40 (main sizes). Right: states expanded by complete GBFS with h_FF, including the stress sizes (log scale).](../results/figures/solver_scaling.png){width=95%}
+![Fig. 3: Certifying the fixed designs. Left: SATPlan exhausting T ≤ 40 (main sizes). Right: states expanded by complete GBFS with h_FF, including stress sizes (log scale).](../results/figures/solver_scaling.png){width=78%}
 
 
 # 6. Analysis and insights
@@ -293,20 +373,18 @@ model reasoned about the wrong mechanism, typically the familiar failure pattern
 states the intent, and reading code is white-box. Trigger rarity, which decides whether *testing* finds
 a bug, therefore has no effect on either LLM arm (Fig. 1).
 
-The hard tier forces the witness to be *constructed*, for example a permutation that a broken sorting
-network mis-sorts. Instead of failing, every model paid 2–3× more output tokens. This matches the
-lecture's reading of Kang et al. (GenAI p.18): when candidates are easy to generate and to check, a
-chain of thought stays short enough. Our functions are small enough that the linearised search fits.
+On the hard tier, where the witness must be *constructed*, the models paid 2–3× more tokens rather than
+failing. This matches Kang et al. as presented in the lecture (GenAI p.18): when candidates are easy to
+generate and check, a chain of thought stays short enough, and our functions are small.
 
 **SP1: translation moves the risk into the specification.** The spec must state the docstring's intent
 while the model is looking at code that contradicts it. Twice the postcondition inherited the bug
 (§A.2), and once a broken spec produced a fabricated witness (§A.3). Both are invisible to the solver,
 which is faithful to the spec.
 
-The repair loop fixes form, not meaning. Valid witnesses using only first specifications vs. after
-repairs are Haiku 106 → 112 and Opus 104 → 114 of 115, but the verifier has no ground truth to repair
-against. Specs should be written blind to the code, or checked against known input/output pairs. Three
-subset-sum specs also made bounded symbolic execution blow up past 150 s: the tool has its own limits.
+The repair loop fixes form (Haiku 106 → 112 and Opus 104 → 114 of 115) but not meaning, because the
+verifier has no ground truth. Specs should be written blind to the code, or checked against known
+input/output pairs.
 
 **SP2: the jagged frontier runs between model generations.** The 5.5 models are perfect in both arms on
 the main and stress sets. Haiku's Direct errors are not slips in long traces. Every failing trace that
@@ -328,15 +406,11 @@ Opus Direct mapped "ids recorded in the same database transaction" to the in-mem
 three false alarms. Opus Translate, with identical inputs, was perfect: writing the initial state forces
 a commitment to one design fact per mechanism, which free-form reasoning skips.
 
-**Where the tools hit their limits (Fig. 3).**
-
-* SATPlan iterates the horizon, so certifying the size-4 inventory fix takes 42 s (T ≤ 40), against 9,026 GBFS expansions. Its 15-event trace takes about 2 minutes, against 15 expansions.
-* Exhaustive certification explodes with symmetric customers: 2.7 M expansions at size 6, and beyond our budget at size 8.
-* Bounded symbolic execution silently excludes paths beyond the unroll bound.
-
-The known remedies are outside this course: symmetry and partial-order reduction (TLC, SPIN), unwinding
-assertions (CBMC), and k-induction. On the size-8 inventory a Direct "safe" is unverifiable too; the
-difference is that the tool says "unknown".
+**The tools have cliffs too (§5.3).** Iterating the horizon makes SATPlan slow on symmetric
+interleavings. Exhaustive certification explodes with the state space, and bounded symbolic execution
+excludes paths beyond the bound. The remedies are outside this course: symmetry and partial-order
+reduction (TLC, SPIN), unwinding assertions (CBMC) and k-induction. On the size-8 inventory a Direct
+"safe" is unverifiable too; the difference is that the tool says "unknown".
 
 **Is translating worth it?**
 
@@ -359,47 +433,36 @@ largest designs did not reach that regime for the 5.5 models; the size-8 invento
 
 # 7. Responsible AI
 
-**Automation bias and what "no failure" means.** A verdict from either arm is a belief about a model,
-not a fact about the world (ProbGrapModel p.4).
+**Automation bias: what "no failure" means.** A verdict is a belief about a *model*, not a fact about
+the world (ProbGrapModel p.4). SP1 certifies only within the domain bounds and the unroll bound
+(Theorem 1). SP2 certifies only within the event model, so a failure mode the domain lacks is
+invisible to both arms. We therefore phrase verdicts as "no counterexample within k steps under
+assumptions X", never "verified safe", since the certainty and framing effects (Decision p.24–25)
+predict that reviewers over-trust the latter. Skipping manual review is a maximum-expected-utility
+decision (Decision p.15–16, 31): it is rational only if P(hidden failure | "no failure") is below
+review cost divided by incident loss. Our data estimates that posterior directly. On the SP2 main set,
+2 of Haiku Direct's 11 "safe" verdicts were wrong (18%), and none of Haiku Translate's 16. Both figures
+depend on the base rate of flawed designs, which Bayes' rule makes explicit (ProbGrapModel p.24–25).
 
-* SP1 Translate certifies only within the list capacities and the unrolling bound. Code that needs more iterations is excluded, not checked; our `is_prime` control with `d + d <= n` runs past the 16-unroll bound on large inputs.
-* SP2 certifies only within the family's event model. A failure mode the domain does not contain is invisible to both arms.
+**Fabricated failures.** False alarms waste reviewer time and train reviewers to ignore the tool. This
+is a precision/recall operating point to be set by the stakes (ResponsibleAI p.18–19). A Translate
+witness is correct only *with respect to the model's own specification*. Seven of Haiku's SP2
+Translate traces were legal only in its mistranslated problem, and a spec can also hide a bug by
+copying it. Witnesses must therefore be executed or replayed on the real artefact, as our scoring
+does.
 
-We therefore report bounded verdicts in the form "no counterexample within k steps under assumptions X",
-never "verified safe". Wording matters: the Decision lecture's certainty and framing effects
-(Decision p.24–25) predict that reviewers over-trust the first. Whether to skip manual review is a
-maximum-expected-utility decision (Decision p.15–16, 31). Accepting is rational only if
-P(hidden failure | "no failure") < review cost / incident loss, and for payments or locks the loss term
-dominates. Our data gives that posterior directly. On the SP2 main set, 2 of Haiku Direct's 11 "safe"
-verdicts were wrong (18%), while all 16 of Haiku Translate's were right. Both figures depend on our
-base rate of flawed designs, which Bayes' rule (ProbGrapModel p.24–25) makes explicit.
+**Accountability.** Translate leaves an audit trail (spec, solver log, witness), close to a white-box
+explanation (ResponsibleAI p.24). A named engineer can then sign off on *what was checked*. Direct
+answers are post-hoc narratives (ResponsibleAI p.25–26), and DeLLMa (Decision p.36) makes the same
+case for structured pipelines. Responsibility stays with the humans who sign off (ResponsibleAI p.6).
 
-**Fabricated failures.** A false alarm costs reviewer time and, repeated, teaches reviewers to ignore
-the tool. This is a precision/recall operating point to be chosen by stakes, like the fairness–accuracy
-Pareto frontier (ResponsibleAI p.18–19). A Translate witness is correct *with respect to the model's
-own specification* by construction. It is still a fabrication if that specification is wrong: seven of
-Haiku's SP2 Translate traces were legal only in its mistranslated problem. A Translate pipeline can
-also miss a failure because the spec copied the bug. Witnesses should therefore always be executed or
-replayed on the real artefact before anyone acts on them, as our scoring does.
-
-**Accountability and auditability.** The Translate arm leaves an audit trail: the spec or problem
-file, the solver log and the witness. This is close to a white-box explanation (ResponsibleAI p.24),
-and it lets a named engineer sign off on *what was checked*. Direct answers are black-box narratives
-whose stated reasoning is at best a post-hoc explanation (ResponsibleAI p.25–26). The DeLLMa result
-in the Decision lecture (p.36) makes the same argument for structured pipelines. Responsibility for
-shipping stays with the humans who sign off (ResponsibleAI p.6).
-
-**Dual use.** A failing input is an adversarial example by another name (ResponsibleAI p.27, 30). The
-same pipeline that finds a double-charge trace for a defender produces an exploit for an attacker, and
-AI lowers the cost and raises the scale of such attacks (ResponsibleAI p.2–4). Mitigations we would
-adopt: run only on code and designs the user owns, follow coordinated disclosure, and do not publish raw
-witnesses for deployed, unpatched systems. The reviewer itself is an attack surface too (ResponsibleAI
-p.31). A comment planted in code under review could steer the Direct arm towards "no bug". The
-Translate arm is less exposed, because the solver, not the model, decides, but the specification is
-still model-written.
-
-**Privacy.** Sending proprietary code or designs to a hosted model discloses them, and renaming
-identifiers does not anonymise (ResponsibleAI p.10). On-premise open-weight models avoid this.
+**Dual use and attacks on the reviewer.** A failing input is an adversarial example by another name
+(ResponsibleAI p.27, 30), so the same pipeline yields exploits, and AI lowers the cost of attacks
+(ResponsibleAI p.2–4). We would run it only on code the user owns, follow coordinated disclosure, and
+withhold witnesses for unpatched deployed systems. A comment planted in the code could steer the
+Direct arm to "no bug" (ResponsibleAI p.31). Translate is less exposed because the solver decides,
+though its spec is still model-written. Sending proprietary code to a hosted model also discloses it
+(ResponsibleAI p.10); on-premise open-weight models avoid that.
 
 # 8. Division of work and use of AI tools
 
@@ -493,3 +556,137 @@ every over-permissive fact becomes a shortcut.
 
 In words: the first request is delayed past the client's timeout. Both the original and the retry pass
 the idempotency lookup before either charge has written the record.
+
+
+# Appendix B. The encodings, as generated by the code
+
+*Produced by `python -m experiments.encodings`; every formula below is printed from the objects the experiments use.*
+
+## B.1 SP1: the CSP/SMT instance for `days_in_month` (mutant 400 → 399)
+
+Code under review (the helper; the docstring states the 400-year rule):
+
+```python
+def leap(y):
+    return y % 4 == 0 and (y % 100 != 0 or y % 399 == 0)
+```
+
+**Variables and domains** X = {month, year}, from `domain.make_symbolic`:
+
+```
+month >= 1
+month <= 12
+year >= 1
+year <= 3000
+```
+
+**Code semantics** ⟦f⟧, the Z3 term the symbolic executor builds for the return value. `exc` and `unwind` simplify to False, because this function cannot raise or loop:
+
+```
+result = If(And(Not(2 == month),
+       Not(Or(4 == month,
+              6 == month,
+              9 == month,
+              11 == month))),
+   31,
+   If(And(Not(2 == month),
+          Or(4 == month,
+             6 == month,
+             9 == month,
+             11 == month)),
+      30,
+      If(And(0 == year%4,
+             Or(Not(0 == year%100), 0 == year%399)),
+         29,
+         28)))
+exc    = False
+unwind = False
+```
+
+The unmutated reference builds the same term with `year%400` in place of `year%399`.
+
+**Specification** written by Sonnet 5.5 in the Translate arm (verbatim, from the response cache):
+
+```python
+def pre(month, year):
+    return 1 <= month <= 12 and 1 <= year <= 3000
+
+def is_leap_spec(year):
+    if year % 400 == 0:
+        return True
+    if year % 100 == 0:
+        return False
+    return year % 4 == 0
+
+def post(month, year, result):
+    if month == 2:
+        if is_leap_spec(year):
+            return result == 29
+        return result == 28
+    if month == 4 or month == 6 or month == 9 or month == 11:
+        return result == 30
+    return result == 31
+```
+
+The executor compiles `pre` and `post(month, year, result)` the same way, with `result` bound to the code's term above. The full query Φ = domain ∧ ¬unwind ∧ pre ∧ (exc ∨ ¬post) is a DAG of 110 shared nodes. Z3 proves it **equivalent** to the readable formula:
+
+```
+Φ  ≡  1 ≤ month ≤ 12 ∧ 1 ≤ year ≤ 3000 ∧ month = 2 ∧ L399(year) ≠ L400(year)
+L399(y) = y%4 = 0 ∧ (y%100 ≠ 0 ∨ y%399 = 0)        (what the code computes)
+L400(y) = y%400 = 0 ∨ (y%100 ≠ 0 ∧ y%4 = 0)        (what the spec requires)
+```
+
+In words: a failing input is a February in a year where the two leap rules disagree. Z3 answers `sat` with the model `[year = 2800, month = 2]`; 2800 is divisible by 400 but not by 399, so the code returns 28 instead of 29.
+
+
+## B.2 SP2: STRIPS action and SATPlan clauses (`payments-subtle-1`, step t = 4)
+
+Ground task: 27 facts, 27 ground actions after relaxed-reachability grounding.
+
+**Ground STRIPS action** `accept-new-racy o1 a1`:
+
+```
+PRE = {dedup-racy, in-flight o1 a1, no-record o1}
+ADD = {approved o1 a1}
+DEL = {in-flight o1 a1}
+```
+
+**Precondition and effect clauses** for this action at t = 4 (each clause is a disjunction). The static design fact `(dedup-racy)` is true at every step, so the encoder fixes it to a constant and its precondition clause is satisfied and dropped:
+
+```
+¬accept-new-racy(o1,a1)@4 ∨ in-flight(o1,a1)@4
+¬accept-new-racy(o1,a1)@4 ∨ no-record(o1)@4
+¬accept-new-racy(o1,a1)@4 ∨ approved(o1,a1)@5
+¬accept-new-racy(o1,a1)@4 ∨ ¬in-flight(o1,a1)@5
+```
+
+**Explanatory frame clauses** for the fact `(no-record o1)`. It can stop holding only if an action that deletes it occurs (here `charge`), and start holding only if one adds it (none does):
+
+```
+¬no-record(o1)@4 ∨ no-record(o1)@5 ∨ charge(o1,a0)@4
+no-record(o1)@4 ∨ ¬no-record(o1)@5
+```
+
+**Exactly one action per step** is added as a cardinality constraint over all action variables of the step (sequential-counter encoding, `pysat.card.CardEnc.equals`).
+
+**Horizon iteration** (T = 0, 1, …; the first satisfiable T is the shortest trace):
+
+| T | variables | clauses | result |
+|---|---|---|---|
+| 0 | 0 | 0 | UNSAT |
+| 1 | 5 | 9 | UNSAT |
+| 2 | 18 | 42 | UNSAT |
+| 3 | 41 | 101 | UNSAT |
+| 4 | 78 | 209 | UNSAT |
+| 5 | 129 | 364 | UNSAT |
+| 6 | 188 | 550 | UNSAT |
+| 7 | 258 | 773 | UNSAT |
+| 8 | 332 | 1016 | SAT |
+
+Decoded plan (8 events): `send o1 a0 t0` → `accept-new-racy o1 a0` → `tick o1 a0 t0 t1` → `time-out-and-retry o1 a0 a1 t1` → `send o1 a1 t0` → `accept-new-racy o1 a1` → `charge o1 a1` → `charge-again o1 a0`
+
+
+## B.3 SP2: certifying the fixed variant with GBFS + h_FF (`payments-fixed-1`)
+
+h_FF(initial state) = 4 (finite, so the delete relaxation alone cannot rule the violation out). GBFS expanded 72 states, generated 200, pruned 28 dead ends (h_FF = ∞) and returned **unsolvable**: the open list emptied, so `(charged-twice o1)` is unreachable from the initial state.
+

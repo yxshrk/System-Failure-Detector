@@ -4,20 +4,18 @@
 states the intent, and reading code is white-box. Trigger rarity, which decides whether *testing* finds
 a bug, therefore has no effect on either LLM arm (Fig. 1).
 
-The hard tier forces the witness to be *constructed*, for example a permutation that a broken sorting
-network mis-sorts. Instead of failing, every model paid 2–3× more output tokens. This matches the
-lecture's reading of Kang et al. (GenAI p.18): when candidates are easy to generate and to check, a
-chain of thought stays short enough. Our functions are small enough that the linearised search fits.
+On the hard tier, where the witness must be *constructed*, the models paid 2–3× more tokens rather than
+failing. This matches Kang et al. as presented in the lecture (GenAI p.18): when candidates are easy to
+generate and check, a chain of thought stays short enough, and our functions are small.
 
 **SP1: translation moves the risk into the specification.** The spec must state the docstring's intent
 while the model is looking at code that contradicts it. Twice the postcondition inherited the bug
 (§A.2), and once a broken spec produced a fabricated witness (§A.3). Both are invisible to the solver,
 which is faithful to the spec.
 
-The repair loop fixes form, not meaning. Valid witnesses using only first specifications vs. after
-repairs are Haiku 106 → 112 and Opus 104 → 114 of 115, but the verifier has no ground truth to repair
-against. Specs should be written blind to the code, or checked against known input/output pairs. Three
-subset-sum specs also made bounded symbolic execution blow up past 150 s: the tool has its own limits.
+The repair loop fixes form (Haiku 106 → 112 and Opus 104 → 114 of 115) but not meaning, because the
+verifier has no ground truth. Specs should be written blind to the code, or checked against known
+input/output pairs.
 
 **SP2: the jagged frontier runs between model generations.** The 5.5 models are perfect in both arms on
 the main and stress sets. Haiku's Direct errors are not slips in long traces. Every failing trace that
@@ -39,15 +37,11 @@ Opus Direct mapped "ids recorded in the same database transaction" to the in-mem
 three false alarms. Opus Translate, with identical inputs, was perfect: writing the initial state forces
 a commitment to one design fact per mechanism, which free-form reasoning skips.
 
-**Where the tools hit their limits (Fig. 3).**
-
-* SATPlan iterates the horizon, so certifying the size-4 inventory fix takes 42 s (T ≤ 40), against 9,026 GBFS expansions. Its 15-event trace takes about 2 minutes, against 15 expansions.
-* Exhaustive certification explodes with symmetric customers: 2.7 M expansions at size 6, and beyond our budget at size 8.
-* Bounded symbolic execution silently excludes paths beyond the unroll bound.
-
-The known remedies are outside this course: symmetry and partial-order reduction (TLC, SPIN), unwinding
-assertions (CBMC), and k-induction. On the size-8 inventory a Direct "safe" is unverifiable too; the
-difference is that the tool says "unknown".
+**The tools have cliffs too (§5.3).** Iterating the horizon makes SATPlan slow on symmetric
+interleavings. Exhaustive certification explodes with the state space, and bounded symbolic execution
+excludes paths beyond the bound. The remedies are outside this course: symmetry and partial-order
+reduction (TLC, SPIN), unwinding assertions (CBMC) and k-induction. On the size-8 inventory a Direct
+"safe" is unverifiable too; the difference is that the tool says "unknown".
 
 **Is translating worth it?**
 

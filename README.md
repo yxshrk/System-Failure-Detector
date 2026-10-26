@@ -56,7 +56,7 @@ premortem/
     families.py       5 design families: PDDL domain, problem generator, design document
     build.py          gold problems, shortest traces, solver statistics
     arms.py, score.py Direct / Translate arms, gold replay, SP3 scores
-experiments/          run_sp1.py, run_sp2.py, analyze.py
+experiments/          run_sp1.py, run_sp2.py, analyze.py, encodings.py (prints the exact solver inputs)
 data/                 generated instance sets (sp1/instances.json, sp2/instances.json)
 results/              scored records (*.jsonl), tables.md, figures/, llm_cache/ (every LLM response)
 report/               report sections (report.md, results.md, discussion.md, tail.md, ...), build.sh -> full.md + report.docx
@@ -73,6 +73,7 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/python -m experiments.run_sp1 --models haiku,sonnet,opus
 .venv/bin/python -m experiments.run_sp2 --models haiku,sonnet,opus
 .venv/bin/python -m experiments.analyze            # results/tables.md, results/figures/*.png
+.venv/bin/python -m experiments.encodings > report/encodings.md   # Appendix B: the real Z3 / SATPlan encodings
 ```
 
 LLM calls go through the Claude Code CLI in headless mode (`claude -p --tools ""`), so the models cannot execute code in either arm. Every response is cached under `results/llm_cache/`, keyed by a hash of the model, system prompt and prompt, so the analysis can be re-run offline at no cost.
