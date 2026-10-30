@@ -28,7 +28,7 @@
     0
    ]
   },
-  "z3_seconds": 0.015,
+  "z3_seconds": 0.008,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -66,7 +66,7 @@
     -1
    ]
   },
-  "z3_seconds": 0.01,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -86,7 +86,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.021,
+  "z3_seconds": 0.017,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -116,7 +116,7 @@
     0
    ]
   },
-  "z3_seconds": 0.006,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -150,7 +150,7 @@
     0
    ]
   },
-  "z3_seconds": 0.016,
+  "z3_seconds": 0.01,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -182,7 +182,7 @@
     0
    ]
   },
-  "z3_seconds": 0.007,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -213,7 +213,7 @@
     0
    ]
   },
-  "z3_seconds": 0.013,
+  "z3_seconds": 0.008,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -247,7 +247,7 @@
     -1
    ]
   },
-  "z3_seconds": 0.01,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -316,7 +316,7 @@
     0
    ]
   },
-  "z3_seconds": 0.01,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -349,7 +349,7 @@
     0
    ]
   },
-  "z3_seconds": 0.01,
+  "z3_seconds": 0.011,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -384,7 +384,7 @@
     0
    ]
   },
-  "z3_seconds": 0.012,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -417,7 +417,7 @@
     0
    ]
   },
-  "z3_seconds": 0.009,
+  "z3_seconds": 0.014,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -454,7 +454,7 @@
    ],
    "gap": 1
   },
-  "z3_seconds": 0.252,
+  "z3_seconds": 0.202,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -474,7 +474,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.109,
+  "z3_seconds": 0.103,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -494,7 +494,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.177,
+  "z3_seconds": 0.093,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -527,7 +527,7 @@
    ],
    "gap": 2
   },
-  "z3_seconds": 0.104,
+  "z3_seconds": 0.096,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -562,7 +562,7 @@
    ],
    "gap": 0
   },
-  "z3_seconds": 0.098,
+  "z3_seconds": 0.091,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -590,16 +590,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "vals": [
+    -8,
     0,
-    -9,
     -2,
-    -11,
-    -13,
-    1
+    -4,
+    -6,
+    0
    ],
    "gap": 2
   },
-  "z3_seconds": 0.103,
+  "z3_seconds": 0.109,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -627,16 +627,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "vals": [
-    2,
-    -1,
-    -1,
     1,
     -2,
+    -2,
+    -1,
+    -3,
     0
    ],
    "gap": 1
   },
-  "z3_seconds": 0.12,
+  "z3_seconds": 0.083,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -671,7 +671,7 @@
    ],
    "gap": 0
   },
-  "z3_seconds": 0.087,
+  "z3_seconds": 0.079,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -703,7 +703,7 @@
    ],
    "gap": 1
   },
-  "z3_seconds": 0.116,
+  "z3_seconds": 0.088,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -732,16 +732,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "vals": [
+    -1,
     0,
     0,
     0,
-    0,
-    0,
-    0
+    -2,
+    -19
    ],
    "gap": 0
   },
-  "z3_seconds": 0.105,
+  "z3_seconds": 0.087,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -769,15 +769,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "vals": [
+    1,
     0,
-    -1,
-    -5,
-    -5,
-    -6
+    0,
+    0,
+    -2,
+    -17
    ],
    "gap": 0
   },
-  "z3_seconds": 0.124,
+  "z3_seconds": 0.096,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -805,15 +806,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "vals": [
-    -2,
+    6,
     0,
     1,
-    3,
-    -5
+    9,
+    -3
    ],
    "gap": 3
   },
-  "z3_seconds": 0.1,
+  "z3_seconds": 0.097,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -841,13 +842,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "vals": [
-    0,
-    -1,
-    -5
+    20,
+    19,
+    18,
+    1,
+    0
    ],
    "gap": 1
   },
-  "z3_seconds": 0.105,
+  "z3_seconds": 0.088,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -875,15 +878,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "vals": [
-    -10,
-    2,
     1,
     -1,
-    -9
+    -2,
+    2,
+    -7
    ],
    "gap": 1
   },
-  "z3_seconds": 0.103,
+  "z3_seconds": 0.083,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -909,13 +912,13 @@
   "z3_witness": {
    "vals": [
     -1,
-    0,
-    1,
-    4,
-    4
+    -1,
+    -1,
+    -1,
+    0
    ]
   },
-  "z3_seconds": 0.064,
+  "z3_seconds": 0.047,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -943,7 +946,7 @@
   ],
   "z3_status": "error",
   "z3_witness": null,
-  "z3_seconds": 0.005,
+  "z3_seconds": 0.007,
   "z3_detail": "line 9: name 'out' is not defined",
   "z3_witness_confirmed": null,
   "label": null
@@ -975,7 +978,7 @@
     0
    ]
   },
-  "z3_seconds": 0.007,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1007,7 +1010,7 @@
     0
    ]
   },
-  "z3_seconds": 0.009,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1039,7 +1042,7 @@
     0
    ]
   },
-  "z3_seconds": 0.012,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1059,7 +1062,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.016,
+  "z3_seconds": 0.022,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -1092,7 +1095,7 @@
     1
    ]
   },
-  "z3_seconds": 0.015,
+  "z3_seconds": 0.009,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1115,7 +1118,7 @@
   ],
   "z3_status": "error",
   "z3_witness": null,
-  "z3_seconds": 0.004,
+  "z3_seconds": 0.003,
   "z3_detail": "line 8: name 'out' is not defined",
   "z3_witness_confirmed": null,
   "label": null
@@ -1145,7 +1148,7 @@
    ],
    "sep": 0
   },
-  "z3_seconds": 0.015,
+  "z3_seconds": 0.014,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1183,7 +1186,7 @@
    ],
    "sep": 0
   },
-  "z3_seconds": 0.013,
+  "z3_seconds": 0.012,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1220,7 +1223,7 @@
    ],
    "sep": 0
   },
-  "z3_seconds": 0.019,
+  "z3_seconds": 0.011,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1256,7 +1259,7 @@
    ],
    "sep": -1
   },
-  "z3_seconds": 0.012,
+  "z3_seconds": 0.008,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1290,7 +1293,7 @@
    ],
    "sep": 0
   },
-  "z3_seconds": 0.016,
+  "z3_seconds": 0.012,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1325,7 +1328,7 @@
    ],
    "sep": -1
   },
-  "z3_seconds": 0.015,
+  "z3_seconds": 0.01,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1360,7 +1363,7 @@
    ],
    "sep": 0
   },
-  "z3_seconds": 0.015,
+  "z3_seconds": 0.009,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1394,7 +1397,7 @@
    ],
    "sep": 0
   },
-  "z3_seconds": 0.013,
+  "z3_seconds": 0.009,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1429,7 +1432,7 @@
     -1
    ]
   },
-  "z3_seconds": 0.431,
+  "z3_seconds": 0.266,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1456,7 +1459,7 @@
   "z3_witness": {
    "vals": []
   },
-  "z3_seconds": 0.005,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1483,7 +1486,7 @@
   "z3_witness": {
    "vals": []
   },
-  "z3_seconds": 0.006,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1510,7 +1513,7 @@
   "z3_witness": {
    "vals": []
   },
-  "z3_seconds": 0.006,
+  "z3_seconds": 0.008,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1537,7 +1540,7 @@
   "z3_witness": {
    "vals": []
   },
-  "z3_seconds": 0.008,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1562,9 +1565,15 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "vals": []
+   "vals": [
+    -1,
+    -1,
+    -1,
+    1,
+    1
+   ]
   },
-  "z3_seconds": 0.008,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1591,7 +1600,7 @@
   "z3_witness": {
    "vals": []
   },
-  "z3_seconds": 0.007,
+  "z3_seconds": 0.008,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1624,7 +1633,7 @@
     0
    ]
   },
-  "z3_seconds": 0.008,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1683,14 +1692,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "vals": [
-    0,
-    0,
-    0,
-    0,
-    -5
+    -1,
+    1,
+    1,
+    -1,
+    6
    ]
   },
-  "z3_seconds": 0.227,
+  "z3_seconds": 0.12,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1716,13 +1725,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "vals": [
-    -1,
-    6,
-    6,
-    -1
+    0,
+    0,
+    0,
+    0,
+    0
    ]
   },
-  "z3_seconds": 0.251,
+  "z3_seconds": 0.17,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1746,7 +1756,7 @@
   "z3_witness": {
    "n": 25
   },
-  "z3_seconds": 0.024,
+  "z3_seconds": 0.018,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1768,9 +1778,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": 71
+   "n": 89
   },
-  "z3_seconds": 0.028,
+  "z3_seconds": 0.02,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1794,7 +1804,7 @@
   "z3_witness": {
    "n": 2
   },
-  "z3_seconds": 0.017,
+  "z3_seconds": 0.011,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1816,9 +1826,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": 2
+   "n": 3
   },
-  "z3_seconds": 0.022,
+  "z3_seconds": 0.016,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1866,7 +1876,7 @@
   "z3_witness": {
    "n": 3
   },
-  "z3_seconds": 0.014,
+  "z3_seconds": 0.013,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1890,7 +1900,7 @@
   "z3_witness": {
    "n": 26
   },
-  "z3_seconds": 0.017,
+  "z3_seconds": 0.016,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1914,7 +1924,7 @@
   "z3_witness": {
    "n": 11
   },
-  "z3_seconds": 0.018,
+  "z3_seconds": 0.009,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1938,7 +1948,7 @@
   "z3_witness": {
    "n": 25
   },
-  "z3_seconds": 0.023,
+  "z3_seconds": 0.009,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1960,9 +1970,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": 238
+   "n": 225
   },
-  "z3_seconds": 0.021,
+  "z3_seconds": 0.01,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -1984,9 +1994,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": 12
+   "n": 229
   },
-  "z3_seconds": 0.025,
+  "z3_seconds": 0.019,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -2010,7 +2020,7 @@
   "z3_witness": {
    "n": 181
   },
-  "z3_seconds": 0.01,
+  "z3_seconds": 0.008,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -2030,7 +2040,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.015,
+  "z3_seconds": 0.014,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -2054,7 +2064,7 @@
   "z3_witness": {
    "n": 2
   },
-  "z3_seconds": 0.016,
+  "z3_seconds": 0.013,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -2078,7 +2088,7 @@
   "z3_witness": {
    "n": 1
   },
-  "z3_seconds": 0.016,
+  "z3_seconds": 0.01,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -2098,7 +2108,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.076,
+  "z3_seconds": 0.056,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -2144,9 +2154,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": 145
+   "n": 165
   },
-  "z3_seconds": 0.02,
+  "z3_seconds": 0.018,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -2166,7 +2176,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.015,
+  "z3_seconds": 0.012,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -2188,9 +2198,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": 10
+   "n": 15
   },
-  "z3_seconds": 0.024,
+  "z3_seconds": 0.014,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -2214,7 +2224,7 @@
   "z3_witness": {
    "n": 24
   },
-  "z3_seconds": 0.02,
+  "z3_seconds": 0.015,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -2238,7 +2248,7 @@
   "z3_witness": {
    "n": 231
   },
-  "z3_seconds": 0.019,
+  "z3_seconds": 0.015,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -2258,7 +2268,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 6.184,
+  "z3_seconds": 4.592,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -2278,7 +2288,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.523,
+  "z3_seconds": 0.429,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -2298,7 +2308,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.482,
+  "z3_seconds": 0.442,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -2318,7 +2328,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.637,
+  "z3_seconds": 0.454,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -2342,7 +2352,7 @@
   "z3_witness": {
    "n": 2
   },
-  "z3_seconds": 0.326,
+  "z3_seconds": 0.427,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -2362,7 +2372,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 3.901,
+  "z3_seconds": 1.804,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -2382,7 +2392,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.587,
+  "z3_seconds": 0.601,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -2404,9 +2414,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": 30
+   "n": 120
   },
-  "z3_seconds": 0.37,
+  "z3_seconds": 0.626,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -2426,7 +2436,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 1.037,
+  "z3_seconds": 0.677,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -2450,7 +2460,7 @@
   "z3_witness": {
    "n": 2
   },
-  "z3_seconds": 0.624,
+  "z3_seconds": 0.342,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -2474,7 +2484,7 @@
   "z3_witness": {
    "n": 119
   },
-  "z3_seconds": 1.053,
+  "z3_seconds": 0.753,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -2496,9 +2506,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": 14
+   "n": 54
   },
-  "z3_seconds": 0.414,
+  "z3_seconds": 0.698,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -2520,9 +2530,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": 38
+   "n": 11
   },
-  "z3_seconds": 0.407,
+  "z3_seconds": 0.438,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -2544,9 +2554,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": 6
+   "n": 8
   },
-  "z3_seconds": 0.517,
+  "z3_seconds": 0.341,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -2570,7 +2580,7 @@
   "z3_witness": {
    "n": 114
   },
-  "z3_seconds": 0.173,
+  "z3_seconds": 0.107,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -2592,9 +2602,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": 208
+   "n": 114
   },
-  "z3_seconds": 0.38,
+  "z3_seconds": 0.226,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -2618,7 +2628,7 @@
   "z3_witness": {
    "n": 114
   },
-  "z3_seconds": 0.285,
+  "z3_seconds": 0.214,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -2642,7 +2652,7 @@
   "z3_witness": {
    "n": 77
   },
-  "z3_seconds": 0.557,
+  "z3_seconds": 0.329,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -2664,9 +2674,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": 177
+   "n": 78
   },
-  "z3_seconds": 0.621,
+  "z3_seconds": 0.367,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -2686,7 +2696,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.594,
+  "z3_seconds": 0.355,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -2710,7 +2720,7 @@
   "z3_witness": {
    "n": 77
   },
-  "z3_seconds": 0.512,
+  "z3_seconds": 0.298,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -2734,7 +2744,7 @@
   "z3_witness": {
    "n": 78
   },
-  "z3_seconds": 0.24,
+  "z3_seconds": 0.145,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -2758,7 +2768,7 @@
   "z3_witness": {
    "n": 257
   },
-  "z3_seconds": 0.134,
+  "z3_seconds": 0.072,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -2778,7 +2788,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.151,
+  "z3_seconds": 0.083,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -2802,7 +2812,7 @@
   "z3_witness": {
    "n": 77
   },
-  "z3_seconds": 0.473,
+  "z3_seconds": 0.302,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -2826,7 +2836,7 @@
   "z3_witness": {
    "n": 108
   },
-  "z3_seconds": 0.626,
+  "z3_seconds": 0.317,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -2846,7 +2856,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.167,
+  "z3_seconds": 0.092,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -2870,7 +2880,7 @@
   "z3_witness": {
    "n": 78
   },
-  "z3_seconds": 0.251,
+  "z3_seconds": 0.147,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -2894,7 +2904,7 @@
   "z3_witness": {
    "n": 77
   },
-  "z3_seconds": 0.437,
+  "z3_seconds": 0.278,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -2914,7 +2924,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.167,
+  "z3_seconds": 0.103,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -2934,7 +2944,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.165,
+  "z3_seconds": 0.097,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -2958,7 +2968,7 @@
   "z3_witness": {
    "n": 77
   },
-  "z3_seconds": 0.502,
+  "z3_seconds": 0.298,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -2980,9 +2990,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": 285
+   "n": 298
   },
-  "z3_seconds": 0.538,
+  "z3_seconds": 0.278,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3006,7 +3016,7 @@
   "z3_witness": {
    "n": 78
   },
-  "z3_seconds": 0.528,
+  "z3_seconds": 0.3,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3030,7 +3040,7 @@
   "z3_witness": {
    "n": 77
   },
-  "z3_seconds": 0.515,
+  "z3_seconds": 0.298,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3054,7 +3064,7 @@
   "z3_witness": {
    "n": 77
   },
-  "z3_seconds": 0.483,
+  "z3_seconds": 0.322,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3078,7 +3088,7 @@
   "z3_witness": {
    "n": 144
   },
-  "z3_seconds": 0.493,
+  "z3_seconds": 0.305,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3098,7 +3108,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.248,
+  "z3_seconds": 0.148,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -3118,7 +3128,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.145,
+  "z3_seconds": 0.095,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -3142,7 +3152,7 @@
   "z3_witness": {
    "n": 39
   },
-  "z3_seconds": 0.483,
+  "z3_seconds": 0.291,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3166,7 +3176,7 @@
   "z3_witness": {
    "n": 78
   },
-  "z3_seconds": 0.381,
+  "z3_seconds": 0.209,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3188,9 +3198,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": 183
+   "n": 300
   },
-  "z3_seconds": 0.45,
+  "z3_seconds": 0.261,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3212,9 +3222,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": 66
+   "n": 77
   },
-  "z3_seconds": 0.471,
+  "z3_seconds": 0.258,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3236,9 +3246,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": 298
+   "n": 295
   },
-  "z3_seconds": 0.41,
+  "z3_seconds": 0.303,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3260,9 +3270,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": 77
+   "n": 297
   },
-  "z3_seconds": 0.502,
+  "z3_seconds": 0.301,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3284,9 +3294,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": 77
+   "n": 297
   },
-  "z3_seconds": 0.497,
+  "z3_seconds": 0.282,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3308,9 +3318,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": 283
+   "n": 285
   },
-  "z3_seconds": 0.451,
+  "z3_seconds": 0.306,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3332,9 +3342,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": 78
+   "n": 270
   },
-  "z3_seconds": 0.254,
+  "z3_seconds": 0.188,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3356,9 +3366,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": 78
+   "n": 229
   },
-  "z3_seconds": 0.485,
+  "z3_seconds": 0.377,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3382,7 +3392,7 @@
   "z3_witness": {
    "n": 77
   },
-  "z3_seconds": 0.544,
+  "z3_seconds": 0.331,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3406,7 +3416,7 @@
   "z3_witness": {
    "n": 78
   },
-  "z3_seconds": 0.307,
+  "z3_seconds": 0.221,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3430,7 +3440,7 @@
   "z3_witness": {
    "n": 78
   },
-  "z3_seconds": 0.187,
+  "z3_seconds": 0.148,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3454,7 +3464,7 @@
   "z3_witness": {
    "n": 102
   },
-  "z3_seconds": 0.463,
+  "z3_seconds": 0.303,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3478,7 +3488,7 @@
   "z3_witness": {
    "n": 210
   },
-  "z3_seconds": 0.504,
+  "z3_seconds": 0.315,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3502,7 +3512,7 @@
   "z3_witness": {
    "year": 2800
   },
-  "z3_seconds": 0.004,
+  "z3_seconds": 0.002,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3522,7 +3532,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.004,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -3546,7 +3556,7 @@
   "z3_witness": {
    "year": 400
   },
-  "z3_seconds": 0.005,
+  "z3_seconds": 0.002,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3594,7 +3604,7 @@
   "z3_witness": {
    "year": 400
   },
-  "z3_seconds": 0.004,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3642,7 +3652,7 @@
   "z3_witness": {
    "year": 1
   },
-  "z3_seconds": 0.014,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3666,7 +3676,7 @@
   "z3_witness": {
    "year": 400
   },
-  "z3_seconds": 0.003,
+  "z3_seconds": 0.002,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3690,7 +3700,7 @@
   "z3_witness": {
    "year": 400
   },
-  "z3_seconds": 0.005,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3714,7 +3724,7 @@
   "z3_witness": {
    "year": 2800
   },
-  "z3_seconds": 0.005,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3738,7 +3748,7 @@
   "z3_witness": {
    "year": 100
   },
-  "z3_seconds": 0.006,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3762,7 +3772,7 @@
   "z3_witness": {
    "year": 100
   },
-  "z3_seconds": 0.004,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3810,7 +3820,7 @@
   "z3_witness": {
    "year": 4
   },
-  "z3_seconds": 0.006,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3858,7 +3868,7 @@
   "z3_witness": {
    "year": 4
   },
-  "z3_seconds": 0.006,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3906,7 +3916,7 @@
   "z3_witness": {
    "year": 399
   },
-  "z3_seconds": 0.011,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -3930,7 +3940,7 @@
   "z3_witness": {
    "year": 404
   },
-  "z3_seconds": 0.007,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4028,7 +4038,7 @@
    "month": 2,
    "year": 100
   },
-  "z3_seconds": 0.007,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4052,9 +4062,9 @@
   "z3_status": "witness",
   "z3_witness": {
    "month": 9,
-   "year": 100
+   "year": 1
   },
-  "z3_seconds": 0.005,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4080,7 +4090,7 @@
    "month": 2,
    "year": 4
   },
-  "z3_seconds": 0.01,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4103,10 +4113,10 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "month": 6,
+   "month": 4,
    "year": 4
   },
-  "z3_seconds": 0.016,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4130,9 +4140,9 @@
   "z3_status": "witness",
   "z3_witness": {
    "month": 2,
-   "year": 100
+   "year": 1
   },
-  "z3_seconds": 0.006,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4156,9 +4166,9 @@
   "z3_status": "witness",
   "z3_witness": {
    "month": 2,
-   "year": 4
+   "year": 100
   },
-  "z3_seconds": 0.008,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4184,7 +4194,7 @@
    "month": 7,
    "year": 1
   },
-  "z3_seconds": 0.01,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4210,7 +4220,7 @@
    "month": 1,
    "year": 4
   },
-  "z3_seconds": 0.016,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4234,7 +4244,7 @@
   "z3_status": "witness",
   "z3_witness": {
    "month": 2,
-   "year": 1
+   "year": 4
   },
   "z3_seconds": 0.004,
   "z3_detail": "",
@@ -4262,7 +4272,7 @@
    "month": 2,
    "year": 4
   },
-  "z3_seconds": 0.012,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4288,7 +4298,7 @@
    "month": 3,
    "year": 4
   },
-  "z3_seconds": 0.019,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4312,9 +4322,9 @@
   "z3_status": "witness",
   "z3_witness": {
    "month": 2,
-   "year": 100
+   "year": 1
   },
-  "z3_seconds": 0.017,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4338,9 +4348,9 @@
   "z3_status": "witness",
   "z3_witness": {
    "month": 11,
-   "year": 1
+   "year": 4
   },
-  "z3_seconds": 0.008,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4364,9 +4374,9 @@
   "z3_status": "witness",
   "z3_witness": {
    "month": 4,
-   "year": 1
+   "year": 4
   },
-  "z3_seconds": 0.008,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4392,7 +4402,7 @@
    "month": 2,
    "year": 1
   },
-  "z3_seconds": 0.016,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4416,9 +4426,9 @@
   "z3_status": "witness",
   "z3_witness": {
    "month": 2,
-   "year": 4
+   "year": 1
   },
-  "z3_seconds": 0.009,
+  "z3_seconds": 0.008,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4444,7 +4454,7 @@
    "month": 2,
    "year": 4
   },
-  "z3_seconds": 0.006,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4468,9 +4478,9 @@
   "z3_status": "witness",
   "z3_witness": {
    "month": 2,
-   "year": 100
+   "year": 4
   },
-  "z3_seconds": 0.007,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4496,7 +4506,7 @@
    "month": 2,
    "year": 100
   },
-  "z3_seconds": 0.008,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4522,7 +4532,7 @@
    "month": 2,
    "year": 4
   },
-  "z3_seconds": 0.018,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4548,7 +4558,7 @@
    "month": 2,
    "year": 4
   },
-  "z3_seconds": 0.005,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4600,7 +4610,7 @@
    "month": 2,
    "year": 1
   },
-  "z3_seconds": 0.012,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4623,10 +4633,10 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "month": 4,
+   "month": 5,
    "year": 4
   },
-  "z3_seconds": 0.013,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4650,9 +4660,9 @@
   "z3_status": "witness",
   "z3_witness": {
    "month": 4,
-   "year": 4
+   "year": 1
   },
-  "z3_seconds": 0.01,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4676,9 +4686,9 @@
   "z3_status": "witness",
   "z3_witness": {
    "month": 7,
-   "year": 4
+   "year": 100
   },
-  "z3_seconds": 0.005,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4701,10 +4711,10 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "month": 5,
+   "month": 6,
    "year": 4
   },
-  "z3_seconds": 0.016,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4727,10 +4737,10 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "month": 10,
+   "month": 9,
    "year": 4
   },
-  "z3_seconds": 0.008,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4753,10 +4763,10 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "month": 9,
-   "year": 100
+   "month": 8,
+   "year": 4
   },
-  "z3_seconds": 0.008,
+  "z3_seconds": 0.016,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4780,7 +4790,7 @@
   "z3_status": "witness",
   "z3_witness": {
    "month": 11,
-   "year": 1
+   "year": 4
   },
   "z3_seconds": 0.006,
   "z3_detail": "",
@@ -4808,7 +4818,7 @@
    "month": 11,
    "year": 1
   },
-  "z3_seconds": 0.01,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4834,7 +4844,7 @@
    "month": 2,
    "year": 5
   },
-  "z3_seconds": 0.019,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4858,9 +4868,9 @@
   "z3_status": "witness",
   "z3_witness": {
    "month": 2,
-   "year": 3
+   "year": 4
   },
-  "z3_seconds": 0.017,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4884,9 +4894,9 @@
   "z3_status": "witness",
   "z3_witness": {
    "month": 2,
-   "year": 4
+   "year": 100
   },
-  "z3_seconds": 0.014,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4912,7 +4922,7 @@
    "month": 2,
    "year": 100
   },
-  "z3_seconds": 0.012,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4938,7 +4948,7 @@
    "month": 2,
    "year": 100
   },
-  "z3_seconds": 0.017,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4962,9 +4972,9 @@
   "z3_status": "witness",
   "z3_witness": {
    "month": 2,
-   "year": 400
+   "year": 100
   },
-  "z3_seconds": 0.009,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -4990,7 +5000,7 @@
    "month": 2,
    "year": 400
   },
-  "z3_seconds": 0.016,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5016,7 +5026,7 @@
    "month": 2,
    "year": 400
   },
-  "z3_seconds": 0.016,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5040,9 +5050,9 @@
   "z3_status": "witness",
   "z3_witness": {
    "month": 2,
-   "year": 404
+   "year": 100
   },
-  "z3_seconds": 0.019,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5066,9 +5076,9 @@
   "z3_status": "witness",
   "z3_witness": {
    "month": 2,
-   "year": 396
+   "year": 100
   },
-  "z3_seconds": 0.009,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5094,7 +5104,7 @@
    "month": 2,
    "year": 400
   },
-  "z3_seconds": 0.016,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5120,7 +5130,7 @@
    "month": 2,
    "year": 400
   },
-  "z3_seconds": 0.016,
+  "z3_seconds": 0.013,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5145,10 +5155,10 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": 2,
-   "b": 3,
+   "b": 1,
    "c": 2
   },
-  "z3_seconds": 0.014,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5176,7 +5186,7 @@
    "b": 1,
    "c": 1
   },
-  "z3_seconds": 0.029,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5204,7 +5214,7 @@
    "b": 1,
    "c": 1
   },
-  "z3_seconds": 0.008,
+  "z3_seconds": 0.01,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5228,11 +5238,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 3,
-   "b": 4,
-   "c": 2
+   "a": 4,
+   "b": 2,
+   "c": 3
   },
-  "z3_seconds": 0.021,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5257,10 +5267,10 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": 3,
-   "b": 2,
-   "c": 1
+   "b": 1,
+   "c": 2
   },
-  "z3_seconds": 0.024,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5284,11 +5294,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 1,
+   "a": 2,
    "b": 2,
-   "c": 2
+   "c": 3
   },
-  "z3_seconds": 0.029,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5313,10 +5323,10 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": 2,
-   "b": 1,
+   "b": 3,
    "c": 2
   },
-  "z3_seconds": 0.011,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5341,10 +5351,10 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": 2,
-   "b": 4,
-   "c": 3
+   "b": 3,
+   "c": 4
   },
-  "z3_seconds": 0.013,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5372,7 +5382,7 @@
    "b": 2,
    "c": 3
   },
-  "z3_seconds": 0.011,
+  "z3_seconds": 0.008,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5396,11 +5406,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 2,
+   "a": 1,
    "b": 1,
-   "c": 3
+   "c": 2
   },
-  "z3_seconds": 0.02,
+  "z3_seconds": 0.01,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5428,7 +5438,7 @@
    "b": 2,
    "c": 4
   },
-  "z3_seconds": 0.016,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5456,7 +5466,7 @@
    "b": 2,
    "c": 1
   },
-  "z3_seconds": 0.014,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5481,10 +5491,10 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": 2,
-   "b": 3,
-   "c": 2
+   "b": 4,
+   "c": 1
   },
-  "z3_seconds": 0.008,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5509,10 +5519,10 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": 3,
-   "b": 1,
-   "c": 2
+   "b": 2,
+   "c": 1
   },
-  "z3_seconds": 0.014,
+  "z3_seconds": 0.009,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5536,11 +5546,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 2,
-   "b": 3,
+   "a": 4,
+   "b": 1,
    "c": 2
   },
-  "z3_seconds": 0.017,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5564,11 +5574,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 2,
-   "b": 1,
-   "c": 3
+   "a": 1,
+   "b": 2,
+   "c": 1
   },
-  "z3_seconds": 0.022,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5592,11 +5602,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 2,
-   "b": 1,
-   "c": 3
+   "a": 1,
+   "b": 2,
+   "c": 1
   },
-  "z3_seconds": 0.01,
+  "z3_seconds": 0.008,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5624,7 +5634,7 @@
    "b": 2,
    "c": 2
   },
-  "z3_seconds": 0.012,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5648,11 +5658,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 2,
-   "b": 2,
-   "c": 3
+   "a": 1,
+   "b": 1,
+   "c": 1
   },
-  "z3_seconds": 0.017,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5680,7 +5690,7 @@
    "b": 1,
    "c": 1
   },
-  "z3_seconds": 0.01,
+  "z3_seconds": 0.017,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5708,7 +5718,7 @@
    "b": 1,
    "c": 1
   },
-  "z3_seconds": 0.012,
+  "z3_seconds": 0.008,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5736,7 +5746,7 @@
    "b": 2,
    "c": 3
   },
-  "z3_seconds": 0.032,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5762,9 +5772,9 @@
   "z3_witness": {
    "a": 3,
    "b": 2,
-   "c": 4
+   "c": 2
   },
-  "z3_seconds": 0.028,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5788,11 +5798,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 2,
-   "b": 3,
+   "a": 3,
+   "b": 4,
    "c": 2
   },
-  "z3_seconds": 0.031,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5817,10 +5827,10 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": 2,
-   "b": 1,
+   "b": 3,
    "c": 2
   },
-  "z3_seconds": 0.035,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5844,11 +5854,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 2,
+   "a": 1,
    "b": 2,
-   "c": 3
+   "c": 2
   },
-  "z3_seconds": 0.025,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5872,11 +5882,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 2,
-   "b": 3,
-   "c": 2
+   "a": 1,
+   "b": 1,
+   "c": 1
   },
-  "z3_seconds": 0.011,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5900,11 +5910,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 1,
+   "a": 4,
    "b": 2,
-   "c": 2
+   "c": 3
   },
-  "z3_seconds": 0.025,
+  "z3_seconds": 0.008,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5929,10 +5939,10 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": 3,
-   "b": 4,
-   "c": 2
+   "b": 2,
+   "c": 4
   },
-  "z3_seconds": 0.014,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -5952,7 +5962,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.014,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -5974,9 +5984,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "score": 70
+   "score": 59
   },
-  "z3_seconds": 0.01,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6000,7 +6010,7 @@
   "z3_witness": {
    "score": 80
   },
-  "z3_seconds": 0.023,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6022,9 +6032,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "score": 70
+   "score": 69
   },
-  "z3_seconds": 0.009,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6048,7 +6058,7 @@
   "z3_witness": {
    "score": 59
   },
-  "z3_seconds": 0.008,
+  "z3_seconds": 0.009,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6072,7 +6082,7 @@
   "z3_witness": {
    "score": 90
   },
-  "z3_seconds": 0.008,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6094,9 +6104,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "score": 89
+   "score": 91
   },
-  "z3_seconds": 0.019,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6120,7 +6130,7 @@
   "z3_witness": {
    "score": 80
   },
-  "z3_seconds": 0.012,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6142,7 +6152,7 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "score": 79
+   "score": 81
   },
   "z3_seconds": 0.006,
   "z3_detail": "",
@@ -6168,7 +6178,7 @@
   "z3_witness": {
    "score": 70
   },
-  "z3_seconds": 0.015,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6190,9 +6200,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "score": 59
+   "score": 71
   },
-  "z3_seconds": 0.006,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6216,7 +6226,7 @@
   "z3_witness": {
    "score": 60
   },
-  "z3_seconds": 0.01,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6240,7 +6250,7 @@
   "z3_witness": {
    "score": 59
   },
-  "z3_seconds": 0.01,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6264,7 +6274,7 @@
   "z3_witness": {
    "score": 0
   },
-  "z3_seconds": 0.016,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6288,7 +6298,7 @@
   "z3_witness": {
    "score": 0
   },
-  "z3_seconds": 0.008,
+  "z3_seconds": 0.012,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6312,7 +6322,7 @@
   "z3_witness": {
    "score": 90
   },
-  "z3_seconds": 0.012,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6336,7 +6346,7 @@
   "z3_witness": {
    "score": 89
   },
-  "z3_seconds": 0.007,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6358,7 +6368,7 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "score": 92
+   "score": 96
   },
   "z3_seconds": 0.007,
   "z3_detail": "",
@@ -6384,7 +6394,7 @@
   "z3_witness": {
    "score": 100
   },
-  "z3_seconds": 0.006,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6408,7 +6418,7 @@
   "z3_witness": {
    "score": 80
   },
-  "z3_seconds": 0.015,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6432,7 +6442,7 @@
   "z3_witness": {
    "score": 79
   },
-  "z3_seconds": 0.013,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6456,7 +6466,7 @@
   "z3_witness": {
    "score": 80
   },
-  "z3_seconds": 0.007,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6480,7 +6490,7 @@
   "z3_witness": {
    "score": 80
   },
-  "z3_seconds": 0.018,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6504,7 +6514,7 @@
   "z3_witness": {
    "score": 70
   },
-  "z3_seconds": 0.014,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6528,7 +6538,7 @@
   "z3_witness": {
    "score": 69
   },
-  "z3_seconds": 0.009,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6550,9 +6560,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "score": 70
+   "score": 79
   },
-  "z3_seconds": 0.015,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6576,7 +6586,7 @@
   "z3_witness": {
    "score": 70
   },
-  "z3_seconds": 0.01,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6600,7 +6610,7 @@
   "z3_witness": {
    "score": 60
   },
-  "z3_seconds": 0.024,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6624,7 +6634,7 @@
   "z3_witness": {
    "score": 59
   },
-  "z3_seconds": 0.021,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6646,9 +6656,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "score": 60
+   "score": 69
   },
-  "z3_seconds": 0.027,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6672,7 +6682,7 @@
   "z3_witness": {
    "score": 60
   },
-  "z3_seconds": 0.025,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6700,11 +6710,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    1
+    -1,
+    0,
+    1,
+    2,
+    3
    ],
-   "target": 1
+   "target": 0
   },
-  "z3_seconds": 0.294,
+  "z3_seconds": 0.193,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6734,11 +6748,15 @@
    "xs": [
     -1,
     0,
-    1
+    1,
+    2,
+    3,
+    4,
+    5
    ],
-   "target": 2
+   "target": 6
   },
-  "z3_seconds": 0.22,
+  "z3_seconds": 0.168,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6765,13 +6783,10 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "xs": [
-    -1,
-    0
-   ],
-   "target": 1
+   "xs": [],
+   "target": 0
   },
-  "z3_seconds": 0.249,
+  "z3_seconds": 0.158,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6801,7 +6816,7 @@
    "xs": [],
    "target": 0
   },
-  "z3_seconds": 0.316,
+  "z3_seconds": 0.161,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6829,17 +6844,11 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    -6,
-    -5,
-    -4,
-    -3,
-    -2,
-    -1,
-    0
+    -1
    ],
-   "target": -6
+   "target": -1
   },
-  "z3_seconds": 0.334,
+  "z3_seconds": 0.2,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6863,15 +6872,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    -1,
+    -2,
     0,
     1,
     2,
     3
    ],
-   "target": -1
+   "target": -2
   },
-  "z3_seconds": 0.394,
+  "z3_seconds": 0.18,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6899,7 +6908,7 @@
    "xs": [],
    "target": 1
   },
-  "z3_seconds": 0.301,
+  "z3_seconds": 0.227,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6927,15 +6936,12 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    -1,
     0,
-    1,
-    2,
-    3
+    1
    ],
-   "target": 0
+   "target": 1
   },
-  "z3_seconds": 0.343,
+  "z3_seconds": 0.191,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -6962,10 +6968,17 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "xs": [],
-   "target": 1
+   "xs": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "target": 2
   },
-  "z3_seconds": 0.271,
+  "z3_seconds": 0.186,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": null
@@ -6992,7 +7005,7 @@
   ],
   "z3_status": "error",
   "z3_witness": null,
-  "z3_seconds": 0.014,
+  "z3_seconds": 0.012,
   "z3_detail": "line 8: name 'mid' is not defined",
   "z3_witness_confirmed": null,
   "label": null
@@ -7020,17 +7033,12 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    -1,
-    0,
     1,
-    2,
-    3,
-    4,
-    5
+    2
    ],
-   "target": 2
+   "target": 1
   },
-  "z3_seconds": 0.303,
+  "z3_seconds": 0.179,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -7058,12 +7066,13 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    -1,
+    -3,
+    -2,
     0
    ],
-   "target": 0
+   "target": -3
   },
-  "z3_seconds": 0.288,
+  "z3_seconds": 0.198,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -7089,12 +7098,11 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    -1,
-    0
+    -1
    ],
-   "target": 0
+   "target": -1
   },
-  "z3_seconds": 0.277,
+  "z3_seconds": 0.183,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -7123,10 +7131,12 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "xs": [],
+   "xs": [
+    -2
+   ],
    "target": 1
   },
-  "z3_seconds": 0.267,
+  "z3_seconds": 0.165,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -7146,7 +7156,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.351,
+  "z3_seconds": 0.231,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -7174,11 +7184,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    0
+    -1,
+    0,
+    2,
+    3
    ],
-   "target": 0
+   "target": 4
   },
-  "z3_seconds": 0.279,
+  "z3_seconds": 0.195,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -7198,7 +7211,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.353,
+  "z3_seconds": 0.245,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -7227,14 +7240,11 @@
   "z3_witness": {
    "xs": [
     -2,
-    -1,
-    0,
-    1,
-    2
+    0
    ],
-   "target": 2
+   "target": 0
   },
-  "z3_seconds": 0.285,
+  "z3_seconds": 0.181,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -7262,9 +7272,9 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [],
-   "target": 0
+   "target": 1
   },
-  "z3_seconds": 0.275,
+  "z3_seconds": 0.186,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -7292,9 +7302,9 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [],
-   "target": 0
+   "target": -1
   },
-  "z3_seconds": 0.285,
+  "z3_seconds": 0.166,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -7322,12 +7332,12 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    -1,
-    0
+    -2,
+    -1
    ],
-   "target": -1
+   "target": -2
   },
-  "z3_seconds": 0.297,
+  "z3_seconds": 0.186,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": null
@@ -7347,7 +7357,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.322,
+  "z3_seconds": 0.264,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -7367,7 +7377,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.414,
+  "z3_seconds": 0.294,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -7387,7 +7397,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.329,
+  "z3_seconds": 0.271,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -7407,7 +7417,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.416,
+  "z3_seconds": 0.283,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -7438,17 +7448,12 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    -1,
-    0,
-    1,
-    2,
-    3,
-    4,
-    5
+    -2,
+    -1
    ],
-   "target": 1
+   "target": -1
   },
-  "z3_seconds": 0.317,
+  "z3_seconds": 0.185,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -7468,7 +7473,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.406,
+  "z3_seconds": 0.261,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -7496,14 +7501,17 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    -2,
     -1,
     0,
-    1
+    1,
+    2,
+    3,
+    4,
+    5
    ],
-   "target": -2
+   "target": 1
   },
-  "z3_seconds": 0.253,
+  "z3_seconds": 0.187,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -7523,7 +7531,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.385,
+  "z3_seconds": 0.293,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -7554,19 +7562,13 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": [
-    4,
-    5,
-    6
-   ],
+   "a": [],
    "b": [
-    7,
-    8,
-    9,
-    9
+    0,
+    0
    ]
   },
-  "z3_seconds": 0.579,
+  "z3_seconds": 0.352,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -7598,13 +7600,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": [
+    0,
+    0,
+    0,
     0
    ],
    "b": [
     -1
    ]
   },
-  "z3_seconds": 0.533,
+  "z3_seconds": 0.321,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -7636,19 +7641,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": [
-    4,
-    4,
-    5,
-    6
+    0,
+    0,
+    0,
+    0
    ],
-   "b": [
-    4,
-    5,
-    6,
-    7
-   ]
+   "b": []
   },
-  "z3_seconds": 0.532,
+  "z3_seconds": 0.297,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -7679,7 +7679,7 @@
   ],
   "z3_status": "error",
   "z3_witness": null,
-  "z3_seconds": 0.085,
+  "z3_seconds": 0.054,
   "z3_detail": "line 10: name 'out' is not defined",
   "z3_witness_confirmed": null,
   "label": null
@@ -7709,16 +7709,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": [
-    -1
+    -7
    ],
    "b": [
-    -2,
-    6,
-    7,
-    7
+    -9,
+    -8,
+    -6,
+    0
    ]
   },
-  "z3_seconds": 0.636,
+  "z3_seconds": 0.349,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -7749,19 +7749,14 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": [
-    5,
-    7,
-    8
-   ],
+   "a": [],
    "b": [
-    5,
-    6,
-    6,
-    9
+    0,
+    0,
+    0
    ]
   },
-  "z3_seconds": 0.606,
+  "z3_seconds": 0.35,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -7793,19 +7788,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": [
-    -6,
-    -5,
-    -4,
-    8
+    0,
+    1,
+    1,
+    1
    ],
    "b": [
-    -8,
-    -7,
-    -3,
-    9
+    0
    ]
   },
-  "z3_seconds": 0.779,
+  "z3_seconds": 0.416,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -7837,18 +7829,18 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": [
-    -2,
-    -1,
-    2,
-    3
+    -8,
+    -7,
+    -6,
+    -4
    ],
    "b": [
-    0,
-    4,
-    5
+    -9,
+    -5,
+    -3
    ]
   },
-  "z3_seconds": 0.749,
+  "z3_seconds": 0.485,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -7880,18 +7872,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": [
-    -4,
-    -3,
-    -2,
-    -1
+    -8
    ],
    "b": [
+    -8,
+    -7,
     -6,
-    -5,
-    0
+    -5
    ]
   },
-  "z3_seconds": 0.654,
+  "z3_seconds": 0.414,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -7923,18 +7913,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": [
-    -8,
-    -8,
-    7
+    0
    ],
    "b": [
-    -7,
-    -4,
-    4,
-    8
+    0,
+    0,
+    0,
+    3
    ]
   },
-  "z3_seconds": 0.614,
+  "z3_seconds": 0.434,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -7966,15 +7954,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": [
-    -1,
-    0,
-    0
+    4
    ],
    "b": [
-    -2
+    0,
+    1,
+    2,
+    3
    ]
   },
-  "z3_seconds": 0.651,
+  "z3_seconds": 0.438,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -8006,18 +7995,19 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": [
-    3,
-    6,
-    7
+    0,
+    1,
+    2,
+    8
    ],
    "b": [
-    2,
-    4,
-    5,
-    8
+    3,
+    6,
+    7,
+    9
    ]
   },
-  "z3_seconds": 0.691,
+  "z3_seconds": 0.498,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -8049,16 +8039,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": [
-    0,
-    2,
-    3,
-    4
+    -1,
+    -1,
+    0
    ],
    "b": [
-    -1
+    -3
    ]
   },
-  "z3_seconds": 0.628,
+  "z3_seconds": 0.465,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -8091,16 +8080,15 @@
   "z3_witness": {
    "a": [
     0,
-    5
+    0,
+    0,
+    0
    ],
    "b": [
-    3,
-    4,
-    6,
-    6
+    -1
    ]
   },
-  "z3_seconds": 0.611,
+  "z3_seconds": 0.421,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -8128,19 +8116,18 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": [
-    0,
+    2,
+    3,
     4,
-    6,
-    8
+    4
    ],
    "b": [
-    -1,
-    5,
-    6,
-    7
+    0,
+    0,
+    1
    ]
   },
-  "z3_seconds": 0.675,
+  "z3_seconds": 0.394,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -8168,19 +8155,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": [
-    6,
-    7,
-    8,
-    9
+    1,
+    1,
+    1,
+    1
    ],
-   "b": [
-    3,
-    4,
-    5,
-    7
-   ]
+   "b": []
   },
-  "z3_seconds": 0.682,
+  "z3_seconds": 0.516,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -8200,7 +8182,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.699,
+  "z3_seconds": 0.439,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -8231,19 +8213,14 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": [
-    -5,
-    -4,
-    1,
-    2
-   ],
+   "a": [],
    "b": [
-    -6,
-    3,
-    4
+    -1,
+    -1,
+    0
    ]
   },
-  "z3_seconds": 0.726,
+  "z3_seconds": 0.403,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -8275,16 +8252,17 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": [
-    0
+    -6,
+    -5,
+    -4
    ],
    "b": [
-    2,
-    2,
-    2,
-    3
+    -3,
+    -2,
+    -1
    ]
   },
-  "z3_seconds": 0.665,
+  "z3_seconds": 0.47,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -8315,16 +8293,15 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": [
-    0
-   ],
+   "a": [],
    "b": [
-    -1,
-    -1,
-    1
+    0,
+    0,
+    1,
+    2
    ]
   },
-  "z3_seconds": 0.565,
+  "z3_seconds": 0.489,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -8344,7 +8321,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.733,
+  "z3_seconds": 0.477,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -8377,17 +8354,14 @@
   "z3_witness": {
    "a": [
     0,
-    1,
-    2,
-    8
+    4
    ],
    "b": [
     0,
-    7,
-    9
+    5
    ]
   },
-  "z3_seconds": 0.771,
+  "z3_seconds": 0.448,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -8417,19 +8391,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": [
-    3,
-    6,
-    7,
-    8
+    1,
+    1,
+    2
    ],
    "b": [
-    3,
-    4,
-    5,
-    9
+    0
    ]
   },
-  "z3_seconds": 0.633,
+  "z3_seconds": 0.439,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -8457,14 +8427,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": [
-    0,
-    1
+    3,
+    3,
+    4,
+    5
    ],
-   "b": [
-    0
-   ]
+   "b": []
   },
-  "z3_seconds": 0.772,
+  "z3_seconds": 0.536,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -8494,14 +8464,18 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": [
-    0
+    -4,
+    -3,
+    -1
    ],
    "b": [
-    -1,
-    3
+    -2,
+    0,
+    0,
+    1
    ]
   },
-  "z3_seconds": 0.675,
+  "z3_seconds": 0.432,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -8521,7 +8495,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 18.862,
+  "z3_seconds": 19.297,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -8553,14 +8527,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": [
-    2
+    4,
+    5,
+    7
    ],
    "b": [
-    0,
-    1
+    3,
+    6
    ]
   },
-  "z3_seconds": 0.647,
+  "z3_seconds": 0.431,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -8592,15 +8568,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": [
-    5,
-    6,
-    7
+    6
    ],
    "b": [
+    5,
+    7,
+    7,
     8
    ]
   },
-  "z3_seconds": 0.83,
+  "z3_seconds": 0.428,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -8620,7 +8597,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.837,
+  "z3_seconds": 0.507,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -8651,13 +8628,14 @@
   "z3_witness": {
    "a": [
     0,
-    0
+    1,
+    2
    ],
    "b": [
-    -1
+    0
    ]
   },
-  "z3_seconds": 0.696,
+  "z3_seconds": 0.487,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -8677,7 +8655,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.736,
+  "z3_seconds": 0.661,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -8711,12 +8689,10 @@
     1
    ],
    "b": [
-    -6,
-    -5,
-    -4
+    -1
    ]
   },
-  "z3_seconds": 0.61,
+  "z3_seconds": 0.509,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -8736,7 +8712,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.931,
+  "z3_seconds": 0.444,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -8767,15 +8743,17 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": [],
-   "b": [
-    -2,
-    -1,
-    0,
+   "a": [
     0
+   ],
+   "b": [
+    1,
+    2,
+    3,
+    3
    ]
   },
-  "z3_seconds": 0.73,
+  "z3_seconds": 0.427,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -8795,7 +8773,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.709,
+  "z3_seconds": 0.501,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -8827,17 +8805,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": [
-    5,
-    6,
-    6,
-    8
+    0,
+    0
    ],
    "b": [
-    4,
-    7
+    1,
+    1,
+    1
    ]
   },
-  "z3_seconds": 0.678,
+  "z3_seconds": 0.41,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -8857,7 +8834,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.935,
+  "z3_seconds": 0.574,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -8887,18 +8864,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": [
-    0,
-    5,
-    6
+    0
    ],
    "b": [
+    -2,
     -1,
-    7,
-    8,
-    9
+    2
    ]
   },
-  "z3_seconds": 0.612,
+  "z3_seconds": 0.468,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -8918,7 +8892,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.737,
+  "z3_seconds": 0.547,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -8947,13 +8921,13 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    -2,
-    -1,
-    -2,
-    0
+    0,
+    1,
+    0,
+    -1
    ]
   },
-  "z3_seconds": 0.267,
+  "z3_seconds": 0.187,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -8982,15 +8956,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    -4,
-    -3,
-    -5,
-    -2,
-    -3,
-    -4
+    2,
+    0,
+    0,
+    3,
+    1,
+    2
    ]
   },
-  "z3_seconds": 0.388,
+  "z3_seconds": 0.321,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -9016,7 +8990,7 @@
   ],
   "z3_status": "error",
   "z3_witness": null,
-  "z3_seconds": 0.019,
+  "z3_seconds": 0.005,
   "z3_detail": "line 6: name 'out' is not defined",
   "z3_witness_confirmed": null,
   "label": null
@@ -9043,15 +9017,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    -3,
-    1,
     0,
-    -2,
-    -2,
-    -1
+    4,
+    2,
+    3,
+    0,
+    1
    ]
   },
-  "z3_seconds": 0.151,
+  "z3_seconds": 0.136,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -9077,14 +9051,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    1,
-    1,
-    3,
-    2,
-    3
+    0,
+    0,
+    0,
+    0,
+    0
    ]
   },
-  "z3_seconds": 0.305,
+  "z3_seconds": 0.226,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -9109,11 +9083,11 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    1,
-    0
+    0,
+    -1
    ]
   },
-  "z3_seconds": 0.218,
+  "z3_seconds": 0.18,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -9137,7 +9111,7 @@
   "z3_witness": {
    "xs": []
   },
-  "z3_seconds": 0.338,
+  "z3_seconds": 0.248,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -9162,15 +9136,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    -4,
     -1,
+    -4,
     -3,
     -2,
-    2,
+    1,
     0
    ]
   },
-  "z3_seconds": 0.238,
+  "z3_seconds": 0.212,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -9195,12 +9169,10 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    0,
-    2,
-    1
+    0
    ]
   },
-  "z3_seconds": 0.194,
+  "z3_seconds": 0.176,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -9227,12 +9199,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
+    -3,
+    -2,
     -1,
     0,
-    0
+    1,
+    1
    ]
   },
-  "z3_seconds": 0.257,
+  "z3_seconds": 0.224,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -9263,10 +9238,10 @@
     0,
     0,
     0,
-    1
+    -1
    ]
   },
-  "z3_seconds": 0.242,
+  "z3_seconds": 0.227,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -9292,13 +9267,11 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    3,
-    4,
-    5,
-    5
+    9,
+    8
    ]
   },
-  "z3_seconds": 0.365,
+  "z3_seconds": 0.3,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -9324,15 +9297,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
+    -7,
+    -2,
+    -6,
+    -5,
+    -3,
+    -2
    ]
   },
-  "z3_seconds": 0.4,
+  "z3_seconds": 0.27,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -9358,15 +9331,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
+    3,
     2,
-    1,
-    0,
-    -1,
-    -2,
-    -3
+    4,
+    5,
+    6
    ]
   },
-  "z3_seconds": 0.356,
+  "z3_seconds": 0.258,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -9394,13 +9366,12 @@
   "z3_witness": {
    "xs": [
     0,
-    0,
-    0,
-    0,
-    0
+    -1,
+    1,
+    -1
    ]
   },
-  "z3_seconds": 0.313,
+  "z3_seconds": 0.204,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -9427,14 +9398,13 @@
   "z3_witness": {
    "xs": [
     0,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1
+    0,
+    0,
+    0,
+    0
    ]
   },
-  "z3_seconds": 0.399,
+  "z3_seconds": 0.306,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -9460,15 +9430,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    -5,
-    -4,
-    -3,
-    -2,
-    0,
-    -1
+    2,
+    2,
+    2,
+    2,
+    2,
+    1
    ]
   },
-  "z3_seconds": 0.247,
+  "z3_seconds": 0.205,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -9488,7 +9458,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.402,
+  "z3_seconds": 0.311,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -9515,15 +9485,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    -4,
-    -3,
     -2,
     -1,
-    1,
-    0
+    2,
+    0,
+    1
    ]
   },
-  "z3_seconds": 0.391,
+  "z3_seconds": 0.287,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -9548,6 +9517,10 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
+    -5,
+    -4,
+    -3,
+    -2,
     -1
    ]
   },
@@ -9584,7 +9557,7 @@
     0
    ]
   },
-  "z3_seconds": 0.021,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -9617,7 +9590,7 @@
     0
    ]
   },
-  "z3_seconds": 0.007,
+  "z3_seconds": 0.009,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -9647,14 +9620,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    6,
-    1,
-    1,
-    -8,
-    7
+    -1,
+    -2,
+    -10,
+    -9,
+    -7
    ]
   },
-  "z3_seconds": 0.038,
+  "z3_seconds": 0.012,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -9674,7 +9647,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.012,
+  "z3_seconds": 0.011,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -9704,15 +9677,10 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    1,
-    -1,
-    0,
-    0,
-    2,
-    -2
+    -1
    ]
   },
-  "z3_seconds": 0.025,
+  "z3_seconds": 0.023,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -9774,7 +9742,7 @@
     1
    ]
   },
-  "z3_seconds": 0.031,
+  "z3_seconds": 0.019,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -9794,7 +9762,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.046,
+  "z3_seconds": 0.022,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -9824,15 +9792,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    -1,
-    2,
-    -2,
+    -7,
     3,
+    -4,
+    4,
     2,
-    1
+    3
    ]
   },
-  "z3_seconds": 0.04,
+  "z3_seconds": 0.018,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -9862,15 +9830,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    -6,
-    -6,
-    -9,
     -8,
-    -7
+    -7,
+    -9,
+    -9,
+    -6
    ],
-   "k": 7
+   "k": 8
   },
-  "z3_seconds": 0.158,
+  "z3_seconds": 0.135,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -9901,7 +9869,7 @@
    ],
    "k": 1
   },
-  "z3_seconds": 0.034,
+  "z3_seconds": 0.017,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -9932,13 +9900,14 @@
   "z3_witness": {
    "xs": [
     -9,
-    -9,
-    -8,
-    -7
+    -6,
+    -6,
+    -7,
+    -9
    ],
    "k": 11
   },
-  "z3_seconds": 0.167,
+  "z3_seconds": 0.183,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -9968,14 +9937,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    4,
-    3,
-    5,
-    2
+    1,
+    0,
+    1,
+    0
    ],
-   "k": 11
+   "k": 4
   },
-  "z3_seconds": 0.067,
+  "z3_seconds": 0.062,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -10031,7 +10000,7 @@
     0
    ]
   },
-  "z3_seconds": 0.248,
+  "z3_seconds": 0.221,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -10055,16 +10024,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "xs": [
-    2,
-    1,
-    1,
-    0,
-    0,
-    0
-   ]
+   "xs": []
   },
-  "z3_seconds": 0.212,
+  "z3_seconds": 0.206,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -10089,16 +10051,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    2,
-    1,
-    1,
-    1,
     0,
+    1,
+    2,
+    3,
     0,
     0
    ]
   },
-  "z3_seconds": 0.316,
+  "z3_seconds": 0.24,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -10127,15 +10088,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    0,
-    0,
-    0,
+    1,
+    1,
+    2,
     1,
     0,
-    0
+    0,
+    1
    ]
   },
-  "z3_seconds": 0.288,
+  "z3_seconds": 0.203,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -10160,16 +10122,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
+    1,
     0,
     1,
+    0,
     2,
-    3,
     1,
-    0,
-    1
+    0
    ]
   },
-  "z3_seconds": 0.259,
+  "z3_seconds": 0.216,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -10194,16 +10156,10 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    2,
-    1,
-    2,
-    3,
-    2,
-    1,
     0
    ]
   },
-  "z3_seconds": 0.262,
+  "z3_seconds": 0.2,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -10237,10 +10193,11 @@
     0,
     0,
     0,
+    0,
     0
    ]
   },
-  "z3_seconds": 0.315,
+  "z3_seconds": 0.205,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -10273,7 +10230,7 @@
     0
    ]
   },
-  "z3_seconds": 0.258,
+  "z3_seconds": 0.22,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -10300,10 +10257,11 @@
    "xs": [
     1,
     1,
+    0,
     0
    ]
   },
-  "z3_seconds": 0.216,
+  "z3_seconds": 0.198,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -10331,15 +10289,15 @@
   "z3_witness": {
    "xs": [
     0,
+    1,
     0,
     1,
-    2,
-    2,
-    2,
-    2
+    1,
+    1,
+    1
    ]
   },
-  "z3_seconds": 0.261,
+  "z3_seconds": 0.225,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -10368,14 +10326,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    3,
-    3,
+    1,
+    1,
+    1,
+    1,
     2,
     1,
     0
    ]
   },
-  "z3_seconds": 0.317,
+  "z3_seconds": 0.18,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -10404,16 +10364,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    0,
-    1,
-    3,
     2,
-    1,
+    2,
+    2,
+    2,
+    2,
     1,
     0
    ]
   },
-  "z3_seconds": 0.229,
+  "z3_seconds": 0.221,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -10437,7 +10397,7 @@
   "z3_witness": {
    "xs": []
   },
-  "z3_seconds": 0.207,
+  "z3_seconds": 0.192,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -10461,7 +10421,7 @@
   "z3_witness": {
    "xs": []
   },
-  "z3_seconds": 0.234,
+  "z3_seconds": 0.181,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -10490,14 +10450,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    2,
-    2,
-    1,
     0,
-    1
+    0,
+    0,
+    0,
+    0,
+    0
    ]
   },
-  "z3_seconds": 0.292,
+  "z3_seconds": 0.196,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -10522,16 +10483,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    1,
-    1,
-    3,
-    2,
-    1,
     0,
-    1
+    0,
+    0,
+    0,
+    0,
+    0
    ]
   },
-  "z3_seconds": 0.294,
+  "z3_seconds": 0.204,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -10561,14 +10521,15 @@
   "z3_witness": {
    "xs": [
     0,
-    0,
-    0,
-    0,
-    0,
-    1
+    1,
+    2,
+    3,
+    3,
+    3,
+    0
    ]
   },
-  "z3_seconds": 0.26,
+  "z3_seconds": 0.209,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -10597,14 +10558,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
+    1,
     0,
-    1,
-    1,
-    1,
+    0,
+    0,
+    0,
+    0,
     1
    ]
   },
-  "z3_seconds": 0.29,
+  "z3_seconds": 0.218,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -10634,15 +10597,15 @@
   "z3_witness": {
    "xs": [
     0,
+    0,
     1,
-    2,
-    3,
-    3,
-    3,
-    0
+    1,
+    1,
+    1,
+    1
    ]
   },
-  "z3_seconds": 0.314,
+  "z3_seconds": 0.208,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -10671,15 +10634,13 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    0,
     1,
-    2,
-    2,
-    2,
-    2
+    0,
+    0,
+    0
    ]
   },
-  "z3_seconds": 0.234,
+  "z3_seconds": 0.182,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -10709,15 +10670,15 @@
   "z3_witness": {
    "xs": [
     0,
-    1,
-    2,
     0,
+    1,
+    1,
     1,
     1,
     2
    ]
   },
-  "z3_seconds": 0.251,
+  "z3_seconds": 0.206,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -10746,16 +10707,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
+    0,
     1,
-    0,
-    0,
     1,
     2,
-    3,
+    1,
+    2,
     0
    ]
   },
-  "z3_seconds": 0.264,
+  "z3_seconds": 0.192,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -10775,7 +10736,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.321,
+  "z3_seconds": 0.208,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -10806,14 +10767,10 @@
    "xs": [
     0,
     0,
-    1,
-    1,
-    0,
-    0,
     0
    ]
   },
-  "z3_seconds": 0.257,
+  "z3_seconds": 0.179,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -10841,15 +10798,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    2,
-    1,
     0,
+    1,
+    1,
     0,
     0,
     0
    ]
   },
-  "z3_seconds": 0.241,
+  "z3_seconds": 0.196,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -10877,16 +10834,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    2,
+    0,
     1,
     1,
-    1,
-    1,
-    1,
+    0,
+    0,
     0
    ]
   },
-  "z3_seconds": 0.264,
+  "z3_seconds": 0.203,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -10915,11 +10871,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
+    0,
+    0,
+    0,
+    0,
     1,
-    0
+    2,
+    2
    ]
   },
-  "z3_seconds": 0.318,
+  "z3_seconds": 0.182,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -10950,13 +10911,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    2,
+    1,
     0,
     2,
-    0
+    1,
+    1,
+    1
    ]
   },
-  "z3_seconds": 0.291,
+  "z3_seconds": 0.214,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -10985,16 +10948,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    3,
-    2,
-    1,
-    1,
-    1,
-    1,
-    0
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1
    ]
   },
-  "z3_seconds": 0.255,
+  "z3_seconds": 0.206,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -11021,11 +10984,11 @@
     0,
     0,
     0,
-    0,
+    1,
     1
    ]
   },
-  "z3_seconds": 0.541,
+  "z3_seconds": 0.404,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -11052,14 +11015,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    1,
-    1,
-    1,
     0,
-    0
+    0,
+    0,
+    0,
+    0,
+    -1
    ]
   },
-  "z3_seconds": 0.402,
+  "z3_seconds": 0.425,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -11087,15 +11051,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    0,
-    -3,
     -2,
     -1,
     0,
-    0
+    1,
+    2
    ]
   },
-  "z3_seconds": 0.477,
+  "z3_seconds": 0.347,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -11122,14 +11085,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    3,
     2,
     1,
     0,
-    1
+    0,
+    -1,
+    0
    ]
   },
-  "z3_seconds": 0.336,
+  "z3_seconds": 0.338,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -11157,14 +11121,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    -2,
-    -3,
+    -1,
     -2,
     -1,
-    0
+    0,
+    0,
+    1
    ]
   },
-  "z3_seconds": 0.323,
+  "z3_seconds": 0.408,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -11190,15 +11155,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
+    -3,
+    -2,
+    -1,
     0,
-    0,
-    0,
-    0,
-    0,
+    1,
     1
    ]
   },
-  "z3_seconds": 0.567,
+  "z3_seconds": 0.392,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -11225,14 +11190,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    3,
     2,
     1,
     0,
+    -1,
+    -1,
     -1
    ]
   },
-  "z3_seconds": 0.388,
+  "z3_seconds": 0.434,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -11267,7 +11233,7 @@
     1
    ]
   },
-  "z3_seconds": 0.315,
+  "z3_seconds": 0.291,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -11296,13 +11262,13 @@
   "z3_witness": {
    "xs": [
     0,
-    -1,
-    -1,
+    2,
+    1,
     0,
-    1
+    -1
    ]
   },
-  "z3_seconds": 0.453,
+  "z3_seconds": 0.394,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -11329,15 +11295,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
+    3,
+    2,
+    1,
     0,
-    0,
-    0,
-    0,
-    0,
-    1
+    0
    ]
   },
-  "z3_seconds": 0.459,
+  "z3_seconds": 0.38,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -11372,7 +11337,7 @@
     3
    ]
   },
-  "z3_seconds": 0.319,
+  "z3_seconds": 0.268,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -11398,12 +11363,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    -1,
+    0,
+    0,
+    0,
+    0,
     0,
     1
    ]
   },
-  "z3_seconds": 0.414,
+  "z3_seconds": 0.399,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -11430,15 +11398,12 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
+    1,
     0,
-    0,
-    0,
-    0,
-    0,
-    -1
+    0
    ]
   },
-  "z3_seconds": 0.476,
+  "z3_seconds": 0.286,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -11465,13 +11430,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
+    2,
+    1,
     0,
-    0,
-    0,
+    -1,
+    -1,
     -1
    ]
   },
-  "z3_seconds": 0.299,
+  "z3_seconds": 0.269,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -11499,15 +11466,13 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    0,
-    0,
-    -2,
     -1,
     0,
-    1
+    1,
+    2
    ]
   },
-  "z3_seconds": 0.343,
+  "z3_seconds": 0.274,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -11538,12 +11503,10 @@
     0,
     0,
     0,
-    0,
-    0,
     -1
    ]
   },
-  "z3_seconds": 0.273,
+  "z3_seconds": 0.489,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -11570,13 +11533,13 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
+    -1,
+    0,
     1,
-    2,
-    1,
-    2
+    0
    ]
   },
-  "z3_seconds": 0.383,
+  "z3_seconds": 0.266,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -11604,15 +11567,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    -2,
-    -2,
+    -1,
+    0,
     -2,
     -1,
     0,
     -1
    ]
   },
-  "z3_seconds": 0.422,
+  "z3_seconds": 0.27,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -11640,14 +11603,14 @@
   "z3_witness": {
    "xs": [
     1,
+    1,
     0,
-    0,
-    0,
-    0,
+    -1,
+    -1,
     -1
    ]
   },
-  "z3_seconds": 0.348,
+  "z3_seconds": 0.333,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -11675,15 +11638,12 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    2,
-    1,
-    1,
     1,
     0,
     1
    ]
   },
-  "z3_seconds": 0.256,
+  "z3_seconds": 0.384,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -11713,15 +11673,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    2,
-    1,
-    2,
+    -2,
     0,
     -1,
-    -1
+    -3,
+    -2,
+    -4
    ]
   },
-  "z3_seconds": 0.632,
+  "z3_seconds": 0.406,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -11743,9 +11703,16 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "xs": []
+   "xs": [
+    -1,
+    0,
+    0,
+    0,
+    -1,
+    0
+   ]
   },
-  "z3_seconds": 0.461,
+  "z3_seconds": 0.343,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -11767,15 +11734,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "xs": [
-    2,
-    1,
-    2,
-    0,
-    -1
-   ]
+   "xs": []
   },
-  "z3_seconds": 0.432,
+  "z3_seconds": 0.373,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -11797,9 +11758,16 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "xs": []
+   "xs": [
+    0,
+    1,
+    -1,
+    0,
+    -2,
+    -3
+   ]
   },
-  "z3_seconds": 0.485,
+  "z3_seconds": 0.616,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -11819,7 +11787,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 1.004,
+  "z3_seconds": 0.678,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -11839,7 +11807,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.599,
+  "z3_seconds": 0.451,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -11873,7 +11841,7 @@
     -1
    ]
   },
-  "z3_seconds": 0.44,
+  "z3_seconds": 0.423,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -11904,14 +11872,14 @@
   "z3_witness": {
    "xs": [
     0,
-    -1,
-    -1,
+    0,
     0,
     -1,
-    0
+    -1,
+    -1
    ]
   },
-  "z3_seconds": 0.686,
+  "z3_seconds": 0.483,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -11941,15 +11909,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
+    2,
+    1,
     0,
     -1,
-    0,
     -2,
-    -3,
-    -4
+    0
    ]
   },
-  "z3_seconds": 0.517,
+  "z3_seconds": 0.479,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -11979,13 +11947,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    3,
-    2,
-    1,
-    0
+    -1,
+    -1,
+    -1,
+    0,
+    -2,
+    -1
    ]
   },
-  "z3_seconds": 0.392,
+  "z3_seconds": 0.317,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -12015,12 +11985,12 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    2,
-    1,
+    -1,
+    0,
+    -1,
     0,
     0,
-    0,
-    1
+    0
    ]
   },
   "z3_seconds": 0.474,
@@ -12054,14 +12024,10 @@
   "z3_witness": {
    "xs": [
     0,
-    2,
-    0,
-    1,
-    0,
     -1
    ]
   },
-  "z3_seconds": 0.897,
+  "z3_seconds": 0.425,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -12090,15 +12056,11 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    1,
-    0,
-    3,
-    2,
-    4,
-    0
+    -4,
+    -4
    ]
   },
-  "z3_seconds": 0.747,
+  "z3_seconds": 0.433,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -12128,15 +12090,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    3,
-    0,
-    0,
-    1,
-    1,
-    2
+    -1,
+    -3,
+    -4,
+    -3,
+    -2,
+    0
    ]
   },
-  "z3_seconds": 0.52,
+  "z3_seconds": 0.398,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -12166,14 +12128,13 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
+    -1,
     1,
-    -1,
     0,
-    -1,
-    -2
+    -1
    ]
   },
-  "z3_seconds": 0.43,
+  "z3_seconds": 0.385,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -12206,12 +12167,10 @@
     3,
     2,
     1,
-    0,
-    2,
-    3
+    0
    ]
   },
-  "z3_seconds": 0.476,
+  "z3_seconds": 0.388,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -12231,7 +12190,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.518,
+  "z3_seconds": 0.397,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -12261,15 +12220,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
+    2,
+    1,
+    0,
     -1,
-    0,
-    0,
-    0,
-    -1,
+    -2,
     0
    ]
   },
-  "z3_seconds": 0.483,
+  "z3_seconds": 0.277,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -12301,11 +12260,10 @@
    "xs": [
     2,
     1,
-    0,
-    -1
+    2
    ]
   },
-  "z3_seconds": 0.421,
+  "z3_seconds": 0.303,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -12335,12 +12293,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
+    2,
     0,
-    -1
+    -3,
+    -1,
+    -5,
+    4
    ],
    "target": 0
   },
-  "z3_seconds": 0.15,
+  "z3_seconds": 0.107,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -12369,15 +12331,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    -1,
     0,
     0,
-    0,
-    -1
+    1,
+    1,
+    -2,
+    -2
    ],
    "target": 0
   },
-  "z3_seconds": 0.444,
+  "z3_seconds": 0.307,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -12397,7 +12360,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.115,
+  "z3_seconds": 0.105,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -12417,7 +12380,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.152,
+  "z3_seconds": 0.128,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -12437,7 +12400,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.134,
+  "z3_seconds": 0.113,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -12466,15 +12429,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    -2,
-    2,
-    -1,
+    3,
+    4,
     0,
+    2,
     2
    ],
-   "target": 0
+   "target": 5
   },
-  "z3_seconds": 0.14,
+  "z3_seconds": 0.122,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -12504,11 +12467,12 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    0
+    0,
+    1
    ],
    "target": 0
   },
-  "z3_seconds": 0.141,
+  "z3_seconds": 0.101,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -12539,16 +12503,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
+    4,
     0,
-    -2,
-    0,
-    0,
-    0,
+    2,
+    2,
     1
    ],
-   "target": -1
+   "target": 3
   },
-  "z3_seconds": 0.145,
+  "z3_seconds": 0.126,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -12578,15 +12541,15 @@
   "z3_witness": {
    "xs": [
     -2,
-    -4,
     0,
-    3,
+    -5,
     -3,
-    1
+    -1,
+    0
    ],
-   "target": 0
+   "target": -4
   },
-  "z3_seconds": 0.136,
+  "z3_seconds": 0.106,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -12616,14 +12579,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    -1,
-    0,
-    -1,
-    -1
+    1,
+    1,
+    1,
+    1,
+    0
    ],
    "target": 0
   },
-  "z3_seconds": 0.138,
+  "z3_seconds": 0.115,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -12657,7 +12621,7 @@
    ],
    "target": 0
   },
-  "z3_seconds": 0.145,
+  "z3_seconds": 0.124,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -12687,16 +12651,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    1,
-    1,
-    1,
-    1,
-    1,
-    0
+    -2,
+    -2,
+    -2,
+    0,
+    1
    ],
    "target": 0
   },
-  "z3_seconds": 0.161,
+  "z3_seconds": 0.124,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -12725,16 +12688,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    2,
     0,
+    -3,
+    1,
     -1,
-    4,
     2,
-    0
+    -2
    ],
-   "target": 3
+   "target": 0
   },
-  "z3_seconds": 0.149,
+  "z3_seconds": 0.09,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -12765,11 +12728,15 @@
   "z3_witness": {
    "xs": [
     0,
-    1
+    -1,
+    2,
+    2,
+    2,
+    -1
    ],
    "target": 0
   },
-  "z3_seconds": 0.148,
+  "z3_seconds": 0.116,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -12799,16 +12766,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    -1,
+    -3,
+    0,
     2,
     2,
     2,
-    2,
-    -1
+    2
    ],
-   "target": 0
+   "target": -2
   },
-  "z3_seconds": 0.117,
+  "z3_seconds": 0.111,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -12830,9 +12797,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": -9999
+   "n": -1
   },
-  "z3_seconds": 0.019,
+  "z3_seconds": 0.05,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -12854,9 +12821,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": 0
+   "n": -1
   },
-  "z3_seconds": 0.006,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -12878,9 +12845,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": -1
+   "n": -1000
   },
-  "z3_seconds": 0.007,
+  "z3_seconds": 0.008,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": null
@@ -12902,9 +12869,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": 0
+   "n": -1
   },
-  "z3_seconds": 0.008,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -12928,7 +12895,7 @@
   "z3_witness": {
    "n": 0
   },
-  "z3_seconds": 0.016,
+  "z3_seconds": 0.015,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -12948,7 +12915,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.009,
+  "z3_seconds": 0.01,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -12972,7 +12939,7 @@
   "z3_witness": {
    "n": -1
   },
-  "z3_seconds": 0.008,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -12994,9 +12961,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": -1000
+   "n": 1000
   },
-  "z3_seconds": 0.007,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -13018,9 +12985,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": 1000
+   "n": -1000
   },
-  "z3_seconds": 0.006,
+  "z3_seconds": 0.013,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -13040,7 +13007,7 @@
   "sample_witness": null,
   "z3_status": "witness",
   "z3_witness": {
-   "n": 1000
+   "n": 10
   },
   "z3_seconds": 0.007,
   "z3_detail": "",
@@ -13062,7 +13029,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.004,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -13084,9 +13051,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": -1000
+   "n": -1999
   },
-  "z3_seconds": 0.008,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -13106,7 +13073,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.016,
+  "z3_seconds": 0.011,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -13128,9 +13095,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": 1008
+   "n": 1000
   },
-  "z3_seconds": 0.008,
+  "z3_seconds": 0.01,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -13152,9 +13119,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": -1220
+   "n": 10
   },
-  "z3_seconds": 0.012,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -13176,9 +13143,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": 9
+   "n": -18
   },
-  "z3_seconds": 0.008,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -13200,9 +13167,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": 1000
+   "n": -1000
   },
-  "z3_seconds": 0.006,
+  "z3_seconds": 0.011,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -13224,9 +13191,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "n": 9260
+   "n": 9000
   },
-  "z3_seconds": 0.008,
+  "z3_seconds": 0.009,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -13254,7 +13221,7 @@
    "b": 1,
    "c": -1
   },
-  "z3_seconds": 0.021,
+  "z3_seconds": 0.019,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -13274,7 +13241,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.029,
+  "z3_seconds": 0.016,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -13302,7 +13269,7 @@
    "b": 2,
    "c": 3
   },
-  "z3_seconds": 0.009,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -13327,10 +13294,10 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": 0,
-   "b": 2,
+   "b": -1,
    "c": 1
   },
-  "z3_seconds": 0.011,
+  "z3_seconds": 0.009,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -13354,11 +13321,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 1,
+   "a": -1,
    "b": 0,
-   "c": -1
+   "c": 1
   },
-  "z3_seconds": 0.028,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -13386,7 +13353,7 @@
    "b": 0,
    "c": -2
   },
-  "z3_seconds": 0.029,
+  "z3_seconds": 0.01,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -13406,7 +13373,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.026,
+  "z3_seconds": 0.02,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -13434,7 +13401,7 @@
    "b": 0,
    "c": 1
   },
-  "z3_seconds": 0.03,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -13454,7 +13421,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.03,
+  "z3_seconds": 0.01,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -13482,7 +13449,7 @@
    "b": 0,
    "c": 1
   },
-  "z3_seconds": 0.029,
+  "z3_seconds": 0.009,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -13502,7 +13469,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.025,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -13526,11 +13493,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 1,
-   "b": 0,
-   "c": 1
+   "a": -1,
+   "b": -2,
+   "c": 0
   },
-  "z3_seconds": 0.027,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -13550,7 +13517,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.011,
+  "z3_seconds": 0.01,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -13578,7 +13545,7 @@
    "b": 2,
    "c": 1
   },
-  "z3_seconds": 0.028,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -13598,7 +13565,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.028,
+  "z3_seconds": 0.017,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -13622,11 +13589,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 0,
-   "b": -1,
-   "c": 1
+   "a": 1,
+   "b": 3,
+   "c": 2
   },
-  "z3_seconds": 0.027,
+  "z3_seconds": 0.008,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -13646,7 +13613,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.011,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -13674,7 +13641,7 @@
    "b": -1,
    "c": 1
   },
-  "z3_seconds": 0.018,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -13694,7 +13661,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.008,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -13718,11 +13685,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": -1,
-   "b": 0,
-   "c": -2
+   "a": 0,
+   "b": 1,
+   "c": -1
   },
-  "z3_seconds": 0.03,
+  "z3_seconds": 0.011,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -13742,7 +13709,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.008,
+  "z3_seconds": 0.01,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -13766,11 +13733,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 1,
-   "b": -1,
-   "c": 0
+   "a": 0,
+   "b": 1,
+   "c": -1
   },
-  "z3_seconds": 0.028,
+  "z3_seconds": 0.01,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -13819,7 +13786,7 @@
    "unit_cents": 100,
    "qty": 48
   },
-  "z3_seconds": 0.021,
+  "z3_seconds": 0.01,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -13842,10 +13809,10 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "unit_cents": 20,
+   "unit_cents": 2,
    "qty": 100
   },
-  "z3_seconds": 0.01,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -13868,10 +13835,10 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "unit_cents": 330,
+   "unit_cents": 1,
    "qty": 100
   },
-  "z3_seconds": 0.019,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -13894,10 +13861,10 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "unit_cents": 100,
-   "qty": 48
+   "unit_cents": 20,
+   "qty": 1
   },
-  "z3_seconds": 0.009,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -13920,10 +13887,10 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "unit_cents": 1,
-   "qty": 10
+   "unit_cents": 10,
+   "qty": 1
   },
-  "z3_seconds": 0.004,
+  "z3_seconds": 0.002,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -13949,7 +13916,7 @@
    "unit_cents": 1,
    "qty": 100
   },
-  "z3_seconds": 0.025,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -13975,7 +13942,7 @@
    "unit_cents": 1,
    "qty": 100
   },
-  "z3_seconds": 0.029,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14001,7 +13968,7 @@
    "unit_cents": 1,
    "qty": 99
   },
-  "z3_seconds": 0.007,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14027,7 +13994,7 @@
    "unit_cents": 1,
    "qty": 101
   },
-  "z3_seconds": 0.004,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14053,7 +14020,7 @@
    "unit_cents": 1,
    "qty": 100
   },
-  "z3_seconds": 0.024,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14079,7 +14046,7 @@
    "unit_cents": 1,
    "qty": 50
   },
-  "z3_seconds": 0.008,
+  "z3_seconds": 0.024,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14105,7 +14072,7 @@
    "unit_cents": 1,
    "qty": 60
   },
-  "z3_seconds": 0.008,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14131,7 +14098,7 @@
    "unit_cents": 1,
    "qty": 100
   },
-  "z3_seconds": 0.004,
+  "z3_seconds": 0.002,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14157,7 +14124,7 @@
    "unit_cents": 500,
    "qty": 50
   },
-  "z3_seconds": 0.031,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14180,10 +14147,10 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "unit_cents": 500,
+   "unit_cents": 1,
    "qty": 49
   },
-  "z3_seconds": 0.01,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14206,10 +14173,10 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "unit_cents": 2,
-   "qty": 51
+   "unit_cents": 1,
+   "qty": 59
   },
-  "z3_seconds": 0.032,
+  "z3_seconds": 0.013,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14232,10 +14199,10 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "unit_cents": 2,
+   "unit_cents": 1,
    "qty": 51
   },
-  "z3_seconds": 0.022,
+  "z3_seconds": 0.024,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14261,7 +14228,7 @@
    "unit_cents": 100,
    "qty": 1
   },
-  "z3_seconds": 0.012,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14287,7 +14254,7 @@
    "unit_cents": 1,
    "qty": 1
   },
-  "z3_seconds": 0.021,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14310,10 +14277,10 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "unit_cents": 500,
-   "qty": 200
+   "unit_cents": 51,
+   "qty": 2
   },
-  "z3_seconds": 0.017,
+  "z3_seconds": 0.026,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14339,7 +14306,7 @@
    "unit_cents": 1,
    "qty": 100
   },
-  "z3_seconds": 0.021,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14365,7 +14332,7 @@
    "unit_cents": 500,
    "qty": 200
   },
-  "z3_seconds": 0.022,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14389,11 +14356,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "balance": 101,
+   "balance": 99,
    "amount": 99,
    "overdraft": false
   },
-  "z3_seconds": 0.014,
+  "z3_seconds": 0.008,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14418,10 +14385,10 @@
   "z3_status": "witness",
   "z3_witness": {
    "balance": 0,
-   "amount": 100,
+   "amount": 0,
    "overdraft": true
   },
-  "z3_seconds": 0.012,
+  "z3_seconds": 0.008,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14469,7 +14436,7 @@
   ],
   "z3_status": "error",
   "z3_witness": null,
-  "z3_seconds": 0.004,
+  "z3_seconds": 0.002,
   "z3_detail": "line 12: name 'new_balance' is not defined",
   "z3_witness_confirmed": null,
   "label": null
@@ -14493,7 +14460,7 @@
   ],
   "z3_status": "error",
   "z3_witness": null,
-  "z3_seconds": 0.002,
+  "z3_seconds": 0.001,
   "z3_detail": "line 12: name 'limit' is not defined",
   "z3_witness_confirmed": null,
   "label": null
@@ -14521,7 +14488,7 @@
    "amount": 501,
    "overdraft": true
   },
-  "z3_seconds": 0.026,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14545,11 +14512,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "balance": 0,
+   "balance": 2,
    "amount": 0,
-   "overdraft": true
+   "overdraft": false
   },
-  "z3_seconds": 0.014,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14577,7 +14544,7 @@
    "amount": 100,
    "overdraft": true
   },
-  "z3_seconds": 0.027,
+  "z3_seconds": 0.017,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14605,7 +14572,7 @@
    "amount": 1,
    "overdraft": false
   },
-  "z3_seconds": 0.008,
+  "z3_seconds": 0.009,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14633,7 +14600,7 @@
    "amount": 99,
    "overdraft": false
   },
-  "z3_seconds": 0.025,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14657,11 +14624,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "balance": 101,
+   "balance": 0,
    "amount": 100,
-   "overdraft": false
+   "overdraft": true
   },
-  "z3_seconds": 0.021,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14689,7 +14656,7 @@
    "amount": 1,
    "overdraft": true
   },
-  "z3_seconds": 0.024,
+  "z3_seconds": 0.012,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14713,11 +14680,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "balance": 0,
+   "balance": 2,
    "amount": 0,
-   "overdraft": true
+   "overdraft": false
   },
-  "z3_seconds": 0.01,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14741,11 +14708,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "balance": 101,
+   "balance": 100,
    "amount": 100,
    "overdraft": false
   },
-  "z3_seconds": 0.03,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14769,11 +14736,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "balance": 101,
-   "amount": 101,
-   "overdraft": false
+   "balance": 0,
+   "amount": 500,
+   "overdraft": true
   },
-  "z3_seconds": 0.012,
+  "z3_seconds": 0.015,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14801,7 +14768,7 @@
    "amount": 500,
    "overdraft": true
   },
-  "z3_seconds": 0.017,
+  "z3_seconds": 0.014,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14829,7 +14796,7 @@
    "amount": 501,
    "overdraft": true
   },
-  "z3_seconds": 0.012,
+  "z3_seconds": 0.008,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14853,11 +14820,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "balance": 3,
-   "amount": 1,
+   "balance": 101,
+   "amount": 99,
    "overdraft": false
   },
-  "z3_seconds": 0.008,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14881,11 +14848,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "balance": 3,
-   "amount": 1,
+   "balance": 100,
+   "amount": 99,
    "overdraft": false
   },
-  "z3_seconds": 0.027,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14909,11 +14876,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "balance": 99,
-   "amount": 100,
-   "overdraft": false
+   "balance": 0,
+   "amount": 501,
+   "overdraft": true
   },
-  "z3_seconds": 0.017,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14941,7 +14908,7 @@
    "amount": 100,
    "overdraft": false
   },
-  "z3_seconds": 0.008,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14969,7 +14936,7 @@
    "amount": 100,
    "overdraft": false
   },
-  "z3_seconds": 0.021,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -14997,7 +14964,7 @@
    "amount": 100,
    "overdraft": false
   },
-  "z3_seconds": 0.029,
+  "z3_seconds": 0.008,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -15021,11 +14988,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "balance": 99,
+   "balance": 100,
    "amount": 99,
    "overdraft": false
   },
-  "z3_seconds": 0.01,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -15081,7 +15048,7 @@
    "amount": 500,
    "overdraft": true
   },
-  "z3_seconds": 0.014,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -15108,7 +15075,7 @@
   ],
   "z3_status": "error",
   "z3_witness": null,
-  "z3_seconds": 0.078,
+  "z3_seconds": 0.051,
   "z3_detail": "line 11: name 'out' is not defined",
   "z3_witness_confirmed": null,
   "label": null
@@ -15136,13 +15103,13 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    3,
     2,
     1,
-    1
+    0,
+    0
    ]
   },
-  "z3_seconds": 0.401,
+  "z3_seconds": 0.252,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -15171,7 +15138,7 @@
   "z3_witness": {
    "xs": []
   },
-  "z3_seconds": 0.407,
+  "z3_seconds": 0.28,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -15199,13 +15166,10 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    0,
-    2,
-    1,
-    1
+    0
    ]
   },
-  "z3_seconds": 0.477,
+  "z3_seconds": 0.322,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -15234,7 +15198,7 @@
   "z3_witness": {
    "xs": []
   },
-  "z3_seconds": 0.442,
+  "z3_seconds": 0.303,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -15263,7 +15227,7 @@
   "z3_witness": {
    "xs": []
   },
-  "z3_seconds": 0.44,
+  "z3_seconds": 0.298,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -15291,14 +15255,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    2,
     0,
-    1,
+    2,
     3,
+    1,
     0
    ]
   },
-  "z3_seconds": 0.419,
+  "z3_seconds": 0.359,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -15326,14 +15290,12 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    2,
-    1,
     0,
-    2,
-    2
+    0,
+    0
    ]
   },
-  "z3_seconds": 0.41,
+  "z3_seconds": 0.268,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -15353,7 +15315,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.425,
+  "z3_seconds": 0.331,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -15373,7 +15335,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.372,
+  "z3_seconds": 0.281,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -15402,13 +15364,13 @@
   "z3_witness": {
    "xs": [
     1,
+    0,
+    0,
     1,
-    0,
-    0,
-    1
+    2
    ]
   },
-  "z3_seconds": 0.471,
+  "z3_seconds": 0.317,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -15436,14 +15398,12 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    0,
-    0,
-    0,
-    0,
+    2,
+    1,
     0
    ]
   },
-  "z3_seconds": 0.47,
+  "z3_seconds": 0.336,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -15472,13 +15432,13 @@
   "z3_witness": {
    "xs": [
     0,
-    1,
-    1,
-    1,
-    1
+    0,
+    0,
+    0,
+    0
    ]
   },
-  "z3_seconds": 0.466,
+  "z3_seconds": 0.315,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -15498,7 +15458,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.487,
+  "z3_seconds": 0.347,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -15518,7 +15478,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.361,
+  "z3_seconds": 0.296,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -15547,13 +15507,11 @@
   "z3_witness": {
    "xs": [
     1,
-    2,
-    2,
-    2,
-    0
+    0,
+    2
    ]
   },
-  "z3_seconds": 0.462,
+  "z3_seconds": 0.317,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -15573,7 +15531,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.135,
+  "z3_seconds": 0.089,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -15601,14 +15559,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    2,
+    0,
+    0,
+    0,
     1,
-    0,
-    0,
-    0
+    2
    ]
   },
-  "z3_seconds": 0.454,
+  "z3_seconds": 0.371,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -15633,12 +15591,12 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 1,
-   "b": 3,
-   "c": 2,
+   "a": 2,
+   "b": 2,
+   "c": 1,
    "d": 0
   },
-  "z3_seconds": 0.018,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -15663,12 +15621,12 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 3,
-   "b": 1,
-   "c": 2,
+   "a": 1,
+   "b": 0,
+   "c": 0,
    "d": 0
   },
-  "z3_seconds": 0.029,
+  "z3_seconds": 0.017,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -15693,12 +15651,12 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 0,
+   "a": 2,
    "b": 1,
-   "c": 1,
+   "c": 0,
    "d": 1
   },
-  "z3_seconds": 0.011,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -15723,12 +15681,12 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 0,
-   "b": 0,
-   "c": 6,
-   "d": 7
+   "a": 2,
+   "b": 2,
+   "c": 1,
+   "d": 0
   },
-  "z3_seconds": 0.031,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -15753,12 +15711,12 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 4,
-   "b": 1,
-   "c": 3,
-   "d": 2
+   "a": 0,
+   "b": 0,
+   "c": 1,
+   "d": 1
   },
-  "z3_seconds": 0.029,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -15783,12 +15741,12 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 0,
-   "b": 2,
-   "c": 1,
+   "a": 1,
+   "b": 3,
+   "c": 2,
    "d": 0
   },
-  "z3_seconds": 0.019,
+  "z3_seconds": 0.027,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -15814,11 +15772,11 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": 0,
-   "b": 8,
-   "c": 9,
-   "d": 9
+   "b": 6,
+   "c": 7,
+   "d": 7
   },
-  "z3_seconds": 0.013,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -15838,7 +15796,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.023,
+  "z3_seconds": 0.008,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -15863,12 +15821,12 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 0,
-   "b": 1,
-   "c": 1,
-   "d": 1
+   "a": 1,
+   "b": 2,
+   "c": 0,
+   "d": 0
   },
-  "z3_seconds": 0.028,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -15888,7 +15846,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.019,
+  "z3_seconds": 0.024,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -15913,12 +15871,12 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 0,
-   "b": 1,
-   "c": 4,
-   "d": 5
+   "a": 1,
+   "b": 0,
+   "c": 5,
+   "d": 6
   },
-  "z3_seconds": 0.028,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -15938,7 +15896,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.016,
+  "z3_seconds": 0.009,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -15965,10 +15923,10 @@
   "z3_witness": {
    "a": 2,
    "b": 1,
-   "c": 2,
-   "d": 0
+   "c": 0,
+   "d": 9
   },
-  "z3_seconds": 0.035,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -15988,7 +15946,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.013,
+  "z3_seconds": 0.009,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -16013,12 +15971,12 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 7,
-   "b": 6,
-   "c": 9,
-   "d": 8
+   "a": 9,
+   "b": 8,
+   "c": 7,
+   "d": 6
   },
-  "z3_seconds": 0.03,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -16038,7 +15996,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.018,
+  "z3_seconds": 0.031,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -16063,12 +16021,12 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 0,
-   "b": 6,
-   "c": 7,
-   "d": 7
+   "a": 3,
+   "b": 2,
+   "c": 0,
+   "d": 1
   },
-  "z3_seconds": 0.026,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -16094,13 +16052,13 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 2,
-   "b": 3,
-   "c": 4,
+   "a": 1,
+   "b": 0,
+   "c": 2,
    "d": 0,
-   "e": 2
+   "e": 1
   },
-  "z3_seconds": 0.031,
+  "z3_seconds": 0.011,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -16126,13 +16084,13 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 3,
+   "a": 0,
    "b": 4,
-   "c": 2,
-   "d": 1,
-   "e": 5
+   "c": 1,
+   "d": 5,
+   "e": 3
   },
-  "z3_seconds": 0.014,
+  "z3_seconds": 0.01,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -16152,7 +16110,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.039,
+  "z3_seconds": 0.021,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -16181,10 +16139,10 @@
    "a": 3,
    "b": 2,
    "c": 0,
-   "d": 0,
+   "d": 1,
    "e": 0
   },
-  "z3_seconds": 0.016,
+  "z3_seconds": 0.013,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -16211,12 +16169,12 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": 3,
-   "b": 2,
-   "c": 1,
+   "b": 1,
+   "c": 2,
    "d": 4,
    "e": 0
   },
-  "z3_seconds": 0.035,
+  "z3_seconds": 0.019,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -16242,13 +16200,13 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 0,
+   "a": 4,
    "b": 0,
-   "c": 3,
-   "d": 2,
-   "e": 1
+   "c": 5,
+   "d": 1,
+   "e": 3
   },
-  "z3_seconds": 0.035,
+  "z3_seconds": 0.016,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -16274,13 +16232,13 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 2,
-   "b": 1,
-   "c": 3,
-   "d": 4,
-   "e": 0
+   "a": 1,
+   "b": 3,
+   "c": 4,
+   "d": 2,
+   "e": 5
   },
-  "z3_seconds": 0.027,
+  "z3_seconds": 0.02,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -16306,13 +16264,13 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 5,
-   "b": 4,
-   "c": 3,
-   "d": 3,
-   "e": 2
+   "a": 2,
+   "b": 1,
+   "c": 0,
+   "d": 0,
+   "e": 0
   },
-  "z3_seconds": 0.021,
+  "z3_seconds": 0.011,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -16338,13 +16296,13 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 0,
-   "b": 0,
-   "c": 2,
-   "d": 3,
-   "e": 4
+   "a": 1,
+   "b": 2,
+   "c": 0,
+   "d": 4,
+   "e": 3
   },
-  "z3_seconds": 0.032,
+  "z3_seconds": 0.012,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -16370,13 +16328,13 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 0,
+   "a": 2,
    "b": 0,
    "c": 0,
-   "d": 0,
-   "e": 1
+   "d": 1,
+   "e": 0
   },
-  "z3_seconds": 0.033,
+  "z3_seconds": 0.014,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -16402,13 +16360,13 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 0,
-   "b": 1,
-   "c": 3,
-   "d": 2,
-   "e": 4
+   "a": 4,
+   "b": 0,
+   "c": 1,
+   "d": 5,
+   "e": 3
   },
-  "z3_seconds": 0.015,
+  "z3_seconds": 0.012,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -16435,12 +16393,12 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": 0,
-   "b": 2,
-   "c": 1,
-   "d": 3,
-   "e": 4
+   "b": 0,
+   "c": 3,
+   "d": 4,
+   "e": 5
   },
-  "z3_seconds": 0.017,
+  "z3_seconds": 0.014,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -16460,7 +16418,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.048,
+  "z3_seconds": 0.027,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -16486,13 +16444,13 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 4,
-   "b": 5,
-   "c": 3,
-   "d": 1,
-   "e": 2
+   "a": 3,
+   "b": 4,
+   "c": 1,
+   "d": 2,
+   "e": 1
   },
-  "z3_seconds": 0.024,
+  "z3_seconds": 0.021,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -16512,7 +16470,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.104,
+  "z3_seconds": 0.068,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -16539,12 +16497,12 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": 0,
-   "b": 1,
+   "b": 0,
    "c": 0,
-   "d": 2,
-   "e": 3
+   "d": 1,
+   "e": 2
   },
-  "z3_seconds": 0.017,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -16564,7 +16522,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.056,
+  "z3_seconds": 0.045,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -16592,11 +16550,11 @@
   "z3_witness": {
    "a": 0,
    "b": 1,
-   "c": 1,
+   "c": 2,
    "d": 4,
-   "e": 5
+   "e": 3
   },
-  "z3_seconds": 0.014,
+  "z3_seconds": 0.015,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -16616,7 +16574,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.028,
+  "z3_seconds": 0.02,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -16642,13 +16600,13 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 1,
-   "b": 0,
-   "c": 0,
+   "a": 0,
+   "b": 1,
+   "c": 2,
    "d": 3,
-   "e": 2
+   "e": 4
   },
-  "z3_seconds": 0.032,
+  "z3_seconds": 0.008,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -16668,7 +16626,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.022,
+  "z3_seconds": 0.021,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -16694,13 +16652,13 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 5,
-   "b": 4,
-   "c": 3,
-   "d": 1,
-   "e": 2
+   "a": 2,
+   "b": 1,
+   "c": 5,
+   "d": 4,
+   "e": 3
   },
-  "z3_seconds": 0.021,
+  "z3_seconds": 0.01,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -16720,7 +16678,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.017,
+  "z3_seconds": 0.016,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -16746,13 +16704,13 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 1,
-   "b": 2,
-   "c": 3,
-   "d": 2,
-   "e": 0
+   "a": 0,
+   "b": 0,
+   "c": 5,
+   "d": 4,
+   "e": 3
   },
-  "z3_seconds": 0.023,
+  "z3_seconds": 0.018,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -16772,7 +16730,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.034,
+  "z3_seconds": 0.014,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -16798,13 +16756,13 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 3,
-   "b": 1,
+   "a": 1,
+   "b": 3,
    "c": 2,
    "d": 0,
-   "e": 4
+   "e": 1
   },
-  "z3_seconds": 0.013,
+  "z3_seconds": 0.012,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -16824,7 +16782,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.011,
+  "z3_seconds": 0.012,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -16851,12 +16809,12 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": 0,
-   "b": 3,
+   "b": 1,
    "c": 0,
-   "d": 2,
-   "e": 1
+   "d": 0,
+   "e": 5
   },
-  "z3_seconds": 0.016,
+  "z3_seconds": 0.01,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -16876,7 +16834,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.035,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -16902,11 +16860,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 1,
-   "b": 0,
-   "c": 4,
-   "d": 3,
-   "e": 2
+   "a": 0,
+   "b": 1,
+   "c": 3,
+   "d": 2,
+   "e": 4
   },
   "z3_seconds": 0.015,
   "z3_detail": "",
@@ -16936,11 +16894,11 @@
   "z3_witness": {
    "a": 1,
    "b": 2,
-   "c": 5,
-   "d": 3,
-   "e": 4
+   "c": 4,
+   "d": 0,
+   "e": 3
   },
-  "z3_seconds": 0.013,
+  "z3_seconds": 0.015,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -16966,13 +16924,13 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 5,
-   "b": 4,
+   "a": 4,
+   "b": 3,
    "c": 2,
    "d": 1,
    "e": 0
   },
-  "z3_seconds": 0.018,
+  "z3_seconds": 0.011,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -17004,7 +16962,7 @@
    "d": 4,
    "e": 5
   },
-  "z3_seconds": 0.017,
+  "z3_seconds": 0.019,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -17024,7 +16982,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.034,
+  "z3_seconds": 0.017,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -17044,7 +17002,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.024,
+  "z3_seconds": 0.016,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -17064,7 +17022,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.042,
+  "z3_seconds": 0.031,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -17096,7 +17054,7 @@
    "d": 4,
    "e": 3
   },
-  "z3_seconds": 0.018,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -17122,13 +17080,13 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 2,
-   "b": 3,
-   "c": 1,
-   "d": 5,
-   "e": 4
+   "a": 1,
+   "b": 2,
+   "c": 3,
+   "d": 4,
+   "e": 0
   },
-  "z3_seconds": 0.02,
+  "z3_seconds": 0.012,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -17154,13 +17112,13 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 4,
-   "b": 3,
-   "c": 1,
-   "d": 0,
-   "e": 2
+   "a": 0,
+   "b": 2,
+   "c": 2,
+   "d": 3,
+   "e": 4
   },
-  "z3_seconds": 0.026,
+  "z3_seconds": 0.012,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -17186,13 +17144,13 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 0,
-   "b": 0,
-   "c": 3,
-   "d": 2,
-   "e": 1
+   "a": 2,
+   "b": 1,
+   "c": 5,
+   "d": 3,
+   "e": 4
   },
-  "z3_seconds": 0.012,
+  "z3_seconds": 0.014,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -17218,13 +17176,13 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 3,
-   "b": 4,
-   "c": 2,
-   "d": 1,
-   "e": 0
+   "a": 4,
+   "b": 3,
+   "c": 0,
+   "d": 2,
+   "e": 1
   },
-  "z3_seconds": 0.017,
+  "z3_seconds": 0.014,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -17251,12 +17209,12 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": 0,
-   "b": 0,
-   "c": 1,
-   "d": 2,
-   "e": 3
+   "b": 1,
+   "c": 2,
+   "d": 3,
+   "e": 5
   },
-  "z3_seconds": 0.014,
+  "z3_seconds": 0.012,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -17283,10 +17241,10 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": 0,
-   "b": 2,
-   "c": 1,
-   "d": 3,
-   "e": 4
+   "b": 1,
+   "c": 2,
+   "d": 2,
+   "e": 3
   },
   "z3_seconds": 0.012,
   "z3_detail": "",
@@ -17308,7 +17266,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.026,
+  "z3_seconds": 0.021,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -17328,7 +17286,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.039,
+  "z3_seconds": 0.022,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -17348,7 +17306,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.045,
+  "z3_seconds": 0.029,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -17368,7 +17326,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.05,
+  "z3_seconds": 0.038,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -17388,7 +17346,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.05,
+  "z3_seconds": 0.031,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -17414,13 +17372,13 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 2,
+   "a": 0,
    "b": 1,
    "c": 3,
    "d": 5,
    "e": 4
   },
-  "z3_seconds": 0.035,
+  "z3_seconds": 0.01,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -17440,7 +17398,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.022,
+  "z3_seconds": 0.017,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -17466,13 +17424,13 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 0,
+   "a": 2,
    "b": 0,
-   "c": 1,
-   "d": 2,
-   "e": 4
+   "c": 4,
+   "d": 1,
+   "e": 3
   },
-  "z3_seconds": 0.015,
+  "z3_seconds": 0.011,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -17492,7 +17450,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.03,
+  "z3_seconds": 0.013,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -17520,11 +17478,11 @@
   "z3_witness": {
    "a": 0,
    "b": 1,
-   "c": 2,
-   "d": 4,
-   "e": 3
+   "c": 4,
+   "d": 3,
+   "e": 2
   },
-  "z3_seconds": 0.03,
+  "z3_seconds": 0.01,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -17544,7 +17502,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.014,
+  "z3_seconds": 0.008,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -17570,13 +17528,13 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 2,
-   "b": 1,
-   "c": 5,
-   "d": 4,
-   "e": 3
+   "a": 1,
+   "b": 0,
+   "c": 4,
+   "d": 3,
+   "e": 2
   },
-  "z3_seconds": 0.037,
+  "z3_seconds": 0.014,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -17596,7 +17554,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.015,
+  "z3_seconds": 0.014,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -17623,12 +17581,12 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": 0,
-   "b": 2,
+   "b": 1,
    "c": 3,
-   "d": 5,
-   "e": 5
+   "d": 3,
+   "e": 2
   },
-  "z3_seconds": 0.013,
+  "z3_seconds": 0.008,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -17648,7 +17606,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.028,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -17675,12 +17633,12 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": 0,
-   "b": 1,
-   "c": 2,
-   "d": 4,
+   "b": 0,
+   "c": 1,
+   "d": 2,
    "e": 3
   },
-  "z3_seconds": 0.022,
+  "z3_seconds": 0.011,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -17700,7 +17658,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.021,
+  "z3_seconds": 0.011,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -17727,12 +17685,12 @@
   "z3_status": "witness",
   "z3_witness": {
    "a": 0,
-   "b": 2,
-   "c": 1,
-   "d": 4,
-   "e": 3
+   "b": 1,
+   "c": 0,
+   "d": 3,
+   "e": 2
   },
-  "z3_seconds": 0.012,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -17762,12 +17720,14 @@
    "times": [
     0,
     6,
+    6,
     7,
-    7,
-    11
+    12,
+    12,
+    12
    ]
   },
-  "z3_seconds": 0.443,
+  "z3_seconds": 0.28,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -17798,16 +17758,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    3,
+    0,
+    2,
     4,
     5,
-    8,
-    9,
-    9,
-    12
+    5,
+    6,
+    8
    ]
   },
-  "z3_seconds": 0.467,
+  "z3_seconds": 0.265,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -17834,7 +17794,7 @@
   ],
   "z3_status": "error",
   "z3_witness": null,
-  "z3_seconds": 0.023,
+  "z3_seconds": 0.016,
   "z3_detail": "line 9: name 'admitted' is not defined",
   "z3_witness_confirmed": null,
   "label": null
@@ -17865,7 +17825,7 @@
     0
    ]
   },
-  "z3_seconds": 0.035,
+  "z3_seconds": 0.029,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -17893,10 +17853,12 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    0
+    0,
+    0,
+    5
    ]
   },
-  "z3_seconds": 0.305,
+  "z3_seconds": 0.195,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -17925,12 +17887,14 @@
   "z3_witness": {
    "times": [
     0,
-    2,
-    3,
-    6
+    1,
+    5,
+    6,
+    7,
+    10
    ]
   },
-  "z3_seconds": 0.391,
+  "z3_seconds": 0.269,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -17960,14 +17924,12 @@
   "z3_witness": {
    "times": [
     0,
-    2,
-    3,
-    4,
-    4,
+    0,
+    0,
     4
    ]
   },
-  "z3_seconds": 0.504,
+  "z3_seconds": 0.272,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -17997,14 +17959,14 @@
   "z3_witness": {
    "times": [
     0,
-    0,
-    1,
+    4,
     5,
-    5,
-    10
+    10,
+    10,
+    12
    ]
   },
-  "z3_seconds": 0.377,
+  "z3_seconds": 0.237,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -18033,15 +17995,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    0,
+    1,
+    2,
+    2,
     5,
-    10,
-    11,
-    12,
-    12
+    6
    ]
   },
-  "z3_seconds": 0.405,
+  "z3_seconds": 0.25,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -18073,7 +18034,7 @@
     5
    ]
   },
-  "z3_seconds": 0.395,
+  "z3_seconds": 0.252,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -18101,16 +18062,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
+    1,
+    1,
     2,
-    2,
-    3,
-    3,
-    3,
-    7,
-    7
+    5,
+    6,
+    6,
+    11
    ]
   },
-  "z3_seconds": 0.467,
+  "z3_seconds": 0.265,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -18139,14 +18100,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    1,
-    1,
     2,
-    5,
-    5
+    2,
+    6,
+    12,
+    12
    ]
   },
-  "z3_seconds": 0.364,
+  "z3_seconds": 0.271,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -18175,15 +18136,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    0,
-    1,
-    2,
-    3,
-    4,
-    5
+    5,
+    5,
+    6,
+    7,
+    9,
+    9
    ]
   },
-  "z3_seconds": 0.396,
+  "z3_seconds": 0.244,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -18213,12 +18174,14 @@
   "z3_witness": {
    "times": [
     0,
-    0,
     4,
-    4
+    5,
+    6,
+    7,
+    12
    ]
   },
-  "z3_seconds": 0.49,
+  "z3_seconds": 0.284,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -18246,13 +18209,12 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    0,
-    1,
-    4,
-    5
+    2,
+    6,
+    6
    ]
   },
-  "z3_seconds": 0.387,
+  "z3_seconds": 0.265,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -18281,16 +18243,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    6,
-    6,
-    7,
-    8,
-    9,
+    0,
+    0,
+    4,
+    4,
+    5,
     10,
     10
    ]
   },
-  "z3_seconds": 0.381,
+  "z3_seconds": 0.271,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -18319,14 +18281,14 @@
   "z3_witness": {
    "times": [
     0,
-    3,
-    4,
-    4,
+    0,
     5,
-    9
+    10,
+    10,
+    10
    ]
   },
-  "z3_seconds": 0.386,
+  "z3_seconds": 0.267,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -18355,16 +18317,13 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    5,
-    5,
-    6,
-    9,
-    9,
-    9,
-    11
+    0,
+    0,
+    0,
+    4
    ]
   },
-  "z3_seconds": 0.445,
+  "z3_seconds": 0.22,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -18392,14 +18351,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    0,
-    0,
-    0,
+    3,
     5,
-    5
+    7,
+    9,
+    11,
+    12
    ]
   },
-  "z3_seconds": 0.394,
+  "z3_seconds": 0.308,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -18429,12 +18389,12 @@
   "z3_witness": {
    "times": [
     0,
-    1,
-    1,
+    0,
+    0,
     4
    ]
   },
-  "z3_seconds": 0.374,
+  "z3_seconds": 0.309,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -18464,15 +18424,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    3,
-    3,
-    3,
-    4,
-    4,
-    4
+    0,
+    11,
+    12,
+    12,
+    12,
+    16
    ]
   },
-  "z3_seconds": 0.369,
+  "z3_seconds": 0.22,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -18502,15 +18462,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    4,
-    5,
+    12,
+    13,
     13,
     15,
-    16,
-    16
+    15
    ]
   },
-  "z3_seconds": 0.471,
+  "z3_seconds": 0.395,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -18535,13 +18494,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    0,
     3,
-    4,
+    3,
+    3,
+    3,
     16
    ]
   },
-  "z3_seconds": 0.42,
+  "z3_seconds": 0.337,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -18566,14 +18526,13 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    7,
-    12,
-    12,
-    12,
-    15
+    0,
+    16,
+    16,
+    16
    ]
   },
-  "z3_seconds": 0.341,
+  "z3_seconds": 0.253,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -18596,11 +18555,10 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    4,
-    4
+    3
    ]
   },
-  "z3_seconds": 0.562,
+  "z3_seconds": 0.293,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -18630,13 +18588,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    16,
-    16,
-    16,
-    16
+    3,
+    3,
+    3,
+    3,
+    11,
+    11
    ]
   },
-  "z3_seconds": 0.536,
+  "z3_seconds": 0.455,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -18666,12 +18626,13 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    0,
     3,
-    3
+    3,
+    7,
+    7
    ]
   },
-  "z3_seconds": 0.396,
+  "z3_seconds": 0.336,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -18702,14 +18663,14 @@
   "z3_witness": {
    "times": [
     3,
-    7,
-    11,
-    11,
-    11,
-    12
+    3,
+    3,
+    3,
+    3,
+    4
    ]
   },
-  "z3_seconds": 0.556,
+  "z3_seconds": 0.344,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -18742,10 +18703,11 @@
     2,
     2,
     3,
-    3
+    3,
+    7
    ]
   },
-  "z3_seconds": 0.553,
+  "z3_seconds": 0.336,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -18768,13 +18730,13 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    11,
-    16,
-    16,
-    16
+    3,
+    3,
+    7,
+    11
    ]
   },
-  "z3_seconds": 0.492,
+  "z3_seconds": 0.299,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -18797,15 +18759,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
+    0,
     3,
-    3,
-    3,
-    3,
-    3,
-    3
+    16,
+    16,
+    16
    ]
   },
-  "z3_seconds": 0.526,
+  "z3_seconds": 0.294,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -18826,13 +18787,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    15,
-    15,
-    15,
+    4,
+    7,
+    7,
+    7,
+    16,
     16
    ]
   },
-  "z3_seconds": 0.567,
+  "z3_seconds": 0.26,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": null
@@ -18857,10 +18820,12 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
+    0,
+    0,
     4
    ]
   },
-  "z3_seconds": 0.399,
+  "z3_seconds": 0.256,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -18891,14 +18856,14 @@
   "z3_witness": {
    "times": [
     3,
+    3,
+    4,
+    7,
     8,
-    13,
-    16,
-    16,
-    16
+    15
    ]
   },
-  "z3_seconds": 0.437,
+  "z3_seconds": 0.337,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -18919,13 +18884,13 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    7,
-    7,
-    12,
-    12
+    5,
+    5,
+    16,
+    16
    ]
   },
-  "z3_seconds": 0.472,
+  "z3_seconds": 0.313,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": null
@@ -18954,13 +18919,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    3,
-    3,
-    16,
+    7,
+    7,
+    12,
+    15,
     16
    ]
   },
-  "z3_seconds": 0.623,
+  "z3_seconds": 0.31,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -18980,7 +18946,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.529,
+  "z3_seconds": 0.382,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -19000,7 +18966,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.527,
+  "z3_seconds": 0.366,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": null
@@ -19030,15 +18996,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    7,
-    7,
-    16,
-    16,
-    16,
+    3,
+    12,
+    15,
+    15,
+    15,
     16
    ]
   },
-  "z3_seconds": 0.677,
+  "z3_seconds": 0.344,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -19063,13 +19029,13 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    3,
-    3,
-    3,
-    12
+    0,
+    0,
+    8,
+    16
    ]
   },
-  "z3_seconds": 0.385,
+  "z3_seconds": 0.262,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -19100,13 +19066,14 @@
   "z3_witness": {
    "times": [
     3,
-    3,
-    3,
+    4,
     7,
-    7
+    7,
+    7,
+    16
    ]
   },
-  "z3_seconds": 0.437,
+  "z3_seconds": 0.319,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -19137,14 +19104,12 @@
   "z3_witness": {
    "times": [
     3,
-    11,
-    16,
-    16,
-    16,
-    16
+    3,
+    3,
+    3
    ]
   },
-  "z3_seconds": 0.419,
+  "z3_seconds": 0.367,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -19169,10 +19134,11 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    12
+    3,
+    3
    ]
   },
-  "z3_seconds": 0.67,
+  "z3_seconds": 0.325,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -19197,13 +19163,10 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    8,
-    8,
-    8,
-    16
+    7
    ]
   },
-  "z3_seconds": 0.393,
+  "z3_seconds": 0.269,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -19233,15 +19196,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
+    4,
+    7,
     11,
     11,
-    15,
-    16,
-    16,
+    11,
     16
    ]
   },
-  "z3_seconds": 0.571,
+  "z3_seconds": 0.372,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -19270,13 +19233,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    3,
+    4,
+    7,
     16,
     16,
     16
    ]
   },
-  "z3_seconds": 0.453,
+  "z3_seconds": 0.291,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -19306,11 +19270,10 @@
   "z3_witness": {
    "times": [
     3,
-    3,
     16
    ]
   },
-  "z3_seconds": 0.662,
+  "z3_seconds": 0.316,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -19340,15 +19303,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    3,
-    3,
-    3,
-    3,
     8,
-    8
+    11,
+    11,
+    11,
+    15,
+    15
    ]
   },
-  "z3_seconds": 0.469,
+  "z3_seconds": 0.37,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -19376,15 +19339,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    4,
-    6,
-    7,
-    11,
-    11,
-    15
+    12,
+    13,
+    16,
+    16,
+    16
    ]
   },
-  "z3_seconds": 0.511,
+  "z3_seconds": 0.379,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -19414,13 +19376,13 @@
   "z3_witness": {
    "times": [
     0,
+    0,
     3,
     3,
-    3,
-    8
+    11
    ]
   },
-  "z3_seconds": 0.588,
+  "z3_seconds": 0.29,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -19450,15 +19412,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    0,
     3,
-    8,
-    8,
-    11,
-    11
+    3,
+    7,
+    7,
+    7,
+    16
    ]
   },
-  "z3_seconds": 0.655,
+  "z3_seconds": 0.352,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -19490,11 +19452,10 @@
     3,
     3,
     3,
-    7,
-    8
+    3
    ]
   },
-  "z3_seconds": 0.551,
+  "z3_seconds": 0.314,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -19524,15 +19485,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    3,
     7,
-    7,
-    7,
-    7,
-    11
+    8,
+    15,
+    15,
+    15,
+    15
    ]
   },
-  "z3_seconds": 0.471,
+  "z3_seconds": 0.289,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -19557,12 +19518,12 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    16,
-    16,
-    16
+    4,
+    4,
+    4
    ]
   },
-  "z3_seconds": 0.68,
+  "z3_seconds": 0.271,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -19587,15 +19548,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    0,
-    0,
+    3,
+    3,
     3,
     7,
-    11,
+    7,
     16
    ]
   },
-  "z3_seconds": 0.441,
+  "z3_seconds": 0.29,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -19625,15 +19586,13 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    4,
-    12,
-    16,
-    16,
-    16,
-    16
+    7,
+    7,
+    7,
+    7
    ]
   },
-  "z3_seconds": 0.55,
+  "z3_seconds": 0.511,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -19663,14 +19622,13 @@
   "z3_witness": {
    "times": [
     7,
-    7,
-    15,
-    15,
-    15,
+    12,
+    12,
+    12,
     16
    ]
   },
-  "z3_seconds": 0.498,
+  "z3_seconds": 0.299,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -19700,15 +19658,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    11,
-    11,
-    11,
-    11,
     12,
-    12
+    12,
+    15,
+    15,
+    16,
+    16
    ]
   },
-  "z3_seconds": 0.735,
+  "z3_seconds": 0.308,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -19737,14 +19695,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "times": [
-    0,
-    0,
     3,
     3,
-    12
+    15,
+    15,
+    15
    ]
   },
-  "z3_seconds": 0.458,
+  "z3_seconds": 0.319,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -19776,16 +19734,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "samples": [
+    1,
+    1,
+    1,
     0,
-    1,
-    1,
-    1,
     0,
     0,
     1
    ]
   },
-  "z3_seconds": 0.318,
+  "z3_seconds": 0.217,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -19805,7 +19763,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.346,
+  "z3_seconds": 0.235,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -19837,16 +19795,10 @@
   "z3_status": "witness",
   "z3_witness": {
    "samples": [
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
     1
    ]
   },
-  "z3_seconds": 0.532,
+  "z3_seconds": 0.262,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -19881,10 +19833,12 @@
     1,
     1,
     1,
-    1
+    1,
+    1,
+    0
    ]
   },
-  "z3_seconds": 0.438,
+  "z3_seconds": 0.296,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -19916,7 +19870,7 @@
     1
    ]
   },
-  "z3_seconds": 0.343,
+  "z3_seconds": 0.251,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -19949,10 +19903,10 @@
   "z3_witness": {
    "samples": [
     1,
-    0
+    1
    ]
   },
-  "z3_seconds": 0.307,
+  "z3_seconds": 0.213,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -19984,14 +19938,10 @@
   "z3_status": "witness",
   "z3_witness": {
    "samples": [
-    1,
-    0,
-    1,
-    1,
-    1
+    0
    ]
   },
-  "z3_seconds": 0.389,
+  "z3_seconds": 0.228,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -20024,7 +19974,7 @@
     1
    ]
   },
-  "z3_seconds": 0.34,
+  "z3_seconds": 0.227,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -20053,14 +20003,10 @@
    "samples": [
     1,
     1,
-    1,
-    0,
-    0,
-    0,
     1
    ]
   },
-  "z3_seconds": 0.313,
+  "z3_seconds": 0.225,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -20091,13 +20037,12 @@
     1,
     0,
     1,
-    1,
     0,
     0,
     0
    ]
   },
-  "z3_seconds": 0.513,
+  "z3_seconds": 0.227,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -20124,16 +20069,12 @@
   "z3_status": "witness",
   "z3_witness": {
    "samples": [
-    0,
-    0,
-    0,
     1,
-    0,
-    0,
-    0
+    1,
+    1
    ]
   },
-  "z3_seconds": 0.35,
+  "z3_seconds": 0.236,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -20169,7 +20110,7 @@
     0
    ]
   },
-  "z3_seconds": 0.352,
+  "z3_seconds": 0.231,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -20197,15 +20138,15 @@
   "z3_witness": {
    "samples": [
     1,
+    1,
     0,
-    0,
-    0,
+    1,
     1,
     1,
     1
    ]
   },
-  "z3_seconds": 0.337,
+  "z3_seconds": 0.227,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -20237,11 +20178,11 @@
   "z3_status": "witness",
   "z3_witness": {
    "samples": [
-    1,
-    0
+    0,
+    1
    ]
   },
-  "z3_seconds": 0.375,
+  "z3_seconds": 0.237,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -20273,15 +20214,17 @@
   "z3_status": "witness",
   "z3_witness": {
    "samples": [
+    1,
+    0,
+    1,
+    1,
     0,
     1,
     1,
-    1,
-    0,
     1
    ]
   },
-  "z3_seconds": 0.356,
+  "z3_seconds": 0.248,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -20316,14 +20259,14 @@
     1,
     1,
     1,
-    1,
+    0,
     0,
     1,
     1,
     1
    ]
   },
-  "z3_seconds": 0.36,
+  "z3_seconds": 0.237,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -20350,17 +20293,16 @@
   "z3_status": "witness",
   "z3_witness": {
    "samples": [
-    0,
-    1,
     1,
     0,
     0,
     1,
     1,
-    1
+    1,
+    0
    ]
   },
-  "z3_seconds": 0.341,
+  "z3_seconds": 0.212,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -20388,13 +20330,12 @@
   "z3_witness": {
    "samples": [
     0,
-    0,
-    0,
     1,
-    0
+    1,
+    1
    ]
   },
-  "z3_seconds": 0.364,
+  "z3_seconds": 0.222,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -20427,16 +20368,10 @@
   "z3_witness": {
    "samples": [
     1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
     1
    ]
   },
-  "z3_seconds": 0.395,
+  "z3_seconds": 0.211,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -20472,7 +20407,7 @@
     1
    ]
   },
-  "z3_seconds": 0.448,
+  "z3_seconds": 0.246,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -20508,7 +20443,7 @@
     0
    ]
   },
-  "z3_seconds": 0.359,
+  "z3_seconds": 0.233,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -20537,12 +20472,10 @@
    "samples": [
     1,
     1,
-    1,
-    0,
     1
    ]
   },
-  "z3_seconds": 0.339,
+  "z3_seconds": 0.222,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -20577,7 +20510,7 @@
     1
    ]
   },
-  "z3_seconds": 0.396,
+  "z3_seconds": 0.268,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -20608,15 +20541,17 @@
   "z3_status": "witness",
   "z3_witness": {
    "samples": [
-    0,
     1,
+    0,
+    0,
+    0,
     1,
     1,
     1,
     1
    ]
   },
-  "z3_seconds": 0.307,
+  "z3_seconds": 0.265,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -20651,14 +20586,10 @@
     0,
     1,
     1,
-    0,
-    0,
-    1,
-    1,
-    1
+    0
    ]
   },
-  "z3_seconds": 0.33,
+  "z3_seconds": 0.236,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -20692,15 +20623,15 @@
    "samples": [
     1,
     1,
-    1,
-    1,
+    0,
+    0,
     0,
     1,
     1,
     1
    ]
   },
-  "z3_seconds": 0.393,
+  "z3_seconds": 0.214,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -20732,7 +20663,7 @@
     1
    ]
   },
-  "z3_seconds": 0.414,
+  "z3_seconds": 0.235,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -20764,11 +20695,11 @@
   "z3_status": "witness",
   "z3_witness": {
    "samples": [
-    1,
-    0
+    0,
+    1
    ]
   },
-  "z3_seconds": 0.333,
+  "z3_seconds": 0.294,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -20796,7 +20727,7 @@
   "z3_witness": {
    "samples": [
     1,
-    1,
+    0,
     0,
     1,
     1,
@@ -20804,7 +20735,7 @@
     1
    ]
   },
-  "z3_seconds": 0.344,
+  "z3_seconds": 0.221,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -20840,7 +20771,7 @@
     1
    ]
   },
-  "z3_seconds": 0.457,
+  "z3_seconds": 0.266,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -20872,7 +20803,7 @@
     1
    ]
   },
-  "z3_seconds": 0.369,
+  "z3_seconds": 0.215,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -20905,11 +20836,10 @@
   "z3_witness": {
    "samples": [
     1,
-    1,
-    0
+    1
    ]
   },
-  "z3_seconds": 0.434,
+  "z3_seconds": 0.43,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -20935,15 +20865,11 @@
   "z3_status": "witness",
   "z3_witness": {
    "digits": [
-    0,
-    0,
-    9,
-    8,
     5,
-    3
+    0
    ]
   },
-  "z3_seconds": 0.169,
+  "z3_seconds": 0.086,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -20972,13 +20898,11 @@
   "z3_status": "witness",
   "z3_witness": {
    "digits": [
-    5,
-    5,
     9,
-    5
+    1
    ]
   },
-  "z3_seconds": 0.338,
+  "z3_seconds": 0.227,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -21011,7 +20935,7 @@
     0
    ]
   },
-  "z3_seconds": 0.03,
+  "z3_seconds": 0.02,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -21035,11 +20959,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "digits": [
-    0
-   ]
+   "digits": []
   },
-  "z3_seconds": 0.036,
+  "z3_seconds": 0.043,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -21070,7 +20992,7 @@
   "z3_witness": {
    "digits": []
   },
-  "z3_seconds": 0.058,
+  "z3_seconds": 0.035,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -21100,12 +21022,12 @@
   "z3_status": "witness",
   "z3_witness": {
    "digits": [
-    7,
-    8,
-    6
+    0,
+    1,
+    8
    ]
   },
-  "z3_seconds": 0.155,
+  "z3_seconds": 0.101,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -21130,11 +21052,11 @@
   "z3_status": "witness",
   "z3_witness": {
    "digits": [
-    5,
-    0
+    9,
+    1
    ]
   },
-  "z3_seconds": 0.108,
+  "z3_seconds": 0.056,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -21159,15 +21081,10 @@
   "z3_status": "witness",
   "z3_witness": {
    "digits": [
-    5,
-    5,
-    5,
-    0,
-    6,
-    5
+    9
    ]
   },
-  "z3_seconds": 0.09,
+  "z3_seconds": 0.064,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -21193,10 +21110,11 @@
   "z3_witness": {
    "digits": [
     0,
+    0,
     0
    ]
   },
-  "z3_seconds": 0.022,
+  "z3_seconds": 0.024,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -21226,14 +21144,13 @@
   "z3_status": "witness",
   "z3_witness": {
    "digits": [
-    9,
-    1,
     8,
-    7,
-    6
+    5,
+    5,
+    7
    ]
   },
-  "z3_seconds": 0.197,
+  "z3_seconds": 0.087,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -21253,7 +21170,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.757,
+  "z3_seconds": 0.803,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -21281,7 +21198,7 @@
     1
    ]
   },
-  "z3_seconds": 0.038,
+  "z3_seconds": 0.037,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -21306,7 +21223,9 @@
   "z3_status": "witness",
   "z3_witness": {
    "digits": [
+    0,
     5,
+    0,
     0,
     0,
     0
@@ -21343,13 +21262,13 @@
   "z3_witness": {
    "digits": [
     9,
-    5,
-    9,
-    7,
-    6
+    8,
+    6,
+    6,
+    5
    ]
   },
-  "z3_seconds": 0.344,
+  "z3_seconds": 0.135,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -21379,14 +21298,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "digits": [
-    9,
     6,
     6,
     6,
-    9
+    6,
+    6
    ]
   },
-  "z3_seconds": 0.153,
+  "z3_seconds": 0.123,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -21417,13 +21336,14 @@
   "z3_witness": {
    "digits": [
     0,
-    5,
     8,
-    7,
-    6
+    0,
+    0,
+    5,
+    0
    ]
   },
-  "z3_seconds": 0.143,
+  "z3_seconds": 0.236,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -21451,7 +21371,7 @@
     1
    ]
   },
-  "z3_seconds": 0.051,
+  "z3_seconds": 0.027,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -21480,16 +21400,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "digits": [
-    5,
-    8,
-    5,
-    0,
-    5,
-    0
-   ]
+   "digits": []
   },
-  "z3_seconds": 0.08,
+  "z3_seconds": 0.059,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -21520,7 +21433,7 @@
   "z3_witness": {
    "digits": []
   },
-  "z3_seconds": 0.049,
+  "z3_seconds": 0.038,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -21550,11 +21463,11 @@
   "z3_status": "witness",
   "z3_witness": {
    "digits": [
-    0,
-    4
+    5,
+    5
    ]
   },
-  "z3_seconds": 0.109,
+  "z3_seconds": 0.2,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -21582,15 +21495,11 @@
   "z3_status": "witness",
   "z3_witness": {
    "digits": [
-    9,
-    8,
-    7,
     6,
-    5,
-    0
+    4
    ]
   },
-  "z3_seconds": 0.13,
+  "z3_seconds": 0.058,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -21621,13 +21530,10 @@
   "z3_witness": {
    "digits": [
     6,
-    9,
-    6,
-    5,
-    4
+    7
    ]
   },
-  "z3_seconds": 0.075,
+  "z3_seconds": 0.054,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -21658,13 +21564,12 @@
   "z3_witness": {
    "digits": [
     9,
-    7,
-    6,
+    9,
     5,
-    9
+    8
    ]
   },
-  "z3_seconds": 0.127,
+  "z3_seconds": 0.227,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -21694,14 +21599,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "digits": [
-    0,
+    6,
     8,
+    6,
     8,
-    8,
-    8
+    6
    ]
   },
-  "z3_seconds": 0.087,
+  "z3_seconds": 0.092,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -21721,7 +21626,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.392,
+  "z3_seconds": 0.256,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -21753,10 +21658,13 @@
    "digits": [
     0,
     0,
-    0
+    0,
+    0,
+    3,
+    1
    ]
   },
-  "z3_seconds": 0.104,
+  "z3_seconds": 0.127,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -21786,12 +21694,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "digits": [
+    5,
+    7,
+    5,
     0,
     5,
-    9
+    0
    ]
   },
-  "z3_seconds": 0.073,
+  "z3_seconds": 0.055,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -21819,13 +21730,11 @@
   "z3_status": "witness",
   "z3_witness": {
    "digits": [
-    0,
-    8,
     6,
-    0
+    8
    ]
   },
-  "z3_seconds": 0.062,
+  "z3_seconds": 0.022,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -21853,7 +21762,7 @@
     9
    ]
   },
-  "z3_seconds": 0.047,
+  "z3_seconds": 0.056,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -21878,12 +21787,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "digits": [
-    6,
+    7,
     9,
-    5
+    6,
+    6,
+    6
    ]
   },
-  "z3_seconds": 0.093,
+  "z3_seconds": 0.135,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -21911,14 +21822,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "digits": [
-    4,
-    5,
+    6,
     2,
     5,
-    2
+    8,
+    9,
+    7
    ]
   },
-  "z3_seconds": 0.193,
+  "z3_seconds": 0.058,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -21948,14 +21860,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "digits": [
-    2,
+    5,
+    5,
+    9,
     6,
-    6,
-    2,
     5
    ]
   },
-  "z3_seconds": 0.077,
+  "z3_seconds": 0.052,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -21985,14 +21897,11 @@
   "z3_status": "witness",
   "z3_witness": {
    "digits": [
-    6,
-    6,
-    6,
     7,
-    7
+    8
    ]
   },
-  "z3_seconds": 0.149,
+  "z3_seconds": 0.233,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22023,14 +21932,14 @@
   "z3_witness": {
    "digits": [
     5,
+    9,
+    9,
     7,
-    8,
-    1,
     7,
-    9
+    3
    ]
   },
-  "z3_seconds": 0.196,
+  "z3_seconds": 0.121,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22056,15 +21965,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "digits": [
-    0,
-    0,
     5,
     7,
-    7,
-    8
+    5,
+    5,
+    4
    ]
   },
-  "z3_seconds": 0.129,
+  "z3_seconds": 0.062,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22084,7 +21992,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 0.024,
+  "z3_seconds": 0.017,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -22114,15 +22022,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "digits": [
-    4,
     0,
     5,
     0,
     5,
-    0
+    8
    ]
   },
-  "z3_seconds": 0.178,
+  "z3_seconds": 0.033,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22154,10 +22061,13 @@
    "digits": [
     0,
     5,
-    9
+    5,
+    8,
+    5,
+    5
    ]
   },
-  "z3_seconds": 0.075,
+  "z3_seconds": 0.101,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22187,13 +22097,15 @@
   "z3_status": "witness",
   "z3_witness": {
    "digits": [
-    6,
     7,
     5,
-    9
+    1,
+    6,
+    5,
+    6
    ]
   },
-  "z3_seconds": 0.111,
+  "z3_seconds": 0.064,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22218,12 +22130,12 @@
   "z3_status": "witness",
   "z3_witness": {
    "digits": [
-    5,
-    5,
-    6
+    4,
+    4,
+    5
    ]
   },
-  "z3_seconds": 0.09,
+  "z3_seconds": 0.06,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22247,11 +22159,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 5,
+   "day": 6,
    "month": 1,
    "year": 1900
   },
-  "z3_seconds": 0.013,
+  "z3_seconds": 0.039,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22275,11 +22187,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 27,
+   "day": 28,
    "month": 2,
-   "year": 1801
+   "year": 1807
   },
-  "z3_seconds": 0.032,
+  "z3_seconds": 0.043,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22303,7 +22215,7 @@
   ],
   "z3_status": "error",
   "z3_witness": null,
-  "z3_seconds": 0.001,
+  "z3_seconds": 0.002,
   "z3_detail": "line 9: name 'k' is not defined",
   "z3_witness_confirmed": null,
   "label": null
@@ -22351,11 +22263,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 20,
+   "day": 4,
    "month": 3,
-   "year": 1801
+   "year": 2000
   },
-  "z3_seconds": 0.044,
+  "z3_seconds": 0.016,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22379,11 +22291,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 1,
+   "day": 4,
    "month": 5,
-   "year": 1801
+   "year": 2011
   },
-  "z3_seconds": 0.019,
+  "z3_seconds": 0.064,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22407,11 +22319,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 1,
+   "day": 4,
    "month": 1,
-   "year": 2049
+   "year": 1901
   },
-  "z3_seconds": 0.043,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22435,11 +22347,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 3,
+   "day": 1,
    "month": 1,
-   "year": 2120
+   "year": 2100
   },
-  "z3_seconds": 0.015,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22463,11 +22375,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 8,
+   "day": 6,
    "month": 1,
-   "year": 2199
+   "year": 1899
   },
-  "z3_seconds": 0.051,
+  "z3_seconds": 0.03,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22491,11 +22403,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 5,
+   "day": 6,
    "month": 1,
-   "year": 2001
+   "year": 2000
   },
-  "z3_seconds": 0.041,
+  "z3_seconds": 0.008,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22519,11 +22431,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 1,
+   "day": 10,
    "month": 1,
    "year": 2000
   },
-  "z3_seconds": 0.006,
+  "z3_seconds": 0.01,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22551,7 +22463,7 @@
    "month": 1,
    "year": 1901
   },
-  "z3_seconds": 0.005,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22575,11 +22487,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 1,
+   "day": 2,
    "month": 1,
-   "year": 1901
+   "year": 1801
   },
-  "z3_seconds": 0.013,
+  "z3_seconds": 0.015,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22603,11 +22515,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 4,
+   "day": 1,
    "month": 3,
-   "year": 2000
+   "year": 2001
   },
-  "z3_seconds": 0.017,
+  "z3_seconds": 0.02,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22631,11 +22543,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 28,
+   "day": 25,
    "month": 2,
    "year": 1801
   },
-  "z3_seconds": 0.017,
+  "z3_seconds": 0.012,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22659,11 +22571,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 1,
+   "day": 3,
    "month": 1,
-   "year": 2100
+   "year": 1901
   },
-  "z3_seconds": 0.007,
+  "z3_seconds": 0.018,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22689,9 +22601,9 @@
   "z3_witness": {
    "day": 1,
    "month": 1,
-   "year": 1901
+   "year": 2000
   },
-  "z3_seconds": 0.01,
+  "z3_seconds": 0.009,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22715,11 +22627,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 8,
-   "month": 1,
-   "year": 2101
+   "day": 2,
+   "month": 2,
+   "year": 2002
   },
-  "z3_seconds": 0.018,
+  "z3_seconds": 0.036,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22743,11 +22655,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 5,
+   "day": 1,
    "month": 1,
-   "year": 1900
+   "year": 1901
   },
-  "z3_seconds": 0.018,
+  "z3_seconds": 0.017,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22771,11 +22683,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 1,
+   "day": 3,
    "month": 2,
-   "year": 2104
+   "year": 2021
   },
-  "z3_seconds": 0.034,
+  "z3_seconds": 0.026,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22799,11 +22711,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 9,
+   "day": 1,
    "month": 1,
-   "year": 1801
+   "year": 2085
   },
-  "z3_seconds": 0.031,
+  "z3_seconds": 0.028,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22827,11 +22739,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 2,
+   "day": 1,
    "month": 1,
-   "year": 2101
+   "year": 1801
   },
-  "z3_seconds": 0.014,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22855,11 +22767,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 1,
-   "month": 1,
+   "day": 28,
+   "month": 2,
    "year": 2000
   },
-  "z3_seconds": 0.094,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22884,10 +22796,10 @@
   "z3_status": "witness",
   "z3_witness": {
    "day": 4,
-   "month": 1,
-   "year": 1901
+   "month": 2,
+   "year": 1804
   },
-  "z3_seconds": 0.02,
+  "z3_seconds": 0.013,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22911,9 +22823,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 1,
+   "day": 26,
    "month": 1,
-   "year": 1801
+   "year": 1901
   },
   "z3_seconds": 0.005,
   "z3_detail": "",
@@ -22939,11 +22851,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 4,
-   "month": 1,
-   "year": 2101
+   "day": 1,
+   "month": 2,
+   "year": 1848
   },
-  "z3_seconds": 0.03,
+  "z3_seconds": 0.016,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22967,11 +22879,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 1,
-   "month": 2,
-   "year": 1901
+   "day": 2,
+   "month": 1,
+   "year": 2001
   },
-  "z3_seconds": 0.011,
+  "z3_seconds": 0.008,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -22995,11 +22907,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 1,
+   "day": 3,
    "month": 1,
-   "year": 2001
+   "year": 1801
   },
-  "z3_seconds": 0.015,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23023,11 +22935,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 28,
-   "month": 2,
-   "year": 1856
+   "day": 1,
+   "month": 1,
+   "year": 1905
   },
-  "z3_seconds": 0.02,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23051,11 +22963,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 2,
+   "day": 1,
    "month": 1,
-   "year": 1801
+   "year": 2003
   },
-  "z3_seconds": 0.009,
+  "z3_seconds": 0.015,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23079,11 +22991,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 2,
-   "month": 2,
-   "year": 1901
+   "day": 1,
+   "month": 1,
+   "year": 1801
   },
-  "z3_seconds": 0.017,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23109,9 +23021,9 @@
   "z3_witness": {
    "day": 6,
    "month": 1,
-   "year": 2000
+   "year": 2001
   },
-  "z3_seconds": 0.006,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23135,11 +23047,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 1,
-   "month": 1,
+   "day": 7,
+   "month": 2,
    "year": 1802
   },
-  "z3_seconds": 0.027,
+  "z3_seconds": 0.017,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23167,7 +23079,7 @@
    "month": 2,
    "year": 1902
   },
-  "z3_seconds": 0.022,
+  "z3_seconds": 0.01,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23192,10 +23104,10 @@
   "z3_status": "witness",
   "z3_witness": {
    "day": 1,
-   "month": 2,
-   "year": 1896
+   "month": 1,
+   "year": 2101
   },
-  "z3_seconds": 0.015,
+  "z3_seconds": 0.009,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23219,11 +23131,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 7,
+   "day": 5,
    "month": 1,
-   "year": 1801
+   "year": 2001
   },
-  "z3_seconds": 0.009,
+  "z3_seconds": 0.013,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23247,11 +23159,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 24,
+   "day": 8,
    "month": 2,
-   "year": 1839
+   "year": 2048
   },
-  "z3_seconds": 0.008,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23275,11 +23187,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 21,
-   "month": 2,
-   "year": 1885
+   "day": 1,
+   "month": 1,
+   "year": 1905
   },
-  "z3_seconds": 0.025,
+  "z3_seconds": 0.013,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23303,11 +23215,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 1,
+   "day": 9,
    "month": 1,
-   "year": 1904
+   "year": 2004
   },
-  "z3_seconds": 0.04,
+  "z3_seconds": 0.015,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23332,10 +23244,10 @@
   "z3_status": "witness",
   "z3_witness": {
    "day": 1,
-   "month": 2,
-   "year": 2125
+   "month": 1,
+   "year": 2000
   },
-  "z3_seconds": 0.012,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23359,11 +23271,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 24,
-   "month": 1,
-   "year": 1801
+   "day": 28,
+   "month": 2,
+   "year": 2009
   },
-  "z3_seconds": 0.01,
+  "z3_seconds": 0.017,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23387,11 +23299,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 9,
+   "day": 5,
    "month": 1,
-   "year": 1801
+   "year": 1900
   },
-  "z3_seconds": 0.015,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23415,9 +23327,9 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 1,
-   "month": 1,
-   "year": 1801
+   "day": 2,
+   "month": 2,
+   "year": 2101
   },
   "z3_seconds": 0.009,
   "z3_detail": "",
@@ -23443,11 +23355,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 4,
-   "month": 2,
-   "year": 1900
+   "day": 2,
+   "month": 1,
+   "year": 1901
   },
-  "z3_seconds": 0.013,
+  "z3_seconds": 0.017,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23471,11 +23383,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 5,
-   "month": 2,
-   "year": 2005
+   "day": 2,
+   "month": 1,
+   "year": 2001
   },
-  "z3_seconds": 0.017,
+  "z3_seconds": 0.014,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23499,11 +23411,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 3,
+   "day": 10,
    "month": 1,
-   "year": 1801
+   "year": 1901
   },
-  "z3_seconds": 0.01,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23527,11 +23439,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 4,
+   "day": 10,
    "month": 1,
-   "year": 1905
+   "year": 2001
   },
-  "z3_seconds": 0.007,
+  "z3_seconds": 0.009,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23555,11 +23467,11 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "day": 1,
+   "day": 3,
    "month": 1,
-   "year": 2000
+   "year": 1801
   },
-  "z3_seconds": 0.006,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23582,10 +23494,10 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": -11,
-   "b": 3
+   "a": -59,
+   "b": 4
   },
-  "z3_seconds": 0.049,
+  "z3_seconds": 0.027,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23611,7 +23523,7 @@
    "a": 1,
    "b": 2
   },
-  "z3_seconds": 0.018,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23637,7 +23549,7 @@
    "a": 0,
    "b": 1
   },
-  "z3_seconds": 0.017,
+  "z3_seconds": 0.003,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23686,7 +23598,7 @@
    "a": 0,
    "b": 7
   },
-  "z3_seconds": 0.023,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23709,10 +23621,10 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": -4,
-   "b": 2
+   "a": 26,
+   "b": 6
   },
-  "z3_seconds": 0.027,
+  "z3_seconds": 0.017,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23735,10 +23647,10 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 60,
-   "b": 12
+   "a": -16,
+   "b": 11
   },
-  "z3_seconds": 0.021,
+  "z3_seconds": 0.008,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23761,10 +23673,10 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": -1,
-   "b": 11
+   "a": -4,
+   "b": 3
   },
-  "z3_seconds": 0.008,
+  "z3_seconds": 0.009,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23787,10 +23699,10 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 59,
+   "a": 2,
    "b": 3
   },
-  "z3_seconds": 0.013,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23813,10 +23725,10 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 6,
-   "b": 2
+   "a": 58,
+   "b": 3
   },
-  "z3_seconds": 0.027,
+  "z3_seconds": 0.017,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23842,7 +23754,7 @@
    "a": 1,
    "b": 2
   },
-  "z3_seconds": 0.011,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23865,10 +23777,10 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": -11,
-   "b": 12
+   "a": 1,
+   "b": 3
   },
-  "z3_seconds": 0.014,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23894,7 +23806,7 @@
    "a": 1,
    "b": 2
   },
-  "z3_seconds": 0.013,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23917,10 +23829,10 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": -1,
+   "a": 2,
    "b": 3
   },
-  "z3_seconds": 0.006,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23946,7 +23858,7 @@
    "a": 2,
    "b": 3
   },
-  "z3_seconds": 0.007,
+  "z3_seconds": 0.004,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23969,10 +23881,10 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 58,
+   "a": -2,
    "b": 5
   },
-  "z3_seconds": 0.011,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -23995,10 +23907,10 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": -2,
+   "a": 10,
    "b": 3
   },
-  "z3_seconds": 0.009,
+  "z3_seconds": 0.01,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -24024,7 +23936,7 @@
    "a": 1,
    "b": 2
   },
-  "z3_seconds": 0.025,
+  "z3_seconds": 0.009,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -24047,10 +23959,10 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 2,
+   "a": 57,
    "b": 5
   },
-  "z3_seconds": 0.011,
+  "z3_seconds": 0.005,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -24073,10 +23985,10 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 2,
+   "a": -1,
    "b": 3
   },
-  "z3_seconds": 0.005,
+  "z3_seconds": 0.007,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -24102,7 +24014,7 @@
    "a": -2,
    "b": 3
   },
-  "z3_seconds": 0.026,
+  "z3_seconds": 0.014,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -24128,7 +24040,7 @@
    "a": 5,
    "b": 2
   },
-  "z3_seconds": 0.017,
+  "z3_seconds": 0.009,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -24154,7 +24066,7 @@
    "a": 3,
    "b": 2
   },
-  "z3_seconds": 0.01,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -24180,7 +24092,7 @@
    "a": 1,
    "b": 2
   },
-  "z3_seconds": 0.007,
+  "z3_seconds": 0.018,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -24203,10 +24115,10 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": -2,
-   "b": 3
+   "a": 3,
+   "b": 2
   },
-  "z3_seconds": 0.026,
+  "z3_seconds": 0.006,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -24229,10 +24141,10 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": -1,
+   "a": 3,
    "b": 2
   },
-  "z3_seconds": 0.012,
+  "z3_seconds": 0.011,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -24255,7 +24167,7 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 9,
+   "a": -5,
    "b": 2
   },
   "z3_seconds": 0.014,
@@ -24281,10 +24193,10 @@
   ],
   "z3_status": "witness",
   "z3_witness": {
-   "a": 6,
-   "b": 4
+   "a": -1,
+   "b": 2
   },
-  "z3_seconds": 0.02,
+  "z3_seconds": 0.011,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -24313,13 +24225,13 @@
   "z3_witness": {
    "xs": [
     5,
+    6,
+    6,
     0,
-    3,
-    2,
-    2
+    1
    ]
   },
-  "z3_seconds": 1.929,
+  "z3_seconds": 1.131,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -24348,14 +24260,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    6,
-    3,
+    5,
+    5,
+    5,
     0,
-    1,
-    2
+    5
    ]
   },
-  "z3_seconds": 1.315,
+  "z3_seconds": 1.012,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -24383,7 +24295,7 @@
   ],
   "z3_status": "error",
   "z3_witness": null,
-  "z3_seconds": 0.294,
+  "z3_seconds": 0.234,
   "z3_detail": "line 6: name 'total' is not defined",
   "z3_witness_confirmed": null,
   "label": null
@@ -24413,10 +24325,13 @@
   "z3_witness": {
    "xs": [
     0,
+    0,
+    0,
+    0,
     1
    ]
   },
-  "z3_seconds": 1.116,
+  "z3_seconds": 0.856,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -24444,7 +24359,7 @@
   ],
   "z3_status": "error",
   "z3_witness": null,
-  "z3_seconds": 0.403,
+  "z3_seconds": 0.247,
   "z3_detail": "line 9: name 'target' is not defined",
   "z3_witness_confirmed": null,
   "label": null
@@ -24472,7 +24387,7 @@
   ],
   "z3_status": "error",
   "z3_witness": null,
-  "z3_seconds": 0.332,
+  "z3_seconds": 0.249,
   "z3_detail": "line 12: name 'reachable' is not defined",
   "z3_witness_confirmed": null,
   "label": null
@@ -24505,7 +24420,7 @@
     1
    ]
   },
-  "z3_seconds": 1.266,
+  "z3_seconds": 0.956,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -24530,12 +24445,12 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    4,
+    2,
     0,
     0
    ]
   },
-  "z3_seconds": 1.19,
+  "z3_seconds": 0.92,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -24563,7 +24478,7 @@
   ],
   "z3_status": "error",
   "z3_witness": null,
-  "z3_seconds": 0.377,
+  "z3_seconds": 0.233,
   "z3_detail": "line 10: expected a number, got list",
   "z3_witness_confirmed": null,
   "label": null
@@ -24594,12 +24509,10 @@
    "xs": [
     0,
     0,
-    0,
-    0,
     1
    ]
   },
-  "z3_seconds": 1.326,
+  "z3_seconds": 0.949,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -24628,14 +24541,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    3,
     2,
-    0,
-    0,
-    0
+    1,
+    3,
+    3,
+    2
    ]
   },
-  "z3_seconds": 1.357,
+  "z3_seconds": 1.143,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -24664,11 +24577,12 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
+    1,
     0,
-    1
+    0
    ]
   },
-  "z3_seconds": 1.155,
+  "z3_seconds": 0.921,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -24697,11 +24611,11 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    2,
-    0
+    0,
+    2
    ]
   },
-  "z3_seconds": 1.354,
+  "z3_seconds": 0.987,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -24726,14 +24640,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    4,
     0,
-    6,
+    2,
     0,
-    0
+    0,
+    6
    ]
   },
-  "z3_seconds": 1.737,
+  "z3_seconds": 1.129,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -24761,7 +24675,7 @@
   ],
   "z3_status": "error",
   "z3_witness": null,
-  "z3_seconds": 0.29,
+  "z3_seconds": 0.241,
   "z3_detail": "line 10: expected a number, got list",
   "z3_witness_confirmed": null,
   "label": null
@@ -24790,14 +24704,11 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    0,
-    0,
-    1,
-    0,
-    1
+    2,
+    2
    ]
   },
-  "z3_seconds": 1.36,
+  "z3_seconds": 1.015,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -24817,7 +24728,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 21.74,
+  "z3_seconds": 16.763,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -24847,13 +24758,13 @@
   "z3_witness": {
    "xs": [
     2,
-    4,
-    2,
+    0,
+    0,
     0,
     0
    ]
   },
-  "z3_seconds": 0.944,
+  "z3_seconds": 0.876,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -24884,10 +24795,11 @@
     0,
     2,
     0,
+    0,
     0
    ]
   },
-  "z3_seconds": 0.884,
+  "z3_seconds": 0.861,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -24917,13 +24829,13 @@
   "z3_witness": {
    "xs": [
     0,
-    2,
-    1,
     0,
-    0
+    3,
+    1,
+    1
    ]
   },
-  "z3_seconds": 1.083,
+  "z3_seconds": 0.655,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -24954,10 +24866,12 @@
    "xs": [
     0,
     0,
+    0,
+    0,
     1
    ]
   },
-  "z3_seconds": 1.371,
+  "z3_seconds": 1.04,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -24986,11 +24900,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
-    6,
-    6
+    0,
+    1,
+    3,
+    1,
+    3
    ]
   },
-  "z3_seconds": 1.509,
+  "z3_seconds": 1.08,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -25010,7 +24927,7 @@
   "sample_witness": null,
   "z3_status": "no_witness",
   "z3_witness": null,
-  "z3_seconds": 21.394,
+  "z3_seconds": 15.711,
   "z3_detail": "",
   "z3_witness_confirmed": null,
   "label": "control"
@@ -25039,12 +24956,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
+    6,
     1,
-    1,
-    0
+    3,
+    5,
+    1
    ]
   },
-  "z3_seconds": 1.513,
+  "z3_seconds": 0.77,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -25076,11 +24995,10 @@
     1,
     1,
     1,
-    0,
     1
    ]
   },
-  "z3_seconds": 1.417,
+  "z3_seconds": 1.582,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"
@@ -25108,7 +25026,7 @@
   ],
   "z3_status": "error",
   "z3_witness": null,
-  "z3_seconds": 0.327,
+  "z3_seconds": 0.253,
   "z3_detail": "line 12: range() step must be a non-zero constant",
   "z3_witness_confirmed": null,
   "label": null
@@ -25137,14 +25055,14 @@
   "z3_status": "witness",
   "z3_witness": {
    "xs": [
+    0,
     1,
-    6,
-    1,
-    1,
-    1
+    5,
+    0,
+    4
    ]
   },
-  "z3_seconds": 1.409,
+  "z3_seconds": 1.047,
   "z3_detail": "",
   "z3_witness_confirmed": true,
   "label": "bug"

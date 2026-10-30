@@ -13,8 +13,7 @@ depend on the base rate of flawed designs, which Bayes' rule makes explicit (Pro
 
 **Fabricated failures.** False alarms waste reviewer time and train reviewers to ignore the tool. This
 is a precision/recall operating point to be set by the stakes (ResponsibleAI p.18–19). A Translate
-witness is correct only *with respect to the model's own specification*. Seven of Haiku's SP2
-Translate traces were legal only in its mistranslated problem, and a spec can also hide a bug by
+witness is correct only *with respect to the model's own specification*. Eleven of Haiku's main-set SP2 Translate traces (31 across all sets) were legal only in its mistranslated problem, and a spec can also hide a bug by
 copying it. Witnesses must therefore be executed or replayed on the real artefact, as our scoring
 does.
 

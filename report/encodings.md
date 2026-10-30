@@ -36,7 +36,9 @@ result = If(And(Not(2 == month),
              11 == month)),
       30,
       If(And(0 == year%4,
-             Or(Not(0 == year%100), 0 == year%399)),
+             If(0 == year%100,
+                0 == year%399,
+                Not(0 == year%100))),
          29,
          28)))
 exc    = False
@@ -68,7 +70,7 @@ def post(month, year, result):
     return result == 31
 ```
 
-The executor compiles `pre` and `post(month, year, result)` the same way, with `result` bound to the code's term above. The full query Φ = domain ∧ ¬unwind ∧ pre ∧ (exc ∨ ¬post) is a DAG of 110 shared nodes. Z3 proves it **equivalent** to the readable formula:
+The executor compiles `pre` and `post(month, year, result)` the same way, with `result` bound to the code's term above. The full query Φ = domain ∧ ¬unwind ∧ pre ∧ (exc ∨ ¬post) is a DAG of 117 shared nodes. Z3 proves it **equivalent** to the readable formula:
 
 ```
 Φ  ≡  1 ≤ month ≤ 12 ∧ 1 ≤ year ≤ 3000 ∧ month = 2 ∧ L399(year) ≠ L400(year)
@@ -76,7 +78,7 @@ L399(y) = y%4 = 0 ∧ (y%100 ≠ 0 ∨ y%399 = 0)        (what the code computes
 L400(y) = y%400 = 0 ∨ (y%100 ≠ 0 ∧ y%4 = 0)        (what the spec requires)
 ```
 
-In words: a failing input is a February in a year where the two leap rules disagree. Z3 answers `sat` with the model `[year = 2800, month = 2]`; 2800 is divisible by 400 but not by 399, so the code returns 28 instead of 29.
+In words: a failing input is a February in a year where the two leap rules disagree. Z3 answers `sat` with the model `[year = 400, month = 2]`; 2800 is divisible by 400 but not by 399, so the code returns 28 instead of 29.
 
 
 ## B.2 SP2: STRIPS action and SATPlan clauses (`payments-subtle-1`, step t = 4)
@@ -94,8 +96,8 @@ DEL = {in-flight o1 a1}
 **Precondition and effect clauses** for this action at t = 4 (each clause is a disjunction). The static design fact `(dedup-racy)` is true at every step, so the encoder fixes it to a constant and its precondition clause is satisfied and dropped:
 
 ```
-¬accept-new-racy(o1,a1)@4 ∨ in-flight(o1,a1)@4
 ¬accept-new-racy(o1,a1)@4 ∨ no-record(o1)@4
+¬accept-new-racy(o1,a1)@4 ∨ in-flight(o1,a1)@4
 ¬accept-new-racy(o1,a1)@4 ∨ approved(o1,a1)@5
 ¬accept-new-racy(o1,a1)@4 ∨ ¬in-flight(o1,a1)@5
 ```
@@ -123,7 +125,7 @@ no-record(o1)@4 ∨ ¬no-record(o1)@5
 | 7 | 258 | 773 | UNSAT |
 | 8 | 332 | 1016 | SAT |
 
-Decoded plan (8 events): `send o1 a0 t0` → `accept-new-racy o1 a0` → `tick o1 a0 t0 t1` → `time-out-and-retry o1 a0 a1 t1` → `send o1 a1 t0` → `accept-new-racy o1 a1` → `charge o1 a1` → `charge-again o1 a0`
+Decoded plan (8 events): `send o1 a0 t0` → `tick o1 a0 t0 t1` → `time-out-and-retry o1 a0 a1 t1` → `accept-new-racy o1 a0` → `send o1 a1 t0` → `accept-new-racy o1 a1` → `charge o1 a1` → `charge-again o1 a0`
 
 
 ## B.3 SP2: certifying the fixed variant with GBFS + h_FF (`payments-fixed-1`)

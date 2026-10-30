@@ -41,8 +41,14 @@ def renaming(family: str) -> dict[str, str]:
     return ren
 
 
+# Words in a comment that would reveal which mechanism a renamed fact or event stands for.
+_TELLTALE = ("racy", "atomic", "fencing", "fenced", "dedup", "durabl", "memory", "lease-check", "checks",
+             "ignores", "stale", "leased", "plain", "update-then-delete", "delete-then-update")
+
+
 def opaque_domain(family: str) -> str:
     ren = renaming(family)
+    design = set(design_predicates(family))
     out = []
     in_design = False
     for line in FAMILIES[family].domain.splitlines():
@@ -55,6 +61,11 @@ def opaque_domain(family: str) -> str:
             in_design = False
         if in_design and ";" in line:
             line = line.split(";")[0].rstrip()
+        elif ";" in line and not s.startswith(";; ---"):
+            code, comment = line.split(";", 1)
+            low = comment.lower()
+            if any(w in low for w in _TELLTALE) or any(d in low for d in design):
+                line = code.rstrip()
         out.append(line)
     text = "\n".join(out) + "\n"
     for old, new in sorted(ren.items(), key=lambda kv: -len(kv[0])):

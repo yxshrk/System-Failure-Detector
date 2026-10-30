@@ -13,7 +13,7 @@ from __future__ import annotations
 from functools import lru_cache
 
 from ..planning import ground, parse_domain, parse_problem, validate_plan
-from .families import FAMILIES, design_predicates
+from .families import FAMILIES, behavioural_predicates, design_predicates
 
 
 @lru_cache(maxsize=None)
@@ -39,6 +39,8 @@ def replay(inst: dict, trace) -> tuple[bool, str, int | None]:
 def outcome(result: dict, inst: dict) -> tuple[str, str]:
     if result["verdict"] == "invalid":
         return "no_answer", "; ".join(map(str, result.get("errors", [])))[:300]
+    if result["verdict"] == "unknown":
+        return "tool_limit", "planner search limit reached: no trace and no proof"
     if result["verdict"] == "safe":
         return ("miss", "") if inst["violation"] else ("correct_safe", "")
     trace = result.get("trace") or []
@@ -61,7 +63,8 @@ def translation_scores(inst: dict, problem_text: str | None) -> dict:
     gold = parse_problem(inst["problem"], dom)
     m_init = {a.fact for a in mine.init}
     g_init = {a.fact for a in gold.init}
-    dp = set(inst.get("design_predicates") or design_predicates(inst["family"]))
+    # Score only design facts that some action actually depends on: an inert fact cannot change behaviour.
+    dp = set(inst.get("design_predicates") or design_predicates(inst["family"])) & behavioural_predicates(_domain(inst))
     m_design = {f for f in m_init if f in dp}
     g_design = {f for f in g_init if f in dp}
     tp = len(m_init & g_init)

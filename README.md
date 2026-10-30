@@ -26,12 +26,12 @@ Scoring is exact. A witness counts only if it reproduces on the gold model: a fa
 |---|---|---|---|---|
 | SP1 bugs found (115) | 114 | 112 | 115 / 114 | 115 / 114 |
 | SP1 false alarms (59 controls) | 0 | 0 | 0 / 0 | 0 / 0 |
-| SP2 valid traces, main (40) | 32 | 33 | 40 / 40 | 40 / 40 |
-| SP2 false alarms, main (20 fixed designs) | 11 | 4 | 0 / 0 | 0 / 0 |
-| SP2 false alarms, opaque names (20) | 17 | 8 | 0 / 0 | 3 / 0 |
+| SP2 valid traces, main (40) | 31 | 34 | 40 / 40 | 40 / 40 |
+| SP2 false alarms, main (20 fixed designs) | 12 | 7 | 0 / 0 | 0 / 0 |
+| SP2 false alarms, opaque names (20) | 19 | 9 | 0 / 0 | 0 / 0 |
 
 * **Rarity.** Trigger rarity decides whether random testing finds a bug: 100 random inputs catch 5% of the very rare bugs. It has no effect on either LLM arm.
-* **Model generations.** The 5.5 models are perfect on SP2 up to 27-event traces. Haiku 4.5's Direct errors come from misreading the design, and translation cuts its false alarms by about two-thirds.
+* **Model generations.** The 5.5 models are perfect on SP2 up to 27-event traces, even with mechanism names hidden. Haiku 4.5's Direct errors come from misreading the design, and translation roughly halves its false alarms.
 * **Translation's own failure modes.** Specifications can copy the bug, permissive problem files get exploited by the planner, and checkers time out. Certification also explodes on the symmetric inventory design: 2.7 M states at size 6, beyond budget at size 8.
 
 Full tables are in `results/tables.md` and figures in `results/figures/`. The report draft is `report/full.md`, with a Word export at `report/report.docx`.
@@ -67,9 +67,9 @@ tests/                symbolic executor vs real Python, planner tests, gold-mode
 
 ```bash
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
-.venv/bin/python -m pytest -q                      # 161 tests
+.venv/bin/python -m pytest -q                      # 200 tests
 .venv/bin/python -m premortem.sp1.build            # ~40 s, 10 processes
-.venv/bin/python -m premortem.sp2.build            # ~4 min (SATPlan on inventory size 4)
+.venv/bin/python -m premortem.sp2.build            # ~35 min (SATPlan/GBFS on the large inventory sizes)
 .venv/bin/python -m experiments.run_sp1 --models haiku,sonnet,opus
 .venv/bin/python -m experiments.run_sp2 --models haiku,sonnet,opus
 .venv/bin/python -m experiments.analyze            # results/tables.md, results/figures/*.png

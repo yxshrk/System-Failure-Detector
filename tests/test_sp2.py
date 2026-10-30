@@ -55,3 +55,19 @@ def test_scoring_replays_on_gold():
     assert outcome({"verdict": "violation", "trace": plan}, fixed)[0] == "false_alarm"
     s = translation_scores(inst, fam.problem("subtle", 1))
     assert s["parsed"] and not s["design_exact"] and s["design_model"] == ["dedup-racy"]
+
+
+def test_opaque_domains_hide_mechanism_names():
+    from premortem.sp2.opaque import _TELLTALE, opaque_domain
+    for name in FAMILIES:
+        text = opaque_domain(name).lower()
+        for pred in design_predicates(name):
+            assert f"({pred})" not in text and f"({pred} " not in text, (name, pred)
+        comments = [l.split(";", 1)[1] for l in text.splitlines() if ";" in l and not l.strip().startswith(";; ---")]
+        assert not any(w in c for c in comments for w in _TELLTALE), name
+
+
+def test_search_limit_is_not_scored_as_safe():
+    fam = FAMILIES["inventory"]
+    fixed = {"family": "inventory", "problem": fam.problem("fixed", 1), "violation": False}
+    assert outcome({"verdict": "unknown"}, fixed)[0] == "tool_limit"

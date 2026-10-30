@@ -587,7 +587,7 @@
      0
     ]
    },
-   "z3_seconds": 0.015,
+   "z3_seconds": 0.008,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -629,7 +629,7 @@
      -1
     ]
    },
-   "z3_seconds": 0.01,
+   "z3_seconds": 0.006,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -663,7 +663,7 @@
      0
     ]
    },
-   "z3_seconds": 0.006,
+   "z3_seconds": 0.004,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -700,7 +700,7 @@
    "sample_witness": null,
    "z3_status": "no_witness",
    "z3_witness": null,
-   "z3_seconds": 0.021,
+   "z3_seconds": 0.017,
    "z3_detail": "",
    "z3_witness_confirmed": null,
    "label": "control",
@@ -741,7 +741,7 @@
     ],
     "gap": 1
    },
-   "z3_seconds": 0.252,
+   "z3_seconds": 0.202,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -778,7 +778,7 @@
     ],
     "gap": 2
    },
-   "z3_seconds": 0.104,
+   "z3_seconds": 0.096,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -810,15 +810,16 @@
    "z3_status": "witness",
    "z3_witness": {
     "vals": [
+     1,
      0,
-     -1,
-     -5,
-     -5,
-     -6
+     0,
+     0,
+     -2,
+     -17
     ],
     "gap": 0
    },
-   "z3_seconds": 0.124,
+   "z3_seconds": 0.096,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -855,7 +856,7 @@
    "sample_witness": null,
    "z3_status": "no_witness",
    "z3_witness": null,
-   "z3_seconds": 0.177,
+   "z3_seconds": 0.093,
    "z3_detail": "",
    "z3_witness_confirmed": null,
    "label": "control",
@@ -885,13 +886,13 @@
    "z3_witness": {
     "vals": [
      -1,
-     0,
-     1,
-     4,
-     4
+     -1,
+     -1,
+     -1,
+     0
     ]
    },
-   "z3_seconds": 0.064,
+   "z3_seconds": 0.047,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -928,7 +929,7 @@
      1
     ]
    },
-   "z3_seconds": 0.015,
+   "z3_seconds": 0.009,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -964,7 +965,7 @@
      0
     ]
    },
-   "z3_seconds": 0.009,
+   "z3_seconds": 0.006,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -1001,7 +1002,7 @@
    "sample_witness": null,
    "z3_status": "no_witness",
    "z3_witness": null,
-   "z3_seconds": 0.016,
+   "z3_seconds": 0.022,
    "z3_detail": "",
    "z3_witness_confirmed": null,
    "label": "control",
@@ -1041,7 +1042,7 @@
     ],
     "sep": -1
    },
-   "z3_seconds": 0.012,
+   "z3_seconds": 0.008,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -1082,7 +1083,7 @@
     ],
     "sep": 0
    },
-   "z3_seconds": 0.019,
+   "z3_seconds": 0.011,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -1121,7 +1122,7 @@
     ],
     "sep": -1
    },
-   "z3_seconds": 0.015,
+   "z3_seconds": 0.01,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -1173,7 +1174,7 @@
      -1
     ]
    },
-   "z3_seconds": 0.431,
+   "z3_seconds": 0.266,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -1240,13 +1241,14 @@
    "z3_status": "witness",
    "z3_witness": {
     "vals": [
-     -1,
-     6,
-     6,
-     -1
+     0,
+     0,
+     0,
+     0,
+     0
     ]
    },
-   "z3_seconds": 0.251,
+   "z3_seconds": 0.17,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -1287,7 +1289,7 @@
    "z3_witness": {
     "n": 25
    },
-   "z3_seconds": 0.024,
+   "z3_seconds": 0.018,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -1315,7 +1317,7 @@
    "z3_witness": {
     "n": 2
    },
-   "z3_seconds": 0.016,
+   "z3_seconds": 0.013,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -1371,7 +1373,7 @@
    "z3_witness": {
     "n": 1
    },
-   "z3_seconds": 0.016,
+   "z3_seconds": 0.01,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -1397,9 +1399,9 @@
    ],
    "z3_status": "witness",
    "z3_witness": {
-    "n": 71
+    "n": 89
    },
-   "z3_seconds": 0.028,
+   "z3_seconds": 0.02,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -1436,7 +1438,7 @@
    "sample_witness": null,
    "z3_status": "no_witness",
    "z3_witness": null,
-   "z3_seconds": 0.076,
+   "z3_seconds": 0.056,
    "z3_detail": "",
    "z3_witness_confirmed": null,
    "label": "control",
@@ -1464,7 +1466,7 @@
    "z3_witness": {
     "n": 2
    },
-   "z3_seconds": 0.624,
+   "z3_seconds": 0.342,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -1492,7 +1494,7 @@
    "z3_witness": {
     "n": 119
    },
-   "z3_seconds": 1.053,
+   "z3_seconds": 0.753,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -1520,7 +1522,7 @@
    "z3_witness": {
     "n": 2
    },
-   "z3_seconds": 0.326,
+   "z3_seconds": 0.427,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -1557,7 +1559,7 @@
    "sample_witness": null,
    "z3_status": "no_witness",
    "z3_witness": null,
-   "z3_seconds": 6.184,
+   "z3_seconds": 4.592,
    "z3_detail": "",
    "z3_witness_confirmed": null,
    "label": "control",
@@ -1583,9 +1585,9 @@
    ],
    "z3_status": "witness",
    "z3_witness": {
-    "n": 177
+    "n": 78
    },
-   "z3_seconds": 0.621,
+   "z3_seconds": 0.367,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -1613,7 +1615,7 @@
    "z3_witness": {
     "n": 108
    },
-   "z3_seconds": 0.626,
+   "z3_seconds": 0.317,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -1641,7 +1643,7 @@
    "z3_witness": {
     "n": 77
    },
-   "z3_seconds": 0.437,
+   "z3_seconds": 0.278,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -1678,7 +1680,7 @@
    "sample_witness": null,
    "z3_status": "no_witness",
    "z3_witness": null,
-   "z3_seconds": 0.594,
+   "z3_seconds": 0.355,
    "z3_detail": "",
    "z3_witness_confirmed": null,
    "label": "control",
@@ -1706,7 +1708,7 @@
    "z3_witness": {
     "year": 2800
    },
-   "z3_seconds": 0.004,
+   "z3_seconds": 0.002,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -1734,7 +1736,7 @@
    "z3_witness": {
     "year": 2800
    },
-   "z3_seconds": 0.005,
+   "z3_seconds": 0.003,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -1762,7 +1764,7 @@
    "z3_witness": {
     "year": 399
    },
-   "z3_seconds": 0.011,
+   "z3_seconds": 0.003,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -1790,7 +1792,7 @@
    "z3_witness": {
     "year": 100
    },
-   "z3_seconds": 0.006,
+   "z3_seconds": 0.003,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -1818,7 +1820,7 @@
    "z3_witness": {
     "year": 400
    },
-   "z3_seconds": 0.003,
+   "z3_seconds": 0.002,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -1855,7 +1857,7 @@
    "sample_witness": null,
    "z3_status": "no_witness",
    "z3_witness": null,
-   "z3_seconds": 0.004,
+   "z3_seconds": 0.003,
    "z3_detail": "",
    "z3_witness_confirmed": null,
    "label": "control",
@@ -1885,7 +1887,7 @@
     "month": 2,
     "year": 100
    },
-   "z3_seconds": 0.007,
+   "z3_seconds": 0.005,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -1913,9 +1915,9 @@
    "z3_status": "witness",
    "z3_witness": {
     "month": 9,
-    "year": 100
+    "year": 1
    },
-   "z3_seconds": 0.005,
+   "z3_seconds": 0.006,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -1945,7 +1947,7 @@
     "month": 2,
     "year": 400
    },
-   "z3_seconds": 0.016,
+   "z3_seconds": 0.013,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -1975,7 +1977,7 @@
     "month": 2,
     "year": 400
    },
-   "z3_seconds": 0.016,
+   "z3_seconds": 0.004,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -2005,7 +2007,7 @@
     "month": 2,
     "year": 100
    },
-   "z3_seconds": 0.008,
+   "z3_seconds": 0.006,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -2033,9 +2035,9 @@
    "z3_status": "witness",
    "z3_witness": {
     "month": 2,
-    "year": 4
+    "year": 100
    },
-   "z3_seconds": 0.014,
+   "z3_seconds": 0.003,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -2077,10 +2079,10 @@
    "z3_status": "witness",
    "z3_witness": {
     "a": 2,
-    "b": 3,
+    "b": 1,
     "c": 2
    },
-   "z3_seconds": 0.014,
+   "z3_seconds": 0.007,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -2112,7 +2114,7 @@
     "b": 1,
     "c": 1
    },
-   "z3_seconds": 0.012,
+   "z3_seconds": 0.008,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -2144,7 +2146,7 @@
     "b": 1,
     "c": 1
    },
-   "z3_seconds": 0.01,
+   "z3_seconds": 0.017,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -2173,10 +2175,10 @@
    "z3_status": "witness",
    "z3_witness": {
     "a": 3,
-    "b": 2,
-    "c": 1
+    "b": 1,
+    "c": 2
    },
-   "z3_seconds": 0.024,
+   "z3_seconds": 0.006,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -2217,7 +2219,7 @@
    "z3_witness": {
     "score": 89
    },
-   "z3_seconds": 0.007,
+   "z3_seconds": 0.003,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -2245,7 +2247,7 @@
    "z3_witness": {
     "score": 79
    },
-   "z3_seconds": 0.013,
+   "z3_seconds": 0.005,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -2273,7 +2275,7 @@
    "z3_witness": {
     "score": 80
    },
-   "z3_seconds": 0.015,
+   "z3_seconds": 0.003,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -2301,7 +2303,7 @@
    "z3_witness": {
     "score": 70
    },
-   "z3_seconds": 0.01,
+   "z3_seconds": 0.005,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -2327,7 +2329,7 @@
    ],
    "z3_status": "witness",
    "z3_witness": {
-    "score": 79
+    "score": 81
    },
    "z3_seconds": 0.006,
    "z3_detail": "",
@@ -2366,7 +2368,7 @@
    "sample_witness": null,
    "z3_status": "no_witness",
    "z3_witness": null,
-   "z3_seconds": 0.014,
+   "z3_seconds": 0.003,
    "z3_detail": "",
    "z3_witness_confirmed": null,
    "label": "control",
@@ -2398,11 +2400,15 @@
    "z3_status": "witness",
    "z3_witness": {
     "xs": [
-     1
+     -1,
+     0,
+     1,
+     2,
+     3
     ],
-    "target": 1
+    "target": 0
    },
-   "z3_seconds": 0.294,
+   "z3_seconds": 0.193,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -2430,15 +2436,15 @@
    "z3_status": "witness",
    "z3_witness": {
     "xs": [
-     -1,
+     -2,
      0,
      1,
      2,
      3
     ],
-    "target": -1
+    "target": -2
    },
-   "z3_seconds": 0.394,
+   "z3_seconds": 0.18,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -2469,13 +2475,10 @@
    ],
    "z3_status": "witness",
    "z3_witness": {
-    "xs": [
-     -1,
-     0
-    ],
-    "target": 1
+    "xs": [],
+    "target": 0
    },
-   "z3_seconds": 0.249,
+   "z3_seconds": 0.158,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -2512,7 +2515,7 @@
    "sample_witness": null,
    "z3_status": "no_witness",
    "z3_witness": null,
-   "z3_seconds": 0.353,
+   "z3_seconds": 0.245,
    "z3_detail": "",
    "z3_witness_confirmed": null,
    "label": "control",
@@ -2547,19 +2550,13 @@
    ],
    "z3_status": "witness",
    "z3_witness": {
-    "a": [
-     4,
-     5,
-     6
-    ],
+    "a": [],
     "b": [
-     7,
-     8,
-     9,
-     9
+     0,
+     0
     ]
    },
-   "z3_seconds": 0.579,
+   "z3_seconds": 0.352,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -2595,17 +2592,16 @@
    "z3_status": "witness",
    "z3_witness": {
     "a": [
-     5,
-     6,
-     6,
-     8
+     0,
+     0
     ],
     "b": [
-     4,
-     7
+     1,
+     1,
+     1
     ]
    },
-   "z3_seconds": 0.678,
+   "z3_seconds": 0.41,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -2643,12 +2639,10 @@
      1
     ],
     "b": [
-     -6,
-     -5,
-     -4
+     -1
     ]
    },
-   "z3_seconds": 0.61,
+   "z3_seconds": 0.509,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -2685,7 +2679,7 @@
    "sample_witness": null,
    "z3_status": "no_witness",
    "z3_witness": null,
-   "z3_seconds": 18.862,
+   "z3_seconds": 19.297,
    "z3_detail": "",
    "z3_witness_confirmed": null,
    "label": "control",
@@ -2718,13 +2712,13 @@
    "z3_status": "witness",
    "z3_witness": {
     "xs": [
-     -2,
-     -1,
-     -2,
-     0
+     0,
+     1,
+     0,
+     -1
     ]
    },
-   "z3_seconds": 0.267,
+   "z3_seconds": 0.187,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -2757,15 +2751,15 @@
    "z3_status": "witness",
    "z3_witness": {
     "xs": [
-     -4,
-     -3,
-     -5,
-     -2,
-     -3,
-     -4
+     2,
+     0,
+     0,
+     3,
+     1,
+     2
     ]
    },
-   "z3_seconds": 0.388,
+   "z3_seconds": 0.321,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -2796,15 +2790,15 @@
    "z3_status": "witness",
    "z3_witness": {
     "xs": [
-     -3,
-     1,
      0,
-     -2,
-     -2,
-     -1
+     4,
+     2,
+     3,
+     0,
+     1
     ]
    },
-   "z3_seconds": 0.151,
+   "z3_seconds": 0.136,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -2847,14 +2841,14 @@
    "z3_status": "witness",
    "z3_witness": {
     "xs": [
-     1,
-     1,
-     3,
-     2,
-     3
+     0,
+     0,
+     0,
+     0,
+     0
     ]
    },
-   "z3_seconds": 0.305,
+   "z3_seconds": 0.226,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -2882,7 +2876,7 @@
    "z3_witness": {
     "xs": []
    },
-   "z3_seconds": 0.338,
+   "z3_seconds": 0.248,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -2917,10 +2911,10 @@
      0,
      0,
      0,
-     1
+     -1
     ]
    },
-   "z3_seconds": 0.242,
+   "z3_seconds": 0.227,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -2957,7 +2951,7 @@
    "sample_witness": null,
    "z3_status": "no_witness",
    "z3_witness": null,
-   "z3_seconds": 0.402,
+   "z3_seconds": 0.311,
    "z3_detail": "",
    "z3_witness_confirmed": null,
    "label": "control",
@@ -2986,6 +2980,10 @@
    "z3_status": "witness",
    "z3_witness": {
     "xs": [
+     -5,
+     -4,
+     -3,
+     -2,
      -1
     ]
    },
@@ -3059,7 +3057,7 @@
      1
     ]
    },
-   "z3_seconds": 0.031,
+   "z3_seconds": 0.019,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -3096,7 +3094,7 @@
    "sample_witness": null,
    "z3_status": "no_witness",
    "z3_witness": null,
-   "z3_seconds": 0.012,
+   "z3_seconds": 0.011,
    "z3_detail": "",
    "z3_witness_confirmed": null,
    "label": "control",
@@ -3130,15 +3128,15 @@
    "z3_status": "witness",
    "z3_witness": {
     "xs": [
-     -6,
-     -6,
-     -9,
      -8,
-     -7
+     -7,
+     -9,
+     -9,
+     -6
     ],
-    "k": 7
+    "k": 8
    },
-   "z3_seconds": 0.158,
+   "z3_seconds": 0.135,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -3172,14 +3170,14 @@
    "z3_status": "witness",
    "z3_witness": {
     "xs": [
-     4,
-     3,
-     5,
-     2
+     1,
+     0,
+     1,
+     0
     ],
-    "k": 11
+    "k": 4
    },
-   "z3_seconds": 0.067,
+   "z3_seconds": 0.062,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -3214,13 +3212,14 @@
    "z3_witness": {
     "xs": [
      -9,
-     -9,
-     -8,
-     -7
+     -6,
+     -6,
+     -7,
+     -9
     ],
     "k": 11
    },
-   "z3_seconds": 0.167,
+   "z3_seconds": 0.183,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -3268,7 +3267,7 @@
      0
     ]
    },
-   "z3_seconds": 0.248,
+   "z3_seconds": 0.221,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -3301,14 +3300,16 @@
    "z3_status": "witness",
    "z3_witness": {
     "xs": [
+     1,
      0,
-     1,
-     1,
-     1,
+     0,
+     0,
+     0,
+     0,
      1
     ]
    },
-   "z3_seconds": 0.29,
+   "z3_seconds": 0.218,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -3343,13 +3344,15 @@
    "z3_status": "witness",
    "z3_witness": {
     "xs": [
-     2,
+     1,
      0,
      2,
-     0
+     1,
+     1,
+     1
     ]
    },
-   "z3_seconds": 0.291,
+   "z3_seconds": 0.214,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -3386,7 +3389,7 @@
    "sample_witness": null,
    "z3_status": "no_witness",
    "z3_witness": null,
-   "z3_seconds": 0.321,
+   "z3_seconds": 0.208,
    "z3_detail": "",
    "z3_witness_confirmed": null,
    "label": "control",
@@ -3425,7 +3428,7 @@
      3
     ]
    },
-   "z3_seconds": 0.319,
+   "z3_seconds": 0.268,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -3456,15 +3459,14 @@
    "z3_status": "witness",
    "z3_witness": {
     "xs": [
+     3,
+     2,
+     1,
      0,
-     0,
-     0,
-     0,
-     0,
-     1
+     0
     ]
    },
-   "z3_seconds": 0.459,
+   "z3_seconds": 0.38,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -3496,15 +3498,13 @@
    "z3_status": "witness",
    "z3_witness": {
     "xs": [
-     0,
-     0,
-     -2,
      -1,
      0,
-     1
+     1,
+     2
     ]
    },
-   "z3_seconds": 0.343,
+   "z3_seconds": 0.274,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -3551,15 +3551,15 @@
    "z3_status": "witness",
    "z3_witness": {
     "xs": [
-     2,
-     1,
-     2,
+     -2,
      0,
      -1,
-     -1
+     -3,
+     -2,
+     -4
     ]
    },
-   "z3_seconds": 0.632,
+   "z3_seconds": 0.406,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -3585,9 +3585,16 @@
    ],
    "z3_status": "witness",
    "z3_witness": {
-    "xs": []
+    "xs": [
+     0,
+     1,
+     -1,
+     0,
+     -2,
+     -3
+    ]
    },
-   "z3_seconds": 0.485,
+   "z3_seconds": 0.616,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -3624,12 +3631,10 @@
      3,
      2,
      1,
-     0,
-     2,
-     3
+     0
     ]
    },
-   "z3_seconds": 0.476,
+   "z3_seconds": 0.388,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -3666,7 +3671,7 @@
    "sample_witness": null,
    "z3_status": "no_witness",
    "z3_witness": null,
-   "z3_seconds": 1.004,
+   "z3_seconds": 0.678,
    "z3_detail": "",
    "z3_witness_confirmed": null,
    "label": "control",
@@ -3700,12 +3705,16 @@
    "z3_status": "witness",
    "z3_witness": {
     "xs": [
+     2,
      0,
-     -1
+     -3,
+     -1,
+     -5,
+     4
     ],
     "target": 0
    },
-   "z3_seconds": 0.15,
+   "z3_seconds": 0.107,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -3738,15 +3747,16 @@
    "z3_status": "witness",
    "z3_witness": {
     "xs": [
-     -1,
      0,
      0,
-     0,
-     -1
+     1,
+     1,
+     -2,
+     -2
     ],
     "target": 0
    },
-   "z3_seconds": 0.444,
+   "z3_seconds": 0.307,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -3780,14 +3790,15 @@
    "z3_status": "witness",
    "z3_witness": {
     "xs": [
-     -1,
-     0,
-     -1,
-     -1
+     1,
+     1,
+     1,
+     1,
+     0
     ],
     "target": 0
    },
-   "z3_seconds": 0.138,
+   "z3_seconds": 0.115,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -3824,7 +3835,7 @@
    "sample_witness": null,
    "z3_status": "no_witness",
    "z3_witness": null,
-   "z3_seconds": 0.115,
+   "z3_seconds": 0.105,
    "z3_detail": "",
    "z3_witness_confirmed": null,
    "label": "control",
@@ -3850,9 +3861,9 @@
    ],
    "z3_status": "witness",
    "z3_witness": {
-    "n": -1220
+    "n": 10
    },
-   "z3_seconds": 0.012,
+   "z3_seconds": 0.005,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -3878,9 +3889,9 @@
    ],
    "z3_status": "witness",
    "z3_witness": {
-    "n": -1000
+    "n": 1000
    },
-   "z3_seconds": 0.007,
+   "z3_seconds": 0.004,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -3906,9 +3917,9 @@
    ],
    "z3_status": "witness",
    "z3_witness": {
-    "n": 9260
+    "n": 9000
    },
-   "z3_seconds": 0.008,
+   "z3_seconds": 0.009,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -3953,7 +3964,7 @@
     "b": 1,
     "c": -1
    },
-   "z3_seconds": 0.021,
+   "z3_seconds": 0.019,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -3985,7 +3996,7 @@
     "b": 2,
     "c": 1
    },
-   "z3_seconds": 0.028,
+   "z3_seconds": 0.007,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -4013,11 +4024,11 @@
    ],
    "z3_status": "witness",
    "z3_witness": {
-    "a": 1,
+    "a": -1,
     "b": 0,
-    "c": -1
+    "c": 1
    },
-   "z3_seconds": 0.028,
+   "z3_seconds": 0.007,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -4054,7 +4065,7 @@
    "sample_witness": null,
    "z3_status": "no_witness",
    "z3_witness": null,
-   "z3_seconds": 0.029,
+   "z3_seconds": 0.016,
    "z3_detail": "",
    "z3_witness_confirmed": null,
    "label": "control",
@@ -4084,7 +4095,7 @@
     "unit_cents": 1,
     "qty": 99
    },
-   "z3_seconds": 0.007,
+   "z3_seconds": 0.005,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -4114,7 +4125,7 @@
     "unit_cents": 1,
     "qty": 100
    },
-   "z3_seconds": 0.029,
+   "z3_seconds": 0.004,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -4144,7 +4155,7 @@
     "unit_cents": 1,
     "qty": 50
    },
-   "z3_seconds": 0.008,
+   "z3_seconds": 0.024,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -4174,7 +4185,7 @@
     "unit_cents": 100,
     "qty": 1
    },
-   "z3_seconds": 0.012,
+   "z3_seconds": 0.006,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -4215,11 +4226,11 @@
    ],
    "z3_status": "witness",
    "z3_witness": {
-    "balance": 101,
+    "balance": 99,
     "amount": 99,
     "overdraft": false
    },
-   "z3_seconds": 0.014,
+   "z3_seconds": 0.008,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -4247,11 +4258,11 @@
    ],
    "z3_status": "witness",
    "z3_witness": {
-    "balance": 101,
+    "balance": 100,
     "amount": 100,
     "overdraft": false
    },
-   "z3_seconds": 0.03,
+   "z3_seconds": 0.007,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -4283,7 +4294,7 @@
     "amount": 500,
     "overdraft": true
    },
-   "z3_seconds": 0.014,
+   "z3_seconds": 0.006,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -4315,7 +4326,7 @@
     "amount": 1,
     "overdraft": true
    },
-   "z3_seconds": 0.024,
+   "z3_seconds": 0.012,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -4347,7 +4358,7 @@
     "amount": 99,
     "overdraft": false
    },
-   "z3_seconds": 0.025,
+   "z3_seconds": 0.004,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -4375,11 +4386,11 @@
    ],
    "z3_status": "witness",
    "z3_witness": {
-    "balance": 0,
+    "balance": 2,
     "amount": 0,
-    "overdraft": true
+    "overdraft": false
    },
-   "z3_seconds": 0.014,
+   "z3_seconds": 0.007,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -4425,13 +4436,13 @@
    "z3_witness": {
     "xs": [
      0,
-     1,
-     1,
-     1,
-     1
+     0,
+     0,
+     0,
+     0
     ]
    },
-   "z3_seconds": 0.466,
+   "z3_seconds": 0.315,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -4464,7 +4475,7 @@
    "z3_witness": {
     "xs": []
    },
-   "z3_seconds": 0.44,
+   "z3_seconds": 0.298,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -4497,7 +4508,7 @@
    "z3_witness": {
     "xs": []
    },
-   "z3_seconds": 0.442,
+   "z3_seconds": 0.303,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -4539,12 +4550,12 @@
    ],
    "z3_status": "witness",
    "z3_witness": {
-    "a": 1,
-    "b": 3,
-    "c": 2,
+    "a": 2,
+    "b": 2,
+    "c": 1,
     "d": 0
    },
-   "z3_seconds": 0.018,
+   "z3_seconds": 0.005,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -4573,12 +4584,12 @@
    ],
    "z3_status": "witness",
    "z3_witness": {
-    "a": 3,
-    "b": 1,
-    "c": 2,
+    "a": 1,
+    "b": 0,
+    "c": 0,
     "d": 0
    },
-   "z3_seconds": 0.029,
+   "z3_seconds": 0.017,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -4615,7 +4626,7 @@
    "sample_witness": null,
    "z3_status": "no_witness",
    "z3_witness": null,
-   "z3_seconds": 0.013,
+   "z3_seconds": 0.009,
    "z3_detail": "",
    "z3_witness_confirmed": null,
    "label": "control",
@@ -4645,13 +4656,13 @@
    ],
    "z3_status": "witness",
    "z3_witness": {
-    "a": 2,
-    "b": 3,
-    "c": 4,
+    "a": 1,
+    "b": 0,
+    "c": 2,
     "d": 0,
-    "e": 2
+    "e": 1
    },
-   "z3_seconds": 0.031,
+   "z3_seconds": 0.011,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -4681,13 +4692,13 @@
    ],
    "z3_status": "witness",
    "z3_witness": {
-    "a": 3,
+    "a": 0,
     "b": 4,
-    "c": 2,
-    "d": 1,
-    "e": 5
+    "c": 1,
+    "d": 5,
+    "e": 3
    },
-   "z3_seconds": 0.014,
+   "z3_seconds": 0.01,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -4724,7 +4735,7 @@
    "sample_witness": null,
    "z3_status": "no_witness",
    "z3_witness": null,
-   "z3_seconds": 0.039,
+   "z3_seconds": 0.021,
    "z3_detail": "",
    "z3_witness_confirmed": null,
    "label": "control",
@@ -4756,11 +4767,11 @@
    "z3_witness": {
     "a": 1,
     "b": 2,
-    "c": 5,
-    "d": 3,
-    "e": 4
+    "c": 4,
+    "d": 0,
+    "e": 3
    },
-   "z3_seconds": 0.013,
+   "z3_seconds": 0.015,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -4790,13 +4801,13 @@
    ],
    "z3_status": "witness",
    "z3_witness": {
-    "a": 5,
-    "b": 4,
+    "a": 4,
+    "b": 3,
     "c": 2,
     "d": 1,
     "e": 0
    },
-   "z3_seconds": 0.018,
+   "z3_seconds": 0.011,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -4832,7 +4843,7 @@
     "d": 4,
     "e": 5
    },
-   "z3_seconds": 0.017,
+   "z3_seconds": 0.019,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -4869,7 +4880,7 @@
    "sample_witness": null,
    "z3_status": "no_witness",
    "z3_witness": null,
-   "z3_seconds": 0.034,
+   "z3_seconds": 0.017,
    "z3_detail": "",
    "z3_witness_confirmed": null,
    "label": "control",
@@ -4903,12 +4914,14 @@
     "times": [
      0,
      6,
+     6,
      7,
-     7,
-     11
+     12,
+     12,
+     12
     ]
    },
-   "z3_seconds": 0.443,
+   "z3_seconds": 0.28,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -4943,16 +4956,16 @@
    "z3_status": "witness",
    "z3_witness": {
     "times": [
-     3,
+     0,
+     2,
      4,
      5,
-     8,
-     9,
-     9,
-     12
+     5,
+     6,
+     8
     ]
    },
-   "z3_seconds": 0.467,
+   "z3_seconds": 0.265,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -4999,15 +5012,15 @@
    "z3_status": "witness",
    "z3_witness": {
     "times": [
-     3,
-     3,
-     3,
-     4,
-     4,
-     4
+     0,
+     11,
+     12,
+     12,
+     12,
+     16
     ]
    },
-   "z3_seconds": 0.369,
+   "z3_seconds": 0.22,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -5041,15 +5054,14 @@
    "z3_status": "witness",
    "z3_witness": {
     "times": [
-     4,
-     5,
+     12,
+     13,
      13,
      15,
-     16,
-     16
+     15
     ]
    },
-   "z3_seconds": 0.471,
+   "z3_seconds": 0.395,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -5098,16 +5110,16 @@
    "z3_status": "witness",
    "z3_witness": {
     "samples": [
+     1,
+     1,
+     1,
      0,
-     1,
-     1,
-     1,
      0,
      0,
      1
     ]
    },
-   "z3_seconds": 0.318,
+   "z3_seconds": 0.217,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -5146,14 +5158,14 @@
      1,
      1,
      1,
-     1,
+     0,
      0,
      1,
      1,
      1
     ]
    },
-   "z3_seconds": 0.36,
+   "z3_seconds": 0.237,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -5190,7 +5202,7 @@
    "sample_witness": null,
    "z3_status": "no_witness",
    "z3_witness": null,
-   "z3_seconds": 0.346,
+   "z3_seconds": 0.235,
    "z3_detail": "",
    "z3_witness_confirmed": null,
    "label": "control",
@@ -5220,15 +5232,11 @@
    "z3_status": "witness",
    "z3_witness": {
     "digits": [
-     0,
-     0,
-     9,
-     8,
      5,
-     3
+     0
     ]
    },
-   "z3_seconds": 0.169,
+   "z3_seconds": 0.086,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -5261,13 +5269,11 @@
    "z3_status": "witness",
    "z3_witness": {
     "digits": [
-     5,
-     5,
      9,
-     5
+     1
     ]
    },
-   "z3_seconds": 0.338,
+   "z3_seconds": 0.227,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -5304,7 +5310,7 @@
    "sample_witness": null,
    "z3_status": "no_witness",
    "z3_witness": null,
-   "z3_seconds": 0.392,
+   "z3_seconds": 0.256,
    "z3_detail": "",
    "z3_witness_confirmed": null,
    "label": "control",
@@ -5332,11 +5338,11 @@
    ],
    "z3_status": "witness",
    "z3_witness": {
-    "day": 5,
+    "day": 6,
     "month": 1,
     "year": 1900
    },
-   "z3_seconds": 0.013,
+   "z3_seconds": 0.039,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -5376,10 +5382,10 @@
    ],
    "z3_status": "witness",
    "z3_witness": {
-    "a": -11,
-    "b": 3
+    "a": -59,
+    "b": 4
    },
-   "z3_seconds": 0.049,
+   "z3_seconds": 0.027,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -5409,7 +5415,7 @@
     "a": 1,
     "b": 2
    },
-   "z3_seconds": 0.018,
+   "z3_seconds": 0.004,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -5455,13 +5461,13 @@
    "z3_witness": {
     "xs": [
      5,
+     6,
+     6,
      0,
-     3,
-     2,
-     2
+     1
     ]
    },
-   "z3_seconds": 1.929,
+   "z3_seconds": 1.131,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -5494,14 +5500,14 @@
    "z3_status": "witness",
    "z3_witness": {
     "xs": [
-     6,
-     3,
+     5,
+     5,
+     5,
      0,
-     1,
-     2
+     5
     ]
    },
-   "z3_seconds": 1.315,
+   "z3_seconds": 1.012,
    "z3_detail": "",
    "z3_witness_confirmed": true,
    "label": "bug",
@@ -5538,7 +5544,7 @@
    "sample_witness": null,
    "z3_status": "no_witness",
    "z3_witness": null,
-   "z3_seconds": 21.394,
+   "z3_seconds": 15.711,
    "z3_detail": "",
    "z3_witness_confirmed": null,
    "label": "control",

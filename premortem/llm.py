@@ -32,6 +32,10 @@ MODELS = {
 }
 
 
+class LLMAuthError(RuntimeError):
+    """The CLI is logged out: every further call would fail, so a run must stop rather than record no-answers."""
+
+
 @dataclass
 class Completion:
     text: str
@@ -67,6 +71,8 @@ class ClaudeCLI:
             c = Completion(**rec["completion"])
             c.cached = True
             return c
+        if os.environ.get("PREMORTEM_CACHE_ONLY"):
+            return Completion(text="", model=self.model, error="cache miss in cache-only mode")
         c = self._call(system, prompt)
         if c.error is None:
             path.write_text(json.dumps({"tag": tag, "model": self.model, "system": system, "prompt": prompt,
@@ -96,6 +102,8 @@ class ClaudeCLI:
                 last = f"exit {proc.returncode}: {proc.stderr[-500:] or proc.stdout[-500:]}"
                 time.sleep(5 * (attempt + 1))
                 continue
+            if d.get("is_error") and "authenticat" in str(d.get("result", "")).lower():
+                raise LLMAuthError(f"Claude CLI: {d.get('result')}")
             if d.get("is_error") or d.get("subtype") != "success":
                 last = f"api error: {str(d.get('result'))[:300]} {d.get('api_error_status')}"
                 time.sleep(10 * (attempt + 1))

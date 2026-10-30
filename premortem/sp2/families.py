@@ -176,8 +176,9 @@ Checkout payment flow (design doc)
 When a customer places order o1, the checkout service (the client) sends a charge request to an
 external payment provider and waits for the reply. The network between them is unreliable: a request
 or a response can be lost, and messages can be delayed arbitrarily, so a request may still be in
-transit after the client has stopped waiting for it. The provider handles requests one at a time,
-in whatever order they arrive.
+transit after the client has stopped waiting for it. The provider serves requests concurrently on
+several worker threads, in whatever order they arrive, so the steps of different requests (looking up
+records, charging, writing records) can interleave.
 
 Each request is one attempt (a0 for the first try). After sending an attempt the client starts a
 timer at t0; every clock tick advances it by one, and when it reaches t{T} ({T} {unit} after sending)
@@ -574,8 +575,9 @@ Payout worker: queue consumer design (design doc)
 
 When a seller's balance is settled, a "send payout" message (m1) is put on a message queue. A
 consumer process (w1) receives messages from the queue and, for each one, performs the payout by
-calling the bank API (an external side effect that cannot be undone), then acknowledges the message
-so the queue deletes it.
+crediting the amount to the seller's wallet balance, which is stored in the payments database (a
+credit, once committed, is not reversed automatically), then acknowledges the message so the queue
+deletes it.
 
 The queue guarantees at-least-once delivery. A received message is hidden from consumers; if it is
 not acknowledged within {V} clock {'tick' if V == 1 else 'ticks'} of being received (the visibility timeout) it becomes visible
@@ -590,15 +592,16 @@ Processing. The consumer performs the payout for every message it receives, then
         mech = """
 Processing and deduplication. The consumer keeps the ids of messages it has already paid out in a
 set in its process memory. Before performing a payout it checks the set: if the id is there it skips
-the payout and only acknowledges the message; otherwise it performs the payout, adds the id to the
+the payout and only acknowledges the message; otherwise it credits the wallet, adds the id to the
 set, and acknowledges.
 """
     else:
         mech = """
 Processing and deduplication. The consumer records the ids of messages it has already paid out in a
-table in the payments database. The payout ledger entry and the id record are written in the same
-database transaction, and before performing a payout the consumer checks the table: if the id is
-there it skips the payout and only acknowledges the message.
+table in the payments database. The wallet credit and the id record are written in the same database
+transaction, so either both are stored or neither is (a crash before the commit rolls both back).
+Before performing a payout the consumer checks the table: if the id is there it skips the payout and
+only acknowledges the message.
 """
     return common + mech + "\nInitially m1 is in the queue and visible, nothing has been paid out, and w1 is idle.\n"
 
@@ -753,6 +756,13 @@ FAMILIES: dict[str, Family] = {
                     "Can the cache be left holding an older version than the database after the writer has finished all its updates?",
                     CACHE_FACTS, cache_updates, cache_problem, cache_design, cache_naming),
 }
+
+def behavioural_predicates(domain_text: str) -> set[str]:
+    """Predicates that occur in some action precondition (facts that can change behaviour)."""
+    from ..planning import parse_domain
+    dom = parse_domain(domain_text)
+    return {atom.predicate for a in dom.actions.values() for atom in (*a.pre_pos, *a.pre_neg)}
+
 
 def design_predicates(family: str) -> set[str]:
     """Nullary predicates declared as design facts in the domain (the facts SP3 scores)."""

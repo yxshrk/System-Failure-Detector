@@ -48,8 +48,9 @@ def outcome(result: dict, inst: dict, params, reference: str, fname: str) -> tup
     if verdict == "invalid":
         return "no_answer", "; ".join(map(str, result.get("errors", [])))[:300]
     if verdict == "no_bug":
-        if result.get("tool_status") == "timeout":
-            return "tool_timeout", result.get("tool_detail", "")
+        if result.get("tool_status") in ("timeout", "unknown", "incomplete"):
+            # the verifier gave up (Z3 unknown, wall-clock kill) or could not cover every in-bound input
+            return "tool_undecided", f"{result.get('tool_status')}: {result.get('tool_detail', '')}"
         return ("miss", "") if inst["kind"] == "bug" else ("correct_no_bug", "")
     ok, why = check_witness(result.get("witness"), params, inst["source"], reference, fname)
     if inst["kind"] == "control":

@@ -18,7 +18,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from premortem.llm import get_llm  # noqa: E402
+from premortem.llm import LLMAuthError, get_llm  # noqa: E402
 from premortem.sp1.arms import run_direct, run_translate  # noqa: E402
 from premortem.sp1.benchmarks import BY_NAME  # noqa: E402
 from premortem.sp1.score import outcome  # noqa: E402
@@ -54,7 +54,7 @@ def run_one(llm, arm: str, inst: dict) -> dict:
     rec["outcome"], rec["outcome_detail"] = outcome(rec, inst, b.params, b.reference, b.name)
     rec.update({"function": inst["function"], "kind": inst["kind"], "bucket": inst["bucket"],
                 "rarity": inst["rarity"], "op": inst["op"]})
-    if arm == "translate" and r.spec and r.tool_status in ("witness", "no_witness", "unknown", "timeout"):
+    if arm == "translate" and r.spec and r.tool_status in ("witness", "no_witness", "unknown", "timeout", "incomplete"):
         s = spec_check(b.reference, b.name, r.spec, b.params, b.loop_bound)
         rec["spec_sound"] = {"no_witness": True, "witness": False}.get(s.status)
         rec["spec_unsound_example"] = s.witness
@@ -93,6 +93,9 @@ def main(argv=None):
                 for k, f in enumerate(as_completed(futs), 1):
                     try:
                         rec = f.result()
+                    except LLMAuthError as e:  # logged out: stop before overwriting results with no-answers
+                        ex.shutdown(wait=False, cancel_futures=True)
+                        sys.exit(f"{e}\nLog in again (run `claude`, then /login) and rerun; results were not written.")
                     except Exception as e:  # keep the batch going; record the failure
                         rec = {"instance": futs[f], "arm": arm, "model": model, "outcome": "harness_error",
                                "outcome_detail": repr(e)}

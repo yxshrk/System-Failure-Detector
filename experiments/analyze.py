@@ -40,15 +40,20 @@ def wilson(k: int, n: int, z: float = 1.96):
     return (max(0.0, c - h), min(1.0, c + h))
 
 
+def _r(x: float) -> int:
+    """Round half up (Python's round() and format() round half to even, which made 82.5% print as 82%)."""
+    return int(x + 0.5)
+
+
 def pct(k, n):
-    return f"{100 * k / n:.0f}%" if n else "-"
+    return f"{_r(100 * k / n)}%" if n else "-"
 
 
 def pct_ci(k, n):
     if not n:
         return "-"
     lo, hi = wilson(k, n)
-    return f"{100 * k / n:.0f}% [{100 * lo:.0f}-{100 * hi:.0f}]"
+    return f"{_r(100 * k / n)}% [{_r(100 * lo)}-{_r(100 * hi)}]"
 
 
 def load(sub: str) -> pd.DataFrame:
@@ -94,8 +99,8 @@ def sp1_tables(df: pd.DataFrame, out: list[str]):
     df = df.copy()
     df["tier"] = df["instance"].map(tier)
     out.append("## SP1: one function (CSP / SMT)\n")
-    out.append("| model | arm | tier | bugs | valid witness | fabricated | miss | no answer / tool timeout | controls | false alarm | $/inst | out tok |")
-    out.append("|---|---|---|---|---|---|---|---|---|---|---|---|")
+    out.append("| model | arm | tier | bugs | valid witness | fabricated | miss | no answer / undecided | controls | false alarm | controls undecided | $/inst | out tok |")
+    out.append("|---|---|---|---|---|---|---|---|---|---|---|---|---|")
     summary = []
     for model in MODEL_ORDER:
         for arm in ("direct", "translate"):
@@ -108,14 +113,15 @@ def sp1_tables(df: pd.DataFrame, out: list[str]):
                 bugs, ctrl = d[d.kind == "bug"], d[d.kind == "control"]
                 c = Counter(bugs.outcome)
                 fa = (ctrl.outcome == "false_alarm").sum()
+                ctrl_undecided = ctrl.outcome.isin(["tool_timeout", "tool_undecided"]).sum()
                 row = dict(model=model, arm=arm, tier=t, bugs=len(bugs), valid=c["valid_witness"],
                            fabricated=c["invalid_witness"], miss=c["miss"],
-                           no_answer=c["no_answer"] + c["harness_error"] + c["tool_timeout"],
-                           controls=len(ctrl), false_alarm=int(fa), cost=d.llm_cost.mean(), tokens=d.output_tokens.mean())
+                           no_answer=c["no_answer"] + c["harness_error"] + c["tool_timeout"] + c["tool_undecided"],
+                           controls=len(ctrl), false_alarm=int(fa), controls_undecided=int(ctrl_undecided), cost=d.llm_cost.mean(), tokens=d.output_tokens.mean())
                 summary.append(row)
                 out.append(f"| {MODEL_LABEL[model]} | {ARM_LABEL[arm]} | {t} | {len(bugs)} | {pct_ci(row['valid'], len(bugs))} | "
                            f"{pct(row['fabricated'], len(bugs))} | {pct(row['miss'], len(bugs))} | {pct(row['no_answer'], len(bugs))} | "
-                           f"{len(ctrl)} | {pct_ci(int(fa), len(ctrl))} | {row['cost']:.3f} | {row['tokens']:.0f} |")
+                           f"{len(ctrl)} | {pct_ci(int(fa), len(ctrl))} | {int(ctrl_undecided)} | {row['cost']:.3f} | {row['tokens']:.0f} |")
     pd.DataFrame(summary).to_csv(RES / "sp1_summary.csv", index=False)
 
     out.append("\n**Valid-witness rate by trigger rarity (bugs only)**\n")
@@ -250,7 +256,7 @@ def sp2_tables(df: pd.DataFrame, out: list[str], title: str = "SP2: one design (
             rows.append(dict(model=model, arm=arm, valid=c["valid_trace"], n=len(v), fabricated=c["invalid_trace"],
                              miss=c["miss"], false_alarm=int(fa), n_fixed=len(f)))
             out.append(f"| {MODEL_LABEL[model]} | {ARM_LABEL[arm]} | {len(v)} | {pct_ci(c['valid_trace'], len(v))} | "
-                       f"{pct(c['invalid_trace'], len(v))} | {pct(c['miss'], len(v))} | {pct(c['no_answer'] + c['harness_error'], len(v))} | "
+                       f"{pct(c['invalid_trace'], len(v))} | {pct(c['miss'], len(v))} | {pct(c['no_answer'] + c['harness_error'] + c['tool_limit'], len(v))} | "
                        f"{len(f)} | {pct_ci(int(fa), len(f))} | {d.llm_cost.mean():.3f} |")
     if not brief:
         pd.DataFrame(rows).to_csv(RES / "sp2_summary.csv", index=False)
@@ -413,11 +419,11 @@ def fig_outcomes(sp1: pd.DataFrame, sp2: pd.DataFrame):
     if not sp1.empty:
         panels.append(("SP1 hard tier (bugs)", sp1[(sp1.tier == "hard") & (sp1.kind == "bug")],
                        {"valid": ["valid_witness"], "fabricated": ["invalid_witness"], "miss": ["miss"],
-                        "no answer": ["no_answer", "harness_error", "tool_timeout"]}))
+                        "no answer": ["no_answer", "harness_error", "tool_timeout", "tool_undecided"]}))
     if not sp2.empty:
         panels.append(("SP2 (violating designs)", sp2[sp2.violation == True],  # noqa: E712
                        {"valid": ["valid_trace"], "fabricated": ["invalid_trace"], "miss": ["miss"],
-                        "no answer": ["no_answer", "harness_error"]}))
+                        "no answer": ["no_answer", "harness_error", "tool_limit"]}))
     if not panels:
         return
     fig, axes = plt.subplots(1, len(panels), figsize=(4.6 * len(panels), 2.9), facecolor=SURFACE)

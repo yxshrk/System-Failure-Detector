@@ -1100,32 +1100,52 @@ class SymbolicExecutor:
         raise SymError(f"unsupported operator {type(op).__name__}")
 
     def eval_boolop(self, node: ast.BoolOp, frame: Frame):
+        """Python value semantics: `a or b` is a if a is truthy, else b; `a and b` is b if a is truthy, else a.
+        The right operand is evaluated only on the paths where Python would evaluate it."""
         is_and = isinstance(node.op, ast.And)
-        acc = truthy(self.eval(node.values[0], frame))
+        acc = self.eval(node.values[0], frame)
         for sub in node.values[1:]:
-            k = concrete(acc)
-            if k is (not is_and):
-                return acc
-            if k is is_and:
-                acc = truthy(self.eval(sub, frame))
+            c = truthy(acc)
+            k = concrete(c)
+            if k is not None:
+                if k is not is_and:  # short-circuit: `and` with falsy left, `or` with truthy left
+                    return acc
+                acc = self.eval(sub, frame)
                 continue
-            guard = acc if is_and else neg(acc)
+            guard = c if is_and else neg(c)
             fb = Frame(dict(frame.env), conj(frame.alive, guard))
-            vb = truthy(self.eval(sub, fb))
+            vb = self.eval(sub, fb)
             fskip = Frame(dict(frame.env), conj(frame.alive, neg(guard)))
             merged = merge_frames([fb, fskip])
             frame.env, frame.alive = merged.env, merged.alive
-            acc = conj(acc, vb) if is_and else disj(acc, vb)
+            try:
+                acc = ite(guard, vb, acc)
+            except SymError:
+                raise SymError(f"`{'and' if is_and else 'or'}` whose operands have different types "
+                               f"({kind(acc)} and {kind(vb)}) is not supported") from None
         return acc
 
     def eval_compare(self, node: ast.Compare, frame: Frame):
+        """Chained comparisons short-circuit: `a < b < c` evaluates c only where a < b holds."""
         left = self.eval(node.left, frame)
-        parts = []
+        acc = True
         for op, rnode in zip(node.ops, node.comparators):
-            right = self.eval(rnode, frame)
-            parts.append(self.compare(op, left, right, frame))
+            k = concrete(acc)
+            if k is False:
+                return False
+            if k is True:
+                right = self.eval(rnode, frame)
+                acc = self.compare(op, left, right, frame)
+            else:
+                fb = Frame(dict(frame.env), conj(frame.alive, acc))
+                right = self.eval(rnode, fb)
+                part = self.compare(op, left, right, fb)
+                fskip = Frame(dict(frame.env), conj(frame.alive, neg(acc)))
+                merged = merge_frames([fb, fskip])
+                frame.env, frame.alive = merged.env, merged.alive
+                acc = conj(acc, part)
             left = right
-        return conj(*parts)
+        return acc
 
     def compare(self, op, a, b, frame: Frame):
         if isinstance(op, (ast.Is, ast.IsNot)):
@@ -1207,10 +1227,20 @@ class SymbolicExecutor:
         if not isinstance(func, ast.Name):
             raise SymError("only calls to named functions are supported")
         name = func.id
-        if name in self.functions and name not in frame.env:
+        if name in frame.env:
+            raise SymError(f"'{name}' is a variable here; calling a variable is not supported")
+        if name in self.functions:
             args = [self.eval(a, frame) for a in node.args]
             kwargs = {kw.arg: self.eval(kw.value, frame) for kw in node.keywords}
-            value, normal = self._call_user(name, args, kwargs, frame.alive)
+            # Run the callee from path condition True and guard its effects by the caller's condition once.
+            # Starting it from frame.alive would repeat that condition once per return statement; the DAG
+            # stays small, but Z3's preprocessing expands shared sub-terms and blows up exponentially in
+            # the number of calls. Arguments are passed by value, so the callee has no other effects.
+            saved_exc, saved_unwind = self.exc, self.unwind
+            self.exc = self.unwind = False
+            value, normal = self._call_user(name, args, kwargs, True)
+            self.exc = disj(saved_exc, conj(frame.alive, self.exc))
+            self.unwind = disj(saved_unwind, conj(frame.alive, self.unwind))
             frame.alive = conj(frame.alive, normal)
             return value
         if name not in _BUILTINS:
@@ -1310,6 +1340,8 @@ class SymbolicExecutor:
             r = self.binop(ast.Mod(), a, b, frame)
             return (q, r)
         if name == "pow":
+            if len(args) != 2:
+                raise SymError("pow() with a modulus argument is not supported; use (a ** b) % m")
             return self.binop(ast.Pow(), args[0], args[1], frame)
         if name in ("enumerate", "zip"):
             raise SymError(f"{name}() is only supported directly in a for loop")

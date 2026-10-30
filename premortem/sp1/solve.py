@@ -184,16 +184,29 @@ def spec_check_inprocess(code_src: str, fname: str, spec_src: str, params, loop_
     try:
         with _deadline(SPEC_CHECK_SECONDS):
             return _spec_check(code_src, fname, spec_src, params, loop_bound, timeout_ms, t0)
-    except ToolTimeout:
+    except Exception as e:
+        # the alarm can fire inside a Z3 callback, where ctypes wraps it in an ArgumentError
+        if not isinstance(e, ToolTimeout) and "ToolTimeout" not in repr(e):
+            raise
         return SolveResult("timeout", detail=f"symbolic execution and solving exceeded {SPEC_CHECK_SECONDS} s",
                            seconds=time.perf_counter() - t0)
+
+
+SPEC_DEEPENING = 3  # unroll the spec at k', 2k', 4k' before reporting "incomplete"
+
+
+def spec_bound(params, loop_bound: int) -> int:
+    """First unroll depth k' for model-written specs: at least one iteration per list position."""
+    longest = max((t.max_len for _, t in params if isinstance(t, D.ListT)), default=0)
+    return max(loop_bound, longest + 1)
 
 
 def _spec_check(code_src, fname, spec_src, params, loop_bound, timeout_ms, t0) -> SolveResult:
     syms, cons = symbolic_inputs(params)
     args = [syms[n] for n, _ in params]
+    bound = spec_bound(params, loop_bound)
     try:
-        spec = SymbolicExecutor(spec_src, loop_bound)
+        spec = SymbolicExecutor(spec_src, bound)
     except SymError as e:
         return SolveResult("error", detail=f"in your specification: {e}", seconds=time.perf_counter() - t0)
     if "post" not in spec.functions:
@@ -203,36 +216,76 @@ def _spec_check(code_src, fname, spec_src, params, loop_bound, timeout_ms, t0) -
         names = ", ".join([n for n, _ in params] + ["result"])
         return SolveResult("error", detail=f"post must take exactly {len(params) + 1} parameters ({names}), "
                                            f"but it takes {n_post}", seconds=time.perf_counter() - t0)
+    if "pre" in spec.functions and len(spec.functions["pre"].args.args) != len(params):
+        return SolveResult("error", detail=f"pre must take exactly {len(params)} parameters, "
+                                           f"but it takes {len(spec.functions['pre'].args.args)}",
+                           seconds=time.perf_counter() - t0)
     try:
         code_out = SymbolicExecutor(code_src, loop_bound).run(fname, args)
     except SymError as e:
         return SolveResult("error", detail=f"(tool limitation) the code under review could not be encoded: {e}",
                            seconds=time.perf_counter() - t0, stats={"tool_error": True})
-    try:
-        pre_ok, pre_unwind = True, False
-        if "pre" in spec.functions:
-            n_pre = len(spec.functions["pre"].args.args)
-            if n_pre != len(params):
-                return SolveResult("error", detail=f"pre must take exactly {len(params)} parameters, but it takes {n_pre}",
-                                   seconds=time.perf_counter() - t0)
-            pre_out = spec.run("pre", args)
-            pre_ok = conj(pre_out.normal, truthy(pre_out.value))
-            pre_unwind = pre_out.unwind
-        result = code_out.value
-        post_out = spec.run("post", args + [result])
-        post_ok = conj(post_out.normal, truthy(post_out.value))
-    except SymError as e:
-        return SolveResult("error", detail=f"in your specification: {e}", seconds=time.perf_counter() - t0)
+    for attempt in range(SPEC_DEEPENING):
+        if attempt:
+            bound *= 2
+            spec = SymbolicExecutor(spec_src, bound)
+        try:
+            pre_ok, pre_unwind = True, False
+            if "pre" in spec.functions:
+                pre_out = spec.run("pre", args)
+                pre_ok = conj(pre_out.normal, truthy(pre_out.value))
+                pre_unwind = pre_out.unwind
+            post_out = spec.run("post", args + [code_out.value])
+            post_ok = conj(post_out.normal, truthy(post_out.value))
+        except SymError as e:
+            return SolveResult("error", detail=f"in your specification: {e}", seconds=time.perf_counter() - t0)
 
-    # A precondition that excludes the whole domain makes every check vacuous.
-    vac_status, _ = _solve(cons + [pre_ok, neg(pre_unwind)], params, syms, timeout_ms)
-    if vac_status == "no_witness":
-        return SolveResult("error", detail="your precondition pre(...) is false for every input in the stated domain, "
-                                           "so nothing would be checked", seconds=time.perf_counter() - t0)
-    violation = conj(pre_ok, disj(code_out.exc, neg(post_ok)))
-    formula = cons + [neg(code_out.unwind), neg(post_out.unwind), neg(pre_unwind), violation]
-    status, wit = _solve(formula, params, syms, timeout_ms)
-    return SolveResult(status, wit, time.perf_counter() - t0)
+        if attempt == 0:
+            # A precondition that excludes the whole domain makes every check vacuous.
+            vac_status, _ = _solve(cons + [pre_ok, neg(pre_unwind)], params, syms, timeout_ms)
+            if vac_status == "no_witness":
+                return SolveResult("error", detail="your precondition pre(...) is false for every input in the stated "
+                                                   "domain, so nothing would be checked", seconds=time.perf_counter() - t0)
+        # post is only evaluated where the code returns normally, so its unwinding only matters there.
+        violation = conj(pre_ok, disj(code_out.exc, conj(neg(post_out.unwind), neg(post_ok))))
+        status, wit = _solve(cons + [neg(code_out.unwind), neg(pre_unwind), violation], params, syms, timeout_ms)
+        if status != "no_witness":
+            return SolveResult(status, wit, time.perf_counter() - t0, stats={"spec_bound": bound})
+        # Theorem 1 needs every in-bound input to be checked (coverage query Psi UNSAT): if the spec needs more
+        # iterations than its unroll depth on some input, deepen; "no witness" is not yet a verdict.
+        skipped = disj(pre_unwind, conj(pre_ok, neg(code_out.exc), post_out.unwind))
+        sk_status, _ = _solve(cons + [neg(code_out.unwind), skipped], params, syms, timeout_ms)
+        if sk_status == "no_witness":
+            return SolveResult(status, wit, time.perf_counter() - t0, stats={"spec_bound": bound})
+    return SolveResult("incomplete", detail=f"the specification needs more than {bound} loop iterations on some "
+                                            f"inputs", seconds=time.perf_counter() - t0, stats={"spec_bound": bound})
+
+
+def substitute_value(v, pairs):
+    """Substitute concrete values for input variables throughout an executor value."""
+    from .symexec import Opt, SymList, is_z3
+    if isinstance(v, SymList):
+        return SymList(substitute_value(v.length, pairs), tuple(substitute_value(e, pairs) for e in v.elems))
+    if isinstance(v, tuple):
+        return tuple(substitute_value(x, pairs) for x in v)
+    if isinstance(v, Opt):
+        return Opt(substitute_value(v.is_none, pairs), substitute_value(v.val, pairs))
+    if is_z3(v):
+        return z3.simplify(z3.substitute(v, *pairs)) if pairs else z3.simplify(v)
+    return v
+
+
+def symbolic_then_substitute(src: str, fname: str, params, loop_bound: int):
+    """Execute once on symbolic inputs; return a function giving the outcome at concrete inputs.
+
+    Unlike ``evaluate_outcome`` this exercises the Z3 encoding itself (Lemma 1)."""
+    syms, _ = symbolic_inputs(params)
+    o = SymbolicExecutor(src, loop_bound).run(fname, [syms[n] for n, _ in params])
+
+    def at(values: dict):
+        pairs = [p for n, t in params for p in D.substitution(t, syms[n], values[n])]
+        return (substitute_value(o.exc, pairs), substitute_value(o.value, pairs), substitute_value(o.unwind, pairs))
+    return at
 
 
 def evaluate_outcome(src: str, fname: str, params, loop_bound: int, values: dict):

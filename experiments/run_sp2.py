@@ -18,7 +18,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from premortem.llm import get_llm  # noqa: E402
+from premortem.llm import LLMAuthError, get_llm  # noqa: E402
 from premortem.sp2.arms import run_direct, run_translate  # noqa: E402
 from premortem.sp2.score import outcome, translation_scores  # noqa: E402
 
@@ -61,6 +61,9 @@ def main(argv=None):
                 for k, f in enumerate(as_completed(futs), 1):
                     try:
                         rec = f.result()
+                    except LLMAuthError as e:  # logged out: stop before overwriting results with no-answers
+                        ex.shutdown(wait=False, cancel_futures=True)
+                        sys.exit(f"{e}\nLog in again (run `claude`, then /login) and rerun; results were not written.")
                     except Exception as e:
                         rec = {"instance": futs[f], "arm": arm, "model": model, "outcome": "harness_error",
                                "outcome_detail": repr(e)}

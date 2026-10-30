@@ -1,6 +1,6 @@
 model,arm,valid,n,fabricated,miss,false_alarm,n_fixed
-haiku,direct,32,40,6,2,11,20
-haiku,translate,33,40,7,0,4,20
+haiku,direct,31,40,7,2,12,20
+haiku,translate,34,40,6,0,7,20
 sonnet,direct,40,40,0,0,0,20
 sonnet,translate,40,40,0,0,0,20
 opus,direct,40,40,0,0,0,20

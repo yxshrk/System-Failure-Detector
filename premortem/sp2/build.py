@@ -55,6 +55,7 @@ def main():
                 gold = solve_gold(fam, variant, size, stress)
                 reachable = gold["gbfs"]["status"] == "solved"
                 assert reachable == (variant != "fixed"), (name, variant, size)
+                certificate = certify(name, variant, size, gold)
                 exact = gold["satplan"]["status"] == "solved"
                 shortest = (gold["satplan"]["length"] if exact else gold["gbfs"]["length"]) if reachable else None
                 if reachable and not exact and name == "inventory":
@@ -68,10 +69,39 @@ def main():
                     "shortest_exact": exact if reachable else None,
                     "design": fam.design(variant, size), "naming": fam.naming(variant, size),
                     "problem": fam.problem(variant, size), "design_facts": list(fam.design_facts[variant]),
-                    "gold": gold,
+                    "certificate": certificate, "gold": gold,
                 })
                 print(f"{instances[-1]['id']:28s} shortest={instances[-1]['shortest']}  {time.perf_counter() - t0:.1f}s", flush=True)
     write(add_opaque(instances))
+
+
+INVARIANT = {
+    "inventory": "units are conserved: stock + holding + sold = S in every reachable state, so at most S of "
+                 "the S+1 customers can buy",
+}
+
+
+def certify(name: str, variant: str, size: int, gold: dict) -> str | None:
+    """How the gold label of a fixed (safe) variant is established."""
+    if variant != "fixed":
+        return None
+    if gold["gbfs"]["status"] == "unsolvable":
+        return "GBFS search exhausted the reachable states (Theorem 3)"
+    if name in INVARIANT:  # search budget ran out; the label rests on an invariant argument
+        return "analytic invariant: " + INVARIANT[name]
+    raise AssertionError(f"{name}-{variant}-{size}: fixed variant neither certified by search nor by an invariant")
+
+
+def refresh_text(instances: list[dict]) -> list[dict]:
+    """Regenerate design documents, naming, certificates and opaque copies without re-solving."""
+    base = [i for i in instances if i.get("set", "main") != "opaque"]
+    for i in base:
+        fam = FAMILIES[i["family"]]
+        assert i["problem"] == fam.problem(i["variant"], i["size"]), i["id"]
+        i["design"] = fam.design(i["variant"], i["size"])
+        i["naming"] = fam.naming(i["variant"], i["size"])
+        i["certificate"] = certify(i["family"], i["variant"], i["size"], i["gold"])
+    return add_opaque(base)
 
 
 def add_opaque(instances: list[dict]) -> list[dict]:
@@ -104,5 +134,7 @@ if __name__ == "__main__":
     import sys
     if "--augment-only" in sys.argv:
         write(add_opaque(json.loads((DATA / "instances.json").read_text())["instances"]))
+    elif "--refresh-text" in sys.argv:
+        write(refresh_text(json.loads((DATA / "instances.json").read_text())["instances"]))
     else:
         main()

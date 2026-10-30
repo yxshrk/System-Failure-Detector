@@ -164,8 +164,8 @@ def run_translate(llm, inst: dict, params, fname: str, loop_bound: int) -> ArmRe
             if r.status == "witness":
                 res.verdict, res.witness = "bug", r.witness
                 return res
-            if r.status in ("no_witness", "unknown", "timeout"):
-                res.verdict = "no_bug"  # no failure found (bounded; "unknown"/"timeout" = solver gave up)
+            if r.status in ("no_witness", "unknown", "timeout", "incomplete"):
+                res.verdict = "no_bug"  # scored as undecided unless the status is a real "no_witness"
                 return res
             feedback = r.detail
         res.errors.append(feedback)

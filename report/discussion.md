@@ -18,7 +18,7 @@ verifier has no ground truth. Specs should be written blind to the code, or chec
 input/output pairs.
 
 **SP2: the jagged frontier runs between model generations.** The 5.5 models are perfect in both arms on
-the main and stress sets. Haiku's Direct errors are not slips in long traces. Every failing trace that
+all three sets. Haiku's Direct errors are not slips in long traces. Every failing trace that
 reached a precondition check failed on a *design fact* (Table 3): a well-known failure pattern applied
 to a design whose text rules it out (§A.4).
 
@@ -26,16 +26,16 @@ Translation does not remove misreading; Haiku moves the same mistake into the de
 It also adds permissive initial states that the planner exploits (§A.5). But translation helps the
 weaker model in three ways:
 
-* *Fewer false alarms:* 55% → 20% (main), 60% → 10% (stress) and 85% → 40% (opaque).
-* *Inspectable errors:* a wrong design fact is one line in a problem file, while a wrong Direct trace is a narrative of 10–27 steps.
+* *Fewer false alarms:* 60% → 35% (main), 80% → 40% (stress) and 95% → 45% (opaque).
+* *Inspectable errors:* a wrong design fact is one line in a problem file, while a wrong Direct trace is a narrative of 6–35 steps.
 * *Lower cost:* the planner, not the model, does the search.
 
 **Length vs. familiarity.** Up to 27 events, trace length did not affect the 5.5 models, and Haiku shows
 no length trend. Our violations are textbook patterns; once the pattern is recognised, a longer trace is
-bookkeeping. The opaque ablation is where a frontier model cracked. With design facts renamed `mode-N`,
-Opus Direct mapped "ids recorded in the same database transaction" to the in-memory mode and raised
-three false alarms. Opus Translate, with identical inputs, was perfect: writing the initial state forces
-a commitment to one design fact per mechanism, which free-form reasoning skips.
+bookkeeping. With design facts renamed `mode-N`, the 5.5 models stayed perfect, so they map the
+mechanism described in the text, not just its name. Haiku leans on names: its Direct false alarms rose
+from 60% to 95%. Translate held it to 45%, because writing the initial state forces a commitment to one
+design fact per mechanism, which free-form reasoning skips.
 
 **The tools have cliffs too (§5.3).** Iterating the horizon makes SATPlan slow on symmetric
 interleavings. Exhaustive certification explodes with the state space, and bounded symbolic execution
@@ -45,8 +45,8 @@ reduction (TLC, SPIN), unwinding assertions (CBMC) and k-induction. On the size-
 
 **Is translating worth it?**
 
-* *Direct suffices* when the specification is local and explicit, the artefact small and the model strong: SP1 at every tier, and SP2 for the 5.5 models with descriptive names. It never fabricated an SP1 witness, and its "no bug" answers were right on all 59 controls.
-* *Translate pays off* when a weaker model must be used (Haiku's false alarms fell by about two-thirds), when the vocabulary gives no hints (the only arm in which Opus made no errors), and when a *guarantee* is required. A solver certificate with an audit trail is something Direct cannot provide.
+* *Direct suffices* when the specification is local and explicit, the artefact small and the model strong: SP1 at every tier, and SP2 for the 5.5 models even with opaque names. It never fabricated an SP1 witness, and its "no bug" answers were right on all 59 controls.
+* *Translate pays off* when a weaker model must be used (Haiku's false alarms roughly halved, most of all with opaque names) and when a *guarantee* is required. A solver certificate with an audit trail is something Direct cannot provide.
 * *Its weaknesses* are specification correctness (anchoring, permissive models) and the tools' state-space and term-size limits.
 
 Direct accuracy on problems of this size will keep rising, as the step from Haiku 4.5 to the 5.5 models
@@ -55,7 +55,7 @@ largest designs did not reach that regime for the 5.5 models; the size-8 invento
 
 **Threats to validity.**
 
-* *Mutants.* They are small, first-order faults [13]; real bugs often span several lines.
+* *Mutants.* They are small, first-order faults [13]; real bugs often span several lines. Some automatic mutants are unidiomatic (`if not x not in out`) and hint at the mutated line, yet Direct also found 41–42 of the 42 cue-free hand-written bugs.
 * *Specifications.* Docstrings are complete specifications; vaguer real ones would hurt Translate more.
 * *Familiarity.* The SP2 families are textbook patterns, and the opaque ablation removes lexical cues but not conceptual familiarity; novel designs would be a stronger test.
 * *Scaffolding.* Both arms get the event model, which in practice must itself be written, an error-prone step (Planning p.15).

@@ -7,16 +7,19 @@ author:
   - "Hein Htet Zaw (A0301513Y, e1355879@u.nus.edu)"
 ---
 
-**Summary.** We built a benchmark of 174 buggy and correct functions (SP1) and 150 distributed-system
-designs (SP2), with gold models that score every claimed failure exactly. On it we compared Claude
+**Summary.** We built a benchmark of 174 buggy and correct functions (SP1) and 150 distributed-system design instances (SP2), with gold models that score every claimed failure exactly. On it we compared Claude
 Haiku 4.5, Sonnet 5.5 and Opus 5.5, each answering directly or translating for Z3 / SATPlan / FF.
 
 * *SP1.* Both arms find essentially every bug, independent of trigger rarity, which instead decides whether random testing finds it. No model fabricated a failure on any control.
-* *SP2.* The 5.5 models are perfect in both arms up to 27-event traces. Haiku's Direct answers misread designs: 55% false alarms on correct designs, cut to 20% by translation. When names give no hints, Opus Direct also fails where Opus Translate does not.
+* *SP2.* The 5.5 models are perfect in both arms up to 27-event traces, even with mechanism names hidden. Haiku's Direct answers misread designs: 60% false alarms on correct designs (95% with hidden names), cut to 35% (45%) by translation.
 * *Translation's risks.* Specifications that copy the bug, permissive models that planners exploit, and solver blow-up (state explosion in certification).
 
 ```{=openxml}
 <w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
+```{=html}
+<div class="pagebreak"></div>
 ```
 
 # 1. Motivation and research questions
@@ -61,9 +64,11 @@ the solver's value for $x$ is the witness (existential instantiation, FOL p.18).
 Intermediate values are shared sub-terms of one formula DAG, which play the role of auxiliary
 variables (CSP p.13). The domains are finite, so this is a finite CSP: NP-complete (CSP p.8).
 
-**Building $\llbracket f \rrbracket$: bounded symbolic execution** (`sp1/symexec.py`). The executor
-walks the syntax tree once with a symbolic environment $\rho$ (variable → Z3 term) and a *path
-condition* $\pi$ (when control reaches the statement):
+**Building $\llbracket f \rrbracket$: bounded symbolic execution** (`sp1/symexec.py`). The proposal
+planned an off-the-shelf executor. We wrote our own because tools such as CrossHair explore paths
+under a time budget and report "no counterexample found" rather than proving unsatisfiability within a
+bound, which Theorem 1 needs. The executor walks the syntax tree once with a symbolic environment
+$\rho$ (variable → Z3 term) and a *path condition* $\pi$ (when control reaches the statement):
 
 | construct | rule |
 |---|---|
@@ -94,17 +99,24 @@ on $x_0$ reaches this point, and in that case $\rho[x][x_0]$ is the concrete val
 * `return` and raising operations record the outcome under exactly the path condition of the run that performs them, then disable that path.
 * Unrolling reproduces each concrete iteration, and $cond_k$ is true exactly when a $(k{+}1)$-th iteration would start. ∎
 
-**The two queries.**
+**The two queries.** The model-written `pre` and `post` are compiled the same way, unrolled to
+$k' = \max(k, L{+}1)$ where $L$ is the longest list input (doubled up to $4k'$ while the coverage
+query $\Psi$ below is satisfiable), and $pre(x)$ stands for "returns normally with a true value" (likewise $post$).
 
-$$\Phi_{spec} = D(x) \land \lnot unwind_f \land \lnot unwind_{spec} \land pre(x) \land \big(exc_f \lor \lnot post(x, ret_f)\big)$$
+$$\Phi_{spec} = D(x) \land \lnot unwind_f \land \lnot unwind_{pre} \land pre(x) \land \big(exc_f \lor (\lnot unwind_{post} \land \lnot post(x, ret_f))\big)$$
 
 $$\Phi_{gold} = D(x) \land \lnot unwind_{ref} \land \lnot unwind_{mut} \land \big((exc_{ref} \oplus exc_{mut}) \lor (\lnot exc_{ref} \land \lnot exc_{mut} \land ret_{ref} \ne ret_{mut})\big)$$
 
-**Theorem 1 (soundness and bounded completeness).** Apply Lemma 1 to $f$ and to the model-written `pre`
-and `post`, which are compiled the same way. Then:
+**Theorem 1 (soundness and bounded completeness).** Suppose the *coverage* query
+$\Psi = D(x) \land \lnot unwind_f \land \big(unwind_{pre} \lor (pre(x) \land \lnot exc_f \land unwind_{post})\big)$
+is unsatisfiable, i.e. on every input within $f$'s bound the spec's own loops fit $k'$. Then:
 
 * $\Phi_{spec}$ is satisfiable iff some $x_0 \in D$ within the bound satisfies $pre$ while $f$ raises or violates $post$. A $pre$ that raises counts as false, and a $post$ that raises counts as violated, exactly as `spec_check` encodes them.
 * Every model of $\Phi_{spec}$ is such an $x_0$.
+
+*Proof sketch.* By Lemma 1 on $f$, $pre$ and $post$, each conjunct has its concrete meaning wherever
+the relevant function fits its bound; $\lnot\Psi$ says that it does at every input where it is
+evaluated. If $\Psi$ is still satisfiable at $4k'$, `spec_check` reports *undecided*, never "no failure". ∎
 
 Equivalently, $\Phi_{spec}$ is unsatisfiable iff $f \models spec$ on all inputs within the bound,
 which is the entailment theorem applied to the bounded program. The same argument covers
@@ -117,7 +129,8 @@ if its domain was enumerated or $unwind_{mut}$ is unsatisfiable.
 (`Solver().add(Φ)`, `check()`, `model()`). It decides satisfiability with the DPLL(T) architecture: a
 CDCL SAT core (DPLL with clause learning, PropLogic p.35) searches the Boolean skeleton, and
 integer-arithmetic theory solvers check each candidate and return conflict clauses. Non-linear terms
-(products or moduli of variables) can make Z3 answer *unknown*, which we count as no failure found.
+(products or moduli of variables) and the 60 s solver limit can make Z3 answer *unknown*, which we
+score as *undecided*, never as a correct "no failure".
 Every model is re-executed in real Python before it counts. Lemma 1 is also checked empirically: on
 every benchmark and hand-written mutant, the symbolic outcome must equal real execution on 25 random
 inputs (`tests/test_symexec.py`). Appendix B.1 shows a complete instance and query.
@@ -188,8 +201,7 @@ from $s$ in the real task. ∎
 By the same argument GBFS finds a plan whenever one exists, though not always a shortest one. FF's
 enforced hill-climbing is incomplete and could not certify. Every fixed variant has finite $h_{FF}(I)$,
 so certification needs the exhaustive search. **Pipeline:** in the Translate arm GBFS decides
-reachability on the model's problem; if a plan exists, SATPlan with $T_{max}$ = the GBFS length returns
-a shortest trace. Appendix B.2–B.3 print real clauses, the horizon iteration and a GBFS certificate.
+reachability on the model's problem; if a plan exists, SATPlan with $T_{max}$ = the GBFS length returns a shortest trace (if its 120 s budget runs out, which happened in 17 inventory runs, the GBFS trace is kept). Appendix B.2–B.3 print real clauses, the horizon iteration and a GBFS certificate.
 
 # 3. Problem instances
 
@@ -239,12 +251,12 @@ Of the 859 candidates, 59 were dropped as non-terminating or not encodable. The 
 | queue | payout twice | no consumer dedup | dedup ids in process memory | dedup id in the same DB transaction | visibility 1–7 |
 | cache | cache older than DB at end | update DB, then delete cache | delete cache, then update DB | leases revoked by delete | 1–4 updates |
 
-Each design document (about 250 words) states the components, the failure model and the mechanism
+Each design document (about 200 words) states the components, the failure model and the mechanism
 without judging it; subtle variants read like a fix the engineer believes works. Gold shortest traces
 are 6–15 events. Two further sets were added:
 
 * *Stress* (sizes 6 and 8): 17–27 events.
-* *Opaque:* the main set with design facts and design-specific events renamed (`mode-2`, `accept-3`) and their comments removed. The semantics are unchanged, but "racy" in the text can no longer be matched to `(dedup-racy)` by name.
+* *Opaque:* the main set with design facts and design-specific events renamed (`mode-2`, `accept-3`) and every domain comment that names or describes a mechanism removed. The semantics are unchanged, but "racy" in the text can no longer be matched to `(dedup-racy)` by name.
 
 # 4. Method
 
@@ -259,20 +271,21 @@ inputs:
 
 **Translate arm, SP1.** The model writes `pre(...)` and `post(..., result)` in the supported Python subset, stating the docstring's intent rather than the code's behaviour. The verifier then runs `spec_check`.
 
-**Translate arm, SP2.** The model writes the PDDL problem: objects, the complete initial state including design facts and counters, and the goal. We parse and validate it, ground it, and run GBFS + h_FF to decide reachability. If a trace exists, SATPlan shortens it to an optimal one.
+**Translate arm, SP2.** The model writes the PDDL problem: objects, the complete initial state including design facts and counters, and the goal. We parse and validate it, ground it, and run GBFS + h_FF to decide reachability. If a trace exists, SATPlan shortens it to an optimal one, within a 120 s budget.
 
 **Repair loop.** Errors are fed back up to twice: syntax errors, unsupported constructs, a vacuous precondition, a wrong goal, and type or arity errors with VAL-style messages.
 
-**Tool budgets.** Each SP1 spec check runs in a child process that is killed after 150 s, reported as
-a *checker timeout*. Z3 queries time out at 60 s. Planner search is capped at 3 M expansions or 300 s,
-and SATPlan at 120 s.
+**Tool budgets.** Each SP1 spec check has a 120 s in-process deadline and runs in a child process that is killed after 150 s.
+Z3 queries time out at 60 s. Planner search is capped at 3 M expansions or 300 s, and SATPlan at 120 s.
+A run that hits a budget, a Z3 *unknown* and a failed coverage check ($\Psi$ satisfiable) are all
+reported as *undecided*, never as "no failure".
 
 **Scoring** is exact and on gold models.
 
 * SP1 witnesses are executed on the code under review and on the unmutated reference. A witness is valid only if it is in-domain and the two behave differently.
 * SP2 traces are replayed on the gold problem; a trace is valid if it reaches the violation.
 
-Outcomes are *valid witness*, *fabricated* (invalid witness, or a false alarm on a control), *miss*, or
-*correct no-failure*. Every LLM response is cached, so all numbers can be regenerated offline.
+Outcomes are *valid witness*, *fabricated* (invalid witness, or a false alarm on a control), *miss*,
+*correct no-failure*, or *undecided* (the tool gave up; counted as no answer). Every LLM response is cached, so all numbers can be regenerated offline.
 
 <!-- RESULTS -->

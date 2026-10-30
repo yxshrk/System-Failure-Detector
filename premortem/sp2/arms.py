@@ -115,7 +115,7 @@ class ArmResult:
     instance: str
     arm: str
     model: str
-    verdict: str  # "violation" | "safe" | "invalid"
+    verdict: str  # "violation" | "safe" | "unknown" (search limit, Translate only) | "invalid"
     trace: list | None = None
     attempts: int = 1
     problem: str | None = None
@@ -213,8 +213,8 @@ def run_translate(llm, inst: dict) -> ArmResult:
                     res.verdict, res.trace = "violation", res.solver["plan"]
                 elif res.solver["gbfs_status"] == "unsolvable":
                     res.verdict = "safe"
-                else:
-                    res.verdict = "safe"  # search limit hit without finding a trace
+                else:  # search limit hit: neither a trace nor a proof
+                    res.verdict = "unknown"
                     res.errors.append("search limit reached")
                 return res
             feedback = err

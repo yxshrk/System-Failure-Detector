@@ -2,26 +2,26 @@
 
 ## SP1: one function (CSP / SMT)
 
-| model | arm | tier | bugs | valid witness | fabricated | miss | no answer / tool timeout | controls | false alarm | $/inst | out tok |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| Haiku 4.5 | Direct | base | 95 | 100% [96-100] | 0% | 0% | 0% | 43 | 0% [0-8] | 0.018 | 3426 |
-| Haiku 4.5 | Direct | hard | 20 | 95% [76-99] | 0% | 5% | 0% | 16 | 0% [0-19] | 0.052 | 10248 |
-| Haiku 4.5 | Direct | all | 115 | 99% [95-100] | 0% | 1% | 0% | 59 | 0% [0-6] | 0.025 | 4838 |
-| Haiku 4.5 | Translate | base | 95 | 98% [93-99] | 0% | 2% | 0% | 43 | 0% [0-8] | 0.023 | 4405 |
-| Haiku 4.5 | Translate | hard | 20 | 95% [76-99] | 5% | 0% | 0% | 16 | 0% [0-19] | 0.037 | 7127 |
-| Haiku 4.5 | Translate | all | 115 | 97% [93-99] | 1% | 2% | 0% | 59 | 0% [0-6] | 0.026 | 4968 |
-| Sonnet 5.5 | Direct | base | 95 | 100% [96-100] | 0% | 0% | 0% | 43 | 0% [0-8] | 0.008 | 321 |
-| Sonnet 5.5 | Direct | hard | 20 | 100% [84-100] | 0% | 0% | 0% | 16 | 0% [0-19] | 0.013 | 852 |
-| Sonnet 5.5 | Direct | all | 115 | 100% [97-100] | 0% | 0% | 0% | 59 | 0% [0-6] | 0.009 | 431 |
-| Sonnet 5.5 | Translate | base | 95 | 100% [96-100] | 0% | 0% | 0% | 43 | 0% [0-8] | 0.008 | 178 |
-| Sonnet 5.5 | Translate | hard | 20 | 95% [76-99] | 0% | 0% | 5% | 16 | 0% [0-19] | 0.010 | 323 |
-| Sonnet 5.5 | Translate | all | 115 | 99% [95-100] | 0% | 0% | 1% | 59 | 0% [0-6] | 0.008 | 208 |
-| Opus 5.5 | Direct | base | 95 | 100% [96-100] | 0% | 0% | 0% | 43 | 0% [0-8] | 0.016 | 387 |
-| Opus 5.5 | Direct | hard | 20 | 100% [84-100] | 0% | 0% | 0% | 16 | 0% [0-19] | 0.025 | 790 |
-| Opus 5.5 | Direct | all | 115 | 100% [97-100] | 0% | 0% | 0% | 59 | 0% [0-6] | 0.018 | 470 |
-| Opus 5.5 | Translate | base | 95 | 100% [96-100] | 0% | 0% | 0% | 43 | 0% [0-8] | 0.020 | 335 |
-| Opus 5.5 | Translate | hard | 20 | 95% [76-99] | 0% | 0% | 5% | 16 | 0% [0-19] | 0.027 | 566 |
-| Opus 5.5 | Translate | all | 115 | 99% [95-100] | 0% | 0% | 1% | 59 | 0% [0-6] | 0.021 | 383 |
+| model | arm | tier | bugs | valid witness | fabricated | miss | no answer / undecided | controls | false alarm | controls undecided | $/inst | out tok |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Haiku 4.5 | Direct | base | 95 | 100% [96-100] | 0% | 0% | 0% | 43 | 0% [0-8] | 0 | 0.018 | 3426 |
+| Haiku 4.5 | Direct | hard | 20 | 95% [76-99] | 0% | 5% | 0% | 16 | 0% [0-19] | 0 | 0.052 | 10248 |
+| Haiku 4.5 | Direct | all | 115 | 99% [95-100] | 0% | 1% | 0% | 59 | 0% [0-6] | 0 | 0.025 | 4838 |
+| Haiku 4.5 | Translate | base | 95 | 98% [93-99] | 0% | 2% | 0% | 43 | 0% [0-8] | 1 | 0.023 | 4405 |
+| Haiku 4.5 | Translate | hard | 20 | 95% [76-99] | 5% | 0% | 0% | 16 | 0% [0-19] | 0 | 0.037 | 7127 |
+| Haiku 4.5 | Translate | all | 115 | 97% [93-99] | 1% | 2% | 0% | 59 | 0% [0-6] | 1 | 0.026 | 4968 |
+| Sonnet 5.5 | Direct | base | 95 | 100% [96-100] | 0% | 0% | 0% | 43 | 0% [0-8] | 0 | 0.008 | 321 |
+| Sonnet 5.5 | Direct | hard | 20 | 100% [84-100] | 0% | 0% | 0% | 16 | 0% [0-19] | 0 | 0.013 | 852 |
+| Sonnet 5.5 | Direct | all | 115 | 100% [97-100] | 0% | 0% | 0% | 59 | 0% [0-6] | 0 | 0.009 | 431 |
+| Sonnet 5.5 | Translate | base | 95 | 100% [96-100] | 0% | 0% | 0% | 43 | 0% [0-8] | 0 | 0.008 | 178 |
+| Sonnet 5.5 | Translate | hard | 20 | 95% [76-99] | 0% | 0% | 5% | 16 | 0% [0-19] | 0 | 0.010 | 323 |
+| Sonnet 5.5 | Translate | all | 115 | 99% [95-100] | 0% | 0% | 1% | 59 | 0% [0-6] | 0 | 0.008 | 208 |
+| Opus 5.5 | Direct | base | 95 | 100% [96-100] | 0% | 0% | 0% | 43 | 0% [0-8] | 0 | 0.016 | 387 |
+| Opus 5.5 | Direct | hard | 20 | 100% [84-100] | 0% | 0% | 0% | 16 | 0% [0-19] | 0 | 0.025 | 790 |
+| Opus 5.5 | Direct | all | 115 | 100% [97-100] | 0% | 0% | 0% | 59 | 0% [0-6] | 0 | 0.018 | 470 |
+| Opus 5.5 | Translate | base | 95 | 100% [96-100] | 0% | 0% | 0% | 43 | 0% [0-8] | 2 | 0.020 | 335 |
+| Opus 5.5 | Translate | hard | 20 | 95% [76-99] | 0% | 0% | 5% | 16 | 0% [0-19] | 3 | 0.027 | 566 |
+| Opus 5.5 | Translate | all | 115 | 99% [95-100] | 0% | 0% | 1% | 59 | 0% [0-6] | 5 | 0.021 | 383 |
 
 **Valid-witness rate by trigger rarity (bugs only)**
 
@@ -85,25 +85,25 @@
 |---|---|---|---|---|---|
 | Haiku 4.5 | 172/174 | 166/174 | 169/172 | 2 | 1.05 |
 | Sonnet 5.5 | 173/174 | 173/174 | 173/173 | 0 | 1.01 |
-| Opus 5.5 | 166/174 | 153/174 | 166/166 | 0 | 1.12 |
+| Opus 5.5 | 165/174 | 153/174 | 165/165 | 0 | 1.12 |
 
 ## SP2: one design (STRIPS planning)
 
 | model | arm | violating designs | valid trace | fabricated trace | miss | no answer | fixed designs | false alarm | $/inst |
 |---|---|---|---|---|---|---|---|---|---|
-| Haiku 4.5 | Direct | 40 | 80% [65-90] | 15% | 5% | 0% | 20 | 55% [34-74] | 0.063 |
-| Haiku 4.5 | Translate | 40 | 82% [68-91] | 18% | 0% | 0% | 20 | 20% [8-42] | 0.050 |
-| Sonnet 5.5 | Direct | 40 | 100% [91-100] | 0% | 0% | 0% | 20 | 0% [0-16] | 0.024 |
-| Sonnet 5.5 | Translate | 40 | 100% [91-100] | 0% | 0% | 0% | 20 | 0% [0-16] | 0.017 |
-| Opus 5.5 | Direct | 40 | 100% [91-100] | 0% | 0% | 0% | 20 | 0% [0-16] | 0.047 |
+| Haiku 4.5 | Direct | 40 | 78% [62-88] | 18% | 5% | 0% | 20 | 60% [39-78] | 0.062 |
+| Haiku 4.5 | Translate | 40 | 85% [71-93] | 15% | 0% | 0% | 20 | 35% [18-57] | 0.051 |
+| Sonnet 5.5 | Direct | 40 | 100% [91-100] | 0% | 0% | 0% | 20 | 0% [0-16] | 0.025 |
+| Sonnet 5.5 | Translate | 40 | 100% [91-100] | 0% | 0% | 0% | 20 | 0% [0-16] | 0.018 |
+| Opus 5.5 | Direct | 40 | 100% [91-100] | 0% | 0% | 0% | 20 | 0% [0-16] | 0.048 |
 | Opus 5.5 | Translate | 40 | 100% [91-100] | 0% | 0% | 0% | 20 | 0% [0-16] | 0.036 |
 
 **SP2 by variant (valid trace on flawed/subtle; correct 'safe' on fixed)**
 
 | model | arm | payments | inventory | lock | queue | cache | flawed | subtle | fixed |
 |---|---|---|---|---|---|---|---|---|---|
-| Haiku 4.5 | Direct | 5/12 | 9/12 | 9/12 | 10/12 | 8/12 | 16/20 | 16/20 | 9/20 |
-| Haiku 4.5 | Translate | 11/12 | 11/12 | 9/12 | 7/12 | 11/12 | 16/20 | 17/20 | 16/20 |
+| Haiku 4.5 | Direct | 5/12 | 9/12 | 9/12 | 8/12 | 8/12 | 14/20 | 17/20 | 8/20 |
+| Haiku 4.5 | Translate | 9/12 | 11/12 | 9/12 | 7/12 | 11/12 | 16/20 | 18/20 | 13/20 |
 | Sonnet 5.5 | Direct | 12/12 | 12/12 | 12/12 | 12/12 | 12/12 | 20/20 | 20/20 | 20/20 |
 | Sonnet 5.5 | Translate | 12/12 | 12/12 | 12/12 | 12/12 | 12/12 | 20/20 | 20/20 | 20/20 |
 | Opus 5.5 | Direct | 12/12 | 12/12 | 12/12 | 12/12 | 12/12 | 20/20 | 20/20 | 20/20 |
@@ -113,8 +113,8 @@
 
 | model | arm | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| Haiku 4.5 | Direct | 2/2 | 4/4 | 4/4 | 4/6 | 4/4 | 4/4 | 3/6 | 4/4 | 2/4 | 1/2 |
-| Haiku 4.5 | Translate | 2/2 | 3/4 | 4/4 | 5/6 | 3/4 | 3/4 | 4/6 | 4/4 | 3/4 | 2/2 |
+| Haiku 4.5 | Direct | 2/2 | 4/4 | 4/4 | 4/6 | 2/4 | 3/4 | 5/6 | 4/4 | 2/4 | 1/2 |
+| Haiku 4.5 | Translate | 2/2 | 3/4 | 3/4 | 6/6 | 3/4 | 4/4 | 5/6 | 3/4 | 3/4 | 2/2 |
 | Sonnet 5.5 | Direct | 2/2 | 4/4 | 4/4 | 6/6 | 4/4 | 4/4 | 6/6 | 4/4 | 4/4 | 2/2 |
 | Sonnet 5.5 | Translate | 2/2 | 4/4 | 4/4 | 6/6 | 4/4 | 4/4 | 6/6 | 4/4 | 4/4 | 2/2 |
 | Opus 5.5 | Direct | 2/2 | 4/4 | 4/4 | 6/6 | 4/4 | 4/4 | 6/6 | 4/4 | 4/4 | 2/2 |
@@ -132,7 +132,7 @@
 
 | model | first attempt only | with repairs |
 |---|---|---|
-| Haiku 4.5 | 49/60 | 49/60 |
+| Haiku 4.5 | 47/60 | 47/60 |
 | Sonnet 5.5 | 60/60 | 60/60 |
 | Opus 5.5 | 60/60 | 60/60 |
 
@@ -140,7 +140,7 @@
 
 | model | parsed | design facts exact | init exact | init precision | init recall | first try |
 |---|---|---|---|---|---|---|
-| Haiku 4.5 | 60/60 | 52/60 | 46/60 | 0.982 | 0.988 | 60/60 |
+| Haiku 4.5 | 60/60 | 49/60 | 44/60 | 0.981 | 0.981 | 60/60 |
 | Sonnet 5.5 | 60/60 | 60/60 | 60/60 | 1.000 | 1.000 | 60/60 |
 | Opus 5.5 | 60/60 | 60/60 | 60/60 | 1.000 | 1.000 | 60/60 |
 
@@ -148,46 +148,46 @@
 
 | model | assumes another design | event order / state | timer / counter | stops before violation | vocabulary / arity | no trace | other |
 |---|---|---|---|---|---|---|---|
-| Haiku 4.5 | 16 | 0 | 0 | 0 | 1 | 0 | 0 |
+| Haiku 4.5 | 16 | 0 | 0 | 0 | 3 | 0 | 0 |
 
 **Mean output tokens (incl. thinking) per instance**
 
 | model | arm | SP2 flawed | SP2 subtle | SP2 fixed |
 |---|---|---|---|---|
-| Haiku 4.5 | Direct | 10692 | 11093 | 14821 |
-| Haiku 4.5 | Translate | 7801 | 9383 | 11460 |
-| Sonnet 5.5 | Direct | 1202 | 1193 | 1238 |
-| Sonnet 5.5 | Translate | 495 | 516 | 513 |
-| Opus 5.5 | Direct | 1278 | 1182 | 1036 |
-| Opus 5.5 | Translate | 547 | 573 | 562 |
+| Haiku 4.5 | Direct | 9947 | 11032 | 14681 |
+| Haiku 4.5 | Translate | 8434 | 9893 | 10558 |
+| Sonnet 5.5 | Direct | 1225 | 1189 | 1220 |
+| Sonnet 5.5 | Translate | 519 | 539 | 527 |
+| Opus 5.5 | Direct | 1288 | 1172 | 1056 |
+| Opus 5.5 | Translate | 547 | 546 | 541 |
 
 ## SP2 stress set (sizes 6 and 8: traces of 17-27 events)
 
 | model | arm | violating designs | valid trace | fabricated trace | miss | no answer | fixed designs | false alarm | $/inst |
 |---|---|---|---|---|---|---|---|---|---|
-| Haiku 4.5 | Direct | 20 | 80% [58-92] | 15% | 5% | 0% | 10 | 60% [31-83] | 0.062 |
-| Haiku 4.5 | Translate | 20 | 90% [70-97] | 10% | 0% | 0% | 10 | 10% [2-40] | 0.049 |
-| Sonnet 5.5 | Direct | 20 | 100% [84-100] | 0% | 0% | 0% | 10 | 0% [0-28] | 0.023 |
-| Sonnet 5.5 | Translate | 20 | 100% [84-100] | 0% | 0% | 0% | 10 | 0% [0-28] | 0.019 |
-| Opus 5.5 | Direct | 20 | 100% [84-100] | 0% | 0% | 0% | 10 | 0% [0-28] | 0.045 |
-| Opus 5.5 | Translate | 20 | 100% [84-100] | 0% | 0% | 0% | 10 | 0% [0-28] | 0.050 |
+| Haiku 4.5 | Direct | 20 | 85% [64-95] | 10% | 5% | 0% | 10 | 80% [49-94] | 0.064 |
+| Haiku 4.5 | Translate | 20 | 90% [70-97] | 10% | 0% | 0% | 10 | 40% [17-69] | 0.050 |
+| Sonnet 5.5 | Direct | 20 | 100% [84-100] | 0% | 0% | 0% | 10 | 0% [0-28] | 0.025 |
+| Sonnet 5.5 | Translate | 20 | 100% [84-100] | 0% | 0% | 0% | 10 | 0% [0-28] | 0.020 |
+| Opus 5.5 | Direct | 20 | 100% [84-100] | 0% | 0% | 0% | 10 | 0% [0-28] | 0.048 |
+| Opus 5.5 | Translate | 20 | 100% [84-100] | 0% | 0% | 0% | 10 | 0% [0-28] | 0.051 |
 
 **SP2 by variant (valid trace on flawed/subtle; correct 'safe' on fixed)**
 
 | model | arm | payments | inventory | lock | queue | cache | flawed | subtle | fixed |
 |---|---|---|---|---|---|---|---|---|---|
-| Haiku 4.5 | Direct | 3/6 | 4/6 | 5/6 | 5/6 | 3/6 | 9/10 | 7/10 | 4/10 |
-| Haiku 4.5 | Translate | 6/6 | 6/6 | 3/6 | 6/6 | 6/6 | 10/10 | 8/10 | 9/10 |
+| Haiku 4.5 | Direct | 3/6 | 4/6 | 5/6 | 4/6 | 3/6 | 9/10 | 8/10 | 2/10 |
+| Haiku 4.5 | Translate | 4/6 | 5/6 | 3/6 | 5/6 | 6/6 | 10/10 | 8/10 | 5/10 |
 | Sonnet 5.5 | Direct | 6/6 | 6/6 | 6/6 | 6/6 | 6/6 | 10/10 | 10/10 | 10/10 |
-| Sonnet 5.5 | Translate | 6/6 | 6/6 | 6/6 | 6/6 | 6/6 | 10/10 | 10/10 | 10/10 |
+| Sonnet 5.5 | Translate | 6/6 | 5/6 | 6/6 | 6/6 | 6/6 | 10/10 | 10/10 | 9/10 |
 | Opus 5.5 | Direct | 6/6 | 6/6 | 6/6 | 6/6 | 6/6 | 10/10 | 10/10 | 10/10 |
-| Opus 5.5 | Translate | 6/6 | 6/6 | 6/6 | 6/6 | 6/6 | 10/10 | 10/10 | 10/10 |
+| Opus 5.5 | Translate | 6/6 | 5/6 | 6/6 | 6/6 | 6/6 | 10/10 | 10/10 | 9/10 |
 
 **Valid traces by shortest violating-trace length (flawed + subtle)**
 
 | model | arm | 17 | 18 | 21 | 22 | 27 |
 |---|---|---|---|---|---|---|
-| Haiku 4.5 | Direct | 3/4 | 3/4 | 6/6 | 3/4 | 1/2 |
+| Haiku 4.5 | Direct | 3/4 | 3/4 | 6/6 | 4/4 | 1/2 |
 | Haiku 4.5 | Translate | 4/4 | 3/4 | 6/6 | 3/4 | 2/2 |
 | Sonnet 5.5 | Direct | 4/4 | 4/4 | 6/6 | 4/4 | 2/2 |
 | Sonnet 5.5 | Translate | 4/4 | 4/4 | 6/6 | 4/4 | 2/2 |
@@ -198,23 +198,23 @@
 
 | model | only Direct correct | only Translate correct | p |
 |---|---|---|---|
-| Haiku 4.5 | 3 | 10 | 0.092 |
-| Sonnet 5.5 | 0 | 0 | 1.000 |
-| Opus 5.5 | 0 | 0 | 1.000 |
+| Haiku 4.5 | 4 | 8 | 0.388 |
+| Sonnet 5.5 | 1 | 0 | 1.000 |
+| Opus 5.5 | 1 | 0 | 1.000 |
 
 **Translate-arm repair loop (SP2): correct outcomes using only the first problem file vs. after repairs**
 
 | model | first attempt only | with repairs |
 |---|---|---|
-| Haiku 4.5 | 27/30 | 27/30 |
-| Sonnet 5.5 | 30/30 | 30/30 |
-| Opus 5.5 | 30/30 | 30/30 |
+| Haiku 4.5 | 23/30 | 23/30 |
+| Sonnet 5.5 | 29/30 | 29/30 |
+| Opus 5.5 | 29/30 | 29/30 |
 
 **SP3 (SP2 translation quality: model-written initial state vs. gold)**
 
 | model | parsed | design facts exact | init exact | init precision | init recall | first try |
 |---|---|---|---|---|---|---|
-| Haiku 4.5 | 30/30 | 28/30 | 27/30 | 0.997 | 0.997 | 30/30 |
+| Haiku 4.5 | 30/30 | 25/30 | 24/30 | 0.979 | 0.993 | 30/30 |
 | Sonnet 5.5 | 30/30 | 30/30 | 30/30 | 1.000 | 1.000 | 30/30 |
 | Opus 5.5 | 30/30 | 30/30 | 30/30 | 1.000 | 1.000 | 30/30 |
 
@@ -222,30 +222,30 @@
 
 | model | arm | violating designs | valid trace | fabricated trace | miss | no answer | fixed designs | false alarm | $/inst |
 |---|---|---|---|---|---|---|---|---|---|
-| Haiku 4.5 | Direct | 40 | 62% [47-76] | 35% | 2% | 0% | 20 | 85% [64-95] | 0.066 |
-| Haiku 4.5 | Translate | 40 | 68% [52-80] | 22% | 10% | 0% | 20 | 40% [22-61] | 0.060 |
-| Sonnet 5.5 | Direct | 40 | 100% [91-100] | 0% | 0% | 0% | 20 | 0% [0-16] | 0.024 |
+| Haiku 4.5 | Direct | 40 | 68% [52-80] | 33% | 0% | 0% | 20 | 95% [76-99] | 0.063 |
+| Haiku 4.5 | Translate | 40 | 63% [47-76] | 30% | 8% | 0% | 20 | 45% [26-66] | 0.056 |
+| Sonnet 5.5 | Direct | 40 | 100% [91-100] | 0% | 0% | 0% | 20 | 0% [0-16] | 0.025 |
 | Sonnet 5.5 | Translate | 40 | 100% [91-100] | 0% | 0% | 0% | 20 | 0% [0-16] | 0.020 |
-| Opus 5.5 | Direct | 40 | 100% [91-100] | 0% | 0% | 0% | 20 | 15% [5-36] | 0.047 |
-| Opus 5.5 | Translate | 40 | 100% [91-100] | 0% | 0% | 0% | 20 | 0% [0-16] | 0.040 |
+| Opus 5.5 | Direct | 40 | 100% [91-100] | 0% | 0% | 0% | 20 | 0% [0-16] | 0.048 |
+| Opus 5.5 | Translate | 40 | 100% [91-100] | 0% | 0% | 0% | 20 | 0% [0-16] | 0.039 |
 
 **SP2 by variant (valid trace on flawed/subtle; correct 'safe' on fixed)**
 
 | model | arm | payments | inventory | lock | queue | cache | flawed | subtle | fixed |
 |---|---|---|---|---|---|---|---|---|---|
-| Haiku 4.5 | Direct | 6/12 | 5/12 | 5/12 | 5/12 | 7/12 | 18/20 | 7/20 | 3/20 |
-| Haiku 4.5 | Translate | 8/12 | 10/12 | 8/12 | 6/12 | 7/12 | 13/20 | 14/20 | 12/20 |
+| Haiku 4.5 | Direct | 5/12 | 6/12 | 3/12 | 7/12 | 7/12 | 16/20 | 11/20 | 1/20 |
+| Haiku 4.5 | Translate | 8/12 | 12/12 | 4/12 | 5/12 | 7/12 | 14/20 | 11/20 | 11/20 |
 | Sonnet 5.5 | Direct | 12/12 | 12/12 | 12/12 | 12/12 | 12/12 | 20/20 | 20/20 | 20/20 |
 | Sonnet 5.5 | Translate | 12/12 | 12/12 | 12/12 | 12/12 | 12/12 | 20/20 | 20/20 | 20/20 |
-| Opus 5.5 | Direct | 12/12 | 12/12 | 12/12 | 9/12 | 12/12 | 20/20 | 20/20 | 17/20 |
+| Opus 5.5 | Direct | 12/12 | 12/12 | 12/12 | 12/12 | 12/12 | 20/20 | 20/20 | 20/20 |
 | Opus 5.5 | Translate | 12/12 | 12/12 | 12/12 | 12/12 | 12/12 | 20/20 | 20/20 | 20/20 |
 
 **Valid traces by shortest violating-trace length (flawed + subtle)**
 
 | model | arm | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| Haiku 4.5 | Direct | 1/2 | 2/4 | 2/4 | 5/6 | 3/4 | 4/4 | 3/6 | 2/4 | 2/4 | 1/2 |
-| Haiku 4.5 | Translate | 2/2 | 3/4 | 2/4 | 3/6 | 3/4 | 4/4 | 5/6 | 1/4 | 3/4 | 1/2 |
+| Haiku 4.5 | Direct | 2/2 | 3/4 | 3/4 | 6/6 | 0/4 | 4/4 | 2/6 | 3/4 | 3/4 | 1/2 |
+| Haiku 4.5 | Translate | 2/2 | 3/4 | 2/4 | 3/6 | 2/4 | 3/4 | 4/6 | 2/4 | 2/4 | 2/2 |
 | Sonnet 5.5 | Direct | 2/2 | 4/4 | 4/4 | 6/6 | 4/4 | 4/4 | 6/6 | 4/4 | 4/4 | 2/2 |
 | Sonnet 5.5 | Translate | 2/2 | 4/4 | 4/4 | 6/6 | 4/4 | 4/4 | 6/6 | 4/4 | 4/4 | 2/2 |
 | Opus 5.5 | Direct | 2/2 | 4/4 | 4/4 | 6/6 | 4/4 | 4/4 | 6/6 | 4/4 | 4/4 | 2/2 |
@@ -255,43 +255,42 @@
 
 | model | only Direct correct | only Translate correct | p |
 |---|---|---|---|
-| Haiku 4.5 | 9 | 20 | 0.061 |
+| Haiku 4.5 | 9 | 17 | 0.169 |
 | Sonnet 5.5 | 0 | 0 | 1.000 |
-| Opus 5.5 | 0 | 3 | 0.250 |
+| Opus 5.5 | 0 | 0 | 1.000 |
 
 **Translate-arm repair loop (SP2): correct outcomes using only the first problem file vs. after repairs**
 
 | model | first attempt only | with repairs |
 |---|---|---|
-| Haiku 4.5 | 39/60 | 39/60 |
+| Haiku 4.5 | 36/60 | 36/60 |
 | Sonnet 5.5 | 60/60 | 60/60 |
-| Opus 5.5 | 59/60 | 60/60 |
+| Opus 5.5 | 60/60 | 60/60 |
 
 **SP3 (SP2 translation quality: model-written initial state vs. gold)**
 
 | model | parsed | design facts exact | init exact | init precision | init recall | first try |
 |---|---|---|---|---|---|---|
-| Haiku 4.5 | 60/60 | 32/60 | 29/60 | 0.962 | 0.971 | 60/60 |
-| Sonnet 5.5 | 60/60 | 52/60 | 52/60 | 1.000 | 0.989 | 60/60 |
-| Opus 5.5 | 60/60 | 52/60 | 52/60 | 1.000 | 0.989 | 59/60 |
+| Haiku 4.5 | 60/60 | 35/60 | 26/60 | 0.967 | 0.971 | 60/60 |
+| Sonnet 5.5 | 60/60 | 60/60 | 52/60 | 1.000 | 0.989 | 60/60 |
+| Opus 5.5 | 60/60 | 60/60 | 52/60 | 1.000 | 0.989 | 60/60 |
 
 **Why Direct traces fail on the gold model (invalid traces + false alarms)**
 
 | model | assumes another design | event order / state | timer / counter | stops before violation | vocabulary / arity | no trace | other |
 |---|---|---|---|---|---|---|---|
-| Haiku 4.5 | 30 | 0 | 0 | 0 | 1 | 0 | 0 |
-| Opus 5.5 | 3 | 0 | 0 | 0 | 0 | 0 | 0 |
+| Haiku 4.5 | 30 | 0 | 0 | 0 | 2 | 0 | 0 |
 
 **Mean output tokens (incl. thinking) per instance**
 
 | model | arm | SP2 flawed | SP2 subtle | SP2 fixed |
 |---|---|---|---|---|
-| Haiku 4.5 | Direct | 11796 | 13796 | 12402 |
-| Haiku 4.5 | Translate | 10230 | 11835 | 12232 |
-| Sonnet 5.5 | Direct | 1241 | 1300 | 1299 |
-| Sonnet 5.5 | Translate | 729 | 792 | 803 |
-| Opus 5.5 | Direct | 1258 | 1212 | 1132 |
-| Opus 5.5 | Translate | 785 | 751 | 720 |
+| Haiku 4.5 | Direct | 10902 | 12389 | 12870 |
+| Haiku 4.5 | Translate | 9095 | 11386 | 11339 |
+| Sonnet 5.5 | Direct | 1270 | 1334 | 1220 |
+| Sonnet 5.5 | Translate | 742 | 810 | 821 |
+| Opus 5.5 | Direct | 1207 | 1216 | 1087 |
+| Opus 5.5 | Translate | 720 | 738 | 710 |
 
 ## Solver behaviour on the gold SP2 problems
 
@@ -392,6 +391,6 @@
 
 | model | calls | input tokens | output tokens | cost (USD) |
 |---|---|---|---|---|
-| claude-haiku-4-5 | 680 | 1,155,178 | 5,369,208 | 28.00 |
-| claude-opus-5-5 | 670 | 1,414,807 | 427,181 | 19.98 |
-| claude-sonnet-5-5 | 649 | 1,357,728 | 396,673 | 9.35 |
+| claude-haiku-4-5 | 848 | 1,592,569 | 7,149,601 | 37.34 |
+| claude-opus-5-5 | 838 | 1,971,399 | 576,906 | 27.43 |
+| claude-sonnet-5-5 | 817 | 1,915,029 | 555,978 | 13.17 |
