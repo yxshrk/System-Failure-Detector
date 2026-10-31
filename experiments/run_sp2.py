@@ -18,7 +18,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from premortem.llm import LLMAuthError, get_llm  # noqa: E402
+from premortem.llm import LLMAuthError, file_slug, get_llm  # noqa: E402
 from premortem.sp2.arms import run_direct, run_translate  # noqa: E402
 from premortem.sp2.score import outcome, translation_scores  # noqa: E402
 
@@ -70,7 +70,7 @@ def main(argv=None):
                     recs.append(rec)
                     print(f"[{model}/{arm}] {k}/{len(insts)} {rec['instance']}: {rec['outcome']}", file=sys.stderr, flush=True)
             recs.sort(key=lambda r: r["instance"])
-            path = OUT / (f"{model}__{arm}.partial.jsonl" if args.ids else f"{model}__{arm}.jsonl")
+            path = OUT / (f"{file_slug(model)}__{arm}.partial.jsonl" if args.ids else f"{file_slug(model)}__{arm}.jsonl")
             path.write_text("".join(json.dumps(r) + "\n" for r in recs))
             cost = sum(r.get("llm_cost", 0) for r in recs)
             print(f"== {model}/{arm}: {dict(Counter(r['outcome'] for r in recs))}  cost ${cost:.2f}  {time.time() - t0:.0f}s",

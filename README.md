@@ -94,7 +94,16 @@ for prompts that are new.
 
 **Open items**
 
-- [ ] **Open-weight models via SoCLaaS.** Add an OpenAI-compatible backend to `premortem/llm.py`, then run both arms on a subset (SP2 main, SP1 hard tier, base sample). Translation is expected to matter most for weaker models; so far only Haiku 4.5 shows a gap.
+- [ ] **Open-weight models via SoCLaaS.** The backend exists (`OpenAICompatible` in `premortem/llm.py`, tested against a mock server only). Next: confirm the endpoint and key from the [SoCLaaS guide](https://dochub.comp.nus.edu.sg/cf/guides/soclaas/start) (NUS network or VPN), then run both arms on a subset (SP2 main, SP1 hard tier, base sample) and add the models to `MODEL_ORDER` in `experiments/analyze.py`. Translation is expected to matter most for weaker models; so far only Haiku 4.5 shows a gap.
+
+  ```bash
+  export SOCLAAS_BASE_URL=<endpoint>/v1 SOCLAAS_API_KEY=<key>
+  .venv/bin/python -m premortem.llm --list                       # model ids the endpoint serves
+  .venv/bin/python -m experiments.run_sp2 --models soc:<model-id> --workers 4
+  .venv/bin/python -m experiments.run_sp1 --models soc:<model-id> --tier hard
+  ```
+
+  Results land in `results/sp*/soc-<model-id>__<arm>.jsonl`.
 - [ ] **Review the code, the instances and the report** (`report/*.md`).
 - [ ] **Rewrite §8 "Division of work"** to state each member's actual contributions and how AI tools were used (required by the guidelines).
 - [ ] **Presentation:** 15 minutes, in the week of 9 Nov.

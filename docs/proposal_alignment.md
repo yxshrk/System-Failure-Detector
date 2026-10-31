@@ -1,6 +1,6 @@
 # How the implementation maps to the approved proposal
 
-This file checks each commitment in `CS3263_Project_Proposal.pdf` (submitted 28 Sep 2026) against what
+This file checks each commitment in `docs/CS3263_Project_Proposal.pdf` (submitted 28 Sep 2026) against what
 the repository does. ✅ = done as proposed; ➕ = done, and extended beyond the proposal;
 ⚠️ = deviation (justified in the report); ⏳ = not done yet.
 

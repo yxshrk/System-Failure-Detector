@@ -18,7 +18,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from premortem.llm import LLMAuthError, get_llm  # noqa: E402
+from premortem.llm import LLMAuthError, file_slug, get_llm  # noqa: E402
 from premortem.sp1.arms import run_direct, run_translate  # noqa: E402
 from premortem.sp1.benchmarks import BY_NAME  # noqa: E402
 from premortem.sp1.score import outcome  # noqa: E402
@@ -102,11 +102,11 @@ def main(argv=None):
                     recs.append(rec)
                     print(f"[{model}/{arm}] {k}/{len(insts)} {rec['instance']}: {rec['outcome']}", file=sys.stderr, flush=True)
             recs.sort(key=lambda r: r["instance"])
-            path = OUT / f"{model}__{arm}.jsonl"
+            path = OUT / f"{file_slug(model)}__{arm}.jsonl"
             if args.tier and args.tier != "subset":
-                path = OUT / f"{model}__{arm}.{args.tier}.partial.jsonl"
+                path = OUT / f"{file_slug(model)}__{arm}.{args.tier}.partial.jsonl"
             if args.limit or args.ids:
-                path = OUT / f"{model}__{arm}.partial.jsonl"
+                path = OUT / f"{file_slug(model)}__{arm}.partial.jsonl"
             path.write_text("".join(json.dumps(r) + "\n" for r in recs))
             from collections import Counter
             cost = sum(r.get("llm_cost", 0) for r in recs)
