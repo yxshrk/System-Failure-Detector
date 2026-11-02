@@ -144,6 +144,14 @@
 | Sonnet 5.5 | 60/60 | 60/60 | 60/60 | 1.000 | 1.000 | 60/60 |
 | Opus 5.5 | 60/60 | 60/60 | 60/60 | 1.000 | 1.000 | 60/60 |
 
+**SP2 Translate: the design facts decide the outcome** (correct = valid trace or correct 'safe')
+
+| model | design facts exact: correct | design facts wrong: correct |
+|---|---|---|
+| Haiku 4.5 | 47/49 | 0/11 |
+| Sonnet 5.5 | 60/60 | 0/0 |
+| Opus 5.5 | 60/60 | 0/0 |
+
 **Why Direct traces fail on the gold model (invalid traces + false alarms)**
 
 | model | assumes another design | event order / state | timer / counter | stops before violation | vocabulary / arity | no trace | other |
@@ -218,6 +226,14 @@
 | Sonnet 5.5 | 30/30 | 30/30 | 30/30 | 1.000 | 1.000 | 30/30 |
 | Opus 5.5 | 30/30 | 30/30 | 30/30 | 1.000 | 1.000 | 30/30 |
 
+**SP2 Translate: the design facts decide the outcome** (correct = valid trace or correct 'safe')
+
+| model | design facts exact: correct | design facts wrong: correct |
+|---|---|---|
+| Haiku 4.5 | 23/25 | 0/5 |
+| Sonnet 5.5 | 29/30 | 0/0 |
+| Opus 5.5 | 29/30 | 0/0 |
+
 ## SP2 opaque-vocabulary ablation (main set, design facts and design-specific events renamed)
 
 | model | arm | violating designs | valid trace | fabricated trace | miss | no answer | fixed designs | false alarm | $/inst |
@@ -274,6 +290,14 @@
 | Haiku 4.5 | 60/60 | 35/60 | 26/60 | 0.967 | 0.971 | 60/60 |
 | Sonnet 5.5 | 60/60 | 60/60 | 52/60 | 1.000 | 0.989 | 60/60 |
 | Opus 5.5 | 60/60 | 60/60 | 52/60 | 1.000 | 0.989 | 60/60 |
+
+**SP2 Translate: the design facts decide the outcome** (correct = valid trace or correct 'safe')
+
+| model | design facts exact: correct | design facts wrong: correct |
+|---|---|---|
+| Haiku 4.5 | 34/35 | 2/25 |
+| Sonnet 5.5 | 60/60 | 0/0 |
+| Opus 5.5 | 60/60 | 0/0 |
 
 **Why Direct traces fail on the gold model (invalid traces + false alarms)**
 

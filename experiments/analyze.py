@@ -324,6 +324,16 @@ def sp2_tables(df: pd.DataFrame, out: list[str], title: str = "SP2: one design (
                        f"{int(s.get('init_exact', pd.Series()).fillna(False).sum())}/{len(d)} | "
                        f"{s.get('init_precision', pd.Series()).mean():.3f} | {s.get('init_recall', pd.Series()).mean():.3f} | "
                        f"{(d.attempts == 1).sum()}/{len(d)} |")
+        out.append("\n**SP2 Translate: the design facts decide the outcome** (correct = valid trace or correct 'safe')\n")
+        out.append("| model | design facts exact: correct | design facts wrong: correct |")
+        out.append("|---|---|---|")
+        for model in MODEL_ORDER:
+            d = tr[tr.model == model]
+            if d.empty:
+                continue
+            exact = d.sp3.map(lambda x: bool(isinstance(x, dict) and x.get("design_exact")))
+            ok = d.outcome.isin(["valid_trace", "correct_safe"])
+            out.append(f"| {MODEL_LABEL[model]} | {(ok & exact).sum()}/{exact.sum()} | {(ok & ~exact).sum()}/{(~exact).sum()} |")
 
 
 TIMING = {"clock", "lease-age", "hidden", "hold-age", "next-tick", "timeout-tick", "visibility-timeout",
