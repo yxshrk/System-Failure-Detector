@@ -14,7 +14,11 @@ while the model is looking at code that contradicts it. Twice the postcondition 
 which is faithful to the spec.
 
 The repair loop fixes form (Haiku 106 → 112 and Opus 104 → 114 of 115) but not meaning, because the
-verifier has no ground truth. Specs should be written blind to the code, or checked against known
+verifier has no ground truth. Nearly every specification is *constructive*: `post` recomputes the
+answer and compares it with `result` (169–172 of 174 per model; `results/tables.md`). Translate in
+SP1 is therefore a differential check between the code and a second, model-written implementation
+(N-version programming) rather than a check of declarative properties, which is why a spec can
+inherit the bug it is meant to expose. Specs should be written blind to the code, or checked against known
 input/output pairs.
 
 **SP2: the jagged frontier runs between model generations.** The 5.5 models are perfect in both arms on
@@ -58,5 +62,5 @@ largest designs did not reach that regime for the 5.5 models; the size-8 invento
 * *Mutants.* They are small, first-order faults [13]; real bugs often span several lines. Some automatic mutants are unidiomatic (`if not x not in out`) and hint at the mutated line, yet Direct also found 41–42 of the 42 cue-free hand-written bugs.
 * *Specifications.* Docstrings are complete specifications; vaguer real ones would hurt Translate more.
 * *Familiarity.* The SP2 families are textbook patterns, and the opaque ablation removes lexical cues but not conceptual familiarity; novel designs would be a stronger test.
-* *Scaffolding.* Both arms get the event model, which in practice must itself be written, an error-prone step (Planning p.15).
+* *Scaffolding: the event model gives the mechanism away.* Both arms get the action schemas, and these contain each failure mechanism as a named, guarded event: `accept-new-racy` does not delete `no-record`, and `crash-restart-losing-memory` deletes `seen`. SP2 Translate therefore reduces to choosing one or two design facts per family, and that choice decides the outcome. With exact design facts, the Translate verdict was correct in 47/49 (Haiku) and 60/60 (Sonnet, Opus) main-set problems; with wrong ones, in 0/11. The opaque set hides the names, not the structure. Writing the event model, the error-prone step in practice (Planning p.15), is not tested; a tier where the model writes the action schemas is the natural next step.
 * *Sampling.* Each instance is sampled once. We report Wilson intervals and exact McNemar tests, but many cells are at ceiling.

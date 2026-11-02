@@ -18,7 +18,9 @@ Wilson intervals. "Fabricated" means a claimed witness that does not reproduce o
 
 * *The repair loop matters.* Using only the first specification, valid witnesses drop to 106 (Haiku), 113 (Sonnet) and 104 (Opus) of 115.
 * *Direct's cost tracks difficulty.* Hard-tier answers cost 2–3× the tokens of base-tier ones for every model.
-* *SP3.* Of the specifications whose soundness check completed, these were *sound*, i.e. the reference satisfies them: 169/172 (Haiku), 173/173 (Sonnet) and 165/165 (Opus). *Discriminating*, meaning the mutant violates them, is the valid-witness rate above.
+* *SP3.* Of the specifications whose soundness check completed, these were *sound*, i.e. the reference satisfies them: 169/172 (Haiku), 173/173 (Sonnet) and 165/165 (Opus). *Discriminating*, meaning the mutant violates them, is the valid-witness rate above. All three
+unsound specifications are Haiku errors (§A.2–A.3), not ambiguous docstrings: in each, the reference
+input that violates the spec is one where the docstring fixes the answer.
 
 **RQ1.** Every model finds essentially every bug in both arms, independently of trigger rarity (Fig. 1).
 Random testing on the same base-tier bugs is a different story: 100 inputs catch 34% of rare and 5% of very rare

@@ -28,4 +28,6 @@
 
 [14] M. Kleppmann. How to do distributed locking. Blog post, 2016 (the fencing-token argument used in the lock family).
 
+[15] D. Jackson. *Software Abstractions: Logic, Language, and Analysis*, revised ed. MIT Press, 2012 (the small-scope hypothesis).
+
 Course material: CS3263 lecture slides (PropLogic, CSP, FirstOrderLogic, Planning, GenerativeReasoningAgenticAI, Decision, ProbGrapModel, ResponsibleAI), cited as *Deck p.N*.
