@@ -87,6 +87,22 @@
 | Sonnet 5.5 | 173/174 | 173/174 | 173/173 | 0 | 1.01 |
 | Opus 5.5 | 165/174 | 153/174 | 165/165 | 0 | 1.12 |
 
+**SP3: how specifications pin down the result** (constructive = `post` computes the answer and compares; declarative = properties only)
+
+| model | constructive | declarative | unparsable |
+|---|---|---|---|
+| Haiku 4.5 | 169/174 | 5/174 | 0/174 |
+| Sonnet 5.5 | 172/174 | 2/174 | 0/174 |
+| Opus 5.5 | 170/174 | 4/174 | 0/174 |
+
+**Unsound specifications (the reference violates them): model error or ambiguous docstring?**
+
+| model | instance | outcome | reference input that violates the spec |
+|---|---|---|---|
+| Haiku 4.5 | sp1-051-days_in_month | miss | `{'month': 2, 'year': 400}` |
+| Haiku 4.5 | sp1-131-withdraw | miss | `{'balance': 3, 'amount': 1, 'overdraft': False}` |
+| Haiku 4.5 | sp1-165-weekday | invalid_witness | `{'day': 1, 'month': 1, 'year': 1801}` |
+
 ## SP2: one design (STRIPS planning)
 
 | model | arm | violating designs | valid trace | fabricated trace | miss | no answer | fixed designs | false alarm | $/inst |
