@@ -3,42 +3,43 @@
 **Automation bias: what "no failure" means.** A verdict is a belief about a *model*, not a fact about
 the world (ProbGrapModel p.4). SP1 certifies only within the domain bounds and the unroll bound
 (Theorem 1). SP2 certifies only within the event model, so a failure mode the domain lacks is
-invisible to both arms. We therefore phrase verdicts as "no counterexample within k steps under
-assumptions X", never "verified safe", since the certainty and framing effects (Decision p.24–25)
-predict that reviewers over-trust the latter. Skipping manual review is a maximum-expected-utility
-decision (Decision p.15–16, 31): it is rational only if P(hidden failure | "no failure") is below
-review cost divided by incident loss. Our data estimates that posterior directly. On the SP2 main set,
-2 of Haiku Direct's 11 "safe" verdicts were wrong (18%), and none of Haiku Translate's 16. Both figures
+invisible to both arms. We therefore say "no counterexample within k steps under assumptions X", never
+"verified safe", which certainty and framing effects (Decision p.24–25) predict reviewers over-trust. By the decision rule of §6
+(Decision p.15–16), skipping manual review is rational only if P(hidden failure | "no failure") is below
+review cost divided by incident loss, a posterior our data estimates. On the SP2 main set,
+2 of Haiku Direct's 10 "safe" verdicts were wrong (20%), and none of Haiku Translate's 13. Both figures
 depend on the base rate of flawed designs, which Bayes' rule makes explicit (ProbGrapModel p.24–25).
 
 **Fabricated failures.** False alarms waste reviewer time and train reviewers to ignore the tool. This
-is a precision/recall operating point to be set by the stakes (ResponsibleAI p.18–19). A Translate
-witness is correct only *with respect to the model's own specification*. Eleven of Haiku's main-set SP2 Translate traces (31 across all sets) were legal only in its mistranslated problem, and a spec can also hide a bug by
-copying it. Witnesses must therefore be executed or replayed on the real artefact, as our scoring
+is a trade-off between misses and false alarms, set by their utilities (Decision p.15–16). A Translate
+witness is correct only *with respect to the model's own specification*. 13 of Haiku's main-set SP2 Translate traces (40 across all sets) were legal only in its mistranslated
+problem: the planner optimises the model as written, not as meant (the King Midas problem,
+ResponsibleAI p.35). Witnesses must therefore be executed or replayed on the real artefact, as our scoring
 does.
 
 **Accountability.** Translate leaves an audit trail (spec, solver log, witness), close to a white-box
 explanation (ResponsibleAI p.24). A named engineer can then sign off on *what was checked*. Direct
-answers are post-hoc narratives (ResponsibleAI p.25–26), and DeLLMa (Decision p.36) makes the same
-case for structured pipelines. Responsibility stays with the humans who sign off (ResponsibleAI p.6).
+answers are post-hoc narratives (ResponsibleAI p.25–26). Responsibility stays with the humans who sign off (ResponsibleAI p.6): the tool supports a human–AI
+review team rather than replacing the reviewer (ResponsibleAI p.45).
 
 **Dual use and attacks on the reviewer.** A failing input is an adversarial example by another name
-(ResponsibleAI p.27, 30), so the same pipeline yields exploits, and AI lowers the cost of attacks
+(ResponsibleAI p.30), so the same pipeline yields exploits, and AI lowers the cost of attacks
 (ResponsibleAI p.2–4). We would run it only on code the user owns, follow coordinated disclosure, and
 withhold witnesses for unpatched deployed systems. A comment planted in the code could steer the
 Direct arm to "no bug" (ResponsibleAI p.31). Translate is less exposed because the solver decides,
 though its spec is still model-written. Sending proprietary code to a hosted model also discloses it
-(ResponsibleAI p.10); on-premise open-weight models avoid that.
+(ResponsibleAI p.8–10); on-premise open-weight models avoid that.
 
 # 8. Division of work and use of AI tools
 
-* **Yash Raj Khandelwal (leader):** coordination; SP2 design families, design documents and gold models; planning toolkit integration (SATPlan, GBFS/h_FF certification, gold replay); experiment runs; report.
-* **Joshua Tan Yu Jie:** SP1 benchmark functions and mutants; symbolic executor and Z3 pipeline; rarity estimation and instance construction.
-* **Hein Htet Zaw:** LLM harness and prompts; Direct/Translate arms and repair loop; SP3 scoring; analysis and figures.
-* **All:** analysis, responsible AI, review of every component.
+**Contributions.** The work departed from the proposal's planned split.
 
-**AI assistance.** Claude Code (Anthropic) was used as a programming assistant to implement parts of
-the code base: the planning toolkit, the symbolic executor and the experiment harness. It was also used
-to draft parts of this report from our design decisions and measured results. Every number in this report is produced by the scripts in
-the repository from cached model outputs. The research questions, formulations, design families and
-evaluation protocol follow our proposal.
+* *Yash:* coordination; directed the Claude Code sessions that built the SP1 and SP2 pipelines (instances, symbolic executor, PDDL domains and design documents, solvers, gold replay, LLM harness); ran all experiments, including the stress, opaque and long-trace sets; and drafted the report.
+* *Joshua:* the OpenAI-compatible backend for the SoC open-weight models (`premortem/llm.py`). *[Confirm or add: reviews, testing, presentation.]*
+* *Hein:* the SP3 analyses (the spec-style classifier with its tests, and design facts vs. Translate outcomes) and the precise statements of both formulations and their limits (§2, §6). *[Confirm or add.]*
+
+**Use of AI tools.** We used Claude Code (Anthropic) extensively. Per component:
+
+* *Ours, from the proposal:* the research questions, the two formulations and their solvers, the five design families and their variants, the evaluation protocol (exact gold scoring, controls) and the risk plan.
+* *Generated by Claude Code from our specifications and instructions:* the code (symbolic executor, planning toolkit, PDDL domains and design documents, LLM harness, analysis scripts), the statements and proofs in §2, and drafts of this report. *[Group: state what you reviewed, tested, changed or wrote yourselves.]*
+* *Checked mechanically:* every number comes from the repository's scripts and cached model outputs; 207 tests check the executor against Python and the planners against each other.

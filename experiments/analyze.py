@@ -236,25 +236,26 @@ def fig_sp1(df: pd.DataFrame):
     labels = ["common\n(>=10%)", "uncommon\n(1-10%)", "rare\n(0.1-1%)", "very rare\n(<0.1%)"]
     inst = pd.DataFrame(json.loads((ROOT / "data" / "sp1" / "instances.json").read_text())["instances"])
     bugs_i = inst[(inst.kind == "bug") & (inst.tier == "base")]
-    fig, ax = plt.subplots(figsize=(5.6, 3.0), facecolor=SURFACE)
+    fig, ax = plt.subplots(figsize=(3.3, 2.45), facecolor=SURFACE)  # printed side by side at half width
     style(ax)
     series = []
     for arm in ("direct", "translate"):
         d = df[(df.arm == arm) & (df.kind == "bug") & (df.tier == "base")]
         ys = [100 * (d[d.bucket == b].outcome == "valid_witness").mean() for b in buckets]
         n_models = d.model.nunique()
-        series.append((f"LLM {ARM_LABEL[arm]} ({n_models} models pooled)", ys, ARM_COLOR[arm], "-"))
+        series.append((f"LLM {ARM_LABEL[arm]} ({n_models} models)", ys, ARM_COLOR[arm], "-"))
     for n, col in ((100, "#1baf7a"), (1000, "#6250d6")):
         ys = [100 * (1 - (1 - bugs_i[bugs_i.bucket == b].rarity) ** n).mean() for b in buckets]
-        series.append((f"random testing, {n} inputs", ys, col, "-"))
+        series.append((f"random testing, {n:,} inputs", ys, col, "-"))
     for label, ys, col, ls in series:
-        ax.plot(range(4), ys, color=col, linewidth=2, linestyle=ls, marker="o", markersize=5,
-                markeredgecolor=SURFACE, markeredgewidth=1.5, label=label)
-    ax.set_xticks(range(4), labels, fontsize=7)
+        ax.plot(range(4), ys, color=col, linewidth=1.6, linestyle=ls, marker="o", markersize=4,
+                markeredgecolor=SURFACE, markeredgewidth=1.2, label=label)
+    ax.set_xticks(range(4), labels, fontsize=6.5)
+    ax.tick_params(axis="y", labelsize=6.5)
     ax.set_ylim(0, 105)
-    ax.set_ylabel("bugs with a valid witness (%)", fontsize=8, color=INK2)
-    ax.legend(frameon=False, fontsize=7, loc="lower left")
-    ax.set_title("SP1 base tier: witness found vs. trigger rarity", fontsize=9, color=INK, loc="left")
+    ax.set_ylabel("bugs with a valid witness (%)", fontsize=7, color=INK2)
+    ax.legend(frameon=False, fontsize=6.5, loc="lower left")
+    ax.set_title("SP1 base tier: witness vs. trigger rarity", fontsize=7.5, color=INK, loc="left")
     fig.tight_layout()
     fig.savefig(FIG / "sp1_rarity.png", dpi=200, facecolor=SURFACE)
     plt.close(fig)
@@ -420,7 +421,7 @@ def fig_sp2(df: pd.DataFrame):
     d0 = df[(df.model == "haiku") & (df.violation == True)]  # noqa: E712
     if d0.empty:
         return
-    fig, ax = plt.subplots(figsize=(5.6, 2.9), facecolor=SURFACE)
+    fig, ax = plt.subplots(figsize=(3.3, 2.45), facecolor=SURFACE)  # printed side by side at half width
     style(ax)
     for arm in ("direct", "translate"):
         d = d0[d0.arm == arm]
@@ -429,19 +430,20 @@ def fig_sp2(df: pd.DataFrame):
             db = d[(d.shortest >= lo) & (d.shortest <= hi)]
             ns.append(len(db))
             ys.append(100 * (db.outcome == "valid_trace").mean() if len(db) else float("nan"))
-        ax.plot(range(len(bins)), ys, color=ARM_COLOR[arm], linewidth=2, marker="o", markersize=5,
-                markeredgecolor=SURFACE, markeredgewidth=1.5, label=f"Haiku 4.5 {ARM_LABEL[arm]}")
+        ax.plot(range(len(bins)), ys, color=ARM_COLOR[arm], linewidth=1.6, marker="o", markersize=4,
+                markeredgecolor=SURFACE, markeredgewidth=1.2, label=f"Haiku 4.5 {ARM_LABEL[arm]}")
     labels = [(f"{lo}-{hi}" if lo != hi else f"{lo}") + f"\n(n={n})" for (lo, hi), n in zip(bins, ns)]
-    ax.set_xticks(range(len(bins)), labels, fontsize=7)
-    ax.set_xlabel("shortest violating trace (events)", fontsize=8, color=INK2)
-    ax.set_ylim(0, 108)
-    ax.set_ylabel("valid failure trace (%)", fontsize=8, color=INK2)
-    ax.legend(frameon=False, fontsize=7, loc="lower left")
+    ax.set_xticks(range(len(bins)), labels, fontsize=6.5)
+    ax.tick_params(axis="y", labelsize=6.5)
+    ax.set_xlabel("shortest violating trace (events)", fontsize=7, color=INK2)
+    ax.set_ylim(0, 112)
+    ax.set_ylabel("valid failure trace (%)", fontsize=7, color=INK2)
+    ax.legend(frameon=False, fontsize=6.5, loc="lower left")
     others = [MODEL_LABEL[m] for m in ("sonnet", "opus") if (df.model == m).any()]
     if others:
-        ax.text(len(bins) - 1, 103, f"{' and '.join(others)}: 100% in both arms at every length",
-                ha="right", fontsize=7, color=INK2)
-    ax.set_title("SP2: valid traces vs. trace length (flawed + subtle, main + stress)", fontsize=9, color=INK, loc="left")
+        ax.text(len(bins) - 1, 106, f"{' and '.join(others)}: 100% in both arms",
+                ha="right", fontsize=6.5, color=INK2)
+    ax.set_title("SP2: valid traces vs. trace length", fontsize=7.5, color=INK, loc="left")
     fig.tight_layout()
     fig.savefig(FIG / "sp2_length.png", dpi=200, facecolor=SURFACE)
     plt.close(fig)
@@ -497,7 +499,7 @@ def solver_scaling(out: list[str]):
         g = i["gold"]
         sat = f"{g['satplan']['seconds']:.2f}" + ("" if g['satplan']['status'] in ("solved", "no_plan_within_bound") else f" ({g['satplan']['status']})")
         gb = f"{g['gbfs']['expanded']}" + (" (limit)" if g['gbfs']['status'] == "limit" else "")
-        bf = f"{g['bfs']['expanded']}" + (" (limit)" if g['bfs']['status'] == "limit" else "")
+        bf = "-" if g['bfs']['status'] == "skipped" else f"{g['bfs']['expanded']}" + (" (limit)" if g['bfs']['status'] == "limit" else "")
         out.append(f"| {i['family']} | {i['variant']} | {i['size']} | {g['n_actions']} | {i['shortest'] or '-'} | {sat} | {gb} | {bf} |")
     fig, axes = plt.subplots(1, 2, figsize=(7.6, 2.8), facecolor=SURFACE)
     fams = ["payments", "inventory", "lock", "queue", "cache"]
@@ -505,7 +507,8 @@ def solver_scaling(out: list[str]):
     for ax in axes:
         style(ax)
     for fam, col in zip(fams, colors):
-        d = sorted([i for i in inst if i["family"] == fam and i["variant"] == "fixed"], key=lambda i: i["size"])
+        d = sorted([i for i in inst if i["family"] == fam and i["variant"] == "fixed" and i.get("set", "main") != "long"],
+                   key=lambda i: i["size"])  # the long set caps search on inventory, so it is not a scaling point
         dm = [i for i in d if i.get("set", "main") == "main"]
         axes[0].plot([i["size"] for i in dm], [max(i["gold"]["satplan"]["seconds"], 1e-3) for i in dm], color=col,
                      linewidth=2, marker="o", markersize=5, markeredgecolor=SURFACE, markeredgewidth=1.5, label=fam)
@@ -520,7 +523,7 @@ def solver_scaling(out: list[str]):
     axes[0].set_title("SATPlan: time to exhaust T <= 40 (s)", fontsize=9, color=INK, loc="left")
     axes[1].set_title("GBFS + h_FF: states expanded to prove safety", fontsize=9, color=INK, loc="left", pad=10)
     axes[0].set_xticks([1, 2, 3, 4])
-    axes[1].set_xticks(sorted({i["size"] for i in inst}))
+    axes[1].set_xticks(sorted({i["size"] for i in inst if i.get("set", "main") != "long"}))
     for ax in axes:
         ax.set_xlabel("design size", fontsize=8, color=INK2)
     axes[1].legend(frameon=False, fontsize=7, loc="upper left")
@@ -557,6 +560,7 @@ def main():
         sp2_tables(main_set, out)
         sp2_failures(main_set, out)
         for name, title in (("stress", "SP2 stress set (sizes 6 and 8: traces of 17-27 events)"),
+                            ("long", "SP2 long-trace set (payments and inventory, sizes 12 and 16: traces of 30-51 events)"),
                             ("opaque", "SP2 opaque-vocabulary ablation (main set, design facts and design-specific events renamed)")):
             d = sp2[sp2.set == name]
             if not d.empty:

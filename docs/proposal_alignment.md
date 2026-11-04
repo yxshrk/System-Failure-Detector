@@ -30,7 +30,7 @@ the repository does. ✅ = done as proposed; ➕ = done, and extended beyond the
 | SP1: benchmark functions [EvalPlus] with injected bugs, plus clean controls | 27 HumanEval/EvalPlus-style functions, **rewritten** (renamed identifiers, new docstrings) as the contamination mitigation; 808 automatic mutants + 42 hand-written bugs; clean controls | ✅ |
 | (not in proposal) | Hard tier (10 functions needing constructed witnesses); **provably equivalent mutants** as hard controls; trigger-rarity measurement | ➕ |
 | SP2: payments, inventory, cache, lock, queue, one domain each; flawed, fixed, subtly wrong; several sizes | Exactly these five families × 3 variants × sizes 1–4 = 60 designs, each with a design document | ✅ |
-| (not in proposal) | Stress sizes 6 and 8 (17–27-event traces); opaque-vocabulary ablation | ➕ |
+| (not in proposal) | Stress sizes 6 and 8 (17–27-event traces); long set, sizes 12 and 16 for payments and inventory (30–51 events, 5.5 models only); opaque-vocabulary ablation | ➕ |
 
 ## SP3: translation scored separately
 
@@ -61,5 +61,5 @@ plus fabricated failures, attacks on the reviewer and privacy. ✅➕
 | Risk (iii) contamination: rename identifiers, rewrite docstrings | ✅ + opaque ablation |
 | Risk (iv) tool limits: keep supported functions, report coverage | ✅ 59 unencodable/non-terminating candidates dropped and reported; checker timeouts, Z3 *unknown* and incomplete spec coverage reported as *undecided*, never as "no bug"; planner search limits reported as *tool limit*, never as "safe" |
 | Risk (v) solver blow-up: cap bounds, report time-outs | ✅ SATPlan/GBFS limits reported (inventory sizes 6–8) |
-| Risk (vi) cost: SoC open-weight endpoint; ≤ $100 for frontier tiers | Frontier tiers done (≈ $78 list-price equivalent, incl. pilots and reruns). **SoC open-weight models** ⏳ |
+| Risk (vi) cost: SoC open-weight endpoint; ≤ $100 for frontier tiers | Frontier tiers done (≈ $80 list-price equivalent, incl. pilots, reruns and the long set). **SoC open-weight models** ⏳ |
 | Division of work as proposed | ⏳ report §8 must be rewritten to reflect actual contributions and AI use |

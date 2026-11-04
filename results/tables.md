@@ -250,6 +250,61 @@
 | Sonnet 5.5 | 29/30 | 0/0 |
 | Opus 5.5 | 29/30 | 0/0 |
 
+## SP2 long-trace set (payments and inventory, sizes 12 and 16: traces of 30-51 events)
+
+| model | arm | violating designs | valid trace | fabricated trace | miss | no answer | fixed designs | false alarm | $/inst |
+|---|---|---|---|---|---|---|---|---|---|
+| Sonnet 5.5 | Direct | 8 | 100% [68-100] | 0% | 0% | 0% | 4 | 0% [0-49] | 0.028 |
+| Sonnet 5.5 | Translate | 8 | 100% [68-100] | 0% | 0% | 0% | 4 | 0% [0-49] | 0.023 |
+| Opus 5.5 | Direct | 8 | 100% [68-100] | 0% | 0% | 0% | 4 | 0% [0-49] | 0.055 |
+| Opus 5.5 | Translate | 8 | 100% [68-100] | 0% | 0% | 0% | 4 | 0% [0-49] | 0.064 |
+
+**SP2 by variant (valid trace on flawed/subtle; correct 'safe' on fixed)**
+
+| model | arm | payments | inventory | lock | queue | cache | flawed | subtle | fixed |
+|---|---|---|---|---|---|---|---|---|---|
+| Sonnet 5.5 | Direct | 6/6 | 6/6 | 0/0 | 0/0 | 0/0 | 4/4 | 4/4 | 4/4 |
+| Sonnet 5.5 | Translate | 6/6 | 4/6 | 0/0 | 0/0 | 0/0 | 4/4 | 4/4 | 2/4 |
+| Opus 5.5 | Direct | 6/6 | 6/6 | 0/0 | 0/0 | 0/0 | 4/4 | 4/4 | 4/4 |
+| Opus 5.5 | Translate | 6/6 | 4/6 | 0/0 | 0/0 | 0/0 | 4/4 | 4/4 | 2/4 |
+
+**Valid traces by shortest violating-trace length (flawed + subtle)**
+
+| model | arm | 30 | 38 | 39 | 51 |
+|---|---|---|---|---|---|
+| Sonnet 5.5 | Direct | 2/2 | 2/2 | 2/2 | 2/2 |
+| Sonnet 5.5 | Translate | 2/2 | 2/2 | 2/2 | 2/2 |
+| Opus 5.5 | Direct | 2/2 | 2/2 | 2/2 | 2/2 |
+| Opus 5.5 | Translate | 2/2 | 2/2 | 2/2 | 2/2 |
+
+**Direct vs. Translate on the same designs (exact McNemar; success = correct verdict with valid trace)**
+
+| model | only Direct correct | only Translate correct | p |
+|---|---|---|---|
+| Sonnet 5.5 | 2 | 0 | 0.500 |
+| Opus 5.5 | 2 | 0 | 0.500 |
+
+**Translate-arm repair loop (SP2): correct outcomes using only the first problem file vs. after repairs**
+
+| model | first attempt only | with repairs |
+|---|---|---|
+| Sonnet 5.5 | 10/12 | 10/12 |
+| Opus 5.5 | 8/12 | 10/12 |
+
+**SP3 (SP2 translation quality: model-written initial state vs. gold)**
+
+| model | parsed | design facts exact | init exact | init precision | init recall | first try |
+|---|---|---|---|---|---|---|
+| Sonnet 5.5 | 12/12 | 12/12 | 12/12 | 1.000 | 1.000 | 12/12 |
+| Opus 5.5 | 12/12 | 12/12 | 12/12 | 1.000 | 1.000 | 10/12 |
+
+**SP2 Translate: the design facts decide the outcome** (correct = valid trace or correct 'safe')
+
+| model | design facts exact: correct | design facts wrong: correct |
+|---|---|---|
+| Sonnet 5.5 | 10/12 | 0/0 |
+| Opus 5.5 | 10/12 | 0/0 |
+
 ## SP2 opaque-vocabulary ablation (main set, design facts and design-specific events renamed)
 
 | model | arm | violating designs | valid trace | fabricated trace | miss | no answer | fixed designs | false alarm | $/inst |
@@ -426,11 +481,23 @@
 | cache | fixed | 4 | 55 | - | 3.91 | 66 | 80 |
 | cache | fixed | 6 | 98 | - | 0.00 (skipped) | 112 | 126 |
 | cache | fixed | 8 | 153 | - | 0.00 (skipped) | 166 | 180 |
+| payments | flawed | 12 | 90 | 30 | 0.01 | 30 | - |
+| payments | flawed | 16 | 114 | 38 | 0.01 | 38 | - |
+| payments | subtle | 12 | 93 | 30 | 0.01 | 32 | - |
+| payments | subtle | 16 | 117 | 38 | 0.01 | 40 | - |
+| payments | fixed | 12 | 93 | - | 0.00 (skipped) | 732 | - |
+| payments | fixed | 16 | 117 | - | 0.00 (skipped) | 972 | - |
+| inventory | flawed | 12 | 2665 | 39 | 0.00 (skipped) | 39 | - |
+| inventory | flawed | 16 | 5729 | 51 | 0.00 (skipped) | 51 | - |
+| inventory | subtle | 12 | 650 | 39 | 0.00 (skipped) | 53 | - |
+| inventory | subtle | 16 | 1122 | 51 | 0.00 (skipped) | 69 | - |
+| inventory | fixed | 12 | 637 | - | 0.00 (skipped) | 557277 (limit) | - |
+| inventory | fixed | 16 | 1105 | - | 0.00 (skipped) | 379759 (limit) | - |
 
 ## LLM usage (all cached calls, list-price equivalent)
 
 | model | calls | input tokens | output tokens | cost (USD) |
 |---|---|---|---|---|
 | claude-haiku-4-5 | 848 | 1,592,569 | 7,149,601 | 37.34 |
-| claude-opus-5-5 | 838 | 1,971,399 | 576,906 | 27.43 |
-| claude-sonnet-5-5 | 817 | 1,915,029 | 555,978 | 13.17 |
+| claude-opus-5-5 | 864 | 2,077,161 | 607,582 | 28.86 |
+| claude-sonnet-5-5 | 841 | 1,996,340 | 584,840 | 13.78 |
