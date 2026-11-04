@@ -61,8 +61,17 @@ the solver's value for $x$ is the witness (existential instantiation, FOL p.18).
 * **Domains $D$:** the stated ranges, e.g. $1 \le month \le 12$, $0 \le n \le m$, and each $e_i \in [lo, hi]$. Sorted or distinct lists add ordering or inequality constraints.
 * **Constraints $C$:** $\llbracket f \rrbracket(x, r) \land \lnot spec(x, r)$, where $\llbracket f \rrbracket(x, r)$ holds iff $r$ is what $f$ returns on $x$.
 
-Intermediate values are shared sub-terms of one formula DAG, which play the role of auxiliary
-variables (CSP p.13). The domains are finite, so this is a finite CSP: NP-complete (CSP p.8).
+Intermediate values are not separate variables. Each is a shared sub-term of one formula DAG and is
+fully determined by the inputs, so it acts as an auxiliary variable that has already been eliminated
+(CSP p.13). The input domains are finite, so the problem is a finite CSP and NP-complete (CSP p.8): a
+witness is checked by running the bounded program, and CNF-SAT reduces to it.
+
+What Z3 receives is not a finite-domain CSP, however. The encoding is SMT over unbounded
+mathematical integers (Z3's `Int` sort), and the domain bounds are ordinary constraints. Products of
+variables and `//` or `%` by a variable make it non-linear integer arithmetic, which is undecidable in
+general, so Z3 can answer *unknown* even though the underlying problem is finite (§5.1). A
+fixed-width bit-vector encoding would make the finiteness explicit and reduce each query to SAT by
+bit-blasting, at the cost of proving that no intermediate value overflows its width.
 
 **Building $\llbracket f \rrbracket$: bounded symbolic execution** (`sp1/symexec.py`). The proposal
 planned an off-the-shelf executor. We wrote our own because tools such as CrossHair explore paths
@@ -153,8 +162,20 @@ lookup before the first charge records the key.
 
 **Modelling assumptions:** events interleave one at a time; effects are deterministic; the
 environment can do exactly the failure events in the domain (loss, delay, pauses, crashes, ticks); and
-object counts are finite. The state space is therefore finite. PlanSAT is in PSPACE and NP-hard even
-without negative effects (Planning p.38); it is PSPACE-complete [10].
+object counts are finite. The state space is therefore finite.
+
+**What a plan means here.** The planner chooses *every* event, including the adversarial ones
+(message loss, crashes, clock ticks). A plan is therefore a counterexample, not a course of action for
+an agent: we use planning as explicit-state model checking of a **safety** property ("a bad state is
+reachable"). Liveness failures, such as an order that is never confirmed, starvation or deadlock,
+cannot be stated as STRIPS goals and are out of scope. A "safe" verdict covers the instance at its
+size (two clients, one message, two retries, ...), not the design at every size. We rely on the
+small-scope hypothesis [15], that most design flaws already appear in small instances, and on an
+analytic invariant where search runs out (inventory, size 8).
+
+**Complexity.** PlanSAT for propositional STRIPS is PSPACE-complete [10] (in PSPACE, and NP-hard even
+without negative effects; Planning p.38). Each SATPlan call decides *bounded* PlanSAT for one horizon
+$T$, which is NP-complete when $T$ is polynomial in the size of the task.
 
 **SATPlan encoding** (Planning p.31–37; `planning/satplan.py`). For horizon $T$: a variable $f^t$ per
 fact and step $t \le T$, and $a^t$ per action and step $t < T$, with clauses:
@@ -180,9 +201,11 @@ $F^{t+1} \Leftrightarrow ActionCausesF^t \lor (F^t \land \lnot ActionCausesNotF^
 
 Hence $s_{t+1} = \mathrm{RESULT}(s_t, a)$, and (3) makes $a$ applicable in $s_t$. ∎
 
-**Theorem 2.** The horizon-$T$ formula is satisfiable iff a plan of exactly $T$ actions reaches $G$,
-and the true action variables of a model form one. Iterating $T = 0, 1, 2, \dots$ returns a *shortest*
-failure trace; decoded plans are re-validated. UNSAT for all $T \le T_{max}$ proves only bounded safety.
+**Theorem 2.** The horizon-$T$ formula is satisfiable iff a plan of exactly $T$ actions ends in a state
+containing $G$, and the true action variables of a model form one. Iterating $T = 0, 1, 2, \dots$ returns a *shortest*
+failure trace; decoded plans are re-validated. Because horizons are tried in order and the search stops at the
+first satisfiable $T$, a violation is found at the first step at which it holds, even if a later action would
+undo it. UNSAT for all $T \le T_{max}$ proves only bounded safety.
 
 **Certifying safety: greedy best-first search with $h_{FF}$** (`premortem/planning/search.py`).
 
@@ -200,8 +223,19 @@ from $s$ in the real task. ∎
 
 By the same argument GBFS finds a plan whenever one exists, though not always a shortest one. FF's
 enforced hill-climbing is incomplete and could not certify. Every fixed variant has finite $h_{FF}(I)$,
-so certification needs the exhaustive search. **Pipeline:** in the Translate arm GBFS decides
+so certification needs the exhaustive search. For certification $h_{FF}$ contributes only its dead-end
+test: the cost is the number of reachable states with finite $h_{FF}$, in whatever order they are
+expanded. On the main sizes (1–4), discarding dead ends expands 1.2× (cache) to 3.8× (queue) fewer states
+than plain BFS (inventory size 4: 9,026 vs 24,992; solver table in `results/tables.md`), but it does not change the
+exponential growth with size. **Pipeline:** in the Translate arm GBFS decides
 reachability on the model's problem; if a plan exists, SATPlan with $T_{max}$ = the GBFS length returns a shortest trace (if its 120 s budget runs out, which happened in 17 inventory runs, the GBFS trace is kept). Appendix B.2–B.3 print real clauses, the horizon iteration and a GBFS certificate.
+
+**What each arm translates.** Both scales check $\alpha \land \lnot\beta$, but the model writes a
+different half at each scale. In SP1 the code ($\alpha$) is encoded mechanically and the model writes
+the requirement $\beta$ (`pre`/`post`). In SP2 we fix the requirement (the goal, plus *monitor*
+actions such as `charge-again` that set the violation fluent), and the model writes part of the system
+$\alpha$: the initial state, including the design facts. The action schemas, i.e. the transition
+relation where the failure mechanism lives, are given to both arms (see Threats to validity, §6).
 
 # 3. Problem instances
 
