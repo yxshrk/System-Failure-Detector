@@ -203,7 +203,31 @@ def sp1_tables(df: pd.DataFrame, out: list[str]):
             hid = ((d.kind == "bug") & (d.outcome == "miss") & (d.spec_sound == False)).sum()  # noqa: E712
             out.append(f"| {MODEL_LABEL[model]} | {accepted}/{len(d)} | {(d.attempts == 1).sum()}/{len(d)} | "
                        f"{sound}/{accepted} | {hid} | {d.attempts.mean():.2f} |")
+        spec_style_tables(tr, out)
     return df
+
+
+def spec_style_tables(tr: pd.DataFrame, out: list[str]):
+    """How the Translate specs pin down the result, and every unsound spec (for the docstring audit)."""
+    sys.path.insert(0, str(ROOT))
+    from premortem.sp1.spec_style import spec_style
+    tr = tr[tr.spec.notna()].copy()
+    tr["style"] = tr.spec.map(spec_style)
+    out.append("\n**SP3: how specifications pin down the result** (constructive = `post` computes the answer and "
+               "compares; declarative = properties only)\n")
+    out.append("| model | constructive | declarative | unparsable |")
+    out.append("|---|---|---|---|")
+    for model in MODEL_ORDER:
+        c = Counter(tr[tr.model == model]["style"])
+        if c:
+            n = sum(c.values())
+            out.append(f"| {MODEL_LABEL[model]} | {c['constructive']}/{n} | {c['declarative']}/{n} | {c['unparsable']}/{n} |")
+    bad = tr[tr.spec_sound == False]  # noqa: E712
+    out.append("\n**Unsound specifications (the reference violates them): model error or ambiguous docstring?**\n")
+    out.append("| model | instance | outcome | reference input that violates the spec |")
+    out.append("|---|---|---|---|")
+    for _, r in bad.sort_values(["model", "instance"]).iterrows():
+        out.append(f"| {MODEL_LABEL[r.model]} | {r.instance} | {r.outcome} | `{r.spec_unsound_example}` |")
 
 
 def fig_sp1(df: pd.DataFrame):
