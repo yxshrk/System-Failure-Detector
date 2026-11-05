@@ -92,11 +92,13 @@ def sp1(instance_id: str = "sp1-049-days_in_month", model: str = "sonnet"):
           f"{size(z3.And(*[p for p in phi if not isinstance(p, bool)]))} shared nodes. "
           + ("Z3 proves it **equivalent** to the readable formula" if equivalent else "It is NOT equivalent to")
           + ":\n")
-    print("```\nΦ  ≡  1 ≤ month ≤ 12 ∧ 1 ≤ year ≤ 3000 ∧ month = 2 ∧ L399(year) ≠ L400(year)\n"
-          "L399(y) = y%4 = 0 ∧ (y%100 ≠ 0 ∨ y%399 = 0)        (what the code computes)\n"
-          "L400(y) = y%400 = 0 ∨ (y%100 ≠ 0 ∧ y%4 = 0)        (what the spec requires)\n```\n")
+    print("```\nΦ  ≡  1 ≤ month ≤ 12 ∧ 1 ≤ year ≤ 3000 ∧ month = 2\n"
+          "      ∧ L399(year) ≠ L400(year)\n"
+          "L399(y) = y%4 = 0 ∧ (y%100 ≠ 0 ∨ y%399 = 0)   (the code)\n"
+          "L400(y) = y%400 = 0 ∨ (y%100 ≠ 0 ∧ y%4 = 0)   (the spec)\n```\n")
+    year = next((s.model()[d] for d in s.model().decls() if d.name() == "year"), None) if status == z3.sat else None
     print("In words: a failing input is a February in a year where the two leap rules disagree. "
-          "Z3 answers " + f"`{status}`" + (f" with the model `{s.model()}`; 2800 is divisible by 400 "
+          "Z3 answers " + f"`{status}`" + (f" with the model `{s.model()}`; {year} is divisible by 400 "
                                          "but not by 399, so the code returns 28 instead of 29." if status == z3.sat else ".") + "\n")
 
 

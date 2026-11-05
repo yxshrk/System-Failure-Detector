@@ -50,7 +50,7 @@ distributed-system design and the witness a failure trace; **SP3** scores the tr
 # 2. Formulation
 
 Both scales rest on $\alpha \models \beta$ iff $\alpha \land \lnot\beta$ is unsatisfiable (PropLogic
-p.28, p.35), with $\alpha$ = "the system as implemented" and $\beta$ = "the requirement". A model (PropLogic p.11) of
+p.28, p.35; [3] Ch. 7), with $\alpha$ = "the system as implemented" and $\beta$ = "the requirement". A model (PropLogic p.11) of
 $\alpha \land \lnot\beta$ is a run that breaks the requirement: a *failure witness*. For a contract
 $\forall x\,(pre \Rightarrow post)$, the negation is $\exists x\,(pre \land \lnot post)$ (FOL p.12), and
 the solver's satisfying assignment to $x$ is the witness.
@@ -71,7 +71,7 @@ variable make it non-linear integer arithmetic, undecidable in general, so Z3 ca
 (§5.1). A bit-vector encoding would make the finiteness explicit and reduce each query to SAT, at the
 cost of proving that no value overflows.
 
-**Building $\llbracket f \rrbracket$: bounded symbolic execution** (`sp1/symexec.py`). The proposal
+**Building $\llbracket f \rrbracket$: bounded symbolic execution** [12] (`sp1/symexec.py`). The proposal
 planned an off-the-shelf executor. We wrote our own because tools such as CrossHair explore paths
 under a time budget and report "no counterexample found" rather than proving unsatisfiability within a
 bound, which Theorem 1 needs. The executor walks the syntax tree once with a symbolic environment
@@ -162,7 +162,7 @@ goals and are out of scope. "Safe" covers the instance at its size (two clients,
 every size; we rely on the small-scope hypothesis [15], that most flaws already appear in small
 instances, and on an analytic invariant where search runs out (inventory, size 8 and up).
 
-**SATPlan encoding** (Planning p.31–37; `planning/satplan.py`). For horizon $T$: a variable $f^t$ per
+**SATPlan encoding** [6] (Planning p.31–37; `planning/satplan.py`). For horizon $T$: a variable $f^t$ per
 fact and step $t \le T$, and $a^t$ per action and step $t < T$, with CNF clauses (PropLogic p.46):
 
 1. **initial state:** $f^0$ for $f \in I$ and $\lnot f^0$ for $f \notin I$;
@@ -258,7 +258,7 @@ The median Z3 query took 0.03 s (mean 0.2 s).
 |---|---|---|---|---|
 | payments | charged twice | no deduplication | key looked up, recorded only after the charge | atomic insert-if-absent |
 | inventory | sold > stock | read-modify-write stock (lost update) | payment accepted after hold expiry | atomic decrement + hold check |
-| lock | stale write after newer one | no fencing, no lease check | lease checked just before writing | fencing tokens |
+| lock | stale write after newer one | no fencing, no lease check | lease checked just before writing | fencing tokens [14] |
 | queue | payout twice | no consumer dedup | dedup ids in process memory | dedup id in the same DB transaction |
 | cache | cache older than DB at end | update DB, then delete cache | delete cache, then update DB | leases revoked by delete |
 
@@ -405,7 +405,7 @@ possible ones (Planning p.10). A state is a subset of $F$ (flawed variant shown)
 states the intent, and reading code is white-box. Trigger rarity, which decides whether *testing* finds
 a bug, therefore showed no effect on either LLM arm at this difficulty (Fig. 1).
 
-In Kang et al.'s terms (GenAI p.18), base-tier SP1 is the easy case: the next step (find the line that
+In Kang et al.'s terms [2] (GenAI p.18), base-tier SP1 is the easy case: the next step (find the line that
 contradicts the docstring) is cheap, so the chain of thought stays short. The hard tier, where a witness
 must be *constructed*, moves towards the search case; the models paid 2–3× more tokens rather than
 failing, as our functions are still small enough for a linearised search.
@@ -469,7 +469,7 @@ shows. But "computationally difficult problems [are] likely to remain difficult"
 * *Specifications.* Docstrings are complete; vaguer real ones would hurt Translate more. Functions were selected to be encodable (integers, Booleans, lists; no strings, floats or recursion), favouring the tools.
 * *Familiarity and contamination.* The SP1 functions derive from public benchmarks, and renaming mitigates but does not remove contamination. The SP2 families are textbook patterns; the opaque ablation removes lexical cues, not conceptual familiarity.
 * *Authorship.* The design documents and gold models were produced together, not independently; two documents contradicted their models and were corrected, with all affected instances rerun.
-* *Scaffolding: the event model gives the mechanism away.* The given action schemas contain each failure mechanism as a named, guarded event (`accept-new-racy` does not delete `no-record`), so SP2 Translate reduces to choosing one or two design facts per family, and that choice decides the outcome: correct in 47/49 (Haiku) and 60/60 (5.5 models) main-set problems with exact facts, 0/11 with wrong ones. Writing the event model (Planning p.15) is untested and the natural next step.
+* *Scaffolding: the event model gives the mechanism away.* The given action schemas contain each failure mechanism as a named, guarded event (`accept-new-racy` does not delete `no-record`), so SP2 Translate reduces to choosing one or two design facts per family, and that choice decides the outcome: correct in 47/49 (Haiku) and 60/60 (5.5 models) main-set problems with exact facts, 0/11 with wrong ones. Writing the event model (Planning p.15), as in [11], is untested and the natural next step.
 * *Sampling and configuration.* Each instance is sampled once and many cells are at ceiling. Models ran with default thinking budgets, so the generation comparison also compares effort (Haiku used 10–15k tokens, the 5.5 models about 1k).
 
 
@@ -552,24 +552,26 @@ though its spec is still model-written. Sending proprietary code to a hosted mod
 
 [15] D. Jackson. *Software Abstractions: Logic, Language, and Analysis*, revised ed. MIT Press, 2012 (the small-scope hypothesis).
 
-Course material: CS3263 lecture slides (PropLogic, CSP, FirstOrderLogic, Planning, GenerativeReasoningAgenticAI, Decision, ProbGrapModel, ResponsibleAI), cited as *Deck p.N*.
+Course material: CS3263 lecture slides (PropLogic, CSP, FirstOrderLogic as FOL, Planning, GenerativeReasoningAgenticAI as GenAI, Decision, ProbGrapModel, ResponsibleAI), cited as *Deck p.N*.
 
 
 # Appendix A. Artefacts from the cached runs
 
-**A.1 A rare SP1 bug** (`days_in_month`, trigger rarity 0.019%; every model found it in both arms):
+**A.1 A rare SP1 bug** (`days_in_month`, mutant 400 → 399, trigger rarity 0.019%; every model found it in
+both arms):
 
 ```python
-return y % 4 == 0 and (y % 100 != 0 or y % 399 == 0)   # mutant 400 -> 399
+return y % 4 == 0 and (y % 100 != 0 or y % 399 == 0)
 ```
 
-**A.2 Specification anchoring** (Translate, Haiku 4.5, mutant `y % 400 == 0 -> y % 400 != 0`; Z3
-reports no violation, the soundness check against the reference fails). The `withdraw` miss is the
-same pattern (`new_balance <= 0` copies the mutated boundary).
+**A.2 Specification anchoring** (Translate, Haiku 4.5, mutant `y % 400 == 0 -> y % 400 != 0`). The
+spec's helper copies the mutated line from the code under review, so Z3 reports no violation and the
+soundness check against the reference fails. The `withdraw` miss is the same pattern (`new_balance <= 0`
+copies the mutated boundary).
 
 ```python
 def leap(y):
-    return y % 4 == 0 and (y % 100 != 0 or y % 400 != 0)   # copied from the code under review
+    return y % 4 == 0 and (y % 100 != 0 or y % 400 != 0)
 ```
 
 **A.3 A wrong specification yields a fabricated witness** (Translate, Haiku 4.5, `weekday`). After
@@ -676,12 +678,13 @@ def post(month, year, result):
 The executor compiles `pre` and `post(month, year, result)` the same way, with `result` bound to the code's term above. The full query Φ = domain ∧ ¬unwind ∧ pre ∧ (exc ∨ ¬post) is a DAG of 117 shared nodes. Z3 proves it **equivalent** to the readable formula:
 
 ```
-Φ  ≡  1 ≤ month ≤ 12 ∧ 1 ≤ year ≤ 3000 ∧ month = 2 ∧ L399(year) ≠ L400(year)
-L399(y) = y%4 = 0 ∧ (y%100 ≠ 0 ∨ y%399 = 0)        (what the code computes)
-L400(y) = y%400 = 0 ∨ (y%100 ≠ 0 ∧ y%4 = 0)        (what the spec requires)
+Φ  ≡  1 ≤ month ≤ 12 ∧ 1 ≤ year ≤ 3000 ∧ month = 2
+      ∧ L399(year) ≠ L400(year)
+L399(y) = y%4 = 0 ∧ (y%100 ≠ 0 ∨ y%399 = 0)   (the code)
+L400(y) = y%400 = 0 ∨ (y%100 ≠ 0 ∧ y%4 = 0)   (the spec)
 ```
 
-In words: a failing input is a February in a year where the two leap rules disagree. Z3 answers `sat` with the model `[year = 400, month = 2]`; 2800 is divisible by 400 but not by 399, so the code returns 28 instead of 29.
+In words: a failing input is a February in a year where the two leap rules disagree. Z3 answers `sat` with the model `[year = 400, month = 2]`; 400 is divisible by 400 but not by 399, so the code returns 28 instead of 29.
 
 
 ## B.2 SP2: STRIPS action and SATPlan clauses (`payments-subtle-1`, step t = 4)
@@ -699,8 +702,8 @@ DEL = {in-flight o1 a1}
 **Precondition and effect clauses** for this action at t = 4 (each clause is a disjunction). The static design fact `(dedup-racy)` is true at every step, so the encoder fixes it to a constant and its precondition clause is satisfied and dropped:
 
 ```
-¬accept-new-racy(o1,a1)@4 ∨ no-record(o1)@4
 ¬accept-new-racy(o1,a1)@4 ∨ in-flight(o1,a1)@4
+¬accept-new-racy(o1,a1)@4 ∨ no-record(o1)@4
 ¬accept-new-racy(o1,a1)@4 ∨ approved(o1,a1)@5
 ¬accept-new-racy(o1,a1)@4 ∨ ¬in-flight(o1,a1)@5
 ```

@@ -4,7 +4,7 @@
 states the intent, and reading code is white-box. Trigger rarity, which decides whether *testing* finds
 a bug, therefore showed no effect on either LLM arm at this difficulty (Fig. 1).
 
-In Kang et al.'s terms (GenAI p.18), base-tier SP1 is the easy case: the next step (find the line that
+In Kang et al.'s terms [2] (GenAI p.18), base-tier SP1 is the easy case: the next step (find the line that
 contradicts the docstring) is cheap, so the chain of thought stays short. The hard tier, where a witness
 must be *constructed*, moves towards the search case; the models paid 2–3× more tokens rather than
 failing, as our functions are still small enough for a linearised search.
@@ -68,5 +68,5 @@ shows. But "computationally difficult problems [are] likely to remain difficult"
 * *Specifications.* Docstrings are complete; vaguer real ones would hurt Translate more. Functions were selected to be encodable (integers, Booleans, lists; no strings, floats or recursion), favouring the tools.
 * *Familiarity and contamination.* The SP1 functions derive from public benchmarks, and renaming mitigates but does not remove contamination. The SP2 families are textbook patterns; the opaque ablation removes lexical cues, not conceptual familiarity.
 * *Authorship.* The design documents and gold models were produced together, not independently; two documents contradicted their models and were corrected, with all affected instances rerun.
-* *Scaffolding: the event model gives the mechanism away.* The given action schemas contain each failure mechanism as a named, guarded event (`accept-new-racy` does not delete `no-record`), so SP2 Translate reduces to choosing one or two design facts per family, and that choice decides the outcome: correct in 47/49 (Haiku) and 60/60 (5.5 models) main-set problems with exact facts, 0/11 with wrong ones. Writing the event model (Planning p.15) is untested and the natural next step.
+* *Scaffolding: the event model gives the mechanism away.* The given action schemas contain each failure mechanism as a named, guarded event (`accept-new-racy` does not delete `no-record`), so SP2 Translate reduces to choosing one or two design facts per family, and that choice decides the outcome: correct in 47/49 (Haiku) and 60/60 (5.5 models) main-set problems with exact facts, 0/11 with wrong ones. Writing the event model (Planning p.15), as in [11], is untested and the natural next step.
 * *Sampling and configuration.* Each instance is sampled once and many cells are at ceiling. Models ran with default thinking budgets, so the generation comparison also compares effort (Haiku used 10–15k tokens, the 5.5 models about 1k).

@@ -50,7 +50,7 @@ distributed-system design and the witness a failure trace; **SP3** scores the tr
 # 2. Formulation
 
 Both scales rest on $\alpha \models \beta$ iff $\alpha \land \lnot\beta$ is unsatisfiable (PropLogic
-p.28, p.35), with $\alpha$ = "the system as implemented" and $\beta$ = "the requirement". A model (PropLogic p.11) of
+p.28, p.35; [3] Ch. 7), with $\alpha$ = "the system as implemented" and $\beta$ = "the requirement". A model (PropLogic p.11) of
 $\alpha \land \lnot\beta$ is a run that breaks the requirement: a *failure witness*. For a contract
 $\forall x\,(pre \Rightarrow post)$, the negation is $\exists x\,(pre \land \lnot post)$ (FOL p.12), and
 the solver's satisfying assignment to $x$ is the witness.
@@ -71,7 +71,7 @@ variable make it non-linear integer arithmetic, undecidable in general, so Z3 ca
 (§5.1). A bit-vector encoding would make the finiteness explicit and reduce each query to SAT, at the
 cost of proving that no value overflows.
 
-**Building $\llbracket f \rrbracket$: bounded symbolic execution** (`sp1/symexec.py`). The proposal
+**Building $\llbracket f \rrbracket$: bounded symbolic execution** [12] (`sp1/symexec.py`). The proposal
 planned an off-the-shelf executor. We wrote our own because tools such as CrossHair explore paths
 under a time budget and report "no counterexample found" rather than proving unsatisfiability within a
 bound, which Theorem 1 needs. The executor walks the syntax tree once with a symbolic environment
@@ -162,7 +162,7 @@ goals and are out of scope. "Safe" covers the instance at its size (two clients,
 every size; we rely on the small-scope hypothesis [15], that most flaws already appear in small
 instances, and on an analytic invariant where search runs out (inventory, size 8 and up).
 
-**SATPlan encoding** (Planning p.31–37; `planning/satplan.py`). For horizon $T$: a variable $f^t$ per
+**SATPlan encoding** [6] (Planning p.31–37; `planning/satplan.py`). For horizon $T$: a variable $f^t$ per
 fact and step $t \le T$, and $a^t$ per action and step $t < T$, with CNF clauses (PropLogic p.46):
 
 1. **initial state:** $f^0$ for $f \in I$ and $\lnot f^0$ for $f \notin I$;
@@ -258,7 +258,7 @@ The median Z3 query took 0.03 s (mean 0.2 s).
 |---|---|---|---|---|
 | payments | charged twice | no deduplication | key looked up, recorded only after the charge | atomic insert-if-absent |
 | inventory | sold > stock | read-modify-write stock (lost update) | payment accepted after hold expiry | atomic decrement + hold check |
-| lock | stale write after newer one | no fencing, no lease check | lease checked just before writing | fencing tokens |
+| lock | stale write after newer one | no fencing, no lease check | lease checked just before writing | fencing tokens [14] |
 | queue | payout twice | no consumer dedup | dedup ids in process memory | dedup id in the same DB transaction |
 | cache | cache older than DB at end | update DB, then delete cache | delete cache, then update DB | leases revoked by delete |
 

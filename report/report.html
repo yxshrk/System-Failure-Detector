@@ -196,7 +196,7 @@ controls?</li>
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>⊨</mo><mi>β</mi></mrow><annotation encoding="application/x-tex">\alpha \models \beta</annotation></semantics></math>
 iff
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>∧</mo><mi>¬</mi><mi>β</mi></mrow><annotation encoding="application/x-tex">\alpha \land \lnot\beta</annotation></semantics></math>
-is unsatisfiable (PropLogic p.28, p.35), with
+is unsatisfiable (PropLogic p.28, p.35; [3] Ch. 7), with
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
 = “the system as implemented” and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math>
@@ -259,8 +259,8 @@ explicit and reduce each query to SAT, at the cost of proving that no
 value overflows.</p>
 <p><strong>Building
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">⟦</mo><mi>f</mi><mo stretchy="false" form="postfix">⟧</mo></mrow><annotation encoding="application/x-tex">\llbracket f \rrbracket</annotation></semantics></math>:
-bounded symbolic execution</strong> (<code>sp1/symexec.py</code>). The
-proposal planned an off-the-shelf executor. We wrote our own because
+bounded symbolic execution</strong> [12] (<code>sp1/symexec.py</code>).
+The proposal planned an off-the-shelf executor. We wrote our own because
 tools such as CrossHair explore paths under a time budget and report “no
 counterexample found” rather than proving unsatisfiability within a
 bound, which Theorem 1 needs. The executor walks the syntax tree once
@@ -523,7 +523,7 @@ size (two clients, two retries, …), not every size; we rely on the
 small-scope hypothesis [15], that most flaws already appear in small
 instances, and on an analytic invariant where search runs out
 (inventory, size 8 and up).</p>
-<p><strong>SATPlan encoding</strong> (Planning p.31–37;
+<p><strong>SATPlan encoding</strong> [6] (Planning p.31–37;
 <code>planning/satplan.py</code>). For horizon
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math>:
 a variable
@@ -769,7 +769,7 @@ SP2: 60 designs, plus 30 stress, 60 opaque and 12 long variants</h2>
 <td>stale write after newer one</td>
 <td>no fencing, no lease check</td>
 <td>lease checked just before writing</td>
-<td>fencing tokens</td>
+<td>fencing tokens [14]</td>
 </tr>
 <tr>
 <td>queue</td>
@@ -1220,12 +1220,12 @@ leaves a visible diff against a docstring that states the intent, and
 reading code is white-box. Trigger rarity, which decides whether
 <em>testing</em> finds a bug, therefore showed no effect on either LLM
 arm at this difficulty (Fig. 1).</p>
-<p>In Kang et al.’s terms (GenAI p.18), base-tier SP1 is the easy case:
-the next step (find the line that contradicts the docstring) is cheap,
-so the chain of thought stays short. The hard tier, where a witness must
-be <em>constructed</em>, moves towards the search case; the models paid
-2–3× more tokens rather than failing, as our functions are still small
-enough for a linearised search.</p>
+<p>In Kang et al.’s terms [2] (GenAI p.18), base-tier SP1 is the easy
+case: the next step (find the line that contradicts the docstring) is
+cheap, so the chain of thought stays short. The hard tier, where a
+witness must be <em>constructed</em>, moves towards the search case; the
+models paid 2–3× more tokens rather than failing, as our functions are
+still small enough for a linearised search.</p>
 <p><strong>SP1: translation moves the risk into the
 specification.</strong> The spec must state the docstring’s intent while
 the model reads code that contradicts it: twice the postcondition
@@ -1331,8 +1331,8 @@ event (<code>accept-new-racy</code> does not delete
 <code>no-record</code>), so SP2 Translate reduces to choosing one or two
 design facts per family, and that choice decides the outcome: correct in
 47/49 (Haiku) and 60/60 (5.5 models) main-set problems with exact facts,
-0/11 with wrong ones. Writing the event model (Planning p.15) is
-untested and the natural next step.</li>
+0/11 with wrong ones. Writing the event model (Planning p.15), as in
+[11], is untested and the natural next step.</li>
 <li><em>Sampling and configuration.</em> Each instance is sampled once
 and many cells are at ceiling. Models ran with default thinking budgets,
 so the generation comparison also compares effort (Haiku used 10–15k
@@ -1452,20 +1452,22 @@ testing? <em>FSE</em>, 2014.</p>
 Analysis</em>, revised ed. MIT Press, 2012 (the small-scope
 hypothesis).</p>
 <p>Course material: CS3263 lecture slides (PropLogic, CSP,
-FirstOrderLogic, Planning, GenerativeReasoningAgenticAI, Decision,
-ProbGrapModel, ResponsibleAI), cited as <em>Deck p.N</em>.</p>
+FirstOrderLogic as FOL, Planning, GenerativeReasoningAgenticAI as GenAI,
+Decision, ProbGrapModel, ResponsibleAI), cited as <em>Deck p.N</em>.</p>
 <h1 id="appendix-a.-artefacts-from-the-cached-runs">Appendix A.
 Artefacts from the cached runs</h1>
 <p><strong>A.1 A rare SP1 bug</strong> (<code>days_in_month</code>,
-trigger rarity 0.019%; every model found it in both arms):</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> y <span class="op">%</span> <span class="dv">4</span> <span class="op">==</span> <span class="dv">0</span> <span class="kw">and</span> (y <span class="op">%</span> <span class="dv">100</span> <span class="op">!=</span> <span class="dv">0</span> <span class="kw">or</span> y <span class="op">%</span> <span class="dv">399</span> <span class="op">==</span> <span class="dv">0</span>)   <span class="co"># mutant 400 -&gt; 399</span></span></code></pre></div>
+mutant 400 → 399, trigger rarity 0.019%; every model found it in both
+arms):</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> y <span class="op">%</span> <span class="dv">4</span> <span class="op">==</span> <span class="dv">0</span> <span class="kw">and</span> (y <span class="op">%</span> <span class="dv">100</span> <span class="op">!=</span> <span class="dv">0</span> <span class="kw">or</span> y <span class="op">%</span> <span class="dv">399</span> <span class="op">==</span> <span class="dv">0</span>)</span></code></pre></div>
 <p><strong>A.2 Specification anchoring</strong> (Translate, Haiku 4.5,
-mutant <code>y % 400 == 0 -&gt; y % 400 != 0</code>; Z3 reports no
-violation, the soundness check against the reference fails). The
+mutant <code>y % 400 == 0 -&gt; y % 400 != 0</code>). The spec’s helper
+copies the mutated line from the code under review, so Z3 reports no
+violation and the soundness check against the reference fails. The
 <code>withdraw</code> miss is the same pattern
 (<code>new_balance &lt;= 0</code> copies the mutated boundary).</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> leap(y):</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> y <span class="op">%</span> <span class="dv">4</span> <span class="op">==</span> <span class="dv">0</span> <span class="kw">and</span> (y <span class="op">%</span> <span class="dv">100</span> <span class="op">!=</span> <span class="dv">0</span> <span class="kw">or</span> y <span class="op">%</span> <span class="dv">400</span> <span class="op">!=</span> <span class="dv">0</span>)   <span class="co"># copied from the code under review</span></span></code></pre></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> y <span class="op">%</span> <span class="dv">4</span> <span class="op">==</span> <span class="dv">0</span> <span class="kw">and</span> (y <span class="op">%</span> <span class="dv">100</span> <span class="op">!=</span> <span class="dv">0</span> <span class="kw">or</span> y <span class="op">%</span> <span class="dv">400</span> <span class="op">!=</span> <span class="dv">0</span>)</span></code></pre></div>
 <p><strong>A.3 A wrong specification yields a fabricated
 witness</strong> (Translate, Haiku 4.5, <code>weekday</code>). After
 <code>m += 12</code> for January and February, <code>t[m - 1]</code> is
@@ -1570,13 +1572,14 @@ arm (verbatim, from the response cache):</p>
 <code>result</code> bound to the code’s term above. The full query Φ =
 domain ∧ ¬unwind ∧ pre ∧ (exc ∨ ¬post) is a DAG of 117 shared nodes. Z3
 proves it <strong>equivalent</strong> to the readable formula:</p>
-<pre><code>Φ  ≡  1 ≤ month ≤ 12 ∧ 1 ≤ year ≤ 3000 ∧ month = 2 ∧ L399(year) ≠ L400(year)
-L399(y) = y%4 = 0 ∧ (y%100 ≠ 0 ∨ y%399 = 0)        (what the code computes)
-L400(y) = y%400 = 0 ∨ (y%100 ≠ 0 ∧ y%4 = 0)        (what the spec requires)</code></pre>
+<pre><code>Φ  ≡  1 ≤ month ≤ 12 ∧ 1 ≤ year ≤ 3000 ∧ month = 2
+      ∧ L399(year) ≠ L400(year)
+L399(y) = y%4 = 0 ∧ (y%100 ≠ 0 ∨ y%399 = 0)   (the code)
+L400(y) = y%400 = 0 ∨ (y%100 ≠ 0 ∧ y%4 = 0)   (the spec)</code></pre>
 <p>In words: a failing input is a February in a year where the two leap
 rules disagree. Z3 answers <code>sat</code> with the model
-<code>[year = 400, month = 2]</code>; 2800 is divisible by 400 but not
-by 399, so the code returns 28 instead of 29.</p>
+<code>[year = 400, month = 2]</code>; 400 is divisible by 400 but not by
+399, so the code returns 28 instead of 29.</p>
 <h2 id="b.2-sp2-strips-action-and-satplan-clauses-payments-subtle-1-step-t-4">B.2
 SP2: STRIPS action and SATPlan clauses (<code>payments-subtle-1</code>,
 step t = 4)</h2>
@@ -1591,8 +1594,8 @@ DEL = {in-flight o1 a1}</code></pre>
 = 4 (each clause is a disjunction). The static design fact
 <code>(dedup-racy)</code> is true at every step, so the encoder fixes it
 to a constant and its precondition clause is satisfied and dropped:</p>
-<pre><code>¬accept-new-racy(o1,a1)@4 ∨ no-record(o1)@4
-¬accept-new-racy(o1,a1)@4 ∨ in-flight(o1,a1)@4
+<pre><code>¬accept-new-racy(o1,a1)@4 ∨ in-flight(o1,a1)@4
+¬accept-new-racy(o1,a1)@4 ∨ no-record(o1)@4
 ¬accept-new-racy(o1,a1)@4 ∨ approved(o1,a1)@5
 ¬accept-new-racy(o1,a1)@4 ∨ ¬in-flight(o1,a1)@5</code></pre>
 <p><strong>Explanatory frame clauses</strong> for the fact

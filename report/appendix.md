@@ -1,18 +1,20 @@
 # Appendix A. Artefacts from the cached runs
 
-**A.1 A rare SP1 bug** (`days_in_month`, trigger rarity 0.019%; every model found it in both arms):
+**A.1 A rare SP1 bug** (`days_in_month`, mutant 400 → 399, trigger rarity 0.019%; every model found it in
+both arms):
 
 ```python
-return y % 4 == 0 and (y % 100 != 0 or y % 399 == 0)   # mutant 400 -> 399
+return y % 4 == 0 and (y % 100 != 0 or y % 399 == 0)
 ```
 
-**A.2 Specification anchoring** (Translate, Haiku 4.5, mutant `y % 400 == 0 -> y % 400 != 0`; Z3
-reports no violation, the soundness check against the reference fails). The `withdraw` miss is the
-same pattern (`new_balance <= 0` copies the mutated boundary).
+**A.2 Specification anchoring** (Translate, Haiku 4.5, mutant `y % 400 == 0 -> y % 400 != 0`). The
+spec's helper copies the mutated line from the code under review, so Z3 reports no violation and the
+soundness check against the reference fails. The `withdraw` miss is the same pattern (`new_balance <= 0`
+copies the mutated boundary).
 
 ```python
 def leap(y):
-    return y % 4 == 0 and (y % 100 != 0 or y % 400 != 0)   # copied from the code under review
+    return y % 4 == 0 and (y % 100 != 0 or y % 400 != 0)
 ```
 
 **A.3 A wrong specification yields a fabricated witness** (Translate, Haiku 4.5, `weekday`). After
