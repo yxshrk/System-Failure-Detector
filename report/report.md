@@ -15,7 +15,7 @@ author:
 <div class="pagebreak"></div>
 ```
 
-**Summary.** On 174 functions (SP1) and 150 designs (SP2), scored exactly on gold models, we compare
+**Summary.** On 174 functions (SP1) and 162 designs (SP2), scored exactly on gold models, we compare
 Claude Haiku 4.5, Sonnet 5.5 and Opus 5.5 answering directly or translating for Z3, SATPlan and GBFS.
 SP1 is at ceiling for both arms at every trigger rarity, with no false alarms. In SP2 the 5.5 models
 are perfect in both arms on traces of up to 51 events, even with mechanism names hidden; translation cuts Haiku's false alarms on
@@ -153,7 +153,7 @@ lookup before the first charge records the key.
 unconditional, preconditions and goals positive; the environment can do exactly the failure events in
 the domain (loss, delay, pauses, crashes, ticks); object counts, hence states, are finite. PlanSAT is
 PSPACE-complete [10] (NP-hard even without negative effects, Planning p.38); each SATPlan call decides
-*bounded* PlanSAT for one horizon $T$, which is NP-complete for $T$ polynomial in the task size.
+*bounded* PlanSAT for one horizon $T$, which is NP-complete for $T$ polynomial in the task size [10].
 
 **What a plan means here.** The planner chooses *every* event, including loss, crashes and ticks, so a
 plan is a counterexample, not a course of action: planning serves as explicit-state model checking of a

@@ -145,7 +145,7 @@ e1123050@u.nus.edu)</p>
 <p class="author">Hein Htet Zaw (A0301513Y, e1355879@u.nus.edu)</p>
 </header>
 <div class="pagebreak"></div>
-<p><strong>Summary.</strong> On 174 functions (SP1) and 150 designs
+<p><strong>Summary.</strong> On 174 functions (SP1) and 162 designs
 (SP2), scored exactly on gold models, we compare Claude Haiku 4.5,
 Sonnet 5.5 and Opus 5.5 answering directly or translating for Z3,
 SATPlan and GBFS. SP1 is at ceiling for both arms at every trigger
@@ -512,7 +512,7 @@ without negative effects, Planning p.38); each SATPlan call decides
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math>,
 which is NP-complete for
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math>
-polynomial in the task size.</p>
+polynomial in the task size [10].</p>
 <p><strong>What a plan means here.</strong> The planner chooses
 <em>every</em> event, including loss, crashes and ticks, so a plan is a
 counterexample, not a course of action: planning serves as
@@ -1094,12 +1094,12 @@ designs (60 main + 30 stress + 60 opaque + 12 long)</h2>
 gold problem and reaches the violation (flawed + subtle designs). FA =
 false alarm, a violation claimed on a fixed design.</p>
 <p><strong>RQ1.</strong> Sonnet 5.5 and Opus 5.5 produced a valid trace
-every time, from 6 up to 51 events (8/8 in both arms on the long set,
-with no false alarm). Haiku stays near 80% with no length trend; its
-errors are design misreadings (RQ2 below). Paired over all 150 designs,
-only Translate is right on 41 and only Direct on 21 (per-set exact
-McNemar p = 0.15, 0.39 and 0.17; pooled p = 0.015, but the opaque
-designs rename the main ones).</p>
+every time, from 6 up to 51 events (on the long set 8/8 per model and
+arm, 95% interval [68–100], with no false alarm). Haiku stays near 80%
+with no length trend; its errors are design misreadings (RQ2 below).
+Paired over its 150 designs, only Translate is right on 41 and only
+Direct on 21 (per-set exact McNemar p = 0.15, 0.39 and 0.17; pooled p =
+0.015, but the opaque designs rename the main ones).</p>
 <p><strong>RQ2.</strong> Fabrication separates the arms.</p>
 <ul>
 <li><p><em>Haiku Direct</em> claims violations on 60% of fixed designs
@@ -1123,9 +1123,10 @@ opaque problems. Its other errors were permissive initial facts that the
 planner exploited (§A.5). All 450 translations parsed without
 repair.</li>
 </ul>
-<p><strong>Cost.</strong> Over all 150 instances Translate is cheaper
-for every model (US$ per instance: Haiku 0.053 vs 0.063, Sonnet 0.019 vs
-0.025, Opus 0.040 vs 0.048). Total usage was US$80 for 2,553 calls.</p>
+<p><strong>Cost.</strong> Over the 150 instances all models ran,
+Translate is cheaper for every model (US$ per instance: Haiku 0.053 vs
+0.063, Sonnet 0.019 vs 0.025, Opus 0.040 vs 0.048). Total usage was
+US$80 for 2,553 calls.</p>
 <h2 id="the-classical-tools">5.3 The classical tools</h2>
 <table>
 <colgroup>
@@ -1239,8 +1240,9 @@ spec can inherit the bug it should expose. The repair loop fixes form
 be written blind to the code, or checked against known input/output
 pairs.</p>
 <p><strong>SP2: the jagged frontier runs between model
-generations.</strong> The 5.5 models are perfect in both arms on all
-three sets. Haiku’s Direct errors are not slips in long traces but
+generations.</strong> The 5.5 models are never wrong in either arm on
+all four sets (Translate is undecided only where certification runs out
+of budget, §5.3). Haiku’s Direct errors are not slips in long traces but
 design misreadings (§5.2): it applies a well-known pattern, such as the
 check-then-act race, to a design whose text rules it out (§A.4).</p>
 <p>Translation does not remove misreading; Haiku moves the same mistake
@@ -1251,7 +1253,7 @@ Haiku’s false alarms roughly halved, at lower cost.</p>
 <p><strong>Length vs. familiarity.</strong> Our violations are textbook
 patterns; once one is recognised, a longer trace is bookkeeping. From
 6–15 to 30–51 events the 5.5 models stayed perfect, and their Direct
-answers grew only from about 1.2k to 1.7k output tokens (Haiku’s
+answers grew only from about 1.2k to 1.5k output tokens (Haiku’s
 per-length cells hold 2–16 designs). With design facts renamed
 <code>mode-N</code>, the 5.5 models stayed perfect, so they map the
 mechanism described in the text, not just its name. Haiku leans on
@@ -1388,12 +1390,10 @@ domains and design documents, solvers, gold replay, LLM harness); ran
 all experiments, including the stress, opaque and long-trace sets; and
 drafted the report.</li>
 <li><em>Joshua:</em> the OpenAI-compatible backend for the SoC
-open-weight models (<code>premortem/llm.py</code>). <em>[Confirm or add:
-reviews, testing, presentation.]</em></li>
+open-weight models (<code>premortem/llm.py</code>).</li>
 <li><em>Hein:</em> the SP3 analyses (the spec-style classifier with its
 tests, and design facts vs. Translate outcomes) and the precise
-statements of both formulations and their limits (§2, §6). <em>[Confirm
-or add.]</em></li>
+statements of both formulations and their limits (§2, §6).</li>
 </ul>
 <p><strong>Use of AI tools.</strong> We used Claude Code (Anthropic)
 extensively. Per component:</p>
@@ -1405,8 +1405,7 @@ risk plan.</li>
 <li><em>Generated by Claude Code from our specifications and
 instructions:</em> the code (symbolic executor, planning toolkit, PDDL
 domains and design documents, LLM harness, analysis scripts), the
-statements and proofs in §2, and drafts of this report. <em>[Group:
-state what you reviewed, tested, changed or wrote yourselves.]</em></li>
+statements and proofs in §2, and drafts of this report.</li>
 <li><em>Checked mechanically:</em> every number comes from the
 repository’s scripts and cached model outputs; 207 tests check the
 executor against Python and the planners against each other.</li>
@@ -1492,7 +1491,7 @@ which the code is correct.</p>
 running before anyone holds the lock; the planner’s trace starts
 <code>tick t0 t1</code> → <code>tick t1 t2</code> → …, legal only in the
 model’s problem, and replay on gold fails at step 1. In
-<code>queue-fixed-8</code>, 11 extra <code>(zero-tick …)</code> facts
+<code>queue-fixed-8</code>, 15 extra <code>(zero-tick …)</code> facts
 let the trace start <code>receive w1 m1 t15</code>, skipping the
 visibility timeout.</p>
 <p><strong>A.6 Gold shortest trace for
@@ -1592,8 +1591,8 @@ DEL = {in-flight o1 a1}</code></pre>
 = 4 (each clause is a disjunction). The static design fact
 <code>(dedup-racy)</code> is true at every step, so the encoder fixes it
 to a constant and its precondition clause is satisfied and dropped:</p>
-<pre><code>¬accept-new-racy(o1,a1)@4 ∨ in-flight(o1,a1)@4
-¬accept-new-racy(o1,a1)@4 ∨ no-record(o1)@4
+<pre><code>¬accept-new-racy(o1,a1)@4 ∨ no-record(o1)@4
+¬accept-new-racy(o1,a1)@4 ∨ in-flight(o1,a1)@4
 ¬accept-new-racy(o1,a1)@4 ∨ approved(o1,a1)@5
 ¬accept-new-racy(o1,a1)@4 ∨ ¬in-flight(o1,a1)@5</code></pre>
 <p><strong>Explanatory frame clauses</strong> for the fact

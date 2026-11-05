@@ -106,5 +106,5 @@ for prompts that are new.
 
   Results land in `results/sp*/soc-<model-id>__<arm>.jsonl`.
 - [ ] **Review the code, the instances and the report** (`report/*.md`).
-- [ ] **Rewrite §8 "Division of work"** to state each member's actual contributions and how AI tools were used (required by the guidelines).
+- [x] **§8 "Division of work"** states each member's actual contributions (matching the git history) and AI use per component.
 - [ ] **Presentation:** 15 minutes, in the week of 9 Nov.

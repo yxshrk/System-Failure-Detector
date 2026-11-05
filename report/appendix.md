@@ -35,7 +35,7 @@ because `(dedup-racy)` is false in this design):
 **A.5 The planner exploits translation slack** (Translate, Haiku 4.5). In `lock-flawed-3` the model's
 `:init` adds `(lease-age t0)`, a lease clock running before anyone holds the lock; the planner's trace
 starts `tick t0 t1` → `tick t1 t2` → …, legal only in the model's problem, and replay on gold fails at
-step 1. In `queue-fixed-8`, 11 extra `(zero-tick …)` facts let the trace start `receive w1 m1 t15`,
+step 1. In `queue-fixed-8`, 15 extra `(zero-tick …)` facts let the trace start `receive w1 m1 t15`,
 skipping the visibility timeout.
 
 **A.6 Gold shortest trace for `payments-subtle-1`** (SATPlan, 8 events; the retry passes the

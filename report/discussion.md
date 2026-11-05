@@ -18,8 +18,8 @@ implementation (N-version programming), which is why a spec can inherit the bug 
 repair loop fixes form (Haiku 106 → 112, Opus 104 → 114 of 115) but not meaning; specs should be
 written blind to the code, or checked against known input/output pairs.
 
-**SP2: the jagged frontier runs between model generations.** The 5.5 models are perfect in both arms on
-all three sets. Haiku's Direct errors are not slips in long traces but design misreadings (§5.2): it
+**SP2: the jagged frontier runs between model generations.** The 5.5 models are never wrong in either arm on
+all four sets (Translate is undecided only where certification runs out of budget, §5.3). Haiku's Direct errors are not slips in long traces but design misreadings (§5.2): it
 applies a well-known pattern, such as the check-then-act race, to a design whose text rules it out (§A.4).
 
 Translation does not remove misreading; Haiku moves the same mistake into the design facts it writes,
@@ -29,7 +29,7 @@ lower cost.
 
 **Length vs. familiarity.** Our violations are textbook patterns; once one is recognised, a longer trace
 is bookkeeping. From 6–15 to 30–51 events the 5.5 models stayed perfect, and their Direct answers grew
-only from about 1.2k to 1.7k output tokens (Haiku's per-length cells hold 2–16 designs). With design facts renamed `mode-N`, the 5.5 models stayed perfect, so they map the
+only from about 1.2k to 1.5k output tokens (Haiku's per-length cells hold 2–16 designs). With design facts renamed `mode-N`, the 5.5 models stayed perfect, so they map the
 mechanism described in the text, not just its name. Haiku leans on names: its Direct false alarms rose
 from 60% to 95%. Translate held it to 45%, because writing the initial state forces one design fact per
 mechanism, which free-form reasoning skips.

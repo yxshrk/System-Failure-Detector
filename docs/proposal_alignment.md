@@ -62,4 +62,4 @@ plus fabricated failures, attacks on the reviewer and privacy. ✅➕
 | Risk (iv) tool limits: keep supported functions, report coverage | ✅ 59 unencodable/non-terminating candidates dropped and reported; checker timeouts, Z3 *unknown* and incomplete spec coverage reported as *undecided*, never as "no bug"; planner search limits reported as *tool limit*, never as "safe" |
 | Risk (v) solver blow-up: cap bounds, report time-outs | ✅ SATPlan/GBFS limits reported (inventory sizes 6–8) |
 | Risk (vi) cost: SoC open-weight endpoint; ≤ $100 for frontier tiers | Frontier tiers done (≈ $80 list-price equivalent, incl. pilots, reruns and the long set). **SoC open-weight models** ⏳ |
-| Division of work as proposed | ⏳ report §8 must be rewritten to reflect actual contributions and AI use |
+| Division of work as proposed | ⚠️ split changed; report §8 states actual contributions (matching the git history) and AI use per component |

@@ -53,9 +53,9 @@ random testing. *Fig. 2 (right):* SP2 valid traces vs. shortest trace length (ma
 *Table 2.* SP2 outcomes. "Valid" = a trace that replays on the gold problem and reaches the violation
 (flawed + subtle designs). FA = false alarm, a violation claimed on a fixed design.
 
-**RQ1.** Sonnet 5.5 and Opus 5.5 produced a valid trace every time, from 6 up to 51 events (8/8 in both
-arms on the long set, with no false alarm).
-Haiku stays near 80% with no length trend; its errors are design misreadings (RQ2 below). Paired over all
+**RQ1.** Sonnet 5.5 and Opus 5.5 produced a valid trace every time, from 6 up to 51 events (on the long set
+8/8 per model and arm, 95% interval [68–100], with no false alarm).
+Haiku stays near 80% with no length trend; its errors are design misreadings (RQ2 below). Paired over its
 150 designs, only Translate is right on 41 and only Direct on 21 (per-set exact McNemar p = 0.15,
 0.39 and 0.17; pooled p = 0.015, but the opaque designs rename the main ones).
 
@@ -72,7 +72,7 @@ Haiku stays near 80% with no length trend; its errors are design misreadings (RQ
 * *Haiku's design facts* were exact in 49/60 main and 35/60 opaque problems. Its other errors were permissive initial facts that the planner exploited (§A.5). All 450 translations parsed without repair.
 
 
-**Cost.** Over all 150 instances Translate is cheaper for every model (US$ per instance: Haiku 0.053 vs
+**Cost.** Over the 150 instances all models ran, Translate is cheaper for every model (US$ per instance: Haiku 0.053 vs
 0.063, Sonnet 0.019 vs 0.025, Opus 0.040 vs 0.048). Total usage was US$80 for 2,553 calls.
 
 ## 5.3 The classical tools
