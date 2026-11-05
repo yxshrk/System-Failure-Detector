@@ -15,7 +15,8 @@ McNemar test on the instances where exactly one arm is right.
 | Opus 5.5 | Direct | 100% | 100% | 0 | 0 | – | 0.018 | 470 |
 | Opus 5.5 | Translate | 100% | 95% | 0 | 0 | 6 | 0.021 | 383 |
 
-*Table 1.* SP1 outcomes. *Undecided:* the checker timed out or Z3 answered *unknown* (on bugs or controls).
+*Table 1.* SP1 outcomes. In *Translate* the named model writes the specification and Z3 searches it.
+*Undecided:* the checker timed out or Z3 answered *unknown* (on bugs or controls).
 
 * *The repair loop matters.* Using only the first specification, valid witnesses drop to 106 (Haiku), 113 (Sonnet) and 104 (Opus) of 115.
 * *SP3.* Of the specifications whose soundness check completed, these were *sound*, i.e. the reference satisfies them: 169/172 (Haiku), 173/173 (Sonnet) and 165/165 (Opus). *Discriminating*, meaning the mutant violates them, is the valid-witness rate above. All three unsound specs are Haiku errors (§A.2–A.3), not ambiguous docstrings: the docstring fixes the answer on each violating reference input.
@@ -50,7 +51,8 @@ random testing. *Fig. 2 (right):* SP2 valid traces vs. shortest trace length (ma
 | Opus 5.5 | Direct | 100% | 0% | 100% | 0% | 100% | 0% | 0.048 |
 | Opus 5.5 | Translate | 100% | 0% | 100% | 0% | 100% | 0% | 0.036 |
 
-*Table 2.* SP2 outcomes. "Valid" = a trace that replays on the gold problem and reaches the violation
+*Table 2.* SP2 outcomes. In *Translate* the named model writes the PDDL problem and the planners
+search it. "Valid" = a trace that replays on the gold problem and reaches the violation
 (flawed + subtle designs). FA = false alarm, a violation claimed on a fixed design.
 
 **RQ1.** Sonnet 5.5 and Opus 5.5 produced a valid trace every time, from 6 up to 51 events (on the long set

@@ -950,8 +950,10 @@ bugs, 59 controls)</h2>
 </tr>
 </tbody>
 </table>
-<p><em>Table 1.</em> SP1 outcomes. <em>Undecided:</em> the checker timed
-out or Z3 answered <em>unknown</em> (on bugs or controls).</p>
+<p><em>Table 1.</em> SP1 outcomes. In <em>Translate</em> the named model
+writes the specification and Z3 searches it. <em>Undecided:</em> the
+checker timed out or Z3 answered <em>unknown</em> (on bugs or
+controls).</p>
 <ul>
 <li><em>The repair loop matters.</em> Using only the first
 specification, valid witnesses drop to 106 (Haiku), 113 (Sonnet) and 104
@@ -1090,9 +1092,11 @@ designs (60 main + 30 stress + 60 opaque + 12 long)</h2>
 </tr>
 </tbody>
 </table>
-<p><em>Table 2.</em> SP2 outcomes. “Valid” = a trace that replays on the
-gold problem and reaches the violation (flawed + subtle designs). FA =
-false alarm, a violation claimed on a fixed design.</p>
+<p><em>Table 2.</em> SP2 outcomes. In <em>Translate</em> the named model
+writes the PDDL problem and the planners search it. “Valid” = a trace
+that replays on the gold problem and reaches the violation (flawed +
+subtle designs). FA = false alarm, a violation claimed on a fixed
+design.</p>
 <p><strong>RQ1.</strong> Sonnet 5.5 and Opus 5.5 produced a valid trace
 every time, from 6 up to 51 events (on the long set 8/8 per model and
 arm, 95% interval [68–100], with no false alarm). Haiku stays near 80%
@@ -1594,8 +1598,8 @@ DEL = {in-flight o1 a1}</code></pre>
 = 4 (each clause is a disjunction). The static design fact
 <code>(dedup-racy)</code> is true at every step, so the encoder fixes it
 to a constant and its precondition clause is satisfied and dropped:</p>
-<pre><code>¬accept-new-racy(o1,a1)@4 ∨ in-flight(o1,a1)@4
-¬accept-new-racy(o1,a1)@4 ∨ no-record(o1)@4
+<pre><code>¬accept-new-racy(o1,a1)@4 ∨ no-record(o1)@4
+¬accept-new-racy(o1,a1)@4 ∨ in-flight(o1,a1)@4
 ¬accept-new-racy(o1,a1)@4 ∨ approved(o1,a1)@5
 ¬accept-new-racy(o1,a1)@4 ∨ ¬in-flight(o1,a1)@5</code></pre>
 <p><strong>Explanatory frame clauses</strong> for the fact
