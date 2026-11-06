@@ -2,7 +2,7 @@
 @page {
   size: Letter;
   margin: 1in;
-  @bottom-center { content: counter(page); font: 10pt "Times New Roman", serif; color: #444; }
+  @bottom-center { content: counter(page); font: 11pt "Times New Roman", serif; color: #444; }
 }
 @page :first { @bottom-center { content: none; } }
 
@@ -47,3 +47,5 @@ math { font-size: 11pt; }
 math[display="block"] { margin: 4pt 0; }
 
 .pagebreak { break-after: page; }
+
+.keep { break-inside: avoid; }

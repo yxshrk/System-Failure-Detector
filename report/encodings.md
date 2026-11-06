@@ -126,7 +126,7 @@ no-record(o1)@4 ∨ ¬no-record(o1)@5
 | 7 | 258 | 773 | UNSAT |
 | 8 | 332 | 1016 | SAT |
 
-Decoded plan (8 events): `send o1 a0 t0` → `accept-new-racy o1 a0` → `tick o1 a0 t0 t1` → `time-out-and-retry o1 a0 a1 t1` → `send o1 a1 t0` → `accept-new-racy o1 a1` → `charge o1 a1` → `charge-again o1 a0`
+Decoded plan (8 events): `send o1 a0 t0` → `tick o1 a0 t0 t1` → `time-out-and-retry o1 a0 a1 t1` → `accept-new-racy o1 a0` → `send o1 a1 t0` → `accept-new-racy o1 a1` → `charge o1 a1` → `charge-again o1 a0`
 
 
 ## B.3 SP2: certifying the fixed variant with GBFS + h_FF (`payments-fixed-1`)

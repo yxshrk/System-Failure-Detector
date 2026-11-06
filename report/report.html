@@ -93,7 +93,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
 @page {
 size: Letter;
 margin: 1in;
-@bottom-center { content: counter(page); font: 10pt "Times New Roman", serif; color: #444; }
+@bottom-center { content: counter(page); font: 11pt "Times New Roman", serif; color: #444; }
 }
 @page :first { @bottom-center { content: none; } }
 html { font-size: 11pt; }
@@ -131,6 +131,7 @@ figcaption { font-size: 11pt; text-align: left; margin-top: 3pt; }
 math { font-size: 11pt; }
 math[display="block"] { margin: 4pt 0; }
 .pagebreak { break-after: page; }
+.keep { break-inside: avoid; }
 </style>
 </head>
 <body>
@@ -149,12 +150,13 @@ e1123050@u.nus.edu)</p>
 (SP2), scored exactly on gold models, we compare Claude Haiku 4.5,
 Sonnet 5.5 and Opus 5.5 answering directly or translating for Z3,
 SATPlan and GBFS. SP1 is at ceiling for both arms at every trigger
-rarity, with no false alarms. In SP2 the 5.5 models are perfect in both
-arms on traces of up to 51 events, even with mechanism names hidden;
-translation cuts Haiku’s false alarms on correct designs from 60% to 35%
-(95% to 45% with hidden names; p = 0.015 pooled over dependent sets).
-Its risks are specs that copy the bug, permissive models that planners
-exploit, and solver blow-up.</p>
+rarity, with no false alarms. In SP2 the 5.5 models find a valid trace
+every time in both arms, up to 51 events and even with mechanism names
+hidden, with no false alarms; translation cuts Haiku’s false alarms on
+correct designs from 60% to 35% (95% to 45% with hidden names; nominal
+paired p = 0.002, as designs share five templates). Its risks are specs
+that copy the bug, permissive models that planners exploit, and solver
+blow-up.</p>
 <h1 id="motivation-and-research-questions">1. Motivation and research
 questions</h1>
 <p>A <em>pre-mortem</em> asks how a design will fail before it ships.
@@ -250,15 +252,15 @@ returns on
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math>
 and intermediate values are not separate variables: each is a shared
 sub-term of one formula DAG, fixed by the inputs, i.e. an auxiliary
-variable already eliminated (CSP p.13). The input domains are finite, so
-this is a finite CSP and NP-complete (CSP p.8). What Z3 receives,
-however, is SMT over unbounded integers (<code>Int</code>) with the
-bounds as ordinary constraints. Products of variables and
-<code>//</code> or <code>%</code> by a variable make it non-linear
-integer arithmetic, undecidable in general, so Z3 can answer
-<em>unknown</em> (§5.1). A bit-vector encoding would make the finiteness
-explicit and reduce each query to SAT, at the cost of proving that no
-value overflows.</p>
+variable already eliminated (CSP p.13). The domains are finite, so this
+is a finite CSP, a class that is NP-complete (CSP p.8). Z3, however,
+receives SMT over unbounded integers (<code>Int</code>) with the bounds
+as ordinary constraints; products of variables and <code>//</code> or
+<code>%</code> by a variable make it non-linear integer arithmetic,
+undecidable in general. Our bounded queries are decidable, but Z3’s
+non-linear procedures are incomplete, so it can answer <em>unknown</em>
+(§5.1); a bit-vector encoding would reduce each query to SAT, at the
+cost of proving that no value overflows.</p>
 <p><strong>Building
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">⟦</mo><mi>f</mi><mo stretchy="false" form="postfix">⟧</mo></mrow><annotation encoding="application/x-tex">\llbracket f \rrbracket</annotation></semantics></math>:
 bounded symbolic execution</strong> [12] (<code>sp1/symexec.py</code>).
@@ -270,67 +272,36 @@ with a symbolic environment
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ρ</mi><annotation encoding="application/x-tex">\rho</annotation></semantics></math>
 (variable → Z3 term) and a <em>path condition</em>
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>π</mi><annotation encoding="application/x-tex">\pi</annotation></semantics></math>
-(when control reaches the statement):</p>
-<table>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<thead>
-<tr>
-<th>construct</th>
-<th>rule</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>x = e</code></td>
-<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ρ</mi><mo stretchy="false" form="prefix">[</mo><mi>x</mi><mo stretchy="false" form="postfix">]</mo><mo>←</mo><mo stretchy="false" form="prefix">⟦</mo><mi>e</mi><msub><mo stretchy="false" form="postfix">⟧</mo><mi>ρ</mi></msub></mrow><annotation encoding="application/x-tex">\rho[x] \leftarrow \llbracket e \rrbracket_\rho</annotation></semantics></math></td>
-</tr>
-<tr>
-<td><code>if c: S1 else: S2</code></td>
-<td>run S1 from
+(when control reaches the statement). <code>x = e</code> sets
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ρ</mi><mo stretchy="false" form="prefix">[</mo><mi>x</mi><mo stretchy="false" form="postfix">]</mo><mo>←</mo><mo stretchy="false" form="prefix">⟦</mo><mi>e</mi><msub><mo stretchy="false" form="postfix">⟧</mo><mi>ρ</mi></msub></mrow><annotation encoding="application/x-tex">\rho[x] \leftarrow \llbracket e \rrbracket_\rho</annotation></semantics></math>.
+<code>if c</code> runs both branches, from
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>ρ</mi><mo>,</mo><mi>π</mi><mo>∧</mo><mi>c</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(\rho, \pi \land c)</annotation></semantics></math>
-and S2 from
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>ρ</mi><mo>,</mo><mi>π</mi><mo>∧</mo><mi>¬</mi><mi>c</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(\rho, \pi \land \lnot c)</annotation></semantics></math>,
-reaching
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>ρ</mi><mn>1</mn></msub><mo>,</mo><msub><mi>π</mi><mn>1</mn></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(\rho_1, \pi_1)</annotation></semantics></math>
 and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>ρ</mi><mn>2</mn></msub><mo>,</mo><msub><mi>π</mi><mn>2</mn></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(\rho_2, \pi_2)</annotation></semantics></math>;
-join to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>ρ</mi><mo>,</mo><mi>π</mi><mo>∧</mo><mi>¬</mi><mi>c</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(\rho, \pi \land \lnot c)</annotation></semantics></math>,
+and joins them with
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ρ</mi><mo stretchy="false" form="prefix">[</mo><mi>x</mi><mo stretchy="false" form="postfix">]</mo><mo>=</mo><mrow><mi>𝐼</mi><mi>𝑓</mi></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>π</mi><mn>1</mn></msub><mo>,</mo><msub><mi>ρ</mi><mn>1</mn></msub><mo stretchy="false" form="prefix">[</mo><mi>x</mi><mo stretchy="false" form="postfix">]</mo><mo>,</mo><msub><mi>ρ</mi><mn>2</mn></msub><mo stretchy="false" form="prefix">[</mo><mi>x</mi><mo stretchy="false" form="postfix">]</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\rho[x] = \mathit{If}(\pi_1, \rho_1[x], \rho_2[x])</annotation></semantics></math>
 and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>π</mi><mo>=</mo><msub><mi>π</mi><mn>1</mn></msub><mo>∨</mo><msub><mi>π</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">\pi = \pi_1 \lor \pi_2</annotation></semantics></math></td>
-</tr>
-<tr>
-<td><code>return e</code></td>
-<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>e</mi><mi>t</mi><mo>←</mo><mrow><mi>𝐼</mi><mi>𝑓</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi>π</mi><mo>,</mo><mo stretchy="false" form="prefix">⟦</mo><mi>e</mi><mo stretchy="false" form="postfix">⟧</mo><mo>,</mo><mi>r</mi><mi>e</mi><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">ret \leftarrow \mathit{If}(\pi, \llbracket e \rrbracket, ret)</annotation></semantics></math>,
-then
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>π</mi><mo>←</mo><mi>⊥</mi></mrow><annotation encoding="application/x-tex">\pi \leftarrow \bot</annotation></semantics></math></td>
-</tr>
-<tr>
-<td>operation that raises when
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>π</mi><mo>=</mo><msub><mi>π</mi><mn>1</mn></msub><mo>∨</mo><msub><mi>π</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">\pi = \pi_1 \lor \pi_2</annotation></semantics></math>
+(<code>break</code>/<code>continue</code> likewise).
+<code>return e</code> sets
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>e</mi><mi>t</mi><mo>←</mo><mrow><mi>𝐼</mi><mi>𝑓</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi>π</mi><mo>,</mo><mo stretchy="false" form="prefix">⟦</mo><mi>e</mi><mo stretchy="false" form="postfix">⟧</mo><mo>,</mo><mi>r</mi><mi>e</mi><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">ret \leftarrow \mathit{If}(\pi, \llbracket e \rrbracket, ret)</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>π</mi><mo>←</mo><mi>⊥</mi></mrow><annotation encoding="application/x-tex">\pi \leftarrow \bot</annotation></semantics></math>.
+An operation that raises when
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math>
-(index out of range, <code>x // 0</code>, unbound local, …)</td>
-<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mi>x</mi><mi>c</mi><mo>←</mo><mi>e</mi><mi>x</mi><mi>c</mi><mo>∨</mo><mo stretchy="false" form="prefix">(</mo><mi>π</mi><mo>∧</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">exc \leftarrow exc \lor (\pi \land b)</annotation></semantics></math>,
-then
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>π</mi><mo>←</mo><mi>π</mi><mo>∧</mo><mi>¬</mi><mi>b</mi></mrow><annotation encoding="application/x-tex">\pi \leftarrow \pi \land \lnot b</annotation></semantics></math></td>
-</tr>
-<tr>
-<td>loop</td>
-<td>unrolled
+(bad index, <code>x // 0</code>, …) sets
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mi>x</mi><mi>c</mi><mo>←</mo><mi>e</mi><mi>x</mi><mi>c</mi><mo>∨</mo><mo stretchy="false" form="prefix">(</mo><mi>π</mi><mo>∧</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">exc \leftarrow exc \lor (\pi \land b)</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>π</mi><mo>←</mo><mi>π</mi><mo>∧</mo><mi>¬</mi><mi>b</mi></mrow><annotation encoding="application/x-tex">\pi \leftarrow \pi \land \lnot b</annotation></semantics></math>.
+A loop is unrolled
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>
-times; iteration
+times, iteration
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>
-runs under
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>π</mi><mo>∧</mo><mi>c</mi><mi>o</mi><mi>n</mi><msub><mi>d</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">\pi \land cond_j</annotation></semantics></math>;
-afterwards
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mi>n</mi><mi>w</mi><mi>i</mi><mi>n</mi><mi>d</mi><mo>←</mo><mi>u</mi><mi>n</mi><mi>w</mi><mi>i</mi><mi>n</mi><mi>d</mi><mo>∨</mo><mo stretchy="false" form="prefix">(</mo><mi>π</mi><mo>∧</mo><mi>c</mi><mi>o</mi><mi>n</mi><msub><mi>d</mi><mi>k</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">unwind \leftarrow unwind \lor (\pi \land cond_k)</annotation></semantics></math></td>
-</tr>
-</tbody>
-</table>
-<p><code>break</code>/<code>continue</code> states re-join like
-<code>if</code>. The result is three terms over
+under
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>π</mi><mo>∧</mo><mi>c</mi><mi>o</mi><mi>n</mi><msub><mi>d</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">\pi \land cond_j</annotation></semantics></math>,
+then
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mi>n</mi><mi>w</mi><mi>i</mi><mi>n</mi><mi>d</mi><mo>←</mo><mi>u</mi><mi>n</mi><mi>w</mi><mi>i</mi><mi>n</mi><mi>d</mi><mo>∨</mo><mo stretchy="false" form="prefix">(</mo><mi>π</mi><mo>∧</mo><mi>c</mi><mi>o</mi><mi>n</mi><msub><mi>d</mi><mi>k</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">unwind \leftarrow unwind \lor (\pi \land cond_k)</annotation></semantics></math>.
+The result is three terms over
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>:
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>e</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">ret</annotation></semantics></math>,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mi>x</mi><mi>c</mi></mrow><annotation encoding="application/x-tex">exc</annotation></semantics></math>
@@ -341,7 +312,9 @@ afterwards
 iterations”). Integers are unbounded and <code>//</code>, <code>%</code>
 follow Python’s floor semantics. Lists are values: aliasing
 (<code>ys = xs; ys.sort()</code>) is not modelled.</p>
-<p><strong>Lemma 1 (encoding correctness).</strong> Let
+<p><strong>Lemma 1 (encoding correctness).</strong> For
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
+in the supported, alias-free subset, let
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>0</mn></msub><mo>∈</mo><mi>D</mi></mrow><annotation encoding="application/x-tex">x_0 \in D</annotation></semantics></math>
 be an input whose execution needs at most
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>
@@ -364,19 +337,15 @@ reaches this point, and then
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ρ</mi><mo stretchy="false" form="prefix">[</mo><mi>x</mi><mo stretchy="false" form="postfix">]</mo><mo stretchy="false" form="prefix">[</mo><msub><mi>x</mi><mn>0</mn></msub><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">\rho[x][x_0]</annotation></semantics></math>
 is the concrete value of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>.
-Assignment preserves it. At an <code>if</code> exactly one of
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>π</mi><mo>∧</mo><mi>c</mi></mrow><annotation encoding="application/x-tex">\pi \land c</annotation></semantics></math>
-and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>π</mi><mo>∧</mo><mi>¬</mi><mi>c</mi></mrow><annotation encoding="application/x-tex">\pi \land \lnot c</annotation></semantics></math>
-holds at
+Assignment preserves it; at an <code>if</code> exactly one branch
+condition holds at
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mn>0</mn></msub><annotation encoding="application/x-tex">x_0</annotation></semantics></math>,
-so the join selects the branch taken. <code>return</code> and raising
-operations record the outcome under exactly the path condition of the
-run that performs them. Unrolling reproduces each iteration, and
+so the join selects the branch taken; <code>return</code> and raising
+operations record the outcome under the run’s path condition; and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mi>o</mi><mi>n</mi><msub><mi>d</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">cond_k</annotation></semantics></math>
-holds exactly when a
+marks a
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>k</mi><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(k{+}1)</annotation></semantics></math>-th
-iteration would start. ∎</p>
+iteration. ∎</p>
 <p><strong>The two queries.</strong> The model-written <code>pre</code>
 and <code>post</code> are compiled the same way, unrolled to
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>k</mi><mo>′</mo></msup><mo>=</mo><mrow><mi mathvariant="normal">max</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>k</mi><mo>,</mo><mi>L</mi><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">k&#39; = \max(k, L{+}1)</annotation></semantics></math>
@@ -391,7 +360,7 @@ below is satisfiable), and
 stands for “returns normally with a true value” (likewise
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>o</mi><mi>s</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">post</annotation></semantics></math>).</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="normal">Φ</mi><mrow><mi>s</mi><mi>p</mi><mi>e</mi><mi>c</mi></mrow></msub><mo>=</mo><mi>D</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>∧</mo><mi>¬</mi><mi>u</mi><mi>n</mi><mi>w</mi><mi>i</mi><mi>n</mi><msub><mi>d</mi><mi>f</mi></msub><mo>∧</mo><mi>¬</mi><mi>u</mi><mi>n</mi><mi>w</mi><mi>i</mi><mi>n</mi><msub><mi>d</mi><mrow><mi>p</mi><mi>r</mi><mi>e</mi></mrow></msub><mo>∧</mo><mi>p</mi><mi>r</mi><mi>e</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>∧</mo><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">(</mo><mi>e</mi><mi>x</mi><msub><mi>c</mi><mi>f</mi></msub><mo>∨</mo><mo stretchy="false" form="prefix">(</mo><mi>¬</mi><mi>u</mi><mi>n</mi><mi>w</mi><mi>i</mi><mi>n</mi><msub><mi>d</mi><mrow><mi>p</mi><mi>o</mi><mi>s</mi><mi>t</mi></mrow></msub><mo>∧</mo><mi>¬</mi><mi>p</mi><mi>o</mi><mi>s</mi><mi>t</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>r</mi><mi>e</mi><msub><mi>t</mi><mi>f</mi></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\Phi_{spec} = D(x) \land \lnot unwind_f \land \lnot unwind_{pre} \land pre(x) \land \big(exc_f \lor (\lnot unwind_{post} \land \lnot post(x, ret_f))\big)</annotation></semantics></math></p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="normal">Φ</mi><mrow><mi>g</mi><mi>o</mi><mi>l</mi><mi>d</mi></mrow></msub><mo>=</mo><mi>D</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>∧</mo><mi>¬</mi><mi>u</mi><mi>n</mi><mi>w</mi><mi>i</mi><mi>n</mi><msub><mi>d</mi><mrow><mi>r</mi><mi>e</mi><mi>f</mi></mrow></msub><mo>∧</mo><mi>¬</mi><mi>u</mi><mi>n</mi><mi>w</mi><mi>i</mi><mi>n</mi><msub><mi>d</mi><mrow><mi>m</mi><mi>u</mi><mi>t</mi></mrow></msub><mo>∧</mo><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">(</mo><mo stretchy="false" form="prefix">(</mo><mi>e</mi><mi>x</mi><msub><mi>c</mi><mrow><mi>r</mi><mi>e</mi><mi>f</mi></mrow></msub><mo>⊕</mo><mi>e</mi><mi>x</mi><msub><mi>c</mi><mrow><mi>m</mi><mi>u</mi><mi>t</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo>∨</mo><mo stretchy="false" form="prefix">(</mo><mi>¬</mi><mi>e</mi><mi>x</mi><msub><mi>c</mi><mrow><mi>r</mi><mi>e</mi><mi>f</mi></mrow></msub><mo>∧</mo><mi>¬</mi><mi>e</mi><mi>x</mi><msub><mi>c</mi><mrow><mi>m</mi><mi>u</mi><mi>t</mi></mrow></msub><mo>∧</mo><mi>r</mi><mi>e</mi><msub><mi>t</mi><mrow><mi>r</mi><mi>e</mi><mi>f</mi></mrow></msub><mo>≠</mo><mi>r</mi><mi>e</mi><msub><mi>t</mi><mrow><mi>m</mi><mi>u</mi><mi>t</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\Phi_{gold} = D(x) \land \lnot unwind_{ref} \land \lnot unwind_{mut} \land \big((exc_{ref} \oplus exc_{mut}) \lor (\lnot exc_{ref} \land \lnot exc_{mut} \land ret_{ref} \ne ret_{mut})\big)</annotation></semantics></math></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi mathvariant="normal">Φ</mi><mrow><mi>g</mi><mi>o</mi><mi>l</mi><mi>d</mi></mrow></msub><mo>=</mo><mrow></mrow></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mi>D</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>∧</mo><mi>¬</mi><mi>u</mi><mi>n</mi><mi>w</mi><mi>i</mi><mi>n</mi><msub><mi>d</mi><mrow><mi>r</mi><mi>e</mi><mi>f</mi></mrow></msub><mo>∧</mo><mi>¬</mi><mi>u</mi><mi>n</mi><mi>w</mi><mi>i</mi><mi>n</mi><msub><mi>d</mi><mrow><mi>m</mi><mi>u</mi><mi>t</mi></mrow></msub></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mi>∧</mi><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">(</mo><mo stretchy="false" form="prefix">(</mo><mi>e</mi><mi>x</mi><msub><mi>c</mi><mrow><mi>r</mi><mi>e</mi><mi>f</mi></mrow></msub><mo>⊕</mo><mi>e</mi><mi>x</mi><msub><mi>c</mi><mrow><mi>m</mi><mi>u</mi><mi>t</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo>∨</mo><mo stretchy="false" form="prefix">(</mo><mi>¬</mi><mi>e</mi><mi>x</mi><msub><mi>c</mi><mrow><mi>r</mi><mi>e</mi><mi>f</mi></mrow></msub><mo>∧</mo><mi>¬</mi><mi>e</mi><mi>x</mi><msub><mi>c</mi><mrow><mi>m</mi><mi>u</mi><mi>t</mi></mrow></msub><mo>∧</mo><mi>r</mi><mi>e</mi><msub><mi>t</mi><mrow><mi>r</mi><mi>e</mi><mi>f</mi></mrow></msub><mo>≠</mo><mi>r</mi><mi>e</mi><msub><mi>t</mi><mrow><mi>m</mi><mi>u</mi><mi>t</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">)</mo></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}\Phi_{gold} = {} &amp; D(x) \land \lnot unwind_{ref} \land \lnot unwind_{mut} \\ &amp; \land \big((exc_{ref} \oplus exc_{mut}) \lor (\lnot exc_{ref} \land \lnot exc_{mut} \land ret_{ref} \ne ret_{mut})\big)\end{aligned}</annotation></semantics></math></p>
 <p><strong>Theorem 1 (soundness and bounded completeness).</strong>
 Suppose the <em>coverage</em> query
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Ψ</mi><mo>=</mo><mi>D</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>∧</mo><mi>¬</mi><mi>u</mi><mi>n</mi><mi>w</mi><mi>i</mi><mi>n</mi><msub><mi>d</mi><mi>f</mi></msub><mo>∧</mo><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">(</mo><mi>u</mi><mi>n</mi><mi>w</mi><mi>i</mi><mi>n</mi><msub><mi>d</mi><mrow><mi>p</mi><mi>r</mi><mi>e</mi></mrow></msub><mo>∨</mo><mo stretchy="false" form="prefix">(</mo><mi>p</mi><mi>r</mi><mi>e</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>∧</mo><mi>¬</mi><mi>e</mi><mi>x</mi><msub><mi>c</mi><mi>f</mi></msub><mo>∧</mo><mi>u</mi><mi>n</mi><mi>w</mi><mi>i</mi><mi>n</mi><msub><mi>d</mi><mrow><mi>p</mi><mi>o</mi><mi>s</mi><mi>t</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\Psi = D(x) \land \lnot unwind_f \land \big(unwind_{pre} \lor (pre(x) \land \lnot exc_f \land unwind_{post})\big)</annotation></semantics></math>
@@ -399,9 +368,8 @@ is unsatisfiable, i.e. on every input within
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>’s
 bound the spec’s own loops fit
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>k</mi><mo>′</mo></msup><annotation encoding="application/x-tex">k&#39;</annotation></semantics></math>.
-Then:</p>
-<ul>
-<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="normal">Φ</mi><mrow><mi>s</mi><mi>p</mi><mi>e</mi><mi>c</mi></mrow></msub><annotation encoding="application/x-tex">\Phi_{spec}</annotation></semantics></math>
+Then
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="normal">Φ</mi><mrow><mi>s</mi><mi>p</mi><mi>e</mi><mi>c</mi></mrow></msub><annotation encoding="application/x-tex">\Phi_{spec}</annotation></semantics></math>
 is satisfiable iff some
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>0</mn></msub><mo>∈</mo><mi>D</mi></mrow><annotation encoding="application/x-tex">x_0 \in D</annotation></semantics></math>
 within the bound satisfies
@@ -409,18 +377,13 @@ within the bound satisfies
 while
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
 raises or violates
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>o</mi><mi>s</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">post</annotation></semantics></math>.
-A
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>r</mi><mi>e</mi></mrow><annotation encoding="application/x-tex">pre</annotation></semantics></math>
-that raises counts as false, and a
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>o</mi><mi>s</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">post</annotation></semantics></math>
-that raises counts as violated, as <code>spec_check</code> encodes
-them.</li>
-<li>Every model of
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="normal">Φ</mi><mrow><mi>s</mi><mi>p</mi><mi>e</mi><mi>c</mi></mrow></msub><annotation encoding="application/x-tex">\Phi_{spec}</annotation></semantics></math>
-is such an
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mn>0</mn></msub><annotation encoding="application/x-tex">x_0</annotation></semantics></math>.</li>
-</ul>
+(a
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>r</mi><mi>e</mi></mrow><annotation encoding="application/x-tex">pre</annotation></semantics></math>
+that raises counts as false, a
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>o</mi><mi>s</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">post</annotation></semantics></math>
+that raises as violated), and every model is such an
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mn>0</mn></msub><annotation encoding="application/x-tex">x_0</annotation></semantics></math>.</p>
 <p><em>Proof sketch.</em> By Lemma 1 on
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>r</mi><mi>e</mi></mrow><annotation encoding="application/x-tex">pre</annotation></semantics></math>
@@ -439,27 +402,23 @@ is still satisfiable at
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="normal">Φ</mi><mrow><mi>s</mi><mi>p</mi><mi>e</mi><mi>c</mi></mrow></msub><annotation encoding="application/x-tex">\Phi_{spec}</annotation></semantics></math>
 is unsatisfiable iff
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo>⊨</mo><mi>s</mi><mi>p</mi><mi>e</mi><mi>c</mi></mrow><annotation encoding="application/x-tex">f \models spec</annotation></semantics></math>
-on all inputs within the bound, which is the entailment theorem applied
-to the bounded program. The same argument covers
+on all inputs within the bound: the entailment theorem applied to the
+bounded program. The same argument covers
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="normal">Φ</mi><mrow><mi>g</mi><mi>o</mi><mi>l</mi><mi>d</mi></mrow></msub><annotation encoding="application/x-tex">\Phi_{gold}</annotation></semantics></math>
-with “behaves differently from the reference” in place of “violates the
-spec”; this is the same caveat as bounded PlanSAT (Planning p.38). The
-build checks that no reference loop can exceed its bound, and accepts a
-mutant as equivalent only if its domain was enumerated or
+with “behaves differently from the reference” for “violates the spec”.
+The build checks that no reference loop can exceed its bound, and
+accepts a mutant as equivalent only if its domain was enumerated or
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mi>n</mi><mi>w</mi><mi>i</mi><mi>n</mi><msub><mi>d</mi><mrow><mi>m</mi><mi>u</mi><mi>t</mi></mrow></msub></mrow><annotation encoding="application/x-tex">unwind_{mut}</annotation></semantics></math>
 is unsatisfiable.</p>
-<p><strong>The solver.</strong> Z3 [4] is an SMT (“SAT modulo theories”)
-solver, used as a Python library (<code>Solver().add(Φ)</code>,
-<code>check()</code>, <code>model()</code>). It decides satisfiability
-with the DPLL(T) architecture: a DPLL core (PropLogic p.35) with
-conflict-directed backjumping (CSP p.40–41) searches the Boolean
-skeleton, and integer-arithmetic theory solvers check each candidate and
-return conflicts (Z3 also learns clauses, beyond the slides [4]). Every
-model is re-executed in real Python before it counts. Lemma 1 is also
-checked empirically: on every benchmark and hand-written mutant, the
-symbolic outcome must equal real execution on 25 random inputs
-(<code>tests/test_symexec.py</code>); Appendix B.1 shows a full
-instance.</p>
+<p><strong>The solver.</strong> Z3 [4], an SMT (“SAT modulo theories”)
+solver, decides satisfiability with DPLL(T): a DPLL core (PropLogic
+p.35) with conflict-directed backjumping (CSP p.40–41) searches the
+Boolean skeleton, and integer theory solvers return conflicts (clause
+learning is beyond the slides [4]). Every model is re-executed in Python
+before it counts, and Lemma 1 is tested: on every benchmark and
+hand-written mutant, the symbolic outcome must equal real execution on
+25 random inputs (<code>tests/test_symexec.py</code>). Appendix B.1
+shows a full instance.</p>
 <h2 id="sp2-a-design-as-a-strips-planning-problem">2.2 SP2: a design as
 a STRIPS planning problem</h2>
 <p><strong>STRIPS task</strong> (Planning p.7–11). Each family is a
@@ -495,15 +454,13 @@ and then
 </ul>
 <p>A plan reaching
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>s</mi><mi>n</mi></msub><mo>⊇</mo><mi>G</mi></mrow><annotation encoding="application/x-tex">s_n \supseteq G</annotation></semantics></math>
-is a failure trace. For example, <code>accept-new-racy o1 a1</code> has
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>r</mi><mi>e</mi><mo>=</mo><mo stretchy="false" form="prefix">{</mo></mrow><annotation encoding="application/x-tex">pre = \{</annotation></semantics></math><code>dedup-racy</code>,
-<code>in-flight o1 a1</code>,
-<code>no-record o1</code><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo stretchy="false" form="postfix">}</mo><annotation encoding="application/x-tex">\}</annotation></semantics></math>,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mi>d</mi><mi>d</mi><mo>=</mo><mo stretchy="false" form="prefix">{</mo></mrow><annotation encoding="application/x-tex">add = \{</annotation></semantics></math><code>approved o1 a1</code><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo stretchy="false" form="postfix">}</mo><annotation encoding="application/x-tex">\}</annotation></semantics></math>
+is a failure trace. For example, <code>accept-new-racy o1 a1</code> does
+<em>not</em> delete <code>no-record o1</code>, so a second request can
+pass the lookup before the first charge records the key (B.2 lists its
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>r</mi><mi>e</mi></mrow><annotation encoding="application/x-tex">pre</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mi>d</mi><mi>d</mi></mrow><annotation encoding="application/x-tex">add</annotation></semantics></math>
 and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>e</mi><mi>l</mi><mo>=</mo><mo stretchy="false" form="prefix">{</mo></mrow><annotation encoding="application/x-tex">del = \{</annotation></semantics></math><code>in-flight o1 a1</code><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo stretchy="false" form="postfix">}</mo><annotation encoding="application/x-tex">\}</annotation></semantics></math>.
-It does <em>not</em> delete <code>no-record o1</code>, so a second
-request can pass the lookup before the first charge records the key.</p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>e</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">del</annotation></semantics></math>).</p>
 <p><strong>Modelling assumptions:</strong> events interleave one at a
 time; effects are deterministic and unconditional, preconditions and
 goals positive; the environment can do exactly the failure events in the
@@ -519,12 +476,11 @@ polynomial in the task size [10].</p>
 <em>every</em> event, including loss, crashes and ticks, so a plan is a
 counterexample, not a course of action: planning serves as
 explicit-state model checking of a <strong>safety</strong> property.
-Liveness failures (an order never confirmed, starvation, deadlock) are
-not STRIPS goals and are out of scope. “Safe” covers the instance at its
-size (two clients, two retries, …), not every size; we rely on the
-small-scope hypothesis [15], that most flaws already appear in small
-instances, and on an analytic invariant where search runs out
-(inventory, size 8 and up).</p>
+Liveness failures (an order never confirmed, starvation) are not STRIPS
+goals and are out of scope. “Safe” covers the instance at its size, not
+every size; we rely on the small-scope hypothesis [15], that most flaws
+already appear in small instances, and on an inductive invariant where
+search runs out (inventory from size 8, §6).</p>
 <p><strong>SATPlan encoding</strong> [6] (Planning p.31–37;
 <code>planning/satplan.py</code>). For horizon
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math>:
@@ -574,39 +530,32 @@ pairwise.</li>
 <p>As a sound optimisation, facts that cannot yet be true (or false) at
 step
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>
-become constants, and actions that cannot yet be applicable get no
-variable. This uses relaxed layers, which over-approximate the states
-reachable in
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>
-steps.</p>
+become constants and actions that cannot yet apply get no variable
+(relaxed layers over-approximate reachability).</p>
 <p><strong>Lemma 2.</strong> Under (6), clauses (4)–(5) are equivalent
 to the lecture’s successor-state axioms
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>F</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msup><mo>⇔</mo><mi>A</mi><mi>c</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>C</mi><mi>a</mi><mi>u</mi><mi>s</mi><mi>e</mi><mi>s</mi><msup><mi>F</mi><mi>t</mi></msup><mo>∨</mo><mo stretchy="false" form="prefix">(</mo><msup><mi>F</mi><mi>t</mi></msup><mo>∧</mo><mi>¬</mi><mi>A</mi><mi>c</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>C</mi><mi>a</mi><mi>u</mi><mi>s</mi><mi>e</mi><mi>s</mi><mi>N</mi><mi>o</mi><mi>t</mi><msup><mi>F</mi><mi>t</mi></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">F^{t+1} \Leftrightarrow ActionCausesF^t \lor (F^t \land \lnot ActionCausesNotF^t)</annotation></semantics></math>
 (Planning p.34). <em>Proof.</em> Let
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>
-be the single action at step
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>.</p>
-<ul>
-<li>If
+act at step
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>.
+If
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo>∈</mo><mi>a</mi><mi>d</mi><mi>d</mi><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">f \in add(a)</annotation></semantics></math>,
 (4) forces
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>f</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msup><annotation encoding="application/x-tex">f^{t+1}</annotation></semantics></math>.</li>
-<li>If
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>f</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msup><annotation encoding="application/x-tex">f^{t+1}</annotation></semantics></math>;
+if
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo>∈</mo><mi>d</mi><mi>e</mi><mi>l</mi><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo><mo>\</mo><mi>a</mi><mi>d</mi><mi>d</mi><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">f \in del(a) \setminus add(a)</annotation></semantics></math>,
 (4) forces
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>¬</mi><msup><mi>f</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">\lnot f^{t+1}</annotation></semantics></math>.</li>
-<li>Otherwise no active action adds or deletes
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>¬</mi><msup><mi>f</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">\lnot f^{t+1}</annotation></semantics></math>;
+otherwise no active action adds or deletes
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>,
-so both clauses in (5) force
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msup><mo>=</mo><msup><mi>f</mi><mi>t</mi></msup></mrow><annotation encoding="application/x-tex">f^{t+1} = f^t</annotation></semantics></math>.</li>
-</ul>
-<p>Hence
+so (5) forces
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>f</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msup><mo>=</mo><msup><mi>f</mi><mi>t</mi></msup></mrow><annotation encoding="application/x-tex">f^{t+1} = f^t</annotation></semantics></math>.
+Hence
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>s</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><mrow><mi mathvariant="normal">R</mi><mi mathvariant="normal">E</mi><mi mathvariant="normal">S</mi><mi mathvariant="normal">U</mi><mi mathvariant="normal">L</mi><mi mathvariant="normal">T</mi></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo>,</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">s_{t+1} = \mathrm{RESULT}(s_t, a)</annotation></semantics></math>,
-and (3) makes
+with
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>
-applicable in
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>s</mi><mi>t</mi></msub><annotation encoding="application/x-tex">s_t</annotation></semantics></math>.
-∎</p>
+applicable by (3). ∎</p>
 <p><strong>Theorem 2.</strong> The
 horizon-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math>
 formula is satisfiable iff a plan of exactly
@@ -624,8 +573,8 @@ plans are re-validated. UNSAT for all
 proves only bounded safety.</p>
 <p><strong>Certifying safety: greedy best-first search with
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>h</mi><mrow><mi>F</mi><mi>F</mi></mrow></msub><annotation encoding="application/x-tex">h_{FF}</annotation></semantics></math></strong>
-(<code>premortem/planning/search.py</code>).</p>
-<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mrow><mi>F</mi><mi>F</mi></mrow></msub><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">h_{FF}(s)</annotation></semantics></math>
+(<code>planning/search.py</code>).
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mrow><mi>F</mi><mi>F</mi></mrow></msub><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">h_{FF}(s)</annotation></semantics></math>
 is the length of a relaxed plan for the task with delete lists ignored
 (Planning p.28), extracted from layered reachability (FF’s relaxed
 planning graph [7], beyond the slides), or
@@ -634,7 +583,7 @@ if
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>G</mi><annotation encoding="application/x-tex">G</annotation></semantics></math>
 is unreachable even in the relaxation. GBFS expands states in order of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>h</mi><mrow><mi>F</mi><mi>F</mi></mrow></msub><annotation encoding="application/x-tex">h_{FF}</annotation></semantics></math>,
-never revisits a state, tests for the goal on generation, and discards
+never revisits one, tests for the goal on generation, and discards
 states with
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mrow><mi>F</mi><mi>F</mi></mrow></msub><mo>=</mo><mi>∞</mi></mrow><annotation encoding="application/x-tex">h_{FF} = \infty</annotation></semantics></math>.</p>
 <p><strong>Theorem 3.</strong> If GBFS returns <em>unsolvable</em>,
@@ -657,64 +606,53 @@ in the real task. ∎</p>
 <p>By the same argument GBFS finds a plan whenever one exists, though
 not always a shortest one
 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>h</mi><mrow><mi>F</mi><mi>F</mi></mrow></msub><annotation encoding="application/x-tex">h_{FF}</annotation></semantics></math>
-is inadmissible; admissibility is Planning p.25). FF’s hill-climbing
-phase (Planning p.28) is incomplete and cannot certify. Every fixed
-variant has finite
+is inadmissible, Planning p.25); FF’s hill-climbing phase (Planning
+p.28) is incomplete and cannot certify. Every fixed variant has finite
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mrow><mi>F</mi><mi>F</mi></mrow></msub><mo stretchy="false" form="prefix">(</mo><mi>I</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">h_{FF}(I)</annotation></semantics></math>,
-so certification needs the exhaustive search, and
+so certification needs the exhaustive search and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>h</mi><mrow><mi>F</mi><mi>F</mi></mrow></msub><annotation encoding="application/x-tex">h_{FF}</annotation></semantics></math>
-contributes only its dead-end test: the cost is the number of reachable
-states with finite
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>h</mi><mrow><mi>F</mi><mi>F</mi></mrow></msub><annotation encoding="application/x-tex">h_{FF}</annotation></semantics></math>,
-in whatever order they are expanded. On sizes 1–4 this expands 1.2×
-(cache) to 3.8× (queue) fewer states than plain BFS (inventory size 4:
-9,026 vs 24,992; <code>results/tables.md</code>) but does not change the
-exponential growth. <strong>Pipeline:</strong> in the Translate arm GBFS
-decides reachability on the model’s problem; if a plan exists, SATPlan
-with
+contributes only its dead-end test: on sizes 1–4 it expands 1.2× (cache)
+to 3.8× (queue) fewer states than plain BFS (inventory size 4: 9,026 vs
+24,992), without changing the exponential growth.
+<strong>Pipeline:</strong> in the Translate arm GBFS decides
+reachability on the model’s problem; if a plan exists, SATPlan with
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>T</mi><mrow><mi>m</mi><mi>a</mi><mi>x</mi></mrow></msub><annotation encoding="application/x-tex">T_{max}</annotation></semantics></math>
 = the GBFS length returns a shortest trace (if its 120 s budget runs
 out, as in 17 inventory runs, the GBFS trace is kept). Appendix B.2–B.3
 show real clauses, horizon iteration and a GBFS certificate.</p>
 <p><strong>What each arm translates.</strong> Both scales check
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>∧</mo><mi>¬</mi><mi>β</mi></mrow><annotation encoding="application/x-tex">\alpha \land \lnot\beta</annotation></semantics></math>,
-but the model writes a different half. In SP1 the code
-(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>)
-is encoded mechanically and the model writes
+but the model writes a different half: in SP1 it writes
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math>
-(<code>pre</code>/<code>post</code>). In SP2 we fix
+(<code>pre</code>/<code>post</code>) and the code
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
+is encoded mechanically; in SP2 we fix
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math>
 (the goal, plus <em>monitor</em> actions such as
-<code>charge-again</code> that set the violation fluent) and the model
-writes part of
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>:
+<code>charge-again</code>) and the model writes part of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>,
 the initial state with its design facts. The action schemas, where the
 failure mechanism lives, are given to both arms (§6).</p>
 <h1 id="problem-instances">3. Problem instances</h1>
 <h2 id="sp1-174-function-instances">3.1 SP1: 174 function instances</h2>
-<p><strong>Benchmarks.</strong> There are 27 base functions and 10 hard
-ones.</p>
-<ul>
-<li><em>Base:</em> HumanEval/EvalPlus-style tasks [8]
-(<code>below_zero</code>, <code>is_prime</code>, <code>fizz_buzz</code>,
-…) plus business rules (calendar, grade bands, discounts,
-withdrawals).</li>
-<li><em>Hard:</em> functions where a witness must be
-<em>constructed</em>: sorting networks, comparator medians, token-bucket
-rate limiters, a debouncer, Luhn, Zeller’s congruence, banker’s
-rounding, subset-sum DP.</li>
-</ul>
-<p>As planned in the proposal, identifiers are renamed and docstrings
-rewritten without examples. Each docstring fully determines the return
-value on the stated domain, so the docstring <em>is</em> the
+<p><strong>Benchmarks.</strong> 27 <em>base</em> functions,
+HumanEval/EvalPlus-style tasks [8] (<code>below_zero</code>,
+<code>is_prime</code>, …) plus business rules (calendar, grade bands,
+discounts, withdrawals), and 10 <em>hard</em> ones where a witness must
+be <em>constructed</em> (sorting networks, comparator medians,
+token-bucket rate limiters, a debouncer, Luhn, Zeller’s congruence,
+banker’s rounding, subset-sum DP). As planned, identifiers are renamed
+and docstrings rewritten without examples; each docstring fixes the
+return value on the stated domain, so the docstring <em>is</em> the
 specification.</p>
 <p><strong>Mutants and labels.</strong> The candidates are 808 automatic
 first-order mutants (ROR, AOR, CRP, LCR, condition negation, range
 off-by-one, statement deletion), 42 hand-written realistic bugs (a
-forgotten 400-year rule, a lost token-bucket remainder, a comparator
-dropped as an “optimisation”) and 9 equivalent rewrites.</p>
+forgotten 400-year rule, a comparator dropped as an “optimisation”) and
+9 equivalent rewrites.</p>
 <p>Each candidate is labelled in four steps. Its <em>trigger rarity</em>
-is the probability that a uniformly random in-domain input exposes it,
+is the probability that a random in-domain input exposes it (integers
+uniform; a list draws its length, then its elements, uniformly),
 computed exhaustively for integer domains up to 70k points and from
 5,000 samples otherwise.
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="normal">Φ</mi><mrow><mi>g</mi><mi>o</mi><mi>l</mi><mi>d</mi></mrow></msub><annotation encoding="application/x-tex">\Phi_{gold}</annotation></semantics></math>
@@ -725,8 +663,8 @@ buckets are common (≥10%), uncommon (1–10%), rare (0.1–1%) and very rare
 <p><strong>Selection.</strong> For each function we keep every hand bug,
 fill the rarity buckets with automatic mutants (preferring rare ones),
 and add two controls: the clean reference, plus an equivalent mutant
-when one exists. These are deliberately hard controls: dropping
-comparator (a, c) leaves a median-of-5 network correct.</p>
+when one exists. These are deliberately hard: dropping comparator (a, c)
+leaves a median-of-5 network correct.</p>
 <p><strong>Result.</strong> 174 instances: 115 bugs (67 common, 19
 uncommon, 21 rare, 8 very rare) and 59 controls (37 clean, 22 provably
 equivalent). Of the 859 candidates, 59 were dropped as non-terminating,
@@ -734,6 +672,19 @@ not encodable or not provably equivalent. The median Z3 query took 0.03
 s (mean 0.2 s).</p>
 <h2 id="sp2-60-designs-plus-30-stress-60-opaque-and-12-long-variants">3.2
 SP2: 60 designs, plus 30 stress, 60 opaque and 12 long variants</h2>
+<p>Each design document (about 200 words) states the components, the
+failure model and the mechanism without judging it; subtle variants read
+like a fix the engineer believes works. Gold shortest traces are 6–15
+events. Three further sets were added:</p>
+<ul>
+<li><em>Stress</em> (sizes 6 and 8): 17–27 events.</li>
+<li><em>Opaque:</em> the main set with design facts and design-specific
+events renamed (<code>mode-2</code>, <code>accept-3</code>) and their
+comments removed; the semantics are unchanged, but “racy” in the text no
+longer matches <code>(dedup-racy)</code> by name.</li>
+<li><em>Long:</em> payments and inventory at sizes 12 and 16 (30–51
+events), 5.5 models only.</li>
+</ul>
 <table>
 <colgroup>
 <col style="width: 20%" />
@@ -747,7 +698,7 @@ SP2: 60 designs, plus 30 stress, 60 opaque and 12 long variants</h2>
 <th>family</th>
 <th>violation</th>
 <th>flawed</th>
-<th>subtle (looks fixed)</th>
+<th>subtle</th>
 <th>fixed</th>
 </tr>
 </thead>
@@ -756,52 +707,39 @@ SP2: 60 designs, plus 30 stress, 60 opaque and 12 long variants</h2>
 <td>payments</td>
 <td>charged twice</td>
 <td>no deduplication</td>
-<td>key looked up, recorded only after the charge</td>
-<td>atomic insert-if-absent</td>
+<td>key saved only after charge</td>
+<td>insert-if-absent</td>
 </tr>
 <tr>
 <td>inventory</td>
 <td>sold &gt; stock</td>
-<td>read-modify-write stock (lost update)</td>
-<td>payment accepted after hold expiry</td>
+<td>lost stock update</td>
+<td>pay after hold expiry</td>
 <td>atomic decrement + hold check</td>
 </tr>
 <tr>
 <td>lock</td>
-<td>stale write after newer one</td>
+<td>stale write wins</td>
 <td>no fencing, no lease check</td>
-<td>lease checked just before writing</td>
+<td>lease checked before write</td>
 <td>fencing tokens [14]</td>
 </tr>
 <tr>
 <td>queue</td>
 <td>payout twice</td>
 <td>no consumer dedup</td>
-<td>dedup ids in process memory</td>
-<td>dedup id in the same DB transaction</td>
+<td>dedup ids in memory</td>
+<td>dedup id in the DB transaction</td>
 </tr>
 <tr>
 <td>cache</td>
-<td>cache older than DB at end</td>
-<td>update DB, then delete cache</td>
-<td>delete cache, then update DB</td>
+<td>stale cache at end</td>
+<td>update DB, delete cache</td>
+<td>delete cache, update DB</td>
 <td>leases revoked by delete</td>
 </tr>
 </tbody>
 </table>
-<p>Each design document (about 200 words) states the components, the
-failure model and the mechanism without judging it; subtle variants read
-like a fix the engineer believes works. Gold shortest traces are 6–15
-events. Three further sets were added:</p>
-<ul>
-<li><em>Stress</em> (sizes 6 and 8): 17–27 events.</li>
-<li><em>Opaque:</em> the main set with design facts and design-specific
-events renamed (<code>mode-2</code>, <code>accept-3</code>) and their
-comments removed; the semantics are unchanged, but “racy” in the text no
-longer matches <code>(dedup-racy)</code> by name.</li>
-<li><em>Long:</em> payments and inventory at sizes 12 and 16 (30–51
-events; cf. the 35 steps of §1), 5.5 models only.</li>
-</ul>
 <h1 id="method">4. Method</h1>
 <p><strong>Models.</strong> Claude Haiku 4.5, Sonnet 5.5 and Opus 5.5
 with default extended thinking, called through the Claude Code CLI with
@@ -817,19 +755,17 @@ comments) and object names.</li>
 failing input (SP1) or a list of ground actions (SP2).</p>
 <p><strong>Translate arm, SP1.</strong> The model writes
 <code>pre(...)</code> and <code>post(..., result)</code> in the
-supported Python subset, stating the docstring’s intent rather than the
-code’s behaviour. The verifier then runs <code>spec_check</code>.</p>
+supported Python subset, stating the docstring’s intent, not the code’s
+behaviour; <code>spec_check</code> then runs.</p>
 <p><strong>Translate arm, SP2.</strong> The model writes the PDDL
 problem. Object names and the goal are given, so the translation is the
 complete initial state, including design facts and counters; mapping
-prose to one design fact per mechanism is the semantic step that SP3
-scores. We parse and validate it, ground it, and run GBFS + h_FF to
-decide reachability. If a trace exists, SATPlan shortens it to an
-optimal one, within a 120 s budget.</p>
+prose to one design fact per mechanism is the semantic step SP3 scores;
+the pipeline of §2.2 then solves it.</p>
 <p><strong>Repair loop.</strong> Errors are fed back up to twice: syntax
 errors, unsupported constructs, a vacuous precondition, a wrong goal,
-and type or arity errors. This is a harness with verification and
-retries (GenAI p.28).</p>
+type or arity errors: a harness with verification and retries (GenAI
+p.28).</p>
 <p><strong>Tool budgets.</strong> An SP1 spec check has a 120 s deadline
 in a child process killed after 150 s; Z3 queries time out at 60 s;
 planner search is capped at 3 M expansions or 300 s, SATPlan at 120 s. A
@@ -837,14 +773,10 @@ budget hit, a Z3 <em>unknown</em> or a failed coverage check
 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="normal">Ψ</mi><annotation encoding="application/x-tex">\Psi</annotation></semantics></math>
 satisfiable) is reported as <em>undecided</em>, never as “no
 failure”.</p>
-<p><strong>Scoring</strong> is exact and on gold models.</p>
-<ul>
-<li>SP1 witnesses are executed on the code under review and on the
-unmutated reference. A witness is valid only if it is in-domain and the
-two behave differently.</li>
-<li>SP2 traces are replayed on the gold problem; a trace is valid if it
-reaches the violation.</li>
-</ul>
+<p><strong>Scoring</strong> is exact, on gold models: an SP1 witness is
+valid only if it is in-domain and the code under review and the
+unmutated reference behave differently on it; an SP2 trace is valid if
+replaying it on the gold problem reaches the violation.</p>
 <p>Outcomes are <em>valid witness</em>, <em>fabricated</em> (an invalid
 witness or a false alarm on a control: a hallucination made checkable,
 GenAI p.9), <em>miss</em>, <em>correct no-failure</em>, or
@@ -858,6 +790,7 @@ comparisons use the exact McNemar test on the instances where exactly
 one arm is right.</p>
 <h2 id="sp1-functions-115-bugs-59-controls">5.1 SP1: functions (115
 bugs, 59 controls)</h2>
+<div class="keep">
 <table style="width:100%;">
 <colgroup>
 <col style="width: 11%" />
@@ -885,7 +818,7 @@ bugs, 59 controls)</h2>
 </thead>
 <tbody>
 <tr>
-<td>Haiku 4.5</td>
+<td>Haiku 4.5</td>
 <td>Direct</td>
 <td>100% [96–100]</td>
 <td>95% [76–99]</td>
@@ -896,7 +829,7 @@ bugs, 59 controls)</h2>
 <td>4,838</td>
 </tr>
 <tr>
-<td>Haiku 4.5</td>
+<td>Haiku 4.5</td>
 <td>Translate</td>
 <td>98% [93–99]</td>
 <td>95% [76–99]</td>
@@ -907,7 +840,7 @@ bugs, 59 controls)</h2>
 <td>4,968</td>
 </tr>
 <tr>
-<td>Sonnet 5.5</td>
+<td>Sonnet 5.5</td>
 <td>Direct</td>
 <td>100%</td>
 <td>100%</td>
@@ -918,7 +851,7 @@ bugs, 59 controls)</h2>
 <td>431</td>
 </tr>
 <tr>
-<td>Sonnet 5.5</td>
+<td>Sonnet 5.5</td>
 <td>Translate</td>
 <td>100%</td>
 <td>95%</td>
@@ -929,7 +862,7 @@ bugs, 59 controls)</h2>
 <td>208</td>
 </tr>
 <tr>
-<td>Opus 5.5</td>
+<td>Opus 5.5</td>
 <td>Direct</td>
 <td>100%</td>
 <td>100%</td>
@@ -940,7 +873,7 @@ bugs, 59 controls)</h2>
 <td>470</td>
 </tr>
 <tr>
-<td>Opus 5.5</td>
+<td>Opus 5.5</td>
 <td>Translate</td>
 <td>100%</td>
 <td>95%</td>
@@ -956,35 +889,30 @@ bugs, 59 controls)</h2>
 writes the specification and Z3 searches it. <em>Undecided:</em> the
 checker timed out or Z3 answered <em>unknown</em> (on bugs or
 controls).</p>
-<ul>
-<li><em>The repair loop matters.</em> Using only the first
-specification, valid witnesses drop to 106 (Haiku), 113 (Sonnet) and 104
-(Opus) of 115.</li>
-<li><em>SP3.</em> Of the specifications whose soundness check completed,
+</div>
+<p><em>SP3.</em> Of the specifications whose soundness check completed,
 these were <em>sound</em>, i.e. the reference satisfies them: 169/172
 (Haiku), 173/173 (Sonnet) and 165/165 (Opus). <em>Discriminating</em>,
 meaning the mutant violates them, is the valid-witness rate above. All
 three unsound specs are Haiku errors (§A.2–A.3), not ambiguous
 docstrings: the docstring fixes the answer on each violating reference
-input.</li>
-</ul>
+input.</p>
 <p><strong>RQ1.</strong> Every model finds essentially every bug in both
 arms, at every trigger rarity (Fig. 1). At this ceiling the test cannot
 detect a rarity effect; difficulty shows only as cost (hard-tier answers
 use 2–3× the tokens) and as Z3 <em>unknown</em> on arithmetic-heavy
 specs. Random testing differs:
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>
-uniform inputs catch a bug of rarity
+inputs from the same sampler catch a bug of rarity
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math>
 with probability
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>r</mi><msup><mo stretchy="false" form="postfix">)</mo><mi>N</mi></msup></mrow><annotation encoding="application/x-tex">1-(1-r)^N</annotation></semantics></math>
 (ProbGrapModel p.22), so 100 inputs catch 34% of rare and 5% of very
-rare bugs, and 1,000 catch 93% and 36%. Rarity defeats <em>testing</em>,
-not code reading or symbolic search.</p>
+rare bugs, and 1,000 catch 93% and 36%. On these benchmarks rarity
+defeats <em>testing</em>, not code reading or symbolic search.</p>
 <p><strong>RQ2.</strong> No model raised a false alarm in either arm on
 the 59 controls, 22 of them equivalent mutants built to look buggy.
-Translate left 1 (Haiku) and 5 (Opus) controls <em>undecided</em> rather
-than wrongly certifying them.</p>
+Translate left 1 (Haiku) and 5 (Opus) controls <em>undecided</em>.</p>
 <p><strong>Translate failures.</strong> Every one comes from the
 specification or the tool, never from the search: two postconditions
 copied the code’s bug (§A.2); one spec raised an exception and produced
@@ -1000,6 +928,7 @@ rarity (LLM arms pooled over models) against random testing. <em>Fig. 2
 stress).</p>
 <h2 id="sp2-designs-60-main-30-stress-60-opaque-12-long">5.2 SP2:
 designs (60 main + 30 stress + 60 opaque + 12 long)</h2>
+<div class="keep">
 <table style="width:100%;">
 <colgroup>
 <col style="width: 11%" />
@@ -1022,12 +951,12 @@ designs (60 main + 30 stress + 60 opaque + 12 long)</h2>
 <th>stress FA /10</th>
 <th>opaque valid /40</th>
 <th>opaque FA /20</th>
-<th>$ per inst. (main)</th>
+<th>$/inst. (main)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Haiku 4.5</td>
+<td>Haiku 4.5</td>
 <td>Direct</td>
 <td>78% [62–88]</td>
 <td>60% [39–78]</td>
@@ -1038,7 +967,7 @@ designs (60 main + 30 stress + 60 opaque + 12 long)</h2>
 <td>0.062</td>
 </tr>
 <tr>
-<td>Haiku 4.5</td>
+<td>Haiku 4.5</td>
 <td>Translate</td>
 <td>85% [71–93]</td>
 <td><strong>35%</strong> [18–57]</td>
@@ -1049,7 +978,7 @@ designs (60 main + 30 stress + 60 opaque + 12 long)</h2>
 <td>0.051</td>
 </tr>
 <tr>
-<td>Sonnet 5.5</td>
+<td>Sonnet 5.5</td>
 <td>Direct</td>
 <td>100%</td>
 <td>0%</td>
@@ -1060,7 +989,7 @@ designs (60 main + 30 stress + 60 opaque + 12 long)</h2>
 <td>0.025</td>
 </tr>
 <tr>
-<td>Sonnet 5.5</td>
+<td>Sonnet 5.5</td>
 <td>Translate</td>
 <td>100%</td>
 <td>0%</td>
@@ -1071,7 +1000,7 @@ designs (60 main + 30 stress + 60 opaque + 12 long)</h2>
 <td>0.018</td>
 </tr>
 <tr>
-<td>Opus 5.5</td>
+<td>Opus 5.5</td>
 <td>Direct</td>
 <td>100%</td>
 <td>0%</td>
@@ -1082,7 +1011,7 @@ designs (60 main + 30 stress + 60 opaque + 12 long)</h2>
 <td>0.048</td>
 </tr>
 <tr>
-<td>Opus 5.5</td>
+<td>Opus 5.5</td>
 <td>Translate</td>
 <td>100%</td>
 <td>0%</td>
@@ -1098,19 +1027,24 @@ designs (60 main + 30 stress + 60 opaque + 12 long)</h2>
 writes the PDDL problem and the planners search it. “Valid” = a trace
 that replays on the gold problem and reaches the violation (flawed +
 subtle designs). FA = false alarm, a violation claimed on a fixed
-design.</p>
+design. Translate was <em>undecided</em> (not a false alarm) on
+inventory’s fixed design at size 8, for every model.</p>
+</div>
 <p><strong>RQ1.</strong> Sonnet 5.5 and Opus 5.5 produced a valid trace
 every time, from 6 up to 51 events (on the long set 8/8 per model and
-arm, 95% interval [68–100], with no false alarm). Haiku stays near 80%
-with no length trend; its errors are design misreadings (RQ2 below).
-Paired over its 150 designs, only Translate is right on 41 and only
-Direct on 21 (per-set exact McNemar p = 0.15, 0.39 and 0.17; pooled p =
-0.015, but the opaque designs rename the main ones).</p>
+arm, 95% interval [68–100], with no false alarm; Translate was undecided
+on its inventory fixed designs, sizes 12 and 16). Haiku stays near 80%
+with no length trend; its errors are design misreadings (RQ2 below). On
+overall correctness, paired over its 150 designs, only Translate is
+right on 41 and only Direct on 21 (exact McNemar p = 0.15, 0.39 and 0.17
+per set; 0.015 pooled, but the sets share templates and are not
+independent).</p>
 <p><strong>RQ2.</strong> Fabrication separates the arms.</p>
 <ul>
 <li><p><em>Haiku Direct</em> claims violations on 60% of fixed designs
-(80% stress, 95% opaque). Translate roughly halves this in every set, to
-35% (40%, 45%), though no single set reaches p &lt; 0.05.</p></li>
+(80% stress, 95% opaque). Translate roughly halves this, to 35% (40%,
+45%); exact McNemar on false alarms gives p = 0.18, 0.22,
+0.002.</p></li>
 <li><p><em>Sonnet and Opus</em> raised no false alarm in either arm,
 with or without mechanism names.</p></li>
 <li><p><em>Why Haiku’s Direct traces fail:</em> every one that reached a
@@ -1130,10 +1064,29 @@ planner exploited (§A.5). All 450 translations parsed without
 repair.</li>
 </ul>
 <p><strong>Cost.</strong> Over the 150 instances all models ran,
-Translate is cheaper for every model (US$ per instance: Haiku 0.053 vs
-0.063, Sonnet 0.019 vs 0.025, Opus 0.040 vs 0.048). Total usage was
-US$80 for 2,553 calls.</p>
+Translate is always cheaper (US$ per instance: Haiku 0.053 vs 0.063,
+Sonnet 0.019 vs 0.025, Opus 0.040 vs 0.048). Total usage was US$80 for
+2,553 calls.</p>
 <h2 id="the-classical-tools">5.3 The classical tools</h2>
+<ul>
+<li><em>Worst case vs. observed.</em> PlanSAT is PSPACE-complete
+(Planning p.38), but only inventory shows pronounced state explosion
+(Table 3): its
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">S{+}1</annotation></semantics></math>
+interchangeable customers interleave, so reachable states grow 1,500×
+from size 1 to 4, while the other families grow roughly linearly with a
+timer or counter. Trace length is not the driver: queue and inventory at
+size 8 need 21 and 27 events.</li>
+<li><em>SATPlan</em> finds shortest traces in milliseconds for four
+families. On inventory it takes 1.1 s at size 3, about 2 minutes at size
+4, and times out (300 s) at sizes 6 and 8.</li>
+<li><em>Certification</em> takes 9,026 GBFS expansions at inventory size
+4 and 2.7 M (176 s) at size 6. From size 8 our 3 M-expansion / 5-minute
+budget runs out, so every Translate run on inventory’s fixed design is
+scored <em>undecided</em>, not safe (the gold label comes from a
+conservation invariant).</li>
+</ul>
+<div class="keep">
 <table>
 <colgroup>
 <col style="width: 20%" />
@@ -1203,35 +1156,18 @@ bounds the state space
 to
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>2</mn><mn>218</mn></msup><annotation encoding="application/x-tex">2^{218}</annotation></semantics></math>
 at size 8), but certification only visits reachable states.</p>
-<ul>
-<li><em>Worst case vs. observed.</em> PlanSAT is PSPACE-complete
-(Planning p.38), but only inventory shows it: its
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">S{+}1</annotation></semantics></math>
-interchangeable customers interleave, so reachable states grow 1,500×
-from size 1 to 4, while the other families grow roughly linearly with a
-timer or counter. Trace length is not the driver: queue and inventory at
-size 8 need 21 and 27 events.</li>
-<li><em>SATPlan</em> finds shortest traces in milliseconds for four
-families. On inventory it takes 1.1 s at size 3, about 2 minutes at size
-4, and times out (300 s) at sizes 6 and 8.</li>
-<li><em>Certification</em> takes 9,026 GBFS expansions at inventory size
-4 and 2.7 M (176 s) at size 6. From size 8 our 3 M-expansion / 5-minute
-budget runs out, so every Translate run on inventory’s fixed design is
-scored <em>undecided</em>, not safe (the gold label comes from a
-conservation invariant).</li>
-</ul>
+</div>
 <h1 id="analysis-and-insights">6. Analysis and insights</h1>
 <p><strong>SP1: localisation, not search.</strong> A first-order mutant
 leaves a visible diff against a docstring that states the intent, and
-reading code is white-box. Trigger rarity, which decides whether
-<em>testing</em> finds a bug, therefore showed no effect on either LLM
-arm at this difficulty (Fig. 1).</p>
-<p>In Kang et al.’s terms [2] (GenAI p.18), base-tier SP1 is the easy
-case: the next step (find the line that contradicts the docstring) is
-cheap, so the chain of thought stays short. The hard tier, where a
+reading code is white-box, so trigger rarity, which decides whether
+<em>testing</em> finds a bug, showed no detectable effect on either LLM
+arm (Fig. 1). In Kang et al.’s terms [2] (GenAI p.18), base-tier SP1 is
+the easy case: the next step (find the line contradicting the docstring)
+is cheap, so the chain of thought stays short. The hard tier, where a
 witness must be <em>constructed</em>, moves towards the search case; the
-models paid 2–3× more tokens rather than failing, as our functions are
-still small enough for a linearised search.</p>
+models paid 2–3× more tokens rather than failing: our functions are
+small enough for a linearised search.</p>
 <p><strong>SP1: translation moves the risk into the
 specification.</strong> The spec must state the docstring’s intent while
 the model reads code that contradicts it: twice the postcondition
@@ -1254,18 +1190,18 @@ check-then-act race, to a design whose text rules it out (§A.4).</p>
 <p>Translation does not remove misreading; Haiku moves the same mistake
 into the design facts it writes, and adds permissive initial facts that
 the planner turns into shortcuts (§A.5): a classical planner is
-adversarial towards its model. Still, with the planner searching,
-Haiku’s false alarms roughly halved, at lower cost.</p>
+adversarial towards its model. Still, Haiku’s false alarms roughly
+halved, at lower cost.</p>
 <p><strong>Length vs. familiarity.</strong> Our violations are textbook
 patterns; once one is recognised, a longer trace is bookkeeping. From
-6–15 to 30–51 events the 5.5 models stayed perfect, and their Direct
-answers grew only from about 1.2k to 1.5k output tokens (Haiku’s
-per-length cells hold 2–16 designs). With design facts renamed
-<code>mode-N</code>, the 5.5 models stayed perfect, so they map the
-mechanism described in the text, not just its name. Haiku leans on
-names: its Direct false alarms rose from 60% to 95%. Translate held it
-to 45%, because writing the initial state forces one design fact per
-mechanism, which free-form reasoning skips.</p>
+6–15 to 30–51 events the 5.5 models found a valid trace on every
+violating design, and their Direct answers grew only from about 1.2k to
+1.5k output tokens (Haiku’s per-length cells hold 2–16 designs). With
+design facts renamed <code>mode-N</code>, they were still never wrong,
+so they map the mechanism described in the text, not just its name.
+Haiku leans on names: its Direct false alarms rose from 60% to 95%.
+Translate held it to 45%: writing the initial state forces one design
+fact per mechanism.</p>
 <p><strong>The tools have cliffs too (§5.3).</strong> SATPlan’s horizon
 iteration slows on symmetric interleavings, exhaustive certification
 explodes with the state space, and bounded symbolic execution ignores
@@ -1276,41 +1212,56 @@ of interchangeable objects, such as inventory’s customers) and
 Planning p.9), both in TLC and SPIN; CBMC’s <em>unwinding
 assertions</em>, which check that
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mi>n</mi><mi>w</mi><mi>i</mi><mi>n</mi><mi>d</mi></mrow><annotation encoding="application/x-tex">unwind</annotation></semantics></math>
-(§2.1) is unsatisfiable; and <em>k-induction</em>, which proves an
-invariant Inv with two entailment checks (PropLogic p.28): Inv holds
-initially, and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi><mi>n</mi><mi>v</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>∧</mo><mi>T</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo>,</mo><msub><mi>s</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo>⊨</mo><mi>I</mi><mi>n</mi><mi>v</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">Inv(s_t) \land T(s_t, s_{t+1}) \models Inv(s_{t+1})</annotation></semantics></math>.
-Our size-8 inventory label rests on such an invariant (stock + holding +
-sold = S), proved by hand; there a Direct “safe” is unverifiable too,
-but the tool says “unknown”.</p>
+(§2.1) is unsatisfiable; and <em>inductive invariants</em> (k-induction
+with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">k = 1</annotation></semantics></math>),
+which prove safety by entailment (PropLogic p.28) with three checks:
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi><mi>n</mi><mi>v</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mn>0</mn></msub><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mspace width="2.0em"></mspace><mi>I</mi><mi>n</mi><mi>v</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>∧</mo><mi>T</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo>,</mo><msub><mi>s</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo>⊨</mo><mi>I</mi><mi>n</mi><mi>v</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mspace width="2.0em"></mspace><mi>I</mi><mi>n</mi><mi>v</mi><mo>⊨</mo><mi>¬</mi><mi>G</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">Inv(s_0), \qquad Inv(s_t) \land T(s_t, s_{t+1}) \models Inv(s_{t+1}), \qquad Inv \models \lnot G.</annotation></semantics></math>
+Inventory’s label from size 8 rests on one, proved by hand: stock +
+holding + sold = S. Initially stock = S; <code>reserve-atomic</code>
+moves a unit from stock to holding, <code>expire-hold</code> moves it
+back, <code>pay</code> moves it to sold, and the other actions change no
+count or are disabled by the fixed design facts; each customer leaves
+browsing once, so no count rises twice. Hence sold ≤ S &lt; S + 1. Our
+search cannot certify a Direct “safe” there either, and the tool says
+“undecided”.</p>
 <p><strong>Is translating worth it? A decision rule.</strong> Choosing
-an arm is a maximum-expected-utility decision (Decision p.16). With
-costs
+an arm is a maximum-expected-utility decision (Decision p.16). With a
+share
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>π</mi><annotation encoding="application/x-tex">\pi</annotation></semantics></math>
+of flawed designs and costs
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>c</mi><mrow><mi>F</mi><mi>A</mi></mrow></msub><annotation encoding="application/x-tex">c_{FA}</annotation></semantics></math>
 per false alarm (reviewer time),
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>c</mi><mrow><mi>m</mi><mi>i</mi><mi>s</mi><mi>s</mi></mrow></msub><annotation encoding="application/x-tex">c_{miss}</annotation></semantics></math>
-per missed failure and
+per flawed design left without a valid witness,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>c</mi><mrow><mi>r</mi><mi>e</mi><mi>v</mi></mrow></msub><annotation encoding="application/x-tex">c_{rev}</annotation></semantics></math>
+per undecided case left to a reviewer, and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>c</mi><mrow><mi>r</mi><mi>u</mi><mi>n</mi></mrow></msub><annotation encoding="application/x-tex">c_{run}</annotation></semantics></math>
-per run,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mi>U</mi><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mi>r</mi><mi>m</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>−</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>P</mi><mrow><mi>F</mi><mi>A</mi></mrow></msub><mspace width="0.167em"></mspace><msub><mi>c</mi><mrow><mi>F</mi><mi>A</mi></mrow></msub><mo>+</mo><msub><mi>P</mi><mrow><mi>m</mi><mi>i</mi><mi>s</mi><mi>s</mi></mrow></msub><mspace width="0.167em"></mspace><msub><mi>c</mi><mrow><mi>m</mi><mi>i</mi><mi>s</mi><mi>s</mi></mrow></msub><mo>+</mo><msub><mi>c</mi><mrow><mi>r</mi><mi>u</mi><mi>n</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">EU(arm) = -(P_{FA}\,c_{FA} + P_{miss}\,c_{miss} + c_{run})</annotation></semantics></math>.
-For Haiku on the SP2 main set, Translate has the lower false-alarm rate
-(35% vs 60%), fewer misses (0 vs 2 of 40) and the lower cost (US$0.051
-vs 0.062), so it wins for any positive
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>c</mi><mrow><mi>F</mi><mi>A</mi></mrow></msub><annotation encoding="application/x-tex">c_{FA}</annotation></semantics></math>
-and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>c</mi><mrow><mi>m</mi><mi>i</mi><mi>s</mi><mi>s</mi></mrow></msub><annotation encoding="application/x-tex">c_{miss}</annotation></semantics></math>.
-For the 5.5 models both rates are zero and the cheaper arm wins:
-Translate on SP2, where the planner does the search, and Direct on SP1,
-where Translate costs as much and leaves some checks undecided. A
-required <em>guarantee</em> only Translate can earn: a solver
-certificate with an audit trail.</p>
-<p><em>Direct suffices</em> when the specification is local and
-explicit, the artefact small and the model strong (SP1 at every tier;
-SP2 for the 5.5 models, even with opaque names). <em>Translate’s
-weaknesses</em> are specification correctness (anchoring, permissive
-models) and the tools’ state-space and term-size limits.</p>
-<p>Direct accuracy on problems of this size will keep rising, as the
-step from Haiku 4.5 to the 5.5 models shows. But “computationally
+per run (model-call charges only; solver time and human review are
+extra),
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mi>U</mi><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mi>r</mi><mi>m</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>−</mi><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">(</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>π</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><msub><mi>P</mi><mrow><mi>F</mi><mi>A</mi></mrow></msub><mspace width="0.167em"></mspace><msub><mi>c</mi><mrow><mi>F</mi><mi>A</mi></mrow></msub><mo>+</mo><mi>π</mi><mspace width="0.167em"></mspace><msub><mi>P</mi><mrow><mi>m</mi><mi>i</mi><mi>s</mi><mi>s</mi></mrow></msub><mspace width="0.167em"></mspace><msub><mi>c</mi><mrow><mi>m</mi><mi>i</mi><mi>s</mi><mi>s</mi></mrow></msub><mo>+</mo><msub><mi>P</mi><mrow><mi>u</mi><mi>n</mi><mi>d</mi></mrow></msub><mspace width="0.167em"></mspace><msub><mi>c</mi><mrow><mi>r</mi><mi>e</mi><mi>v</mi></mrow></msub><mo>+</mo><msub><mi>c</mi><mrow><mi>r</mi><mi>u</mi><mi>n</mi></mrow></msub><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">EU(arm) = -\big((1-\pi)\,P_{FA}\,c_{FA} + \pi\,P_{miss}\,c_{miss} + P_{und}\,c_{rev} + c_{run}\big).</annotation></semantics></math>
+For Haiku on the SP2 main set, Translate has fewer false alarms (35% vs
+60%), fewer flawed designs without a valid trace (6 vs 9 of 40), nothing
+undecided and the lower cost (US$0.051 vs 0.062), so under this loss and
+these rates it wins for any
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>π</mi><annotation encoding="application/x-tex">\pi</annotation></semantics></math>
+and positive costs; on the opaque set it trades two detections for half
+the false alarms. For the 5.5 models the error rates are zero, so cost
+meets abstention: on SP2 Translate is cheaper and wins outright on the
+main set, but is undecided on inventory’s fixed design from size 8,
+where Direct answers correctly; on SP1 Opus’s Translate is dearer with
+six checks undecided, so Direct wins, and Sonnet’s is slightly cheaper
+with one undecided, so it wins only if
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>c</mi><mrow><mi>r</mi><mi>e</mi><mi>v</mi></mrow></msub><annotation encoding="application/x-tex">c_{rev}</annotation></semantics></math>
+is tiny. Only Translate can <em>certify</em> absence, with a solver
+result and audit trail that hold relative to the translated model.
+<em>Direct suffices</em> when the specification is local and explicit,
+the artefact small and the model strong (SP1 at every tier; SP2 for the
+5.5 models, even with opaque names). <em>Translate’s weaknesses</em> are
+specification correctness and the tools’ state-space and term-size
+limits.</p>
+<p>Direct accuracy on problems of this size may keep rising, as the step
+from Haiku 4.5 to the 5.5 models suggests. But “computationally
 difficult problems [are] likely to remain difficult” (GenAI p.31). Even
 51-event designs did not reach that regime for the 5.5 models; inventory
 from size 8 did for the tools.</p>
@@ -1338,36 +1289,38 @@ event (<code>accept-new-racy</code> does not delete
 design facts per family, and that choice decides the outcome: correct in
 47/49 (Haiku) and 60/60 (5.5 models) main-set problems with exact facts,
 0/11 with wrong ones. Writing the event model (Planning p.15), as in
-[11], is untested and the natural next step.</li>
-<li><em>Sampling and configuration.</em> Each instance is sampled once
+[11], is untested.</li>
+<li><em>Sampling and configuration.</em> Each instance is sampled once,
+instances share five templates (so intervals and p-values are nominal),
 and many cells are at ceiling. Models ran with default thinking budgets,
-so the generation comparison also compares effort (Haiku used 10–15k
-tokens, the 5.5 models about 1k).</li>
+so generations also differ in effort (Haiku used 10–15k tokens, the 5.5
+models about 1k).</li>
 </ul>
 <h1 id="responsible-ai">7. Responsible AI</h1>
 <p><strong>Automation bias: what “no failure” means.</strong> A verdict
 is a belief about a <em>model</em>, not a fact about the world
-(ProbGrapModel p.4). SP1 certifies only within the domain bounds and the
-unroll bound (Theorem 1). SP2 certifies only within the event model, so
-a failure mode the domain lacks is invisible to both arms. We therefore
-say “no counterexample within k steps under assumptions X”, never
-“verified safe”, which certainty and framing effects (Decision p.24–25)
-predict reviewers over-trust. By the decision rule of §6 (Decision
-p.15–16), skipping manual review is rational only if P(hidden failure |
-“no failure”) is below review cost divided by incident loss, a posterior
-our data estimates. On the SP2 main set, 2 of Haiku Direct’s 10 “safe”
-verdicts were wrong (20%), and none of Haiku Translate’s 13. Both
-figures depend on the base rate of flawed designs, which Bayes’ rule
-makes explicit (ProbGrapModel p.24–25).</p>
+(ProbGrapModel p.4): SP1 certifies only within the domain and unroll
+bounds (Theorem 1), and SP2 only within the event model, so a failure
+mode the domain lacks is invisible to both arms. We therefore say “no
+counterexample within the input and loop bounds” (SP1) or “no reachable
+violation in this finite event model” (SP2), never “verified safe”,
+which certainty and framing effects (Decision p.24–25) predict reviewers
+over-trust. Skipping manual review is rational only if P(hidden failure
+| “no failure”) is below review cost divided by incident loss (Decision
+p.15–16, if review would catch the failure). On our SP2 main set, 2 of
+Haiku Direct’s 10 “safe” verdicts were wrong and none of Haiku
+Translate’s 13 (95% upper bound 23%); both depend on the base rate of
+flawed designs (Bayes’ rule, ProbGrapModel p.24–25) and miss failure
+modes outside the benchmark.</p>
 <p><strong>Fabricated failures.</strong> False alarms waste reviewer
-time and train reviewers to ignore the tool. This is a trade-off between
-misses and false alarms, set by their utilities (Decision p.15–16). A
-Translate witness is correct only <em>with respect to the model’s own
-specification</em>. 13 of Haiku’s main-set SP2 Translate traces (40
-across all sets) were legal only in its mistranslated problem: the
-planner optimises the model as written, not as meant (the King Midas
-problem, ResponsibleAI p.35). Witnesses must therefore be executed or
-replayed on the real artefact, as our scoring does.</p>
+time and train reviewers to ignore the tool, a trade-off against misses
+set by their utilities (Decision p.15–16). A Translate witness is
+correct only <em>with respect to the model’s own specification</em>: 13
+of Haiku’s main-set SP2 Translate traces (40 across all sets) were legal
+only in its mistranslated problem, as the planner optimises the model as
+written, not as meant (the King Midas problem, ResponsibleAI p.35).
+Witnesses must therefore be executed or replayed on the real artefact,
+as our scoring does.</p>
 <p><strong>Accountability.</strong> Translate leaves an audit trail
 (spec, solver log, witness), close to a white-box explanation
 (ResponsibleAI p.24). A named engineer can then sign off on <em>what was
@@ -1375,16 +1328,15 @@ checked</em>. Direct answers are post-hoc narratives (ResponsibleAI
 p.25–26). Responsibility stays with the humans who sign off
 (ResponsibleAI p.6): the tool supports a human–AI review team rather
 than replacing the reviewer (ResponsibleAI p.45).</p>
-<p><strong>Dual use and attacks on the reviewer.</strong> A failing
-input is an adversarial example by another name (ResponsibleAI p.30), so
-the same pipeline yields exploits, and AI lowers the cost of attacks
-(ResponsibleAI p.2–4). We would run it only on code the user owns,
+<p><strong>Dual use and attacks on the reviewer.</strong> A witness can
+help construct an exploit, and AI lowers the cost of attacks
+(ResponsibleAI p.2–4); we would run the tool only on code the user owns,
 follow coordinated disclosure, and withhold witnesses for unpatched
 deployed systems. A comment planted in the code could steer the Direct
-arm to “no bug” (ResponsibleAI p.31). Translate is less exposed because
-the solver decides, though its spec is still model-written. Sending
-proprietary code to a hosted model also discloses it (ResponsibleAI
-p.8–10); on-premise open-weight models avoid that.</p>
+arm to “no bug” (ResponsibleAI p.31); Translate may be less exposed,
+since the solver decides, but its spec is still model-written
+(untested). Sending proprietary code to a hosted model also discloses it
+(ResponsibleAI p.8–10); on-premise open-weight models avoid that.</p>
 <h1 id="division-of-work-and-use-of-ai-tools">8. Division of work and
 use of AI tools</h1>
 <p><strong>Contributions.</strong> The work departed from the proposal’s
@@ -1683,9 +1635,10 @@ satisfiable T is the shortest trace):</p>
 </tbody>
 </table>
 <p>Decoded plan (8 events): <code>send o1 a0 t0</code> →
-<code>accept-new-racy o1 a0</code> → <code>tick o1 a0 t0 t1</code> →
-<code>time-out-and-retry o1 a0 a1 t1</code> → <code>send o1 a1 t0</code>
-→ <code>accept-new-racy o1 a1</code> → <code>charge o1 a1</code> →
+<code>tick o1 a0 t0 t1</code> →
+<code>time-out-and-retry o1 a0 a1 t1</code> →
+<code>accept-new-racy o1 a0</code> → <code>send o1 a1 t0</code> →
+<code>accept-new-racy o1 a1</code> → <code>charge o1 a1</code> →
 <code>charge-again o1 a0</code></p>
 <h2 id="b.3-sp2-certifying-the-fixed-variant-with-gbfs-h_ff-payments-fixed-1">B.3
 SP2: certifying the fixed variant with GBFS + h_FF
