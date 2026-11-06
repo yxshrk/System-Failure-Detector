@@ -246,7 +246,9 @@ is what
 returns on
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>.</li>
 </ul>
-<p>Intermediate values are not separate variables: each is a shared
+<p>The result
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math>
+and intermediate values are not separate variables: each is a shared
 sub-term of one formula DAG, fixed by the inputs, i.e. an auxiliary
 variable already eliminated (CSP p.13). The input domains are finite, so
 this is a finite CSP and NP-complete (CSP p.8). What Z3 receives,
@@ -1598,8 +1600,8 @@ DEL = {in-flight o1 a1}</code></pre>
 = 4 (each clause is a disjunction). The static design fact
 <code>(dedup-racy)</code> is true at every step, so the encoder fixes it
 to a constant and its precondition clause is satisfied and dropped:</p>
-<pre><code>¬accept-new-racy(o1,a1)@4 ∨ no-record(o1)@4
-¬accept-new-racy(o1,a1)@4 ∨ in-flight(o1,a1)@4
+<pre><code>¬accept-new-racy(o1,a1)@4 ∨ in-flight(o1,a1)@4
+¬accept-new-racy(o1,a1)@4 ∨ no-record(o1)@4
 ¬accept-new-racy(o1,a1)@4 ∨ approved(o1,a1)@5
 ¬accept-new-racy(o1,a1)@4 ∨ ¬in-flight(o1,a1)@5</code></pre>
 <p><strong>Explanatory frame clauses</strong> for the fact

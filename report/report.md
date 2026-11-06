@@ -63,7 +63,7 @@ the solver's satisfying assignment to $x$ is the witness.
 * **Domains $D$:** the stated ranges, e.g. $1 \le month \le 12$, $0 \le n \le m$, and each $e_i \in [lo, hi]$. Sorted or distinct lists add ordering or inequality constraints.
 * **Constraints $C$:** $\llbracket f \rrbracket(x, r) \land \lnot spec(x, r)$, where $\llbracket f \rrbracket(x, r)$ holds iff $r$ is what $f$ returns on $x$.
 
-Intermediate values are not separate variables: each is a shared sub-term of one formula DAG, fixed by
+The result $r$ and intermediate values are not separate variables: each is a shared sub-term of one formula DAG, fixed by
 the inputs, i.e. an auxiliary variable already eliminated (CSP p.13). The input domains are finite, so
 this is a finite CSP and NP-complete (CSP p.8). What Z3 receives, however, is SMT over unbounded
 integers (`Int`) with the bounds as ordinary constraints. Products of variables and `//` or `%` by a
