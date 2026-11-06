@@ -1246,20 +1246,19 @@ undecided and the lower cost (US$0.051 vs 0.062), so under this loss and
 these rates it wins for any
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>π</mi><annotation encoding="application/x-tex">\pi</annotation></semantics></math>
 and positive costs; on the opaque set it trades two detections for half
-the false alarms. For the 5.5 models the error rates are zero, so cost
-meets abstention: on SP2 Translate is cheaper and wins outright on the
+the false alarms. For the 5.5 models on SP2 the error rates are zero, so
+cost meets abstention: Translate is cheaper and wins outright on the
 main set, but is undecided on inventory’s fixed design from size 8,
-where Direct answers correctly; on SP1 Opus’s Translate is dearer with
-six checks undecided, so Direct wins, and Sonnet’s is slightly cheaper
-with one undecided, so it wins only if
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>c</mi><mrow><mi>r</mi><mi>e</mi><mi>v</mi></mrow></msub><annotation encoding="application/x-tex">c_{rev}</annotation></semantics></math>
-is tiny. Only Translate can <em>certify</em> absence, with a solver
-result and audit trail that hold relative to the translated model.
-<em>Direct suffices</em> when the specification is local and explicit,
-the artefact small and the model strong (SP1 at every tier; SP2 for the
-5.5 models, even with opaque names). <em>Translate’s weaknesses</em> are
-specification correctness and the tools’ state-space and term-size
-limits.</p>
+where Direct answers correctly. On SP1, Opus’s Translate is dearer and
+leaves one bug and five controls undecided, so Direct wins; Sonnet’s
+small model-call saving must be weighed against one unresolved faulty
+instance and its review cost. Only Translate can <em>certify</em>
+absence, with a solver result and audit trail that hold relative to the
+translated model. <em>Direct suffices</em> when the specification is
+local and explicit, the artefact small and the model strong (SP1 at
+every tier; SP2 for the 5.5 models, even with opaque names).
+<em>Translate’s weaknesses</em> are specification correctness and the
+tools’ state-space and term-size limits.</p>
 <p>Direct accuracy on problems of this size may keep rising, as the step
 from Haiku 4.5 to the 5.5 models suggests. But “computationally
 difficult problems [are] likely to remain difficult” (GenAI p.31). Even
@@ -1552,8 +1551,8 @@ DEL = {in-flight o1 a1}</code></pre>
 = 4 (each clause is a disjunction). The static design fact
 <code>(dedup-racy)</code> is true at every step, so the encoder fixes it
 to a constant and its precondition clause is satisfied and dropped:</p>
-<pre><code>¬accept-new-racy(o1,a1)@4 ∨ in-flight(o1,a1)@4
-¬accept-new-racy(o1,a1)@4 ∨ no-record(o1)@4
+<pre><code>¬accept-new-racy(o1,a1)@4 ∨ no-record(o1)@4
+¬accept-new-racy(o1,a1)@4 ∨ in-flight(o1,a1)@4
 ¬accept-new-racy(o1,a1)@4 ∨ approved(o1,a1)@5
 ¬accept-new-racy(o1,a1)@4 ∨ ¬in-flight(o1,a1)@5</code></pre>
 <p><strong>Explanatory frame clauses</strong> for the fact
@@ -1635,10 +1634,9 @@ satisfiable T is the shortest trace):</p>
 </tbody>
 </table>
 <p>Decoded plan (8 events): <code>send o1 a0 t0</code> →
-<code>tick o1 a0 t0 t1</code> →
-<code>time-out-and-retry o1 a0 a1 t1</code> →
-<code>accept-new-racy o1 a0</code> → <code>send o1 a1 t0</code> →
-<code>accept-new-racy o1 a1</code> → <code>charge o1 a1</code> →
+<code>accept-new-racy o1 a0</code> → <code>tick o1 a0 t0 t1</code> →
+<code>time-out-and-retry o1 a0 a1 t1</code> → <code>send o1 a1 t0</code>
+→ <code>accept-new-racy o1 a1</code> → <code>charge o1 a1</code> →
 <code>charge-again o1 a0</code></p>
 <h2 id="b.3-sp2-certifying-the-fixed-variant-with-gbfs-h_ff-payments-fixed-1">B.3
 SP2: certifying the fixed variant with GBFS + h_FF

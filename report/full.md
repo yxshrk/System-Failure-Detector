@@ -444,11 +444,11 @@ $$EU(arm) = -\big((1-\pi)\,P_{FA}\,c_{FA} + \pi\,P_{miss}\,c_{miss} + P_{und}\,c
 For Haiku on the SP2 main set, Translate has fewer false alarms (35% vs 60%), fewer flawed designs
 without a valid trace (6 vs 9 of 40), nothing undecided and the lower cost (US$0.051 vs 0.062), so
 under this loss and these rates it wins for any $\pi$ and positive costs; on the opaque set it trades
-two detections for half the false alarms. For the 5.5 models the error rates are zero, so cost meets
-abstention: on SP2 Translate is cheaper and wins outright on the main set, but is undecided on
-inventory's fixed design from size 8, where Direct answers correctly; on SP1 Opus's Translate is dearer
-with six checks undecided, so Direct wins, and Sonnet's is slightly cheaper with one undecided, so it
-wins only if $c_{rev}$ is tiny. Only Translate can *certify* absence, with a solver result and
+two detections for half the false alarms. For the 5.5 models on SP2 the error rates are zero, so cost
+meets abstention: Translate is cheaper and wins outright on the main set, but is undecided on
+inventory's fixed design from size 8, where Direct answers correctly. On SP1, Opus's Translate is
+dearer and leaves one bug and five controls undecided, so Direct wins; Sonnet's small model-call
+saving must be weighed against one unresolved faulty instance and its review cost. Only Translate can *certify* absence, with a solver result and
 audit trail that hold relative to the translated model. *Direct suffices* when the specification is local and explicit, the artefact small and the model strong
 (SP1 at every tier; SP2 for the 5.5 models, even with opaque names). *Translate's weaknesses* are
 specification correctness and the tools' state-space and term-size limits.
@@ -694,8 +694,8 @@ DEL = {in-flight o1 a1}
 **Precondition and effect clauses** for this action at t = 4 (each clause is a disjunction). The static design fact `(dedup-racy)` is true at every step, so the encoder fixes it to a constant and its precondition clause is satisfied and dropped:
 
 ```
-¬accept-new-racy(o1,a1)@4 ∨ in-flight(o1,a1)@4
 ¬accept-new-racy(o1,a1)@4 ∨ no-record(o1)@4
+¬accept-new-racy(o1,a1)@4 ∨ in-flight(o1,a1)@4
 ¬accept-new-racy(o1,a1)@4 ∨ approved(o1,a1)@5
 ¬accept-new-racy(o1,a1)@4 ∨ ¬in-flight(o1,a1)@5
 ```
@@ -723,7 +723,7 @@ no-record(o1)@4 ∨ ¬no-record(o1)@5
 | 7 | 258 | 773 | UNSAT |
 | 8 | 332 | 1016 | SAT |
 
-Decoded plan (8 events): `send o1 a0 t0` → `tick o1 a0 t0 t1` → `time-out-and-retry o1 a0 a1 t1` → `accept-new-racy o1 a0` → `send o1 a1 t0` → `accept-new-racy o1 a1` → `charge o1 a1` → `charge-again o1 a0`
+Decoded plan (8 events): `send o1 a0 t0` → `accept-new-racy o1 a0` → `tick o1 a0 t0 t1` → `time-out-and-retry o1 a0 a1 t1` → `send o1 a1 t0` → `accept-new-racy o1 a1` → `charge o1 a1` → `charge-again o1 a0`
 
 
 ## B.3 SP2: certifying the fixed variant with GBFS + h_FF (`payments-fixed-1`)
