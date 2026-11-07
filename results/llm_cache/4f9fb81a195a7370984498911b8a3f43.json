@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-112-has_pair_sum",
+ "model": "qwen3.8:27b",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `xs` is a list of 0 to 6 integers, each between -10 and 10 inclusive\n- `target` is an integer with -20 <= target <= 20\n\n```python\ndef has_pair_sum(xs, target):\n    \"\"\"Return True if there are two different positions i and j in `xs` with\n    xs[i] + xs[j] == target, and False otherwise.\n    \"\"\"\n    for i in range(len(xs)):\n        if target - xs[i] in xs[i + 1:]:\n            return True\n    return False\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"xs\": ..., \"target\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "The function checks each position `i` for a matching value at a later position `j > i`. Any valid pair of different positions has one earlier and one later index, so it will be found when `i` is the earlier index. Empty lists and single-element lists also behave correctly.\n\n```json\n{\"verdict\": \"no_bug\"}\n```",
+  "model": "qwen3.8:27b",
+  "input_tokens": 382,
+  "output_tokens": 479,
+  "thinking_tokens": 0,
+  "cost_usd": 0.0,
+  "seconds": 21.826184082980035,
+  "cached": false,
+  "error": null
+ }
+}

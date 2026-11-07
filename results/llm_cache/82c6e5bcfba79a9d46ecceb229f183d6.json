@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-032-largest_proper_divisor",
+ "model": "llama3.1:8b",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `n` is an integer with 2 <= n <= 120\n\n```python\ndef largest_proper_divisor(n):\n    \"\"\"Return the largest integer d with 1 <= d < n that divides `n` exactly.\n    \"\"\"\n    best = 1\n    for d in range(1, n + 1):\n        if n % d == 0:\n            best = d\n    return best\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"n\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "Let's analyze the function.\n\nThe function iterates over all numbers from 1 to `n` (inclusive) and keeps track of the largest divisor found so far. The docstring specifies that it should return the largest integer `d` with `1 <= d < n` that divides `n` exactly.\n\nHowever, there's a problem: if `n` is prime, then its only divisors are 1 and itself. In this case, the function will return `n`, which does not satisfy the condition `d < n`.\n\nFor example, if we call `largest_proper_divisor(5)`, it should return 4 (the largest proper divisor of 5), but instead it returns 5.\n\n```json\n{\n    \"verdict\": \"bug\",\n    \"failing_input\": {\"n\": 5},\n    \"expected\": 4,\n    \"actual\": 5\n}\n```\n\nThis is a bug because the function does not meet its docstring for every valid input.",
+  "model": "llama3.1:8b",
+  "input_tokens": 294,
+  "output_tokens": 208,
+  "thinking_tokens": 0,
+  "cost_usd": 0.0,
+  "seconds": 8.351715500000864,
+  "cached": false,
+  "error": null
+ }
+}

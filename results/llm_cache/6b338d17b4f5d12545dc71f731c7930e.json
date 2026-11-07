@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-031-largest_proper_divisor",
+ "model": "qwen3.8:27b",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `n` is an integer with 2 <= n <= 120\n\n```python\ndef largest_proper_divisor(n):\n    \"\"\"Return the largest integer d with 1 <= d < n that divides `n` exactly.\n    \"\"\"\n    best = 1\n    for d in range(1, n):\n        if n % d != 0:\n            best = d\n    return best\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"n\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "The function has a bug: it updates `best` when `n % d != 0`, i.e. when `d` does **not** divide `n`. So for most inputs it returns the largest non-divisor below `n`, not the largest proper divisor.\n\nFor example, with `n = 3`, the largest proper divisor is `1`, but the code returns `2`.\n\n```json\n{\"verdict\": \"bug\", \"failing_input\": {\"n\": 3}, \"expected\": 1, \"actual\": 2}\n```",
+  "model": "qwen3.8:27b",
+  "input_tokens": 342,
+  "output_tokens": 561,
+  "thinking_tokens": 0,
+  "cost_usd": 0.0,
+  "seconds": 14.796396083023865,
+  "cached": false,
+  "error": null
+ }
+}

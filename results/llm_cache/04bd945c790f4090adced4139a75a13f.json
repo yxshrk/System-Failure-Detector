@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-009-has_near_pair",
+ "model": "qwen3.8:27b",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `vals` is a list of 0 to 6 integers, each between -20 and 20 inclusive\n- `gap` is an integer with 0 <= gap <= 6\n\n```python\ndef has_near_pair(vals, gap):\n    \"\"\"Return True if there are two different positions i and j in `vals` whose\n    values differ by strictly less than `gap` (that is, abs(vals[i] - vals[j]) < gap),\n    and False otherwise.\n    \"\"\"\n    for i in range(len(vals) - 1):\n        for j in range(i + 1, len(vals)):\n            if abs(vals[i] - vals[j]) < gap:\n                return True\n    return False\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"vals\": ..., \"gap\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "The function checks every pair of distinct positions `i < j` and returns `True` exactly when `abs(vals[i] - vals[j]) < gap`. For valid inputs, including empty lists, single-element lists, and `gap = 0`, this matches the docstring.\n\n```json\n{\"verdict\": \"no_bug\"}\n```",
+  "model": "qwen3.8:27b",
+  "input_tokens": 412,
+  "output_tokens": 479,
+  "thinking_tokens": 0,
+  "cost_usd": 0.0,
+  "seconds": 13.233304958004737,
+  "cached": false,
+  "error": null
+ }
+}

@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-141-sort4",
+ "model": "qwen3.8:27b",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `a` is an integer with 0 <= a <= 9\n- `b` is an integer with 0 <= b <= 9\n- `c` is an integer with 0 <= c <= 9\n- `d` is an integer with 0 <= d <= 9\n\n```python\ndef sort4(a, b, c, d):\n    \"\"\"Return the four integers a, b, c, d as a tuple in non-decreasing order.\n    \"\"\"\n    if a > b:\n        a, b = (b, a)\n    if c > d:\n        c, d = (d, c)\n    if a > c:\n        a, c = (c, a)\n    if b >= d:\n        b, d = (d, b)\n    if b > c:\n        b, c = (c, b)\n    return (a, b, c, d)\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"a\": ..., \"b\": ..., \"c\": ..., \"d\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "The code implements the standard 4-element sorting network:\n\n1. Sort `(a, b)`\n2. Sort `(c, d)`\n3. Sort `(a, c)`\n4. Sort `(b, d)`\n5. Sort `(b, c)`\n\nThis guarantees the final tuple is in non-decreasing order for all valid integer inputs. The use of `b >= d` instead of `b > d` is harmless because swapping equal values does not change the result.\n\n```json\n{\"verdict\": \"no_bug\"}\n```",
+  "model": "qwen3.8:27b",
+  "input_tokens": 470,
+  "output_tokens": 4920,
+  "thinking_tokens": 4802,
+  "cost_usd": 0.0,
+  "seconds": 92.81287404100294,
+  "cached": false,
+  "error": null
+ }
+}

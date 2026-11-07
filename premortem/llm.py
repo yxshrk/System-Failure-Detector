@@ -21,6 +21,7 @@ cache directory.
 from __future__ import annotations
 
 import hashlib
+import http.client
 import json
 import os
 import re
@@ -162,7 +163,7 @@ class OpenAICompatible(CachedLLM):
     backend = "openai-compatible"
 
     def __init__(self, model: str, base_url: str, api_key: str = "", cache_dir: Path = CACHE_DIR,
-                 timeout: int = 900, max_tokens: int = 8192, alias: str | None = None):
+                 timeout: int = 1800, max_tokens: int = 32768, alias: str | None = None):
         self.alias = alias or model
         self.model = model
         self.base_url = base_url.rstrip("/")
@@ -184,31 +185,81 @@ class OpenAICompatible(CachedLLM):
     def list_models(self) -> list[str]:
         return [m["id"] for m in self._request("/models").get("data", [])]
 
+    def _stream(self, body: dict) -> tuple[str, str, dict, str]:
+        """POST a streaming chat request; return (content, reasoning, usage, model).
+
+        Streaming keeps the connection active while a reasoning model thinks: non-streaming requests to
+        Qwen on SoCLaaS were dropped after about a minute, before any answer arrived.
+        """
+        headers = {"Content-Type": "application/json"}
+        if self.api_key:
+            headers["Authorization"] = f"Bearer {self.api_key}"
+        req = urllib.request.Request(self.base_url + "/chat/completions", data=json.dumps(body).encode(), headers=headers)
+        content, reasoning, usage, model = [], [], {}, self.model
+        with urllib.request.urlopen(req, timeout=self.timeout) as resp:
+            for raw in resp:
+                line = raw.decode(errors="replace").strip()
+                if not line.startswith("data:"):
+                    continue
+                payload = line[5:].strip()
+                if payload == "[DONE]":
+                    break
+                d = json.loads(payload)
+                usage = d.get("usage") or usage
+                model = d.get("model", model)
+                for ch in d.get("choices", []):
+                    delta = ch.get("delta") or {}
+                    content.append(delta.get("content") or "")
+                    reasoning.append(delta.get("reasoning_content") or delta.get("reasoning") or "")
+        return "".join(content), "".join(reasoning), usage, model
+
     def _call(self, system: str, prompt: str, retries: int = 3) -> Completion:
-        body = {"model": self.model, "temperature": 0, "max_tokens": self.max_tokens,
+        body = {"model": self.model, "temperature": 0, "max_tokens": self.max_tokens, "stream": True,
+                "stream_options": {"include_usage": True},
                 "messages": [{"role": "system", "content": system}, {"role": "user", "content": prompt}]}
         last = ""
-        for attempt in range(retries):
+        attempt = busy = 0
+        while attempt < retries:
             t0 = time.perf_counter()
             try:
-                d = self._request("/chat/completions", body)
+                content, reasoning, usage, model = self._stream(body)
+            except http.client.RemoteDisconnected as e:
+                # The gateway drops queued requests it has not started within about a minute. That is load,
+                # not an answer, so wait and resubmit (up to ~30 min) without spending a real attempt.
+                last = f"connection error: {e}"
+                busy += 1
+                if busy > 40:
+                    break
+                time.sleep(min(60, 10 * busy))
+                continue
             except urllib.error.HTTPError as e:
                 detail = e.read().decode(errors="replace")[:300]
                 if e.code in (401, 403):
                     raise LLMAuthError(f"{self.base_url}: HTTP {e.code} {detail}") from e
                 last = f"HTTP {e.code}: {detail}"
-                time.sleep(10 * (attempt + 1))
+                if e.code == 429:  # per-key queue full: load again, so wait like a dropped request
+                    busy += 1
+                    if busy > 40:
+                        break
+                    time.sleep(min(60, 10 * busy))
+                    continue
+                attempt += 1
+                time.sleep(10 * attempt)
                 continue
-            except (urllib.error.URLError, TimeoutError, OSError) as e:
+            except (urllib.error.URLError, TimeoutError, OSError, json.JSONDecodeError) as e:
                 last = f"connection error: {e}"
-                time.sleep(5 * (attempt + 1))
+                attempt += 1
+                time.sleep(5 * attempt)
                 continue
-            msg = d["choices"][0]["message"]
-            usage = d.get("usage") or {}
+            # Reasoning models (Qwen3, DeepSeek-R1) may inline their chain of thought; the arms parse the answer only.
+            text = _THINK.sub("", content).strip()
+            if not text:  # stream cut before the answer (gateway time limit) or the token budget ran out in reasoning
+                last = f"empty answer after {time.perf_counter() - t0:.0f}s ({len(reasoning)} reasoning chars)"
+                attempt += 1
+                continue
             return Completion(
-                # Reasoning models (Qwen3, DeepSeek-R1) may inline their chain of thought; the arms parse the answer only.
-                text=_THINK.sub("", msg.get("content") or "").strip(),
-                model=d.get("model", self.model),
+                text=text,
+                model=model,
                 input_tokens=usage.get("prompt_tokens", 0),
                 output_tokens=usage.get("completion_tokens", 0),
                 thinking_tokens=(usage.get("completion_tokens_details") or {}).get("reasoning_tokens", 0),

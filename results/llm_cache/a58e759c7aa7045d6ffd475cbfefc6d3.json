@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-translate:sp1-141-sort4:0",
+ "model": "qwen3.8:27b",
+ "system": "You are a formal-methods engineer. You translate informal specifications into precise, machine-checkable pre- and postconditions for an automatic verifier.",
+ "prompt": "Below is a Python function whose docstring is its specification. Do NOT judge the code yourself. Instead, translate the docstring into a formal specification that an automatic bounded verifier will check the code against.\n\nValid inputs:\n- `a` is an integer with 0 <= a <= 9\n- `b` is an integer with 0 <= b <= 9\n- `c` is an integer with 0 <= c <= 9\n- `d` is an integer with 0 <= d <= 9\n\n```python\ndef sort4(a, b, c, d):\n    \"\"\"Return the four integers a, b, c, d as a tuple in non-decreasing order.\n    \"\"\"\n    if a > b:\n        a, b = (b, a)\n    if c > d:\n        c, d = (d, c)\n    if a > c:\n        a, c = (c, a)\n    if b >= d:\n        b, d = (d, b)\n    if b > c:\n        b, c = (c, b)\n    return (a, b, c, d)\n```\n\nWrite two Python functions:\n\n    def pre(a, b, c, d):            # -> bool: True for inputs the docstring's contract covers (you may just return True)\n    def post(a, b, c, d, result):   # -> bool: True exactly when `result` is what the docstring requires for these inputs\n\nHow the verifier works: it symbolically executes `sort4` on every valid input (lists up to their maximum length; loops unrolled up to 8 iterations) and asks the Z3 SMT solver for an input where pre(...) is True but `sort4` raises an exception or post(...) is False. Any such input is reported as a failure.\n\nThe verifier understands only this subset of Python, for pre, post and any helper functions you define:\n- values: ints, bools, None, lists of ints, tuples (no strings, floats, dicts, sets, lambdas, classes, imports, recursion)\n- statements: assignment, augmented assignment, if/elif/else, for over range(...)/lists/enumerate(...)/zip(...), while, break, continue, return, assert\n- built-ins: len, abs, min, max, sum, sorted, reversed, range, list, all, any, enumerate, zip, divmod; list methods append, pop, insert, count, index, copy, extend, remove, sort, reverse\n- integer arithmetic only: use // and %, never /\nGuidance:\n- Specify the docstring's intended behaviour, not what the code happens to do.\n- Computing the required answer independently (for example with a simple loop) and comparing it with `result` is a good strategy.\n- `post` receives the original, unmodified inputs.\n\nAnswer with one ```python block containing pre, post and any helpers.",
+ "completion": {
+  "text": "```python\ndef pre(a, b, c, d):\n    return (\n        (0 <= a and a <= 9) and\n        (0 <= b and b <= 9) and\n        (0 <= c and c <= 9) and\n        (0 <= d and d <= 9)\n    )\n\ndef post(a, b, c, d, result):\n    s = sorted([a, b, c, d])\n    return result == (s[0], s[1], s[2], s[3])\n```",
+  "model": "qwen3.8:27b",
+  "input_tokens": 719,
+  "output_tokens": 3837,
+  "thinking_tokens": 0,
+  "cost_usd": 0.0,
+  "seconds": 202.69751533298404,
+  "cached": false,
+  "error": null
+ }
+}

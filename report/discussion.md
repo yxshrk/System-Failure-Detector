@@ -24,6 +24,20 @@ Translation does not remove misreading; Haiku moves the same mistake into the de
 and adds permissive initial facts that the planner turns into shortcuts (§A.5): a classical planner is
 adversarial towards its model. Still, Haiku's false alarms roughly halved, at lower cost.
 
+**Open weights: a floor below which translation silences instead of fixing.** Qwen 3.8 27B, free on
+SoC's endpoint, matches the 5.5 models on SP1 and on the SP2 main set in Translate, and in Direct differs only
+by three format slips, at the cost of reasoning (about 8–10k output tokens and 5–10 minutes per SP2 Direct answer on a shared GPU).
+Llama 3.1 8B, which does not reason, fabricates in Direct: witnesses that do not reproduce, and traces whose
+events have the wrong names or arity (37 of 48 classified failures on the main set). Translation does not
+repair this; it silences it. Llama cannot write the formal language reliably (70 of 174 SP1 runs end with no
+accepted spec, 8 of 60 SP2 problems never parse), and what it writes is incomplete: problem files missing a
+third of the initial state make flawed and fixed designs alike look safe, and unsound specs cause all of its
+SP1 false alarms. The solver is faithful to an under-constrained model that rarely admits any failure, so
+false alarms fall for the wrong reason. Against the trivial policy "always answer safe" (no false alarms,
+every violation missed), Llama Translate on the SP2 main set adds one valid trace and two false alarms.
+"Translate when the model is weak" thus holds only above a floor: the model must write the formal language
+correctly and completely, and SP3's recall, not the solver, is where a weak model fails.
+
 **Length vs. familiarity.** Our violations are textbook patterns; once one is recognised, a longer trace
 is bookkeeping. From 6–15 to 30–51 events the 5.5 models found a valid trace on every violating design, and their Direct answers grew
 only from about 1.2k to 1.5k output tokens (Haiku's per-length cells hold 2–16 designs). With design facts renamed `mode-N`, they were still never wrong, so they map the
@@ -54,7 +68,9 @@ $$EU(arm) = -\big((1-\pi)\,P_{FA}\,c_{FA} + \pi\,P_{miss}\,c_{miss} + P_{und}\,c
 For Haiku on the SP2 main set, Translate has fewer false alarms (35% vs 60%), fewer flawed designs
 without a valid trace (6 vs 9 of 40), nothing undecided and the lower cost (US$0.051 vs 0.062), so
 under this loss and these rates it wins for any $\pi$ and positive costs; on the opaque set it trades
-two detections for half the false alarms. For the 5.5 models on SP2 the error rates are zero, so cost
+two detections for half the false alarms. Llama's Translate also has both lower rates than its Direct (10% vs 70% false alarms; 39 vs 40
+flawed designs without a valid trace), yet beats "always safe" only if a miss costs more than four false
+alarms (at $\pi = 1/2$, ignoring review of its no-answers), and then by a single trace. For the 5.5 models on SP2 the error rates are zero, so cost
 meets abstention: Translate is cheaper and wins outright on the main set, but is undecided on
 inventory's fixed design from size 8, where Direct answers correctly. On SP1, Opus's Translate is
 dearer and leaves one bug and five controls undecided, so Direct wins; Sonnet's small model-call
@@ -73,5 +89,5 @@ suggests. But "computationally difficult problems [are] likely to remain difficu
 * *Specifications.* Docstrings are complete; vaguer real ones would hurt Translate more. Functions were selected to be encodable (integers, Booleans, lists; no strings, floats or recursion), favouring the tools.
 * *Familiarity and contamination.* The SP1 functions derive from public benchmarks, and renaming mitigates but does not remove contamination. The SP2 families are textbook patterns; the opaque ablation removes lexical cues, not conceptual familiarity.
 * *Authorship.* The design documents and gold models were produced together, not independently; two documents contradicted their models and were corrected, with all affected instances rerun.
-* *Scaffolding: the event model gives the mechanism away.* The given action schemas contain each failure mechanism as a named, guarded event (`accept-new-racy` does not delete `no-record`), so SP2 Translate reduces to choosing one or two design facts per family, and that choice decides the outcome: correct in 47/49 (Haiku) and 60/60 (5.5 models) main-set problems with exact facts, 0/11 with wrong ones. Writing the event model (Planning p.15), as in [11], is untested.
-* *Sampling and configuration.* Each instance is sampled once, instances share five templates (so intervals and p-values are nominal), and many cells are at ceiling. Models ran with default thinking budgets, so generations also differ in effort (Haiku used 10–15k tokens, the 5.5 models about 1k).
+* *Scaffolding: the event model gives the mechanism away.* The given action schemas contain each failure mechanism as a named, guarded event (`accept-new-racy` does not delete `no-record`), so SP2 Translate reduces to choosing one or two design facts per family, and that choice decides the outcome: correct in 47/49 (Haiku) and 60/60 (5.5 models, Qwen) main-set problems with exact facts, 0/11 (Haiku) with wrong ones. Writing the event model (Planning p.15), as in [11], is untested.
+* *Sampling and configuration.* Each instance is sampled once, instances share five templates (so intervals and p-values are nominal), and many cells are at ceiling. Models ran with default thinking budgets, so generations also differ in effort (Haiku used 10–15k tokens, the 5.5 models about 1k). The open-weight models ran at temperature 0 with a 32k-token budget; Qwen ran SP1 and the SP2 main set only, and lost 4 SP1 Translate answers to the endpoint's 15-minute stream limit.

@@ -20,8 +20,10 @@ import pandas as pd  # noqa: E402
 ROOT = Path(__file__).resolve().parents[1]
 RES = ROOT / "results"
 FIG = RES / "figures"
-MODEL_ORDER = ["haiku", "sonnet", "opus"]
-MODEL_LABEL = {"haiku": "Haiku 4.5", "sonnet": "Sonnet 5.5", "opus": "Opus 5.5"}
+MODEL_ORDER = ["haiku", "sonnet", "opus", "soc:llama3.1:8b", "soc:qwen3.8:27b"]
+MODEL_LABEL = {"haiku": "Haiku 4.5", "sonnet": "Sonnet 5.5", "opus": "Opus 5.5",
+               "soc:llama3.1:8b": "Llama 3.1 8B", "soc:qwen3.8:27b": "Qwen 3.8 27B"}
+WEAK_MODEL = "soc:llama3.1:8b"  # plotted on its own: pooling it would hide the strong models' ceiling
 ARM_LABEL = {"direct": "Direct", "translate": "Translate"}
 
 # Reference palette (dataviz skill, light mode): categorical slots in fixed order.
@@ -231,19 +233,24 @@ def spec_style_tables(tr: pd.DataFrame, out: list[str]):
 
 
 def fig_sp1(df: pd.DataFrame):
-    """Valid witnesses vs. trigger rarity: both LLM arms (pooled over models) against random testing."""
+    """Valid witnesses vs. trigger rarity: both LLM arms (pooled over the strong models), the weak model on its own,
+    and random testing."""
     buckets = ["common", "uncommon", "rare", "very_rare"]
     labels = ["common\n(>=10%)", "uncommon\n(1-10%)", "rare\n(0.1-1%)", "very rare\n(<0.1%)"]
     inst = pd.DataFrame(json.loads((ROOT / "data" / "sp1" / "instances.json").read_text())["instances"])
     bugs_i = inst[(inst.kind == "bug") & (inst.tier == "base")]
-    fig, ax = plt.subplots(figsize=(3.3, 2.45), facecolor=SURFACE)  # printed side by side at half width
+    fig, ax = plt.subplots(figsize=(3.3, 2.9), facecolor=SURFACE)  # printed side by side at half width
     style(ax)
     series = []
     for arm in ("direct", "translate"):
         d = df[(df.arm == arm) & (df.kind == "bug") & (df.tier == "base")]
-        ys = [100 * (d[d.bucket == b].outcome == "valid_witness").mean() for b in buckets]
-        n_models = d.model.nunique()
-        series.append((f"LLM {ARM_LABEL[arm]} ({n_models} models)", ys, ARM_COLOR[arm], "-"))
+        for weak, ls in ((False, "-"), (True, "--")):
+            dd = d[(d.model == WEAK_MODEL) == weak]
+            if dd.empty:
+                continue
+            ys = [100 * (dd[dd.bucket == b].outcome == "valid_witness").mean() for b in buckets]
+            name = MODEL_LABEL[WEAK_MODEL] if weak else f"LLM ({dd.model.nunique()} models)"
+            series.append((f"{name} {ARM_LABEL[arm]}", ys, ARM_COLOR[arm], ls))
     for n, col in ((100, "#1baf7a"), (1000, "#6250d6")):
         ys = [100 * (1 - (1 - bugs_i[bugs_i.bucket == b].rarity) ** n).mean() for b in buckets]
         series.append((f"random testing, {n:,} inputs", ys, col, "-"))
@@ -254,7 +261,7 @@ def fig_sp1(df: pd.DataFrame):
     ax.tick_params(axis="y", labelsize=6.5)
     ax.set_ylim(0, 105)
     ax.set_ylabel("bugs with a valid witness (%)", fontsize=7, color=INK2)
-    ax.legend(frameon=False, fontsize=6.5, loc="lower left")
+    ax.legend(frameon=False, fontsize=5.5, loc="upper center", bbox_to_anchor=(0.45, -0.3), ncol=2)
     ax.set_title("SP1 base tier: witness vs. trigger rarity", fontsize=7.5, color=INK, loc="left")
     fig.tight_layout()
     fig.savefig(FIG / "sp1_rarity.png", dpi=200, facecolor=SURFACE)
@@ -421,7 +428,7 @@ def fig_sp2(df: pd.DataFrame):
     d0 = df[(df.model == "haiku") & (df.violation == True)]  # noqa: E712
     if d0.empty:
         return
-    fig, ax = plt.subplots(figsize=(3.3, 2.45), facecolor=SURFACE)  # printed side by side at half width
+    fig, ax = plt.subplots(figsize=(3.3, 2.9), facecolor=SURFACE)  # printed side by side at half width
     style(ax)
     for arm in ("direct", "translate"):
         d = d0[d0.arm == arm]

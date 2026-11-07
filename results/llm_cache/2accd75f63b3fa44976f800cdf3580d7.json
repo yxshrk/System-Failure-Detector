@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-065-letter_grade",
+ "model": "qwen3.8:27b",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `score` is an integer with 0 <= score <= 100\n\n```python\ndef letter_grade(score):\n    \"\"\"Map an exam score to a grade point: 4 for a score of 90 or more, 3 for 80 to 89,\n    2 for 70 to 79, 1 for 60 to 69, and 0 below 60.\n    \"\"\"\n    return max(0, min(4, (score - 50) // 10))\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"score\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "The function matches the docstring for all valid integer scores from 0 to 100.\n\n- `0` to `59`: `(score - 50) // 10` is negative or `0`, and `max(0, ...)` makes it `0`.\n- `60` to `69`: result is `1`.\n- `70` to `79`: result is `2`.\n- `80` to `89`: result is `3`.\n- `90` to `100`: result is `4` after `min(4, ...)`.\n\n```json\n{\"verdict\": \"no_bug\"}\n```",
+  "model": "qwen3.8:27b",
+  "input_tokens": 371,
+  "output_tokens": 538,
+  "thinking_tokens": 0,
+  "cost_usd": 0.0,
+  "seconds": 12.9778244580084,
+  "cached": false,
+  "error": null
+ }
+}

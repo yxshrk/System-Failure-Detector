@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-133-withdraw",
+ "model": "qwen3.8:27b",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `balance` is an integer with 0 <= balance <= 1000\n- `amount` is an integer with 0 <= amount <= 1000\n- `overdraft` is a bool\n\n```python\ndef withdraw(balance, amount, overdraft):\n    \"\"\"Process a withdrawal of `amount` from an account holding `balance`. A withdrawal\n    of 100 or more is free; a smaller withdrawal costs a fee of 2, also taken from\n    the account. Reject the withdrawal (return None) if `amount` is not positive, or\n    if the resulting balance would be below 0 when `overdraft` is False, or below\n    -500 when `overdraft` is True. Otherwise return the resulting balance.\n    \"\"\"\n    if amount <= 0:\n        return None\n    fee = 0 if amount >= 100 else 2\n    new_balance = balance - amount - fee\n    limit = -500 if overdraft else 0\n    if new_balance < limit:\n        return None\n    return new_balance\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"balance\": ..., \"amount\": ..., \"overdraft\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "The function matches the docstring for all valid inputs:\n\n- `amount <= 0` is rejected, matching \u201cnot positive\u201d.\n- Fee is `0` for `amount >= 100`, otherwise `2`.\n- The resulting balance is computed as `balance - amount - fee`.\n- The limit is `0` when `overdraft` is `False`, and `-500` when `overdraft` is `True`.\n- It rejects only when the resulting balance is strictly below that limit, matching \u201cbelow 0\u201d / \u201cbelow -500\u201d.\n\nNo valid input causes an exception or a different return value than specified.\n\n```json\n{\"verdict\": \"no_bug\"}\n```",
+  "model": "qwen3.8:27b",
+  "input_tokens": 498,
+  "output_tokens": 1158,
+  "thinking_tokens": 0,
+  "cost_usd": 0.0,
+  "seconds": 24.243304709001677,
+  "cached": false,
+  "error": null
+ }
+}

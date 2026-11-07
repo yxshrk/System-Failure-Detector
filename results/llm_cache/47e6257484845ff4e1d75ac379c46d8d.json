@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-translate:sp1-050-days_in_month:0",
+ "model": "qwen3.8:27b",
+ "system": "You are a formal-methods engineer. You translate informal specifications into precise, machine-checkable pre- and postconditions for an automatic verifier.",
+ "prompt": "Below is a Python function whose docstring is its specification. Do NOT judge the code yourself. Instead, translate the docstring into a formal specification that an automatic bounded verifier will check the code against.\n\nValid inputs:\n- `month` is an integer with 1 <= month <= 12\n- `year` is an integer with 1 <= year <= 3000\n\n```python\ndef leap(y):\n    return y % 4 == 0 and (y % 100 != 0 or y % 400 == 1)\n\ndef days_in_month(month, year):\n    \"\"\"Return the number of days in month `month` (1 = January, ..., 12 = December) of\n    year `year` in the Gregorian calendar. February has 29 days in leap years (years\n    divisible by 4, except years divisible by 100 unless also divisible by 400) and\n    28 otherwise; April, June, September and November have 30; all others have 31.\n    \"\"\"\n    if month == 2:\n        return 29 if leap(year) else 28\n    if month in (4, 6, 9, 11):\n        return 30\n    return 31\n```\n\nWrite two Python functions:\n\n    def pre(month, year):            # -> bool: True for inputs the docstring's contract covers (you may just return True)\n    def post(month, year, result):   # -> bool: True exactly when `result` is what the docstring requires for these inputs\n\nHow the verifier works: it symbolically executes `days_in_month` on every valid input (lists up to their maximum length; loops unrolled up to 8 iterations) and asks the Z3 SMT solver for an input where pre(...) is True but `days_in_month` raises an exception or post(...) is False. Any such input is reported as a failure.\n\nThe verifier understands only this subset of Python, for pre, post and any helper functions you define:\n- values: ints, bools, None, lists of ints, tuples (no strings, floats, dicts, sets, lambdas, classes, imports, recursion)\n- statements: assignment, augmented assignment, if/elif/else, for over range(...)/lists/enumerate(...)/zip(...), while, break, continue, return, assert\n- built-ins: len, abs, min, max, sum, sorted, reversed, range, list, all, any, enumerate, zip, divmod; list methods append, pop, insert, count, index, copy, extend, remove, sort, reverse\n- integer arithmetic only: use // and %, never /\nGuidance:\n- Specify the docstring's intended behaviour, not what the code happens to do.\n- Computing the required answer independently (for example with a simple loop) and comparing it with `result` is a good strategy.\n- `post` receives the original, unmodified inputs.\n\nAnswer with one ```python block containing pre, post and any helpers.",
+ "completion": {
+  "text": "```python\ndef pre(month, year):\n    return (month >= 1 and month <= 12) and (year >= 1 and year <= 3000)\n\ndef _is_leap(year):\n    return year % 4 == 0 and (year % 100 != 0 or year % 400 == 0)\n\ndef _expected_days(month, year):\n    if month == 2:\n        if _is_leap(year):\n            return 29\n        return 28\n    if month == 4 or month == 6 or month == 9 or month == 11:\n        return 30\n    return 31\n\ndef post(month, year, result):\n    return result == _expected_days(month, year)\n```",
+  "model": "qwen3.8:27b",
+  "input_tokens": 746,
+  "output_tokens": 1925,
+  "thinking_tokens": 0,
+  "cost_usd": 0.0,
+  "seconds": 70.77251508302288,
+  "cached": false,
+  "error": null
+ }
+}

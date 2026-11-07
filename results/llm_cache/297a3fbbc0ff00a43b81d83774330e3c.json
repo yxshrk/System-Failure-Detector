@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-165-weekday",
+ "model": "qwen3.8:27b",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `day` is an integer with 1 <= day <= 28\n- `month` is an integer with 1 <= month <= 12\n- `year` is an integer with 1801 <= year <= 2199\n\n```python\ndef weekday(day, month, year):\n    \"\"\"Return the day of the week of the Gregorian date day/month/year as an integer:\n    0 = Saturday, 1 = Sunday, 2 = Monday, ..., 6 = Friday.\n    \"\"\"\n    j = year // 100\n    if month < 3:\n        month += 12\n        year -= 1\n    k = year % 100\n    return (day + 13 * (month + 1) // 5 + k + k // 4 + j // 4 + 5 * j) % 7\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"day\": ..., \"month\": ..., \"year\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "The function is a Zeller-style weekday calculation, but it computes `j = year // 100` **before** adjusting the year for January and February. For January/February dates in a century year, the century value should be based on the previous year.\n\nFor example, for `1900-01-01`:\n\n- Correct Gregorian weekday: Monday, so expected value is `2`.\n- The code uses `j = 19` instead of `j = 18` after adjusting the year to `1899`, and returns `0` (Saturday).\n\n```json\n{\n  \"verdict\": \"bug\",\n  \"failing_input\": {\n    \"day\": 1,\n    \"month\": 1,\n    \"year\": 1900\n  },\n  \"expected\": 2,\n  \"actual\": 0\n}\n```",
+  "model": "qwen3.8:27b",
+  "input_tokens": 455,
+  "output_tokens": 2603,
+  "thinking_tokens": 0,
+  "cost_usd": 0.0,
+  "seconds": 64.33828933301265,
+  "cached": false,
+  "error": null
+ }
+}

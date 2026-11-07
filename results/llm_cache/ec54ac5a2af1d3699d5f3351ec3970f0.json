@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-040-is_leap",
+ "model": "llama3.1:8b",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `year` is an integer with 1 <= year <= 3000\n\n```python\ndef is_leap(year):\n    \"\"\"Return True if `year` is a leap year in the Gregorian calendar: years divisible\n    by 4 are leap years, except years divisible by 100, which are not, except years\n    divisible by 400, which are.\n    \"\"\"\n    if year % 100 == 0:\n        return False\n    return year % 4 == 0\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"year\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "Let's analyze the function.\n\nThe function is supposed to return `True` if a year is a leap year in the Gregorian calendar and `False` otherwise. The docstring specifies the rules for determining whether a year is a leap year: years divisible by 4 are leap years, except years divisible by 100, which are not, except years divisible by 400, which are.\n\nThe function checks if the year is divisible by 100 and returns `False` immediately in that case. Then it checks if the year is divisible by 4 and returns `True` if so.\n\nHowever, there's a problem: this implementation does not correctly handle the special case of years divisible by 400. According to the docstring, such years are leap years. But the function will return `False` for them because it first checks if the year is divisible by 100 and returns `False` in that case.\n\nHere's an example input that demonstrates this issue:\n\n```json\n{\n    \"verdict\": \"bug\",\n    \"failing_input\": {\"year\": 2000},\n    \"expected\": true,\n    \"actual\": false\n}\n```\n\nThis function does not meet its docstring for every valid input.",
+  "model": "llama3.1:8b",
+  "input_tokens": 311,
+  "output_tokens": 249,
+  "thinking_tokens": 0,
+  "cost_usd": 0.0,
+  "seconds": 8.438901874993462,
+  "cached": false,
+  "error": null
+ }
+}

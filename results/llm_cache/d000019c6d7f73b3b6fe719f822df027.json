@@ -1,0 +1,17 @@
+{
+ "tag": "sp1-direct:sp1-167-round_div",
+ "model": "qwen3.8:27b",
+ "system": "You are a meticulous senior software engineer running a pre-mortem code review. You analyse code by reading and reasoning about it; you cannot execute it.",
+ "prompt": "Below is a Python function. Its docstring is the specification: it states exactly what the function must return for every valid input.\n\nValid inputs:\n- `a` is an integer with -60 <= a <= 60\n- `b` is an integer with 1 <= b <= 12\n\n```python\ndef round_div(a, b):\n    \"\"\"Return a / b rounded to the nearest integer; when a / b is exactly halfway between\n    two integers, return the even one (banker's rounding).\n    \"\"\"\n    q = abs(a) // b\n    if a < 0:\n        q = -q\n    r = a - q * b\n    if 2 * r > b or (2 * r == b and q % 2 == 1):\n        q += 1\n    return q\n```\n\nQuestion: is there a valid input for which the function does NOT behave as its docstring specifies (it returns a different value, or raises an exception)?\n\n- If yes, give one concrete such input.\n- If you are confident the function meets its docstring for every valid input, say so.\n\nThink it through, then end your answer with a JSON object in a ```json block, either\n{\"verdict\": \"bug\", \"failing_input\": {\"a\": ..., \"b\": ...}, \"expected\": <what the docstring requires>, \"actual\": <what the code returns, or \"exception\">}\nor\n{\"verdict\": \"no_bug\"}",
+ "completion": {
+  "text": "The function handles positive values correctly, but for negative values it computes a truncation-toward-zero quotient and only ever increments it. For negative numbers, rounding away from zero when the fractional part is large enough would require decrementing the quotient, which the code never does.\n\nFor example, with `a = -7` and `b = 2`:\n\n- `a / b = -3.5`\n- Banker's rounding should choose the even integer between `-4` and `-3`, which is `-4`.\n- The code returns `-3`.\n\n```json\n{\n  \"verdict\": \"bug\",\n  \"failing_input\": {\n    \"a\": -7,\n    \"b\": 2\n  },\n  \"expected\": -4,\n  \"actual\": -3\n}\n```",
+  "model": "qwen3.8:27b",
+  "input_tokens": 407,
+  "output_tokens": 1266,
+  "thinking_tokens": 0,
+  "cost_usd": 0.0,
+  "seconds": 36.86685287501314,
+  "cached": false,
+  "error": null
+ }
+}
