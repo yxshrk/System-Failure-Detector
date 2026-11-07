@@ -13,13 +13,14 @@ SoC (SoCLaaS): name a model as ``soc:<model-id>`` and set ``SOCLAAS_BASE_URL``
 and ``SOCLAAS_API_KEY``. Run ``python -m premortem.llm --list`` to see the
 model ids the endpoint serves.
 
-Responses are cached by a hash of (backend, model, system prompt, prompt), which
-makes every experiment re-runnable for free and exactly reproducible from the
-cache directory.
+Responses are cached by a hash of (backend, model, system prompt, prompt), one
+JSONL file per model in ``results/llm_cache/``, which makes every experiment
+re-runnable for free and exactly reproducible from the cache.
 """
 
 from __future__ import annotations
 
+import fcntl
 import hashlib
 import http.client
 import json
@@ -72,11 +73,41 @@ class CachedLLM:
                            "system": system, "prompt": prompt}, sort_keys=True)
         return hashlib.sha256(blob.encode()).hexdigest()[:32]
 
+    _index: dict | None = None  # key -> record, loaded on first use in each process
+
+    def __getstate__(self) -> dict:
+        state = dict(self.__dict__)
+        state.pop("_index", None)  # worker processes load their own copy
+        return state
+
+    @property
+    def cache_path(self) -> Path:
+        return self.cache_dir / f"{file_slug(self.model)}.jsonl"
+
+    def _cached(self, key: str) -> dict | None:
+        if self._index is None:
+            self._index = {}
+            if self.cache_path.exists():
+                for line in self.cache_path.read_text().splitlines():
+                    if line:
+                        rec = json.loads(line)
+                        self._index[rec["key"]] = rec
+        return self._index.get(key)
+
+    def _store(self, rec: dict) -> None:
+        # Parallel workers append to the same file; the lock keeps each line whole.
+        with open(self.cache_path, "a") as f:
+            fcntl.flock(f, fcntl.LOCK_EX)
+            f.write(json.dumps(rec) + "\n")
+            f.flush()
+            fcntl.flock(f, fcntl.LOCK_UN)
+        if self._index is not None:
+            self._index[rec["key"]] = rec
+
     def complete(self, system: str, prompt: str, tag: str = "") -> Completion:
         key = self._key(system, prompt)
-        path = self.cache_dir / f"{key}.json"
-        if path.exists():
-            rec = json.loads(path.read_text())
+        rec = self._cached(key)
+        if rec is not None:
             c = Completion(**rec["completion"])
             c.cached = True
             return c
@@ -84,8 +115,8 @@ class CachedLLM:
             return Completion(text="", model=self.model, error="cache miss in cache-only mode")
         c = self._call(system, prompt)
         if c.error is None:
-            path.write_text(json.dumps({"tag": tag, "model": self.model, "system": system, "prompt": prompt,
-                                        "completion": asdict(c)}, indent=1))
+            self._store({"key": key, "tag": tag, "model": self.model, "system": system, "prompt": prompt,
+                         "completion": asdict(c)})
         return c
 
     def _call(self, system: str, prompt: str) -> Completion:
@@ -285,8 +316,8 @@ def file_slug(name: str) -> str:
 
 def cache_summary(cache_dir: Path = CACHE_DIR) -> dict:
     out: dict = {}
-    for p in cache_dir.glob("*.json"):
-        rec = json.loads(p.read_text())
+    recs = (json.loads(line) for p in cache_dir.glob("*.jsonl") for line in p.read_text().splitlines() if line)
+    for rec in recs:
         c = rec["completion"]
         m = out.setdefault(c["model"], {"calls": 0, "cost_usd": 0.0, "input_tokens": 0, "output_tokens": 0})
         m["calls"] += 1

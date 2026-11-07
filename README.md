@@ -61,7 +61,7 @@ premortem/
     arms.py, score.py Direct / Translate arms, gold replay, SP3 scores
 experiments/          run_sp1.py, run_sp2.py, analyze.py, encodings.py (prints the exact solver inputs)
 data/                 generated instance sets (sp1/instances.json, sp2/instances.json)
-results/              scored records (*.jsonl), tables.md, figures/, llm_cache/ (every LLM response)
+results/              scored records (*.jsonl), tables.md, figures/, llm_cache/ (every LLM response, one JSONL per model)
 report/               report sections (report.md, results.md, discussion.md, tail.md, ...), build.sh -> full.md + report.docx
 tests/                symbolic executor vs real Python, planner tests, gold-model properties
 ```
@@ -80,7 +80,7 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/python -m experiments.encodings > report/encodings.md   # Appendix B: the real Z3 / SATPlan encodings
 ```
 
-LLM calls go through the Claude Code CLI in headless mode (`claude -p --tools ""`), so the models cannot execute code in either arm. Every response is cached under `results/llm_cache/`, keyed by a hash of the model, system prompt and prompt, so the analysis can be re-run offline at no cost.
+LLM calls go through the Claude Code CLI in headless mode (`claude -p --tools ""`), so the models cannot execute code in either arm. Every response is cached in `results/llm_cache/<model>.jsonl`, keyed by a hash of the model, system prompt and prompt, so the experiments can be re-run offline at no cost: set `PREMORTEM_CACHE_ONLY=1` to guarantee no model is called (for `soc:` models also set `SOCLAAS_BASE_URL` to any value).
 
 ## Contributing (group notes)
 
