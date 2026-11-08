@@ -49,3 +49,4 @@ math[display="block"] { margin: 4pt 0; }
 .pagebreak { break-after: page; }
 
 .keep { break-inside: avoid; }
+.keep td { white-space: nowrap; }
