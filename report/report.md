@@ -16,12 +16,16 @@ author:
 ```
 
 **Summary.** On 174 functions (SP1) and 162 designs (SP2), scored exactly on gold models, we compare
-Claude Haiku 4.5, Sonnet 5.5 and Opus 5.5 answering directly or translating for Z3, SATPlan and GBFS.
-SP1 is at ceiling for both arms at every trigger rarity, with no false alarms. In SP2 the 5.5 models
-find a valid trace every time in both arms, up to 51 events and even with mechanism names hidden, with no false alarms;
+Claude Haiku 4.5, Sonnet 5.5 and Opus 5.5, and the open-weight Qwen 3.8 27B and Llama 3.1 8B,
+answering directly or translating for Z3, SATPlan and GBFS.
+For every model except Llama, SP1 is at ceiling for both arms at every trigger rarity, with no false alarms. In SP2 the 5.5 models
+find a valid trace every time in both arms, up to 51 events and even with mechanism names hidden, with no false alarms,
+and Qwen does so in Translate;
 translation cuts Haiku's false alarms on correct designs from 60% to 35% (95% to 45% with hidden names; nominal paired
 p = 0.002, as designs share five templates).
-Its risks are specs that copy the bug, permissive models that planners exploit, and solver blow-up.
+Llama 3.1 8B fabricates in Direct (no valid SP2 trace; false alarms on 76% of SP1 controls). Translation silences it
+rather than fixing it: its specifications and problem files are mostly unusable or incomplete, so it answers "safe" or nothing.
+Translation's risks are specs that copy the bug, permissive models that planners exploit, and solver blow-up.
 
 # 1. Motivation and research questions
 
@@ -254,8 +258,11 @@ are 6–15 events. Three further sets were added:
 # 4. Method
 
 **Models.** Claude Haiku 4.5, Sonnet 5.5 and Opus 5.5 with default extended thinking, called through
-the Claude Code CLI with *all tools disabled* (so Direct cannot run code). The SoC open-weight endpoint
-was not used; Haiku 4.5 stands in for a weaker model. Both arms see the same inputs:
+the Claude Code CLI with *all tools disabled* (so Direct cannot run code). Two open-weight models served
+by SoC's OpenAI-compatible endpoint (SoCLaaS) bracket them: Qwen 3.8 27B, which reasons before answering,
+and Llama 3.1 8B, which does not. Both run at temperature 0 with a 32k-token output budget that includes
+reasoning; Qwen ran SP1 and the SP2 main set only, as one SP2 answer took 5–10 minutes on the shared endpoint.
+Requests the endpoint dropped under load were resubmitted, not scored. Both arms see the same inputs:
 
 * SP1: the code with its docstring, plus the input domain.
 * SP2: the design document, the family's PDDL domain (events, with comments) and object names.

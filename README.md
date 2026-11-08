@@ -22,16 +22,19 @@ Scoring is exact. A witness counts only if it reproduces on the gold model: a fa
 
 ## Results at a glance
 
-| | Haiku 4.5 Direct | Haiku 4.5 Translate | Sonnet 5.5 Direct / Translate | Opus 5.5 Direct / Translate |
-|---|---|---|---|---|
-| SP1 bugs found (115) | 114 | 112 | 115 / 114 | 115 / 114 |
-| SP1 false alarms (59 controls) | 0 | 0 | 0 / 0 | 0 / 0 |
-| SP2 valid traces, main (40) | 31 | 34 | 40 / 40 | 40 / 40 |
-| SP2 false alarms, main (20 fixed designs) | 12 | 7 | 0 / 0 | 0 / 0 |
-| SP2 false alarms, opaque names (20) | 19 | 9 | 0 / 0 | 0 / 0 |
+| | Haiku 4.5 Direct | Haiku 4.5 Translate | Sonnet 5.5 Direct / Translate | Opus 5.5 Direct / Translate | Qwen 3.8 27B Direct / Translate | Llama 3.1 8B Direct / Translate |
+|---|---|---|---|---|---|---|
+| SP1 bugs found (115) | 114 | 112 | 115 / 114 | 115 / 114 | 114 / 113 | 40 / 31 |
+| SP1 false alarms (59 controls) | 0 | 0 | 0 / 0 | 0 / 0 | 0 / 0 | 45 / 12 |
+| SP2 valid traces, main (40) | 31 | 34 | 40 / 40 | 40 / 40 | 37 / 40 | 0 / 1 |
+| SP2 false alarms, main (20 fixed designs) | 12 | 7 | 0 / 0 | 0 / 0 | 0 / 0 | 14 / 2 |
+| SP2 false alarms, opaque names (20) | 19 | 9 | 0 / 0 | 0 / 0 | not run | 18 / 8 |
+
+Qwen 3.8 27B and Llama 3.1 8B are open-weight models served by SoCLaaS; Qwen ran SP1 and the SP2 main set only.
 
 * **Rarity.** Trigger rarity decides whether random testing finds a bug: 100 random inputs catch 5% of the very rare bugs. It has no effect on either LLM arm.
 * **Model generations.** The 5.5 models are perfect on SP2 up to 51-event traces (long set: payments and inventory at sizes 12 and 16), even with mechanism names hidden. Haiku 4.5's Direct errors come from misreading the design, and translation roughly halves its false alarms.
+* **Open-weight models.** Qwen 3.8 27B matches the 5.5 models (its 3 Direct misses on SP2 are format slips). Llama 3.1 8B fabricates in Direct; Translate cuts its false alarms, but only because its specs and problem files are unusable or incomplete, so it answers "safe" or nothing.
 * **Translation's own failure modes.** Specifications can copy the bug, permissive problem files get exploited by the planner, and checkers time out. Certification also explodes on the symmetric inventory design: 2.7 M states at size 6, beyond budget at size 8.
 
 Full tables are in `results/tables.md` and figures in `results/figures/`. The report draft is `report/full.md`, with a Word export at `report/report.docx`.
@@ -58,7 +61,7 @@ premortem/
     arms.py, score.py Direct / Translate arms, gold replay, SP3 scores
 experiments/          run_sp1.py, run_sp2.py, analyze.py, encodings.py (prints the exact solver inputs)
 data/                 generated instance sets (sp1/instances.json, sp2/instances.json)
-results/              scored records (*.jsonl), tables.md, figures/, llm_cache/ (every LLM response)
+results/              scored records (*.jsonl), tables.md, figures/, llm_cache/ (every LLM response, one JSONL per model)
 report/               report sections (report.md, results.md, discussion.md, tail.md, ...), build.sh -> full.md + report.docx
 tests/                symbolic executor vs real Python, planner tests, gold-model properties
 ```
@@ -77,7 +80,7 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/python -m experiments.encodings > report/encodings.md   # Appendix B: the real Z3 / SATPlan encodings
 ```
 
-LLM calls go through the Claude Code CLI in headless mode (`claude -p --tools ""`), so the models cannot execute code in either arm. Every response is cached under `results/llm_cache/`, keyed by a hash of the model, system prompt and prompt, so the analysis can be re-run offline at no cost.
+LLM calls go through the Claude Code CLI in headless mode (`claude -p --tools ""`), so the models cannot execute code in either arm. Every response is cached in `results/llm_cache/<model>.jsonl`, keyed by a hash of the model, system prompt and prompt, so the experiments can be re-run offline at no cost: set `PREMORTEM_CACHE_ONLY=1` to guarantee no model is called (for `soc:` models also set `SOCLAAS_BASE_URL` to any value).
 
 ## Contributing (group notes)
 
@@ -95,16 +98,16 @@ for prompts that are new.
 
 **Open items**
 
-- [ ] **Open-weight models via SoCLaaS.** The backend exists (`OpenAICompatible` in `premortem/llm.py`, tested against a mock server only). Next: confirm the endpoint and key from the [SoCLaaS guide](https://dochub.comp.nus.edu.sg/cf/guides/soclaas/start) (NUS network or VPN), then run both arms on a subset (SP2 main, SP1 hard tier, base sample) and add the models to `MODEL_ORDER` in `experiments/analyze.py`. Translation is expected to matter most for weaker models; so far only Haiku 4.5 shows a gap.
+- [x] **Open-weight models via SoCLaaS.** Qwen 3.8 27B and Llama 3.1 8B ran through `OpenAICompatible` in `premortem/llm.py` (§4–6 of the report). To rerun or add a model (NUS network or VPN; key from the [SoCLaaS guide](https://dochub.comp.nus.edu.sg/cf/guides/soclaas/start)):
 
   ```bash
-  export SOCLAAS_BASE_URL=<endpoint>/v1 SOCLAAS_API_KEY=<key>
+  export SOCLAAS_BASE_URL=https://soclaas-api.comp.nus.edu.sg/v1 SOCLAAS_API_KEY=<key>
   .venv/bin/python -m premortem.llm --list                       # model ids the endpoint serves
+  .venv/bin/python -m experiments.run_sp1 --models soc:<model-id> --workers 4
   .venv/bin/python -m experiments.run_sp2 --models soc:<model-id> --workers 4
-  .venv/bin/python -m experiments.run_sp1 --models soc:<model-id> --tier hard
   ```
 
-  Results land in `results/sp*/soc-<model-id>__<arm>.jsonl`.
+  Results land in `results/sp*/soc-<model-id>__<arm>.jsonl`; add the model to `MODEL_ORDER` in `experiments/analyze.py`. Keep total workers around 10: the endpoint drops requests it cannot start within a minute and rejects more with HTTP 429, and the backend waits and resubmits both. Reasoning models need the 32k-token budget; Qwen 3.8 takes 5–10 minutes per SP2 answer.
 - [ ] **Review the code, the instances and the report** (`report/*.md`).
 - [x] **§8 "Division of work"** states each member's actual contributions (matching the git history) and AI use per component.
 - [ ] **Presentation:** 15 minutes, in the week of 9 Nov.

@@ -26,14 +26,14 @@ attacks (ResponsibleAI p.2–4); we would run the tool only on code the user own
 disclosure, and withhold witnesses for unpatched deployed systems. A comment planted in the code could
 steer the Direct arm to "no bug" (ResponsibleAI p.31); Translate may be less exposed, since the solver
 decides, but its spec is still model-written (untested). Sending proprietary code to a hosted model also discloses it
-(ResponsibleAI p.8–10); on-premise open-weight models avoid that.
+(ResponsibleAI p.8–10); on-premise open-weight models avoid that, and Qwen 3.8 27B on SoC's own endpoint was as accurate as the hosted 5.5 models on SP1 and the SP2 main set.
 
 # 8. Division of work and use of AI tools
 
 **Contributions.** The work departed from the proposal's planned split.
 
-* *Yash:* coordination; directed the Claude Code sessions that built the SP1 and SP2 pipelines (instances, symbolic executor, PDDL domains and design documents, solvers, gold replay, LLM harness); ran all experiments, including the stress, opaque and long-trace sets; and drafted the report.
-* *Joshua:* the OpenAI-compatible backend for the SoC open-weight models (`premortem/llm.py`).
+* *Yash:* coordination; directed the Claude Code sessions that built the SP1 and SP2 pipelines (instances, symbolic executor, PDDL domains and design documents, solvers, gold replay, LLM harness); ran all Claude experiments, including the stress, opaque and long-trace sets; and drafted the report.
+* *Joshua:* the OpenAI-compatible backend for the SoC open-weight models (`premortem/llm.py`) and the Qwen 3.8 27B and Llama 3.1 8B runs reported in §5–6.
 * *Hein:* the SP3 analyses (the spec-style classifier with its tests, and design facts vs. Translate outcomes) and the precise statements of both formulations and their limits (§2, §6).
 
 **Use of AI tools.** We used Claude Code (Anthropic) extensively. Per component:

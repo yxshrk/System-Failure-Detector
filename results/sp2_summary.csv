@@ -5,3 +5,7 @@ sonnet,direct,40,40,0,0,0,20
 sonnet,translate,40,40,0,0,0,20
 opus,direct,40,40,0,0,0,20
 opus,translate,40,40,0,0,0,20
+soc:llama3.1:8b,direct,0,40,34,3,14,20
+soc:llama3.1:8b,translate,1,40,4,29,2,20
+soc:qwen3.8:27b,direct,37,40,3,0,0,20
+soc:qwen3.8:27b,translate,40,40,0,0,0,20

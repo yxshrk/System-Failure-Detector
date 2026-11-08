@@ -22,6 +22,18 @@
 | Opus 5.5 | Translate | base | 95 | 100% [96-100] | 0% | 0% | 0% | 43 | 0% [0-8] | 2 | 0.020 | 335 |
 | Opus 5.5 | Translate | hard | 20 | 95% [76-99] | 0% | 0% | 5% | 16 | 0% [0-19] | 3 | 0.027 | 566 |
 | Opus 5.5 | Translate | all | 115 | 99% [95-100] | 0% | 0% | 1% | 59 | 0% [0-6] | 5 | 0.021 | 383 |
+| Llama 3.1 8B | Direct | base | 95 | 41% [32-51] | 49% | 6% | 3% | 43 | 79% [65-89] | 0 | 0.000 | 360 |
+| Llama 3.1 8B | Direct | hard | 20 | 5% [1-24] | 65% | 20% | 10% | 16 | 69% [44-86] | 0 | 0.000 | 801 |
+| Llama 3.1 8B | Direct | all | 115 | 35% [27-44] | 52% | 9% | 4% | 59 | 76% [64-85] | 0 | 0.000 | 451 |
+| Llama 3.1 8B | Translate | base | 95 | 28% [20-38] | 11% | 15% | 46% | 43 | 16% [8-30] | 0 | 0.000 | 441 |
+| Llama 3.1 8B | Translate | hard | 20 | 20% [8-42] | 20% | 40% | 20% | 16 | 31% [14-56] | 0 | 0.000 | 382 |
+| Llama 3.1 8B | Translate | all | 115 | 27% [20-36] | 12% | 19% | 42% | 59 | 20% [12-32] | 0 | 0.000 | 429 |
+| Qwen 3.8 27B | Direct | base | 95 | 99% [94-100] | 0% | 1% | 0% | 43 | 0% [0-8] | 0 | 0.000 | 685 |
+| Qwen 3.8 27B | Direct | hard | 20 | 100% [84-100] | 0% | 0% | 0% | 16 | 0% [0-19] | 0 | 0.000 | 3173 |
+| Qwen 3.8 27B | Direct | all | 115 | 99% [95-100] | 0% | 1% | 0% | 59 | 0% [0-6] | 0 | 0.000 | 1200 |
+| Qwen 3.8 27B | Translate | base | 95 | 99% [94-100] | 0% | 1% | 0% | 43 | 0% [0-8] | 0 | 0.000 | 5885 |
+| Qwen 3.8 27B | Translate | hard | 20 | 95% [76-99] | 0% | 0% | 5% | 16 | 0% [0-19] | 0 | 0.000 | 8600 |
+| Qwen 3.8 27B | Translate | all | 115 | 98% [94-100] | 0% | 1% | 1% | 59 | 0% [0-6] | 0 | 0.000 | 6447 |
 
 **Valid-witness rate by trigger rarity (bugs only)**
 
@@ -33,6 +45,10 @@
 | Sonnet 5.5 | Translate | 66/67 | 19/19 | 21/21 | 8/8 |
 | Opus 5.5 | Direct | 67/67 | 19/19 | 21/21 | 8/8 |
 | Opus 5.5 | Translate | 67/67 | 18/19 | 21/21 | 8/8 |
+| Llama 3.1 8B | Direct | 33/67 | 2/19 | 4/21 | 1/8 |
+| Llama 3.1 8B | Translate | 22/67 | 5/19 | 3/21 | 1/8 |
+| Qwen 3.8 27B | Direct | 66/67 | 19/19 | 21/21 | 8/8 |
+| Qwen 3.8 27B | Translate | 67/67 | 19/19 | 20/21 | 7/8 |
 
 **False alarms on controls: clean reference vs. equivalent mutant**
 
@@ -44,6 +60,10 @@
 | Sonnet 5.5 | Translate | 0/37 | 0/22 |
 | Opus 5.5 | Direct | 0/37 | 0/22 |
 | Opus 5.5 | Translate | 0/37 | 0/22 |
+| Llama 3.1 8B | Direct | 25/37 | 20/22 |
+| Llama 3.1 8B | Translate | 7/37 | 5/22 |
+| Qwen 3.8 27B | Direct | 0/37 | 0/22 |
+| Qwen 3.8 27B | Translate | 0/37 | 0/22 |
 
 **Direct vs. Translate on the same bug instances (exact McNemar)**
 
@@ -58,6 +78,12 @@
 | Opus 5.5 | base | 0 | 0 | 1.000 |
 | Opus 5.5 | hard | 1 | 0 | 1.000 |
 | Opus 5.5 | all | 1 | 0 | 1.000 |
+| Llama 3.1 8B | base | 25 | 13 | 0.073 |
+| Llama 3.1 8B | hard | 1 | 4 | 0.375 |
+| Llama 3.1 8B | all | 26 | 17 | 0.222 |
+| Qwen 3.8 27B | base | 1 | 1 | 1.000 |
+| Qwen 3.8 27B | hard | 1 | 0 | 1.000 |
+| Qwen 3.8 27B | all | 2 | 1 | 1.000 |
 
 **Alternative: random testing (expected share of bugs caught by N uniform in-domain inputs, from measured rarity)**
 
@@ -78,6 +104,8 @@
 | Haiku 4.5 | 106/115 | 112/115 |
 | Sonnet 5.5 | 113/115 | 114/115 |
 | Opus 5.5 | 104/115 | 114/115 |
+| Llama 3.1 8B | 24/115 | 31/115 |
+| Qwen 3.8 27B | 112/115 | 113/115 |
 
 **SP3 (SP1 translation quality)**
 
@@ -86,6 +114,8 @@
 | Haiku 4.5 | 172/174 | 166/174 | 169/172 | 2 | 1.05 |
 | Sonnet 5.5 | 173/174 | 173/174 | 173/173 | 0 | 1.01 |
 | Opus 5.5 | 165/174 | 153/174 | 165/165 | 0 | 1.12 |
+| Llama 3.1 8B | 103/174 | 88/174 | 45/103 | 20 | 1.93 |
+| Qwen 3.8 27B | 170/174 | 173/174 | 169/170 | 1 | 1.01 |
 
 **SP3: how specifications pin down the result** (constructive = `post` computes the answer and compares; declarative = properties only)
 
@@ -94,6 +124,8 @@
 | Haiku 4.5 | 169/174 | 5/174 | 0/174 |
 | Sonnet 5.5 | 172/174 | 2/174 | 0/174 |
 | Opus 5.5 | 170/174 | 4/174 | 0/174 |
+| Llama 3.1 8B | 125/174 | 32/174 | 17/174 |
+| Qwen 3.8 27B | 168/170 | 2/170 | 0/170 |
 
 **Unsound specifications (the reference violates them): model error or ambiguous docstring?**
 
@@ -102,6 +134,65 @@
 | Haiku 4.5 | sp1-051-days_in_month | miss | `{'month': 2, 'year': 400}` |
 | Haiku 4.5 | sp1-131-withdraw | miss | `{'balance': 3, 'amount': 1, 'overdraft': False}` |
 | Haiku 4.5 | sp1-165-weekday | invalid_witness | `{'day': 1, 'month': 1, 'year': 1801}` |
+| Llama 3.1 8B | sp1-002-dips_below_zero | invalid_witness | `{'moves': [-1]}` |
+| Llama 3.1 8B | sp1-005-has_near_pair | invalid_witness | `{'vals': [0, 0], 'gap': 1}` |
+| Llama 3.1 8B | sp1-006-has_near_pair | invalid_witness | `{'vals': [0, 0, 0, 0, 0, 0], 'gap': 1}` |
+| Llama 3.1 8B | sp1-007-has_near_pair | invalid_witness | `{'vals': [1, 0, -1, 0, 0, 0], 'gap': 1}` |
+| Llama 3.1 8B | sp1-008-has_near_pair | false_alarm | `{'vals': [5, 0, -13, 0, 0, 0], 'gap': 5}` |
+| Llama 3.1 8B | sp1-009-has_near_pair | false_alarm | `{'vals': [5, 0, -13, 0, 0, 0], 'gap': 5}` |
+| Llama 3.1 8B | sp1-019-sum_and_product | miss | `{'vals': [-3, -1, 0]}` |
+| Llama 3.1 8B | sp1-030-largest_proper_divisor | valid_witness | `{'n': 120}` |
+| Llama 3.1 8B | sp1-031-largest_proper_divisor | valid_witness | `{'n': 12}` |
+| Llama 3.1 8B | sp1-040-is_leap | invalid_witness | `{'year': 1500}` |
+| Llama 3.1 8B | sp1-041-is_leap | miss | `{'year': 400}` |
+| Llama 3.1 8B | sp1-042-is_leap | miss | `{'year': 1200}` |
+| Llama 3.1 8B | sp1-043-is_leap | invalid_witness | `{'year': 100}` |
+| Llama 3.1 8B | sp1-044-is_leap | valid_witness | `{'year': 1}` |
+| Llama 3.1 8B | sp1-047-days_in_month | invalid_witness | `{'month': 2, 'year': 1}` |
+| Llama 3.1 8B | sp1-048-days_in_month | miss | `{'month': 9, 'year': 1}` |
+| Llama 3.1 8B | sp1-049-days_in_month | miss | `{'month': 2, 'year': 400}` |
+| Llama 3.1 8B | sp1-051-days_in_month | miss | `{'month': 2, 'year': 100}` |
+| Llama 3.1 8B | sp1-052-days_in_month | miss | `{'month': 2, 'year': 100}` |
+| Llama 3.1 8B | sp1-054-triangle_kind | miss | `{'a': 2, 'b': 3, 'c': 2}` |
+| Llama 3.1 8B | sp1-055-triangle_kind | miss | `{'a': 1, 'b': 1, 'c': 1}` |
+| Llama 3.1 8B | sp1-056-triangle_kind | miss | `{'a': 1, 'b': 1, 'c': 1}` |
+| Llama 3.1 8B | sp1-057-triangle_kind | miss | `{'a': 1, 'b': 1, 'c': 2}` |
+| Llama 3.1 8B | sp1-067-find_index | valid_witness | `{'xs': [-4, -3, -2, -1], 'target': 0}` |
+| Llama 3.1 8B | sp1-068-find_index | valid_witness | `{'xs': [0], 'target': 1}` |
+| Llama 3.1 8B | sp1-080-second_largest | valid_witness | `{'xs': [0, 0, 0]}` |
+| Llama 3.1 8B | sp1-083-second_largest | false_alarm | `{'xs': [0, 0, 0]}` |
+| Llama 3.1 8B | sp1-085-best_window_sum | invalid_witness | `{'xs': [1, -2, 0, 2]}` |
+| Llama 3.1 8B | sp1-086-best_window_sum | valid_witness | `{'xs': [10, 10, 1]}` |
+| Llama 3.1 8B | sp1-087-best_window_sum | invalid_witness | `{'xs': [-2, -1, -2]}` |
+| Llama 3.1 8B | sp1-088-best_window_sum | false_alarm | `{'xs': [6, 2, -8, 7]}` |
+| Llama 3.1 8B | sp1-089-best_window_sum | false_alarm | `{'xs': [-2, 0, -1]}` |
+| Llama 3.1 8B | sp1-100-is_monotone | valid_witness | `{'xs': [-1, 0, 1, 0, -1, 0]}` |
+| Llama 3.1 8B | sp1-112-has_pair_sum | false_alarm | `{'xs': [0, 0, -2, -1, 0], 'target': 0}` |
+| Llama 3.1 8B | sp1-122-bulk_price | valid_witness | `{'unit_cents': 10, 'qty': 1}` |
+| Llama 3.1 8B | sp1-123-bulk_price | invalid_witness | `{'unit_cents': 490, 'qty': 99}` |
+| Llama 3.1 8B | sp1-124-bulk_price | valid_witness | `{'unit_cents': 10, 'qty': 1}` |
+| Llama 3.1 8B | sp1-125-bulk_price | miss | `{'unit_cents': 100, 'qty': 1}` |
+| Llama 3.1 8B | sp1-126-bulk_price | false_alarm | `{'unit_cents': 1, 'qty': 100}` |
+| Llama 3.1 8B | sp1-138-sort4 | valid_witness | `{'a': 0, 'b': 1, 'c': 2, 'd': 3}` |
+| Llama 3.1 8B | sp1-140-sort4 | false_alarm | `{'a': 1, 'b': 2, 'c': 3, 'd': 4}` |
+| Llama 3.1 8B | sp1-141-sort4 | false_alarm | `{'a': 0, 'b': 1, 'c': 2, 'd': 3}` |
+| Llama 3.1 8B | sp1-146-median5 | invalid_witness | `{'a': 5, 'b': 3, 'c': 1, 'd': 2, 'e': 4}` |
+| Llama 3.1 8B | sp1-148-median5 | valid_witness | `{'a': 5, 'b': 3, 'c': 1, 'd': 2, 'e': 4}` |
+| Llama 3.1 8B | sp1-149-median5 | false_alarm | `{'a': 5, 'b': 3, 'c': 1, 'd': 2, 'e': 4}` |
+| Llama 3.1 8B | sp1-150-median5 | false_alarm | `{'a': 5, 'b': 3, 'c': 1, 'd': 2, 'e': 4}` |
+| Llama 3.1 8B | sp1-151-admit_requests | miss | `{'times': [3, 5, 7, 9, 11, 12]}` |
+| Llama 3.1 8B | sp1-152-admit_requests | invalid_witness | `{'times': [3, 4, 6, 11, 11, 11]}` |
+| Llama 3.1 8B | sp1-154-bucket_admits | miss | `{'times': [3, 6, 7, 11, 12]}` |
+| Llama 3.1 8B | sp1-155-bucket_admits | miss | `{'times': [13, 13, 16, 16, 16, 16]}` |
+| Llama 3.1 8B | sp1-157-count_presses | miss | `{'samples': [0, 0, 0, 1, 1, 0, 1]}` |
+| Llama 3.1 8B | sp1-158-count_presses | miss | `{'samples': [0, 1, 1, 1, 0, 1, 1, 1]}` |
+| Llama 3.1 8B | sp1-162-luhn_ok | miss | `{'digits': [3, 9, 9, 9, 9, 0]}` |
+| Llama 3.1 8B | sp1-167-round_div | invalid_witness | `{'a': -57, 'b': 4}` |
+| Llama 3.1 8B | sp1-168-round_div | invalid_witness | `{'a': -60, 'b': 12}` |
+| Llama 3.1 8B | sp1-169-round_div | false_alarm | `{'a': -12, 'b': 1}` |
+| Llama 3.1 8B | sp1-170-can_split_evenly | miss | `{'xs': [2, 6]}` |
+| Llama 3.1 8B | sp1-171-can_split_evenly | miss | `{'xs': [2, 2]}` |
+| Qwen 3.8 27B | sp1-051-days_in_month | miss | `{'month': 2, 'year': 100}` |
 
 ## SP2: one design (STRIPS planning)
 
@@ -113,6 +204,10 @@
 | Sonnet 5.5 | Translate | 40 | 100% [91-100] | 0% | 0% | 0% | 20 | 0% [0-16] | 0.018 |
 | Opus 5.5 | Direct | 40 | 100% [91-100] | 0% | 0% | 0% | 20 | 0% [0-16] | 0.048 |
 | Opus 5.5 | Translate | 40 | 100% [91-100] | 0% | 0% | 0% | 20 | 0% [0-16] | 0.036 |
+| Llama 3.1 8B | Direct | 40 | 0% [0-9] | 85% | 8% | 8% | 20 | 70% [48-85] | 0.000 |
+| Llama 3.1 8B | Translate | 40 | 3% [0-13] | 10% | 73% | 15% | 20 | 10% [3-30] | 0.000 |
+| Qwen 3.8 27B | Direct | 40 | 93% [80-97] | 8% | 0% | 0% | 20 | 0% [0-16] | 0.000 |
+| Qwen 3.8 27B | Translate | 40 | 100% [91-100] | 0% | 0% | 0% | 20 | 0% [0-16] | 0.000 |
 
 **SP2 by variant (valid trace on flawed/subtle; correct 'safe' on fixed)**
 
@@ -124,6 +219,10 @@
 | Sonnet 5.5 | Translate | 12/12 | 12/12 | 12/12 | 12/12 | 12/12 | 20/20 | 20/20 | 20/20 |
 | Opus 5.5 | Direct | 12/12 | 12/12 | 12/12 | 12/12 | 12/12 | 20/20 | 20/20 | 20/20 |
 | Opus 5.5 | Translate | 12/12 | 12/12 | 12/12 | 12/12 | 12/12 | 20/20 | 20/20 | 20/20 |
+| Llama 3.1 8B | Direct | 0/12 | 1/12 | 1/12 | 1/12 | 0/12 | 0/20 | 0/20 | 3/20 |
+| Llama 3.1 8B | Translate | 5/12 | 2/12 | 2/12 | 4/12 | 4/12 | 1/20 | 0/20 | 16/20 |
+| Qwen 3.8 27B | Direct | 11/12 | 10/12 | 12/12 | 12/12 | 12/12 | 18/20 | 19/20 | 20/20 |
+| Qwen 3.8 27B | Translate | 12/12 | 12/12 | 12/12 | 12/12 | 12/12 | 20/20 | 20/20 | 20/20 |
 
 **Valid traces by shortest violating-trace length (flawed + subtle)**
 
@@ -135,6 +234,10 @@
 | Sonnet 5.5 | Translate | 2/2 | 4/4 | 4/4 | 6/6 | 4/4 | 4/4 | 6/6 | 4/4 | 4/4 | 2/2 |
 | Opus 5.5 | Direct | 2/2 | 4/4 | 4/4 | 6/6 | 4/4 | 4/4 | 6/6 | 4/4 | 4/4 | 2/2 |
 | Opus 5.5 | Translate | 2/2 | 4/4 | 4/4 | 6/6 | 4/4 | 4/4 | 6/6 | 4/4 | 4/4 | 2/2 |
+| Llama 3.1 8B | Direct | 0/2 | 0/4 | 0/4 | 0/6 | 0/4 | 0/4 | 0/6 | 0/4 | 0/4 | 0/2 |
+| Llama 3.1 8B | Translate | 0/2 | 0/4 | 1/4 | 0/6 | 0/4 | 0/4 | 0/6 | 0/4 | 0/4 | 0/2 |
+| Qwen 3.8 27B | Direct | 1/2 | 4/4 | 4/4 | 6/6 | 3/4 | 4/4 | 6/6 | 4/4 | 4/4 | 1/2 |
+| Qwen 3.8 27B | Translate | 2/2 | 4/4 | 4/4 | 6/6 | 4/4 | 4/4 | 6/6 | 4/4 | 4/4 | 2/2 |
 
 **Direct vs. Translate on the same designs (exact McNemar; success = correct verdict with valid trace)**
 
@@ -143,6 +246,8 @@
 | Haiku 4.5 | 8 | 16 | 0.152 |
 | Sonnet 5.5 | 0 | 0 | 1.000 |
 | Opus 5.5 | 0 | 0 | 1.000 |
+| Llama 3.1 8B | 0 | 14 | 0.000 |
+| Qwen 3.8 27B | 0 | 3 | 0.250 |
 
 **Translate-arm repair loop (SP2): correct outcomes using only the first problem file vs. after repairs**
 
@@ -151,6 +256,8 @@
 | Haiku 4.5 | 47/60 | 47/60 |
 | Sonnet 5.5 | 60/60 | 60/60 |
 | Opus 5.5 | 60/60 | 60/60 |
+| Llama 3.1 8B | 13/60 | 17/60 |
+| Qwen 3.8 27B | 59/60 | 60/60 |
 
 **SP3 (SP2 translation quality: model-written initial state vs. gold)**
 
@@ -159,6 +266,8 @@
 | Haiku 4.5 | 60/60 | 49/60 | 44/60 | 0.981 | 0.981 | 60/60 |
 | Sonnet 5.5 | 60/60 | 60/60 | 60/60 | 1.000 | 1.000 | 60/60 |
 | Opus 5.5 | 60/60 | 60/60 | 60/60 | 1.000 | 1.000 | 60/60 |
+| Llama 3.1 8B | 52/60 | 22/60 | 0/60 | 0.915 | 0.638 | 42/60 |
+| Qwen 3.8 27B | 60/60 | 60/60 | 60/60 | 1.000 | 1.000 | 59/60 |
 
 **SP2 Translate: the design facts decide the outcome** (correct = valid trace or correct 'safe')
 
@@ -167,12 +276,16 @@
 | Haiku 4.5 | 47/49 | 0/11 |
 | Sonnet 5.5 | 60/60 | 0/0 |
 | Opus 5.5 | 60/60 | 0/0 |
+| Llama 3.1 8B | 9/22 | 8/38 |
+| Qwen 3.8 27B | 60/60 | 0/0 |
 
 **Why Direct traces fail on the gold model (invalid traces + false alarms)**
 
 | model | assumes another design | event order / state | timer / counter | stops before violation | vocabulary / arity | no trace | other |
 |---|---|---|---|---|---|---|---|
 | Haiku 4.5 | 16 | 0 | 0 | 0 | 3 | 0 | 0 |
+| Llama 3.1 8B | 1 | 6 | 0 | 0 | 37 | 1 | 3 |
+| Qwen 3.8 27B | 0 | 0 | 0 | 0 | 3 | 0 | 0 |
 
 **Mean output tokens (incl. thinking) per instance**
 
@@ -184,6 +297,10 @@
 | Sonnet 5.5 | Translate | 519 | 539 | 527 |
 | Opus 5.5 | Direct | 1288 | 1172 | 1056 |
 | Opus 5.5 | Translate | 547 | 546 | 541 |
+| Llama 3.1 8B | Direct | 1888 | 1074 | 1440 |
+| Llama 3.1 8B | Translate | 292 | 324 | 234 |
+| Qwen 3.8 27B | Direct | 8164 | 8120 | 10215 |
+| Qwen 3.8 27B | Translate | 3660 | 3046 | 3760 |
 
 ## SP2 stress set (sizes 6 and 8: traces of 17-27 events)
 
@@ -195,6 +312,8 @@
 | Sonnet 5.5 | Translate | 20 | 100% [84-100] | 0% | 0% | 0% | 10 | 0% [0-28] | 0.020 |
 | Opus 5.5 | Direct | 20 | 100% [84-100] | 0% | 0% | 0% | 10 | 0% [0-28] | 0.048 |
 | Opus 5.5 | Translate | 20 | 100% [84-100] | 0% | 0% | 0% | 10 | 0% [0-28] | 0.051 |
+| Llama 3.1 8B | Direct | 20 | 0% [0-16] | 85% | 10% | 5% | 10 | 60% [31-83] | 0.000 |
+| Llama 3.1 8B | Translate | 20 | 0% [0-16] | 5% | 65% | 30% | 10 | 10% [2-40] | 0.000 |
 
 **SP2 by variant (valid trace on flawed/subtle; correct 'safe' on fixed)**
 
@@ -206,6 +325,8 @@
 | Sonnet 5.5 | Translate | 6/6 | 5/6 | 6/6 | 6/6 | 6/6 | 10/10 | 10/10 | 9/10 |
 | Opus 5.5 | Direct | 6/6 | 6/6 | 6/6 | 6/6 | 6/6 | 10/10 | 10/10 | 10/10 |
 | Opus 5.5 | Translate | 6/6 | 5/6 | 6/6 | 6/6 | 6/6 | 10/10 | 10/10 | 9/10 |
+| Llama 3.1 8B | Direct | 0/6 | 1/6 | 1/6 | 0/6 | 0/6 | 0/10 | 0/10 | 2/10 |
+| Llama 3.1 8B | Translate | 2/6 | 1/6 | 2/6 | 2/6 | 2/6 | 0/10 | 0/10 | 9/10 |
 
 **Valid traces by shortest violating-trace length (flawed + subtle)**
 
@@ -217,6 +338,8 @@
 | Sonnet 5.5 | Translate | 4/4 | 4/4 | 6/6 | 4/4 | 2/2 |
 | Opus 5.5 | Direct | 4/4 | 4/4 | 6/6 | 4/4 | 2/2 |
 | Opus 5.5 | Translate | 4/4 | 4/4 | 6/6 | 4/4 | 2/2 |
+| Llama 3.1 8B | Direct | 0/4 | 0/4 | 0/6 | 0/4 | 0/2 |
+| Llama 3.1 8B | Translate | 0/4 | 0/4 | 0/6 | 0/4 | 0/2 |
 
 **Direct vs. Translate on the same designs (exact McNemar; success = correct verdict with valid trace)**
 
@@ -225,6 +348,7 @@
 | Haiku 4.5 | 4 | 8 | 0.388 |
 | Sonnet 5.5 | 1 | 0 | 1.000 |
 | Opus 5.5 | 1 | 0 | 1.000 |
+| Llama 3.1 8B | 1 | 8 | 0.039 |
 
 **Translate-arm repair loop (SP2): correct outcomes using only the first problem file vs. after repairs**
 
@@ -233,6 +357,7 @@
 | Haiku 4.5 | 23/30 | 23/30 |
 | Sonnet 5.5 | 29/30 | 29/30 |
 | Opus 5.5 | 29/30 | 29/30 |
+| Llama 3.1 8B | 7/30 | 9/30 |
 
 **SP3 (SP2 translation quality: model-written initial state vs. gold)**
 
@@ -241,6 +366,7 @@
 | Haiku 4.5 | 30/30 | 25/30 | 24/30 | 0.979 | 0.993 | 30/30 |
 | Sonnet 5.5 | 30/30 | 30/30 | 30/30 | 1.000 | 1.000 | 30/30 |
 | Opus 5.5 | 30/30 | 30/30 | 30/30 | 1.000 | 1.000 | 30/30 |
+| Llama 3.1 8B | 24/30 | 10/30 | 0/30 | 0.932 | 0.499 | 21/30 |
 
 **SP2 Translate: the design facts decide the outcome** (correct = valid trace or correct 'safe')
 
@@ -249,6 +375,7 @@
 | Haiku 4.5 | 23/25 | 0/5 |
 | Sonnet 5.5 | 29/30 | 0/0 |
 | Opus 5.5 | 29/30 | 0/0 |
+| Llama 3.1 8B | 4/10 | 5/20 |
 
 ## SP2 long-trace set (payments and inventory, sizes 12 and 16: traces of 30-51 events)
 
@@ -258,6 +385,8 @@
 | Sonnet 5.5 | Translate | 8 | 100% [68-100] | 0% | 0% | 0% | 4 | 0% [0-49] | 0.023 |
 | Opus 5.5 | Direct | 8 | 100% [68-100] | 0% | 0% | 0% | 4 | 0% [0-49] | 0.055 |
 | Opus 5.5 | Translate | 8 | 100% [68-100] | 0% | 0% | 0% | 4 | 0% [0-49] | 0.064 |
+| Llama 3.1 8B | Direct | 8 | 0% [0-32] | 75% | 13% | 13% | 4 | 75% [30-95] | 0.000 |
+| Llama 3.1 8B | Translate | 8 | 0% [0-32] | 0% | 88% | 13% | 4 | 25% [5-70] | 0.000 |
 
 **SP2 by variant (valid trace on flawed/subtle; correct 'safe' on fixed)**
 
@@ -267,6 +396,8 @@
 | Sonnet 5.5 | Translate | 6/6 | 4/6 | 0/0 | 0/0 | 0/0 | 4/4 | 4/4 | 2/4 |
 | Opus 5.5 | Direct | 6/6 | 6/6 | 0/0 | 0/0 | 0/0 | 4/4 | 4/4 | 4/4 |
 | Opus 5.5 | Translate | 6/6 | 4/6 | 0/0 | 0/0 | 0/0 | 4/4 | 4/4 | 2/4 |
+| Llama 3.1 8B | Direct | 0/6 | 0/6 | 0/0 | 0/0 | 0/0 | 0/4 | 0/4 | 0/4 |
+| Llama 3.1 8B | Translate | 2/6 | 0/6 | 0/0 | 0/0 | 0/0 | 0/4 | 0/4 | 2/4 |
 
 **Valid traces by shortest violating-trace length (flawed + subtle)**
 
@@ -276,6 +407,8 @@
 | Sonnet 5.5 | Translate | 2/2 | 2/2 | 2/2 | 2/2 |
 | Opus 5.5 | Direct | 2/2 | 2/2 | 2/2 | 2/2 |
 | Opus 5.5 | Translate | 2/2 | 2/2 | 2/2 | 2/2 |
+| Llama 3.1 8B | Direct | 0/2 | 0/2 | 0/2 | 0/2 |
+| Llama 3.1 8B | Translate | 0/2 | 0/2 | 0/2 | 0/2 |
 
 **Direct vs. Translate on the same designs (exact McNemar; success = correct verdict with valid trace)**
 
@@ -283,6 +416,7 @@
 |---|---|---|---|
 | Sonnet 5.5 | 2 | 0 | 0.500 |
 | Opus 5.5 | 2 | 0 | 0.500 |
+| Llama 3.1 8B | 0 | 2 | 0.500 |
 
 **Translate-arm repair loop (SP2): correct outcomes using only the first problem file vs. after repairs**
 
@@ -290,6 +424,7 @@
 |---|---|---|
 | Sonnet 5.5 | 10/12 | 10/12 |
 | Opus 5.5 | 8/12 | 10/12 |
+| Llama 3.1 8B | 0/12 | 2/12 |
 
 **SP3 (SP2 translation quality: model-written initial state vs. gold)**
 
@@ -297,6 +432,7 @@
 |---|---|---|---|---|---|---|
 | Sonnet 5.5 | 12/12 | 12/12 | 12/12 | 1.000 | 1.000 | 12/12 |
 | Opus 5.5 | 12/12 | 12/12 | 12/12 | 1.000 | 1.000 | 10/12 |
+| Llama 3.1 8B | 10/12 | 6/12 | 0/12 | 0.886 | 0.437 | 6/12 |
 
 **SP2 Translate: the design facts decide the outcome** (correct = valid trace or correct 'safe')
 
@@ -304,6 +440,7 @@
 |---|---|---|
 | Sonnet 5.5 | 10/12 | 0/0 |
 | Opus 5.5 | 10/12 | 0/0 |
+| Llama 3.1 8B | 2/6 | 0/6 |
 
 ## SP2 opaque-vocabulary ablation (main set, design facts and design-specific events renamed)
 
@@ -315,6 +452,8 @@
 | Sonnet 5.5 | Translate | 40 | 100% [91-100] | 0% | 0% | 0% | 20 | 0% [0-16] | 0.020 |
 | Opus 5.5 | Direct | 40 | 100% [91-100] | 0% | 0% | 0% | 20 | 0% [0-16] | 0.048 |
 | Opus 5.5 | Translate | 40 | 100% [91-100] | 0% | 0% | 0% | 20 | 0% [0-16] | 0.039 |
+| Llama 3.1 8B | Direct | 40 | 0% [0-9] | 78% | 10% | 13% | 20 | 90% [70-97] | 0.000 |
+| Llama 3.1 8B | Translate | 40 | 0% [0-9] | 30% | 58% | 13% | 20 | 40% [22-61] | 0.000 |
 
 **SP2 by variant (valid trace on flawed/subtle; correct 'safe' on fixed)**
 
@@ -326,6 +465,8 @@
 | Sonnet 5.5 | Translate | 12/12 | 12/12 | 12/12 | 12/12 | 12/12 | 20/20 | 20/20 | 20/20 |
 | Opus 5.5 | Direct | 12/12 | 12/12 | 12/12 | 12/12 | 12/12 | 20/20 | 20/20 | 20/20 |
 | Opus 5.5 | Translate | 12/12 | 12/12 | 12/12 | 12/12 | 12/12 | 20/20 | 20/20 | 20/20 |
+| Llama 3.1 8B | Direct | 0/12 | 0/12 | 0/12 | 0/12 | 0/12 | 0/20 | 0/20 | 0/20 |
+| Llama 3.1 8B | Translate | 4/12 | 0/12 | 3/12 | 3/12 | 0/12 | 0/20 | 0/20 | 10/20 |
 
 **Valid traces by shortest violating-trace length (flawed + subtle)**
 
@@ -337,6 +478,8 @@
 | Sonnet 5.5 | Translate | 2/2 | 4/4 | 4/4 | 6/6 | 4/4 | 4/4 | 6/6 | 4/4 | 4/4 | 2/2 |
 | Opus 5.5 | Direct | 2/2 | 4/4 | 4/4 | 6/6 | 4/4 | 4/4 | 6/6 | 4/4 | 4/4 | 2/2 |
 | Opus 5.5 | Translate | 2/2 | 4/4 | 4/4 | 6/6 | 4/4 | 4/4 | 6/6 | 4/4 | 4/4 | 2/2 |
+| Llama 3.1 8B | Direct | 0/2 | 0/4 | 0/4 | 0/6 | 0/4 | 0/4 | 0/6 | 0/4 | 0/4 | 0/2 |
+| Llama 3.1 8B | Translate | 0/2 | 0/4 | 0/4 | 0/6 | 0/4 | 0/4 | 0/6 | 0/4 | 0/4 | 0/2 |
 
 **Direct vs. Translate on the same designs (exact McNemar; success = correct verdict with valid trace)**
 
@@ -345,6 +488,7 @@
 | Haiku 4.5 | 9 | 17 | 0.169 |
 | Sonnet 5.5 | 0 | 0 | 1.000 |
 | Opus 5.5 | 0 | 0 | 1.000 |
+| Llama 3.1 8B | 0 | 10 | 0.002 |
 
 **Translate-arm repair loop (SP2): correct outcomes using only the first problem file vs. after repairs**
 
@@ -353,6 +497,7 @@
 | Haiku 4.5 | 36/60 | 36/60 |
 | Sonnet 5.5 | 60/60 | 60/60 |
 | Opus 5.5 | 60/60 | 60/60 |
+| Llama 3.1 8B | 9/60 | 10/60 |
 
 **SP3 (SP2 translation quality: model-written initial state vs. gold)**
 
@@ -361,6 +506,7 @@
 | Haiku 4.5 | 60/60 | 35/60 | 26/60 | 0.967 | 0.971 | 60/60 |
 | Sonnet 5.5 | 60/60 | 60/60 | 52/60 | 1.000 | 0.989 | 60/60 |
 | Opus 5.5 | 60/60 | 60/60 | 52/60 | 1.000 | 0.989 | 60/60 |
+| Llama 3.1 8B | 53/60 | 7/60 | 0/60 | 0.837 | 0.685 | 46/60 |
 
 **SP2 Translate: the design facts decide the outcome** (correct = valid trace or correct 'safe')
 
@@ -369,12 +515,14 @@
 | Haiku 4.5 | 34/35 | 2/25 |
 | Sonnet 5.5 | 60/60 | 0/0 |
 | Opus 5.5 | 60/60 | 0/0 |
+| Llama 3.1 8B | 1/7 | 9/53 |
 
 **Why Direct traces fail on the gold model (invalid traces + false alarms)**
 
 | model | assumes another design | event order / state | timer / counter | stops before violation | vocabulary / arity | no trace | other |
 |---|---|---|---|---|---|---|---|
 | Haiku 4.5 | 30 | 0 | 0 | 0 | 2 | 0 | 0 |
+| Llama 3.1 8B | 0 | 0 | 0 | 0 | 46 | 3 | 0 |
 
 **Mean output tokens (incl. thinking) per instance**
 
@@ -386,6 +534,8 @@
 | Sonnet 5.5 | Translate | 742 | 810 | 821 |
 | Opus 5.5 | Direct | 1207 | 1216 | 1087 |
 | Opus 5.5 | Translate | 720 | 738 | 710 |
+| Llama 3.1 8B | Direct | 1306 | 2221 | 1491 |
+| Llama 3.1 8B | Translate | 277 | 275 | 255 |
 
 ## Solver behaviour on the gold SP2 problems
 
@@ -501,3 +651,5 @@
 | claude-haiku-4-5 | 848 | 1,592,569 | 7,149,601 | 37.34 |
 | claude-opus-5-5 | 864 | 2,077,161 | 607,582 | 28.86 |
 | claude-sonnet-5-5 | 841 | 1,996,340 | 584,840 | 13.78 |
+| llama3.1:8b | 900 | 995,301 | 455,451 | 0.00 |
+| qwen3.8:27b | 480 | 429,935 | 2,186,271 | 0.00 |
