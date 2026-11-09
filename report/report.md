@@ -22,7 +22,7 @@ For every model except Llama, SP1 is at ceiling for both arms at every trigger r
 find a valid trace every time in both arms, up to 51 events and even with mechanism names hidden, with no false alarms,
 and Qwen does so in Translate on the main set;
 translation cuts Haiku's false alarms on correct designs from 60% to 35% (95% to 45% with hidden names; nominal paired
-p = 0.002, as designs share five templates).
+p = 0.18 and 0.002, as designs share five templates).
 Llama 3.1 8B fabricates in Direct, and translation silences rather than fixes this: its specifications and problem files
 are mostly unusable or incomplete, so it answers "safe" or nothing.
 Translation risks specs that copy the bug, permissive models that planners exploit, and solver blow-up.

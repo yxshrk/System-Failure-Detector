@@ -22,7 +22,7 @@ For every model except Llama, SP1 is at ceiling for both arms at every trigger r
 find a valid trace every time in both arms, up to 51 events and even with mechanism names hidden, with no false alarms,
 and Qwen does so in Translate on the main set;
 translation cuts Haiku's false alarms on correct designs from 60% to 35% (95% to 45% with hidden names; nominal paired
-p = 0.002, as designs share five templates).
+p = 0.18 and 0.002, as designs share five templates).
 Llama 3.1 8B fabricates in Direct, and translation silences rather than fixes this: its specifications and problem files
 are mostly unusable or incomplete, so it answers "safe" or nothing.
 Translation risks specs that copy the bug, permissive models that planners exploit, and solver blow-up.
@@ -316,7 +316,7 @@ Llama Direct finds 33 of 55 common base-tier bugs but only 6 of 40 rarer ones, t
 | model | arm | main valid /40 | main FA /20 | stress valid /20 | stress FA /10 | opaque valid /40 | opaque FA /20 | $/inst. main |
 |---|---|---|---|---|---|---|---|---|
 | Haiku&nbsp;4.5 | Direct | 78% [62–88] | 60% [39–78] | 85% | 80% | 68% | 95% | 0.062 |
-| Haiku&nbsp;4.5 | Translate | 85% [71–93] | **35%** [18–57] | 90% | **40%** | 63% | **45%** | 0.051 |
+| Haiku&nbsp;4.5 | Translate | 85% [71–93] | 35% [18–57] | 90% | 40% | 63% | 45% | 0.051 |
 | Sonnet,&nbsp;Opus&nbsp;5.5 | Direct | 100% | 0% | 100% | 0% | 100% | 0% | 0.025, 0.048 |
 | Sonnet,&nbsp;Opus&nbsp;5.5 | Translate | 100% | 0% | 100% | 0% | 100% | 0% | 0.018, 0.036 |
 | Qwen&nbsp;3.8&nbsp;27B | Direct | 93% | 0% | – | – | – | – | – |
@@ -393,7 +393,7 @@ silences this rather than repairing it: Llama cannot write the formal language r
 spec, 8 of 60 SP2 problems never parse), and problem files missing a third of the initial state make flawed and fixed designs
 alike look safe. So false alarms fall for the wrong reason: against the policy "always answer safe", Llama Translate on the SP2
 main set adds one valid trace and two false alarms, so it beats that policy only if a miss costs over four false alarms (at $\pi = 1/2$). "Translate when the model is weak" holds only above a floor: the model must
-write the formal language correctly and completely.
+write the formal language correctly and completely. Open-weight results on other SP2 sets are Llama's.
 
 **Length vs. familiarity.** Our violations are textbook patterns; once one is recognised, a longer trace
 is bookkeeping: from 6–15 to 30–51 events the 5.5 models found a valid trace on every violating design, and Direct answers grew only from about 1.2k to 1.5k tokens. With facts renamed `mode-N`, they were still never wrong, so they map the
@@ -435,7 +435,7 @@ problems [are] likely to remain difficult" (GenAI p.31): inventory from size 8 r
 * *Familiarity and contamination.* SP1 functions derive from public benchmarks; renaming does not remove contamination. SP2 families are textbook patterns; the opaque set removes only lexical cues.
 * *Authorship.* The design documents and gold models were produced together; two documents contradicted their models and were corrected, with all affected instances rerun.
 * *Scaffolding.* The given action schemas contain each failure mechanism as a named, guarded event, so SP2 Translate reduces to choosing one or two design facts per family, and that choice decides the outcome: correct in 47/49 (Haiku) and 60/60 (5.5 models, Qwen) main-set problems with exact facts, 0/11 (Haiku) with wrong ones. Writing the event model (Planning p.15), as in [11], is untested.
-* *Sampling and configuration.* Each instance is sampled once, instances share five templates (so intervals and p-values are nominal), and many cells are at ceiling. Models ran with default thinking budgets, so generations also differ in effort (Haiku used 10–15k tokens, the 5.5 models about 1k).
+* *Sampling and configuration.* Instances are sampled once and share five templates (so intervals and p-values are nominal); many cells are at ceiling. Claude models used default thinking, open-weight ones temperature 0, so effort and sampling differ (Haiku 10–15k tokens, the 5.5 models about 1k).
 
 
 # 7. Responsible AI

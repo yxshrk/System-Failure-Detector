@@ -46,7 +46,7 @@ Llama Direct finds 33 of 55 common base-tier bugs but only 6 of 40 rarer ones, t
 | model | arm | main valid /40 | main FA /20 | stress valid /20 | stress FA /10 | opaque valid /40 | opaque FA /20 | $/inst. main |
 |---|---|---|---|---|---|---|---|---|
 | Haiku&nbsp;4.5 | Direct | 78% [62–88] | 60% [39–78] | 85% | 80% | 68% | 95% | 0.062 |
-| Haiku&nbsp;4.5 | Translate | 85% [71–93] | **35%** [18–57] | 90% | **40%** | 63% | **45%** | 0.051 |
+| Haiku&nbsp;4.5 | Translate | 85% [71–93] | 35% [18–57] | 90% | 40% | 63% | 45% | 0.051 |
 | Sonnet,&nbsp;Opus&nbsp;5.5 | Direct | 100% | 0% | 100% | 0% | 100% | 0% | 0.025, 0.048 |
 | Sonnet,&nbsp;Opus&nbsp;5.5 | Translate | 100% | 0% | 100% | 0% | 100% | 0% | 0.018, 0.036 |
 | Qwen&nbsp;3.8&nbsp;27B | Direct | 93% | 0% | – | – | – | – | – |

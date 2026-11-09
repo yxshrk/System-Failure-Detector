@@ -26,7 +26,7 @@ silences this rather than repairing it: Llama cannot write the formal language r
 spec, 8 of 60 SP2 problems never parse), and problem files missing a third of the initial state make flawed and fixed designs
 alike look safe. So false alarms fall for the wrong reason: against the policy "always answer safe", Llama Translate on the SP2
 main set adds one valid trace and two false alarms, so it beats that policy only if a miss costs over four false alarms (at $\pi = 1/2$). "Translate when the model is weak" holds only above a floor: the model must
-write the formal language correctly and completely.
+write the formal language correctly and completely. Open-weight results on other SP2 sets are Llama's.
 
 **Length vs. familiarity.** Our violations are textbook patterns; once one is recognised, a longer trace
 is bookkeeping: from 6–15 to 30–51 events the 5.5 models found a valid trace on every violating design, and Direct answers grew only from about 1.2k to 1.5k tokens. With facts renamed `mode-N`, they were still never wrong, so they map the
@@ -68,4 +68,4 @@ problems [are] likely to remain difficult" (GenAI p.31): inventory from size 8 r
 * *Familiarity and contamination.* SP1 functions derive from public benchmarks; renaming does not remove contamination. SP2 families are textbook patterns; the opaque set removes only lexical cues.
 * *Authorship.* The design documents and gold models were produced together; two documents contradicted their models and were corrected, with all affected instances rerun.
 * *Scaffolding.* The given action schemas contain each failure mechanism as a named, guarded event, so SP2 Translate reduces to choosing one or two design facts per family, and that choice decides the outcome: correct in 47/49 (Haiku) and 60/60 (5.5 models, Qwen) main-set problems with exact facts, 0/11 (Haiku) with wrong ones. Writing the event model (Planning p.15), as in [11], is untested.
-* *Sampling and configuration.* Each instance is sampled once, instances share five templates (so intervals and p-values are nominal), and many cells are at ceiling. Models ran with default thinking budgets, so generations also differ in effort (Haiku used 10–15k tokens, the 5.5 models about 1k).
+* *Sampling and configuration.* Instances are sampled once and share five templates (so intervals and p-values are nominal); many cells are at ceiling. Claude models used default thinking, open-weight ones temperature 0, so effort and sampling differ (Haiku 10–15k tokens, the 5.5 models about 1k).
