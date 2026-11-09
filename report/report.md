@@ -18,7 +18,8 @@ author:
 **Summary.** On 174 functions (SP1) and 162 designs (SP2), scored exactly on gold models, we compare
 Claude Haiku 4.5, Sonnet 5.5 and Opus 5.5, and the open-weight Qwen 3.8 27B and Llama 3.1 8B,
 answering directly or translating for Z3, SATPlan and GBFS.
-For every model except Llama, SP1 is at ceiling for both arms at every trigger rarity, with no false alarms. In SP2 the 5.5 models
+Both arms receive each design's event rules, so SP2 tests finding a reachable failure under those rules, not discovering new failure mechanisms.
+In SP1, Claude and Qwen raise no false alarm and, over model–bug pairs, find 267/268 common bugs in both arms; on very rare bugs Direct finds 32/32 and Translate 29/32, the three misses from two bugs. In SP2 the 5.5 models
 find a valid trace every time in both arms, up to 51 events and even with mechanism names hidden, with no false alarms,
 and Qwen does so in Translate on the main set;
 translation cuts Haiku's false alarms on correct designs from 60% to 35% (95% to 45% with hidden names; nominal paired
@@ -76,7 +77,7 @@ make it non-linear integer arithmetic, undecidable in general. Our bounded queri
 Z3's non-linear procedures are incomplete, so it can answer *unknown* (§5.1).
 
 **Building $\llbracket f \rrbracket$: bounded symbolic execution** [12] (`sp1/symexec.py`). The proposal
-planned an off-the-shelf executor; we wrote our own because tools such as CrossHair cannot prove
+planned an off-the-shelf executor; we wrote our own because tools such as CrossHair [16] cannot prove
 unsatisfiability within a bound, which Theorem 1 needs. The executor walks the syntax tree once with a symbolic environment
 $\rho$ (variable → Z3 term) and a *path condition* $\pi$ (when control reaches the statement).
 `x = e` sets $\rho[x] \leftarrow \llbracket e \rrbracket_\rho$. `if c` runs both branches, from $(\rho, \pi \land c)$ and
@@ -119,7 +120,7 @@ differently from the reference" for "violates the spec". The build checks that n
 if its domain was enumerated or $unwind_{mut}$ is unsatisfiable.
 
 **The solver.** Z3 [4] decides satisfiability with DPLL(T): a DPLL core (PropLogic p.35) with
-conflict-directed backjumping (CSP p.40–41) searches the Boolean skeleton, and integer theory solvers return
+backjumping (cf. conflict sets, CSP p.40–41) and clause learning (beyond the slides) searches the Boolean skeleton, and integer theory solvers return
 conflicts. Every model is re-executed in Python before it counts, and Lemma 1 is tested against real execution on 25 random
 inputs per benchmark and hand-written mutant (`tests/test_symexec.py`). Appendix B.1 shows a full instance.
 
@@ -180,7 +181,7 @@ delete lists only adds behaviour, so if $G$ is unreachable from $s$ in the relax
 from $s$ in the real task. ∎
 
 By the same argument GBFS finds a plan whenever one exists, though not always a shortest one ($h_{FF}$
-is inadmissible, Planning p.25); FF's hill-climbing phase (Planning p.28) is incomplete and cannot
+is inadmissible in the sense of Planning p.25); FF's hill-climbing phase (Planning p.28) is incomplete and cannot
 certify. Every fixed variant has finite $h_{FF}(I)$, so certification needs the exhaustive search and
 $h_{FF}$ contributes only its dead-end test: on sizes 1–4 it expands 1.2× (cache) to 3.8× (queue) fewer
 states than plain BFS (inventory size 4: 9,026 vs 24,992), without changing the exponential growth. **Pipeline:** in the Translate arm GBFS decides
@@ -227,7 +228,7 @@ are 6–15 events. Three further sets were added:
 
 * *Stress* (sizes 6 and 8): 17–27 events.
 * *Opaque:* the main set with design facts and design-specific events renamed (`mode-2`, `accept-3`) and comments removed; the semantics are unchanged.
-* *Long:* payments and inventory at sizes 12 and 16 (30–51 events), 5.5 models only.
+* *Long:* payments and inventory at sizes 12 and 16 (30–51 events), 5.5 models and Llama only.
 
 Each family has one violation and three variants (flawed; subtle, which looks fixed; fixed):
 
@@ -241,8 +242,8 @@ Each family has one violation and three variants (flawed; subtle, which looks fi
 
 **Models.** Claude Haiku 4.5, Sonnet 5.5 and Opus 5.5 with default extended thinking, called through
 the Claude Code CLI with *all tools disabled* (so Direct cannot run code). Two open-weight models on SoC's endpoint (SoCLaaS)
-bracket them: Qwen 3.8 27B, which reasons before answering, and Llama 3.1 8B, which does not, both at temperature 0 with a
-32k-token output budget. Qwen ran SP1 and the SP2 main set only, as one SP2 answer took 5–10 minutes on the shared endpoint.
+bracket them: Qwen 3.8 27B [18], which reasons before answering, and Llama 3.1 8B [19], which does not, both at temperature 0; Llama's answers never exceed 8,192
+output tokens (21 Direct answers stop exactly there, 18 of them scored *no answer*). Qwen ran SP1 and the SP2 main set only, as one SP2 answer took 5–10 minutes on the shared endpoint.
 Requests dropped under load were resubmitted, not scored. Both arms see the same inputs: the code with its docstring and the
 input domain (SP1); the design document, the family's PDDL domain (events, with comments) and object names (SP2).
 

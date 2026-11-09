@@ -239,7 +239,7 @@ def fig_sp1(df: pd.DataFrame):
     labels = ["common\n(>=10%)", "uncommon\n(1-10%)", "rare\n(0.1-1%)", "very rare\n(<0.1%)"]
     inst = pd.DataFrame(json.loads((ROOT / "data" / "sp1" / "instances.json").read_text())["instances"])
     bugs_i = inst[(inst.kind == "bug") & (inst.tier == "base")]
-    fig, ax = plt.subplots(figsize=(3.3, 2.9), facecolor=SURFACE)  # printed side by side at half width
+    fig, ax = plt.subplots(figsize=(3.3, 2.8), facecolor=SURFACE)  # printed side by side at half width
     style(ax)
     series = []
     for arm in ("direct", "translate"):
@@ -249,20 +249,21 @@ def fig_sp1(df: pd.DataFrame):
             if dd.empty:
                 continue
             ys = [100 * (dd[dd.bucket == b].outcome == "valid_witness").mean() for b in buckets]
-            name = MODEL_LABEL[WEAK_MODEL] if weak else f"LLM ({dd.model.nunique()} models)"
+            name = MODEL_LABEL[WEAK_MODEL].split()[0] if weak else f"{dd.model.nunique()} LLMs"
             series.append((f"{name} {ARM_LABEL[arm]}", ys, ARM_COLOR[arm], ls))
     for n, col in ((100, "#1baf7a"), (1000, "#6250d6")):
         ys = [100 * (1 - (1 - bugs_i[bugs_i.bucket == b].rarity) ** n).mean() for b in buckets]
-        series.append((f"random testing, {n:,} inputs", ys, col, "-"))
+        series.append((f"random, {n:,} inputs", ys, col, "-"))
     for label, ys, col, ls in series:
         ax.plot(range(4), ys, color=col, linewidth=1.6, linestyle=ls, marker="o", markersize=4,
                 markeredgecolor=SURFACE, markeredgewidth=1.2, label=label)
-    ax.set_xticks(range(4), labels, fontsize=6.5)
-    ax.tick_params(axis="y", labelsize=6.5)
+    ax.set_xticks(range(4), labels, fontsize=8.5)
+    ax.tick_params(axis="y", labelsize=8.5)
     ax.set_ylim(0, 105)
-    ax.set_ylabel("bugs with a valid witness (%)", fontsize=7, color=INK2)
-    ax.legend(frameon=False, fontsize=5.5, loc="upper center", bbox_to_anchor=(0.45, -0.3), ncol=2)
-    ax.set_title("SP1 base tier: witness vs. trigger rarity", fontsize=7.5, color=INK, loc="left")
+    ax.set_ylabel("bugs with a valid witness (%)", fontsize=9, color=INK2)
+    ax.legend(frameon=False, fontsize=8, loc="upper center", bbox_to_anchor=(0.45, -0.24), ncol=2,
+              handlelength=1.6, columnspacing=1.0)
+    ax.set_title("SP1: witnesses vs. trigger rarity", fontsize=10, color=INK, loc="left")
     fig.tight_layout()
     fig.savefig(FIG / "sp1_rarity.png", dpi=200, facecolor=SURFACE)
     plt.close(fig)
@@ -428,7 +429,7 @@ def fig_sp2(df: pd.DataFrame):
     d0 = df[(df.model == "haiku") & (df.violation == True)]  # noqa: E712
     if d0.empty:
         return
-    fig, ax = plt.subplots(figsize=(3.3, 2.9), facecolor=SURFACE)  # printed side by side at half width
+    fig, ax = plt.subplots(figsize=(3.3, 2.8), facecolor=SURFACE)  # printed side by side at half width
     style(ax)
     for arm in ("direct", "translate"):
         d = d0[d0.arm == arm]
@@ -440,17 +441,17 @@ def fig_sp2(df: pd.DataFrame):
         ax.plot(range(len(bins)), ys, color=ARM_COLOR[arm], linewidth=1.6, marker="o", markersize=4,
                 markeredgecolor=SURFACE, markeredgewidth=1.2, label=f"Haiku 4.5 {ARM_LABEL[arm]}")
     labels = [(f"{lo}-{hi}" if lo != hi else f"{lo}") + f"\n(n={n})" for (lo, hi), n in zip(bins, ns)]
-    ax.set_xticks(range(len(bins)), labels, fontsize=6.5)
-    ax.tick_params(axis="y", labelsize=6.5)
-    ax.set_xlabel("shortest violating trace (events)", fontsize=7, color=INK2)
+    ax.set_xticks(range(len(bins)), labels, fontsize=8)
+    ax.tick_params(axis="y", labelsize=8.5)
+    ax.set_xlabel("shortest violating trace (events)", fontsize=9, color=INK2)
     ax.set_ylim(0, 112)
-    ax.set_ylabel("valid failure trace (%)", fontsize=7, color=INK2)
-    ax.legend(frameon=False, fontsize=6.5, loc="lower left")
+    ax.set_ylabel("valid failure trace (%)", fontsize=9, color=INK2)
+    ax.legend(frameon=False, fontsize=8, loc="lower left")
     others = [MODEL_LABEL[m] for m in ("sonnet", "opus") if (df.model == m).any()]
     if others:
-        ax.text(len(bins) - 1, 106, f"{' and '.join(others)}: 100% in both arms",
-                ha="right", fontsize=6.5, color=INK2)
-    ax.set_title("SP2: valid traces vs. trace length", fontsize=7.5, color=INK, loc="left")
+        ax.text(len(bins) - 1, 106, f"{', '.join(others)}: 100%, both arms",
+                ha="right", fontsize=8, color=INK2)
+    ax.set_title("SP2: valid traces vs. trace length", fontsize=10, color=INK, loc="left")
     fig.tight_layout()
     fig.savefig(FIG / "sp2_length.png", dpi=200, facecolor=SURFACE)
     plt.close(fig)

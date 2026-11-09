@@ -1,6 +1,6 @@
 # Appendix A. Artefacts from the cached runs
 
-**A.1 A rare SP1 bug** (`days_in_month`, mutant 400 → 399, trigger rarity 0.019%; every model found it in
+**A.1 A rare SP1 bug** (`days_in_month`, mutant 400 → 399, trigger rarity 0.019%; every model except Llama found it in
 both arms):
 
 ```python

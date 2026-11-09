@@ -30,4 +30,12 @@
 
 [15] D. Jackson. *Software Abstractions: Logic, Language, and Analysis*, revised ed. MIT Press, 2012 (the small-scope hypothesis).
 
+[16] P. Schanely. CrossHair: an analysis tool for Python. https://github.com/pschanely/CrossHair.
+
+[17] E. Clarke, D. Kroening, F. Lerda. A tool for checking ANSI-C programs. *TACAS*, 2004.
+
+[18] Qwen Team. Qwen 3.8 27B, open-weight model, served by SoC's SoCLaaS endpoint, accessed November 2026.
+
+[19] A. Dubey et al. The Llama 3 herd of models. arXiv:2407.21783, 2024.
+
 Course material: CS3263 lecture slides (PropLogic, CSP, FirstOrderLogic as FOL, Planning, GenerativeReasoningAgenticAI as GenAI, Decision, ProbGrapModel, ResponsibleAI), cited as *Deck p.N*.

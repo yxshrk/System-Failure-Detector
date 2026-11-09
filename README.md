@@ -32,7 +32,7 @@ Scoring is exact. A witness counts only if it reproduces on the gold model: a fa
 
 Qwen 3.8 27B and Llama 3.1 8B are open-weight models served by SoCLaaS; Qwen ran SP1 and the SP2 main set only.
 
-* **Rarity.** Trigger rarity decides whether random testing finds a bug: 100 random inputs catch 5% of the very rare bugs. It has no effect on either LLM arm.
+* **Rarity.** Trigger rarity decides whether random testing finds a bug: 100 random inputs catch 5% of the very rare bugs. Direct, for Claude and Qwen, found every rare and very rare bug. Translate fell slightly behind as bugs got rarer (29/32 vs 32/32 model–bug pairs on very rare bugs), but those three misses come from two bugs, so treat it as a hint.
 * **Model generations.** The 5.5 models are perfect on SP2 up to 51-event traces (long set: payments and inventory at sizes 12 and 16), even with mechanism names hidden. Haiku 4.5's Direct errors come from misreading the design, and translation roughly halves its false alarms.
 * **Open-weight models.** Qwen 3.8 27B matches the 5.5 models (its 3 Direct misses on SP2 are format slips). Llama 3.1 8B fabricates in Direct; Translate cuts its false alarms, but only because its specs and problem files are unusable or incomplete, so it answers "safe" or nothing.
 * **Translation's own failure modes.** Specifications can copy the bug, permissive problem files get exploited by the planner, and checkers time out. Certification also explodes on the symmetric inventory design: 2.7 M states at size 6, beyond budget at size 8.
