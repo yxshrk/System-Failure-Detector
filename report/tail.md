@@ -15,14 +15,14 @@ all sets) were legal only in its mistranslated problem, as the planner optimises
 does.
 
 **Accountability.** Translate leaves an audit trail (spec, solver log, witness), close to a white-box
-explanation ([3] Ch. 27), so a named engineer can sign off on *what was checked*; Direct
-answers are post-hoc narratives. Responsibility stays with the humans who sign off; the tool supports a human–AI review team.
+explanation ([3] Ch. 27), so a named engineer can sign off on *what was checked*; Direct's
+witnesses replay, but its explanations are post-hoc. Humans who sign off stay responsible; the tool aids a human–AI review team.
 
 **Dual use and attacks on the reviewer.** A witness can help construct an exploit, and AI lowers the cost of
 attacks; we would run the tool only on code the user owns, follow coordinated
 disclosure, and withhold witnesses for unpatched deployed systems. A comment planted in the code could
 steer the Direct arm to "no bug"; Translate may be less exposed, since the solver
-decides, but its spec is still model-written (untested). Sending proprietary code to a hosted model also discloses it; on-premise open-weight models avoid that.
+decides, but its spec is still model-written (untested). Sending proprietary code to a hosted model also discloses it; on-premise models avoid that.
 
 # 8. Division of work and use of AI tools
 

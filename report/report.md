@@ -16,8 +16,8 @@ author:
 ```
 
 **Summary.** Can an LLM show concretely how unshipped software would fail? We test function review (SP1: find an input that breaks a Python function's docstring) and distributed-system design review (SP2: given a design document and its event rules, find an order of timeouts, retries, lost messages and crashes that breaks a safety property such as "no order is charged twice"). On 174 functions and 162 designs, scored exactly against ground truth, we compare answering directly with translating for a solver (Z3 or planners), using Claude Haiku 4.5, Sonnet 5.5, Opus 5.5 and the open-weight Qwen 3.8 27B and Llama 3.1 8B.
-**Results.** In SP1, Claude and Qwen raise no false alarm and find nearly every bug either way; Translate trails only on rare bugs (very rare model–bug pairs: 29/32 vs 32/32). In SP2, the 5.5 models find a valid trace every time either way, up to 51 events and with mechanism names hidden. Translation cuts Haiku's false alarms on correct designs from 60% to 35% (95% to 45% with hidden names; nominal paired p = 0.18 and 0.002). Llama fabricates when answering directly, and translation silences rather than fixes this.
-**Answer.** On these small, fully specified problems capable models were as accurate directly as through a solver. Translation is worth its cost mainly when a certificate or audit trail is needed or a mid-tier model misreads designs; it did not rescue a model that could not write the formal language.
+**Results.** In SP1, Claude and Qwen raise no false alarm and find nearly every bug either way; Translate trails only on rare bugs (very rare, 8 bugs × 4 models: 29/32 vs 32/32). In SP2, the 5.5 models find a valid trace every time either way, up to 51 events and with mechanism names hidden. Translation cuts Haiku's false alarms on correct designs from 60% to 35% (95% to 45% with hidden names; nominal paired p = 0.18 and 0.002). Llama fabricates when answering directly, and translation silences rather than fixes this.
+**Answer.** On these small, fully specified problems capable models were about as accurate directly as through a solver. Translation pays off mainly when a certificate or audit trail is needed or a mid-tier model misreads designs; it did not rescue a model that could not write the formal language.
 
 # 1. Motivation and research questions
 
@@ -29,7 +29,7 @@ testing [1]. An AI assistant for code and design review is therefore valuable on
 that do not exist.
 
 The course asks: "When should you use LLM reasoning
-directly? When should you translate problem specification then call tool?" We compare
+directly? When should you translate problem specification then call tool?", and whether that is "likely to change in the near future". We compare
 two arms on the same inputs:
 
 * **(A) Direct.** The LLM reads the input and answers with a verdict and a witness.
@@ -69,19 +69,17 @@ a finite CSP, a class that is NP-complete. Z3, however, receives SMT (SAT extend
 make it non-linear integer arithmetic, undecidable in general. Our bounded queries are decidable, but
 Z3's non-linear procedures are incomplete, so it can answer *unknown* (§5.1).
 
-**Building $\llbracket f \rrbracket$: bounded symbolic execution** [12] (`sp1/symexec.py`). Rather than running the code on one input, the executor runs it once on symbolic inputs and produces one formula covering every path: a branch setting `y = 1` if `x > 0` and `y = 2` otherwise, then returning `y`, becomes $ret = \mathit{If}(x > 0, 1, 2)$. We wrote our own because tools such as CrossHair [16] cannot prove unsatisfiability within a bound, which Theorem 1 needs. It walks the syntax tree once with a symbolic environment
+**Building $\llbracket f \rrbracket$: bounded symbolic execution** [12]. Rather than running the code on one input, the executor runs it once on symbolic inputs and produces one formula covering every path: a branch setting `y = 1` if `x > 0` and `y = 2` otherwise, then returning `y`, becomes $ret = \mathit{If}(x > 0, 1, 2)$. We wrote our own because tools such as CrossHair [16] cannot prove unsatisfiability within a bound, which Theorem 1 needs. It walks the syntax tree once with a symbolic environment
 $\rho$ (variable → Z3 term) and a *path condition* $\pi$ (when control reaches the statement).
 `x = e` sets $\rho[x] \leftarrow \llbracket e \rrbracket_\rho$. `if c` runs both branches, from $(\rho, \pi \land c)$ and
 $(\rho, \pi \land \lnot c)$, and joins them with $\rho[x] = \mathit{If}(\pi_1, \rho_1[x], \rho_2[x])$ and $\pi = \pi_1 \lor \pi_2$
 (`break`/`continue` likewise). `return e` sets $ret \leftarrow \mathit{If}(\pi, \llbracket e \rrbracket, ret)$ and $\pi \leftarrow \bot$. An
-operation that raises when $b$ (bad index, `x // 0`, …) sets $exc \leftarrow exc \lor (\pi \land b)$ and $\pi \leftarrow \pi \land \lnot b$. A
+operation that raises when $b$ (bad index, `x // 0`, …) sets $exc \leftarrow exc \lor (\pi \land b)$ and $\pi \leftarrow \pi \land \lnot b$. A `while` or symbolic-`range`
 loop is unrolled $k$ times, iteration $j$ under $\pi \land cond_j$, then $unwind \leftarrow unwind \lor (\pi \land cond_k)$. The
-result is three terms over $X$: $ret$, $exc$ ("raises") and $unwind$ ("needs more than $k$ iterations"). Integers are unbounded and `//`, `%`
+result is three terms over $X$: $ret$, $exc$ ("raises") and $unwind$ ("exceeds a bound"). Integers are unbounded and `//`, `%`
 follow Python's floor semantics. Lists are values: aliasing (`ys = xs; ys.sort()`) is not modelled.
 
-**Lemma 1 (encoding correctness).** For $f$ in the supported, alias-free subset, let $x_0 \in D$ be an input whose execution needs at most $k$
-iterations of every loop. Then $unwind[x_0] = \bot$; $exc[x_0] = \top$ iff $f(x_0)$ raises; and otherwise
-$ret[x_0] = f(x_0)$. If the execution needs more than $k$ iterations, $unwind[x_0] = \top$.
+**Lemma 1 (encoding correctness).** Call $x_0 \in D$ *covered* if $unwind[x_0] = \bot$: its run needs at most $k$ iterations of each `while` or symbolic-`range` loop and at most $k$ elements in each list built from a symbolic count (concrete `range` loops are expanded in full). For $f$ in the supported, alias-free subset and covered $x_0$: $exc[x_0] = \top$ iff $f(x_0)$ raises, and otherwise $ret[x_0] = f(x_0)$.
 
 *Proof sketch.* Induction over statements, with the invariant: $\pi[x_0] = \top$ iff the concrete run
 on $x_0$ reaches this point, and then $\rho[x][x_0]$ is the concrete value of $x$. The join selects the branch taken, `return` and raises record the outcome under the path condition, and $cond_k$ marks a
@@ -99,49 +97,46 @@ In words, $\Phi_{spec}$ seeks an in-domain input, within the loop bounds, that s
 
 **Theorem 1 (soundness and bounded completeness).** Suppose the *coverage* query
 $\Psi = D(x) \land \lnot unwind_f \land \big(unwind_{pre} \lor (pre(x) \land \lnot exc_f \land unwind_{post})\big)$
-is unsatisfiable, i.e. on every input within $f$'s bound the spec's own loops fit $k'$. Then $\Phi_{spec}$
-is satisfiable iff some $x_0 \in D$ within the bound satisfies $pre$ while $f$ raises or violates $post$ (a
+is unsatisfiable, i.e. on every input covered by $f$ the spec's own loops fit $k'$. Then $\Phi_{spec}$
+is satisfiable iff some covered $x_0 \in D$ satisfies $pre$ while $f$ raises or violates $post$ (a
 $pre$ that raises counts as false, a $post$ that raises as violated), and every satisfying assignment is such an $x_0$.
 
 *Proof sketch.* By Lemma 1 on $f$, $pre$ and $post$, each conjunct has its concrete meaning wherever
 the relevant function fits its bound; $\lnot\Psi$ says that it does at every input where it is
 evaluated. If $\Psi$ is still satisfiable at $4k'$, `spec_check` reports *undecided*, never "no failure". ∎
 
-Equivalently, $\Phi_{spec}$ is unsatisfiable iff $f \models spec$ on all inputs within the bound: the
+Equivalently, $\Phi_{spec}$ is unsatisfiable iff $f \models spec$ on all covered inputs: the
 entailment theorem applied to the bounded program. The same argument covers $\Phi_{gold}$ with "behaves
 differently from the reference" for "violates the spec". The build checks that no reference loop can exceed its bound, and accepts a mutant as equivalent only
-if its domain was enumerated or $unwind_{mut}$ is unsatisfiable.
+if its domain was enumerated or $unwind_{mut}$ is unsatisfiable (cf. CBMC's [17] unwinding assertions).
 
-**The solver.** Z3 [4] decides satisfiability with DPLL(T): a DPLL core with
-backjumping and clause learning searches the Boolean skeleton, and integer theory solvers return
-conflicts. Every satisfying assignment is re-executed in Python before it counts, and Lemma 1 is tested against real execution on 25 random
-inputs per benchmark and hand-written mutant (`tests/test_symexec.py`). Appendix B.1 shows a full instance.
+**The solver.** Z3 [4] decides satisfiability. Every satisfying assignment is re-executed in Python before it counts, and Lemma 1 is tested against real execution on 25 random
+inputs per benchmark and hand-written mutant. Appendix B.1 shows a full instance.
 
 ## 2.2 SP2: a distributed-system design as a STRIPS planning problem
 
 **Setting.** A distributed system is a set of components communicating over an unreliable network, so failures often depend on event order: SP2 asks whether a design permits an unlucky order, such as a timer expiring while a request is in flight. We use five classic designs, the *families*, each with one safety property and three *variants*: *flawed*, *subtle* (looks fixed but is not) and *fixed* (safe).
 
 * *payments:* a retried charge must not bill twice (no dedup; key saved after charge; atomic insert)
-* *inventory:* must not sell above stock (lost update; payment after hold expiry; atomic decrement)
+* *inventory:* must not oversell (lost update; payment after hold expiry; atomic decrement + hold check)
 * *lock:* a stale writer must not win (no fencing or lease check; lease check only; fencing tokens [14])
 * *queue:* redelivery must not pay out twice (no dedup; ids in memory; id in the DB transaction)
 * *cache:* must not end stale (update DB then delete cache; the reverse; leases revoked by delete)
 
 Variants differ only in their *design facts*; in payments one initial fact says whether deduplication is absent, racy or atomic. *Size* scales a timer or capacity, lengthening the shortest failure.
 
-**STRIPS task** ([3] Ch. 11). Each family is a typed PDDL domain and each variant and size a problem; grounding (propositionalization, [3] Ch. 9; up to $K^V$ instances per schema) gives $\Pi = (F, A, I, G)$:
+**STRIPS task** ([3] Ch. 11). Each family is a typed PDDL domain and each variant and size a problem; grounding (propositionalization, [3] Ch. 9; up to $K^V$ instances per schema with $K$ objects, $V$ parameters) gives $\Pi = (F, A, I, G)$:
 
 * $F$, what can be true: ground facts such as `(no-record o1)`. A state $s \subseteq F$ is the set of facts that hold (closed world assumption).
 * $A$, what can happen: each action has $pre(a)$, $add(a)$, $del(a)$. It is applicable in $s$ iff $pre(a) \subseteq s$, and then $\mathrm{RESULT}(s, a) = (s \setminus del(a)) \cup add(a)$.
 * $I$, how this design starts and behaves: design facts such as `(dedup-racy)`, counters `(next-tick t0 t1)` and the starting situation.
 * $G$, what must never happen: e.g. `{(charged-twice o1)}`.
 
-A plan reaching $s_n \supseteq G$ is a failure trace. The planner chooses *every* event, including loss and crashes, so a plan is a counterexample, not a course of action: planning serves as explicit-state model checking of a **safety** property. In payments, attempt a0 passes the duplicate check, the timer expires, retry a1 also passes because `accept-new-racy` does *not* delete `no-record o1`, and both charge (B.2 lists its $pre$, $add$ and $del$).
+A plan reaching $s_n \supseteq G$ is a failure trace. The planner chooses *every* event, including loss and crashes, so a plan is a counterexample, not a course of action: planning serves as explicit-state model checking of a **safety** property. In payments, attempt a0 passes the duplicate check, the timer expires, retry a1 also passes because `accept-new-racy` does *not* delete `no-record o1`, and both charge (B.2 shows it).
 
 **Modelling assumptions:** events interleave one at a time; effects are deterministic and
-unconditional, preconditions and goals positive; the environment can do exactly the failure events in
-the domain (loss, delay, pauses, crashes, ticks); object counts, hence states, are finite. PlanSAT is
-PSPACE-complete [10] (NP-hard even without negative effects); each SATPlan call decides
+unconditional, preconditions and goals positive; the environment can do exactly the domain's failure events; object counts, hence states, are finite. PlanSAT is
+PSPACE-complete [10] (its delete-free relaxation is polynomial given positive preconditions, as here, so $h_{FF}$ is tractable); each SATPlan call decides
 *bounded* PlanSAT for one horizon $T$, which is NP-complete for $T$ polynomial in the task size [10].
 
 **Scope.** Liveness failures are not STRIPS goals and are out of scope. "Safe" covers the instance at its size, not every size; we rely on the small-scope hypothesis [15], that most flaws already appear in small instances, and on an inductive invariant where search runs out (inventory from size 8, §6).
@@ -160,7 +155,7 @@ $F^{t+1} \Leftrightarrow ActionCausesF^t \lor (F^t \land \lnot ActionCausesNotF^
 $f \in del(a) \setminus add(a)$; otherwise (5) forces $f^{t+1} = f^t$. Hence $s_{t+1} = \mathrm{RESULT}(s_t, a)$, with $a$ applicable by (3). ∎
 
 **Theorem 2.** The horizon-$T$ formula is satisfiable iff a plan of exactly $T$ actions ends in a state
-containing $G$, and the true action variables of a model form one. Iterating $T$ from 0 returns a *shortest* failure trace at the first satisfiable $T$; decoded plans are re-validated. UNSAT for all $T \le T_{max}$ proves only bounded safety.
+containing $G$, and the true action variables of a model form one. Iterating $T$ from 0 returns a *shortest* trace at the first satisfiable $T$; decoded plans are re-validated. UNSAT for all $T \le T_{max}$ proves only bounded safety.
 
 **Certifying safety: greedy best-first search with $h_{FF}$**. $h_{FF}(s)$ is the length of a relaxed plan for the task with delete lists ignored, extracted
 from layered reachability (FF's relaxed planning graph [7]), or $\infty$ if $G$ is unreachable even in the relaxation. GBFS expands states
@@ -179,7 +174,7 @@ is inadmissible); FF's hill-climbing phase is incomplete and cannot
 certify. Every safe (*fixed*) variant has finite $h_{FF}(I)$, so certification needs the exhaustive search and
 $h_{FF}$ contributes only its dead-end test: on sizes 1–4 it expands 1.2× (cache) to 3.8× (queue) fewer
 states than plain BFS, without changing the exponential growth. **Pipeline:** in the Translate arm GBFS decides
-reachability on the model's problem; if a plan exists, SATPlan returns a shortest trace within its 120 s budget, else the GBFS trace is kept (B.2–B.3 show real clauses and a certificate).
+reachability on the model's problem; if a plan exists, SATPlan returns a shortest trace within its 120 s budget, else the GBFS trace is kept (B.2–3).
 
 
 # 3. Problem instances
@@ -192,8 +187,7 @@ must be *constructed* (sorting networks, rate limiters, Luhn, subset-sum DP, …
 docstrings rewritten without examples; each docstring fixes the return value on the stated domain, so
 the docstring *is* the specification.
 
-**Mutants and labels.** The candidates are 808 automatic first-order mutants, 42 hand-written realistic bugs (a
-forgotten 400-year rule, a comparator dropped as an "optimisation") and 9
+**Mutants and labels.** The candidates are 808 automatic first-order (single-change) mutants, 42 hand-written bugs (e.g. a forgotten 400-year rule) and 9
 equivalent rewrites.
 
 Each candidate is labelled in four steps. Its *trigger rarity* is the probability that a random
@@ -227,7 +221,7 @@ input domain (SP1); the design document, the family's PDDL domain (events, with 
 
 **Arms.** Direct returns JSON with a verdict and a witness (a failing input, or a list of ground actions). Translate returns `pre(...)` and `post(..., result)` in the supported Python subset, stating the docstring's intent, not the code's behaviour (SP1), or the complete initial state, including design facts and counters, with object names and the goal given (SP2); `spec_check` or the pipeline of §2.2 then runs.
 
-**Repair loop.** Errors are fed back up to twice: syntax errors, unsupported constructs, a vacuous precondition, a wrong goal, type or arity errors: a harness with verification and retries.
+**Repair loop (Translate only).** Errors are fed back up to twice: syntax, unsupported constructs, a vacuous precondition, a wrong goal, type or arity.
 
 **Tool budgets.** An SP1 spec check has a 120 s deadline; Z3
 queries time out at 60 s; planner search is capped at 3 M expansions or 300 s, SATPlan at 120 s. A
