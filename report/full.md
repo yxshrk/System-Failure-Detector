@@ -62,7 +62,7 @@ the solver's satisfying assignment to $x$ is the witness.
 
 ## 2.1 SP1: a function as a CSP, solved by SMT
 
-**CSP.** Each instance is a CSP $(X, D, C)$.
+**CSP.** Each instance is a CSP $(X, D, C)$ ([3] Ch. 6).
 
 * **Variables $X$:** the function's inputs. An integer input is one variable. A list input is a length variable $n$ plus element variables $e_0, \dots, e_{m-1}$, where $m$ is the maximum length.
 * **Domains $D$:** the stated ranges, e.g. $1 \le month \le 12$, $0 \le n \le m$, and each $e_i \in [lo, hi]$.
@@ -125,8 +125,8 @@ inputs per benchmark and hand-written mutant (`tests/test_symexec.py`). Appendix
 
 ## 2.2 SP2: a design as a STRIPS planning problem
 
-**STRIPS task.** Each family is a typed PDDL domain and each variant/size a
-problem; grounding (propositionalization; up to $K^V$ instances per schema)
+**STRIPS task** ([3] Ch. 11). Each family is a typed PDDL domain and each variant/size a
+problem; grounding (propositionalization, [3] Ch. 9; up to $K^V$ instances per schema)
 gives $\Pi = (F, A, I, G)$:
 
 * $F$ is the set of ground facts; a state $s \subseteq F$ is the set of facts that hold (closed world assumption).
@@ -160,7 +160,7 @@ fact and step $t \le T$, and $a^t$ per action and step $t < T$, with CNF clauses
 6. **exactly one action per step:** the exclusion axioms, strengthened, in linear size.
 
 **Lemma 2.** Under (6), clauses (4)–(5) are equivalent to the standard successor-state axioms
-$F^{t+1} \Leftrightarrow ActionCausesF^t \lor (F^t \land \lnot ActionCausesNotF^t)$.
+$F^{t+1} \Leftrightarrow ActionCausesF^t \lor (F^t \land \lnot ActionCausesNotF^t)$ ([3] Ch. 7).
 *Proof.* Let $a$ act at step $t$. (4) forces $f^{t+1}$ if $f \in add(a)$ and $\lnot f^{t+1}$ if
 $f \in del(a) \setminus add(a)$; otherwise (5) forces $f^{t+1} = f^t$. Hence $s_{t+1} = \mathrm{RESULT}(s_t, a)$, with $a$ applicable by (3). ∎
 
@@ -409,7 +409,7 @@ moves a unit from stock to holding, `expire-hold` moves it back, `pay` moves it 
 actions change no count or are disabled by the fixed design facts; each customer leaves browsing once,
 so no count rises twice. Hence sold ≤ S < S + 1.
 
-**Is translating worth it? A decision rule.** Choosing an arm is a maximum-expected-utility decision. With a share $\pi$ of flawed designs and costs $c_{FA}$ per false alarm (reviewer time),
+**Is translating worth it? A decision rule.** Choosing an arm is a maximum-expected-utility decision ([3] Ch. 16). With a share $\pi$ of flawed designs and costs $c_{FA}$ per false alarm (reviewer time),
 $c_{miss}$ per flawed design left without a valid witness, $c_{rev}$ per undecided case,
 and $c_{run}$ per run (model calls),
 $$EU(arm) = -\big((1-\pi)\,P_{FA}\,c_{FA} + \pi\,P_{miss}\,c_{miss} + P_{und}\,c_{rev} + c_{run}\big).$$
@@ -423,7 +423,7 @@ dearer and leaves one bug and five controls undecided, so Direct wins; Sonnet's 
 saving must be weighed against one unresolved faulty instance and its review cost. Only Translate can *certify* absence, with a solver result and
 audit trail that hold relative to the translated model. *Direct suffices* when the specification is local and explicit, the artefact small and the model strong.
 
-As the course notes, computationally difficult problems are likely to remain difficult for LLM reasoning models, yet Sonnet and Opus Direct were right on inventory's fixed designs where the tools gave up (sizes 8–16): recognising a pattern is not solving the search. Direct will likely keep improving on small, recognisable problems (Haiku 4.5 to 5.5), but worst-case hardness and the missing certificate remain.
+Hard search problems should stay hard for reasoning models, yet Sonnet and Opus Direct were right on inventory's fixed designs where the tools gave up (sizes 8–16): recognising a pattern is not solving the search. Direct will likely keep improving on small, recognisable problems (Haiku 4.5 to 5.5), but worst-case hardness and the missing certificate remain.
 
 **Threats to validity.**
 
@@ -440,11 +440,11 @@ As the course notes, computationally difficult problems are likely to remain dif
 **Automation bias: what "no failure" means.** A verdict is a belief about a *model*, not a fact about
 the world: SP1 certifies only within the domain and unroll bounds (Theorem 1), and
 SP2 only within the event model, so a failure mode the domain lacks is invisible to both arms. We therefore say "no counterexample within the input and loop bounds" (SP1) or "no reachable
-violation in this finite event model" (SP2), never "verified safe", which certainty and framing effects predict reviewers over-trust. Skipping manual review is
+violation in this finite event model" (SP2), never "verified safe", which certainty and framing effects ([3] Ch. 16) predict reviewers over-trust. Skipping manual review is
 rational only if P(hidden failure | "no failure") is below review cost divided by incident loss
 (if review would catch the failure). On our SP2 main set, 2 of Haiku Direct's 10
 "safe" verdicts were wrong and none of Haiku Translate's 13 (95% upper bound 23%); both depend on the
-base rate of flawed designs (Bayes' rule) and miss failure modes outside the benchmark.
+base rate of flawed designs (Bayes' rule, [3] Ch. 12) and miss failure modes outside the benchmark.
 
 **Fabricated failures.** False alarms waste reviewer time and train reviewers to ignore the tool. A Translate witness is correct only
 *with respect to the model's own specification*: 13 of Haiku's main-set SP2 Translate traces (40 across
@@ -452,7 +452,7 @@ all sets) were legal only in its mistranslated problem, as the planner optimises
 does.
 
 **Accountability.** Translate leaves an audit trail (spec, solver log, witness), close to a white-box
-explanation, so a named engineer can sign off on *what was checked*; Direct
+explanation ([3] Ch. 27), so a named engineer can sign off on *what was checked*; Direct
 answers are post-hoc narratives. Responsibility stays with the humans who sign off; the tool supports a human–AI review team.
 
 **Dual use and attacks on the reviewer.** A witness can help construct an exploit, and AI lowers the cost of
@@ -465,11 +465,11 @@ decides, but its spec is still model-written (untested). Sending proprietary cod
 
 **Contributions.** The work departed from the proposal's planned split.
 
-* *Yash:* coordination; directed the Claude Code sessions that built the SP1 and SP2 pipelines; ran all Claude experiments; and drafted the report.
+* *Yash:* coordination; directed the build of the SP1 and SP2 pipelines; ran all Claude experiments; and drafted the report.
 * *Joshua:* the backend for the SoC open-weight models (`premortem/llm.py`) and the Qwen and Llama runs (§5–6).
 * *Hein:* the SP3 analyses (spec-style classifier, design facts vs. outcomes) and the precise statements of both formulations and their limits (§2, §6).
 
-**Use of AI tools.** We used Claude Code (Anthropic) extensively. *Ours, from the proposal:* the research questions, the two formulations and their solvers, the five design families and their variants, the evaluation protocol and the risk plan. *Generated by Claude Code from our specifications and instructions:* the code, the PDDL domains and design documents, the statements and proofs in §2, and drafts of this report. *Checked mechanically:* every number comes from the repository's scripts and cached model outputs; 207 tests check the executor against Python and the planners against each other.
+**Use of AI tools.** We used Claude Code (Anthropic) to execute our proposal design and perform the experiments in accordance with our specifications. We then vetted the outputs and refined our preliminary analysis with AI assistance, ultimately reviewing and making the final edits and modifications ourselves to produce our final submission.
 
 
 # References
@@ -478,7 +478,7 @@ decides, but its spec is still model-written (untested). Sending proprietary cod
 
 [2] L. Kang, Z. Zhao, D. Hsu, W. S. Lee. On the empirical complexity of reasoning and planning in LLMs. *Findings of EMNLP*, 2024.
 
-[3] S. Russell, P. Norvig. *Artificial Intelligence: A Modern Approach*, 4th ed. Pearson, 2021. Ch. 6 (CSP), Ch. 7 (logical agents), Ch. 11 (planning), Ch. 16 (decisions).
+[3] S. Russell, P. Norvig. *Artificial Intelligence: A Modern Approach*, 4th ed. Pearson, 2021. Ch. 6 (CSP), Ch. 7 and 9 (logic), Ch. 11 (planning), Ch. 12 (probability), Ch. 16 (decisions), Ch. 27 (ethics and safety).
 
 [4] L. de Moura, N. Bjørner. Z3: An efficient SMT solver. *TACAS*, 2008.
 

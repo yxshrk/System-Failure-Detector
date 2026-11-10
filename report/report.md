@@ -62,7 +62,7 @@ the solver's satisfying assignment to $x$ is the witness.
 
 ## 2.1 SP1: a function as a CSP, solved by SMT
 
-**CSP.** Each instance is a CSP $(X, D, C)$.
+**CSP.** Each instance is a CSP $(X, D, C)$ ([3] Ch. 6).
 
 * **Variables $X$:** the function's inputs. An integer input is one variable. A list input is a length variable $n$ plus element variables $e_0, \dots, e_{m-1}$, where $m$ is the maximum length.
 * **Domains $D$:** the stated ranges, e.g. $1 \le month \le 12$, $0 \le n \le m$, and each $e_i \in [lo, hi]$.
@@ -125,8 +125,8 @@ inputs per benchmark and hand-written mutant (`tests/test_symexec.py`). Appendix
 
 ## 2.2 SP2: a design as a STRIPS planning problem
 
-**STRIPS task.** Each family is a typed PDDL domain and each variant/size a
-problem; grounding (propositionalization; up to $K^V$ instances per schema)
+**STRIPS task** ([3] Ch. 11). Each family is a typed PDDL domain and each variant/size a
+problem; grounding (propositionalization, [3] Ch. 9; up to $K^V$ instances per schema)
 gives $\Pi = (F, A, I, G)$:
 
 * $F$ is the set of ground facts; a state $s \subseteq F$ is the set of facts that hold (closed world assumption).
@@ -160,7 +160,7 @@ fact and step $t \le T$, and $a^t$ per action and step $t < T$, with CNF clauses
 6. **exactly one action per step:** the exclusion axioms, strengthened, in linear size.
 
 **Lemma 2.** Under (6), clauses (4)–(5) are equivalent to the standard successor-state axioms
-$F^{t+1} \Leftrightarrow ActionCausesF^t \lor (F^t \land \lnot ActionCausesNotF^t)$.
+$F^{t+1} \Leftrightarrow ActionCausesF^t \lor (F^t \land \lnot ActionCausesNotF^t)$ ([3] Ch. 7).
 *Proof.* Let $a$ act at step $t$. (4) forces $f^{t+1}$ if $f \in add(a)$ and $\lnot f^{t+1}$ if
 $f \in del(a) \setminus add(a)$; otherwise (5) forces $f^{t+1} = f^t$. Hence $s_{t+1} = \mathrm{RESULT}(s_t, a)$, with $a$ applicable by (3). ∎
 

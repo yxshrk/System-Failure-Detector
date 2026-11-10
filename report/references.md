@@ -4,7 +4,7 @@
 
 [2] L. Kang, Z. Zhao, D. Hsu, W. S. Lee. On the empirical complexity of reasoning and planning in LLMs. *Findings of EMNLP*, 2024.
 
-[3] S. Russell, P. Norvig. *Artificial Intelligence: A Modern Approach*, 4th ed. Pearson, 2021. Ch. 6 (CSP), Ch. 7 (logical agents), Ch. 11 (planning), Ch. 16 (decisions).
+[3] S. Russell, P. Norvig. *Artificial Intelligence: A Modern Approach*, 4th ed. Pearson, 2021. Ch. 6 (CSP), Ch. 7 and 9 (logic), Ch. 11 (planning), Ch. 12 (probability), Ch. 16 (decisions), Ch. 27 (ethics and safety).
 
 [4] L. de Moura, N. Bjørner. Z3: An efficient SMT solver. *TACAS*, 2008.
 

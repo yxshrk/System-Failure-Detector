@@ -43,7 +43,7 @@ moves a unit from stock to holding, `expire-hold` moves it back, `pay` moves it 
 actions change no count or are disabled by the fixed design facts; each customer leaves browsing once,
 so no count rises twice. Hence sold ≤ S < S + 1.
 
-**Is translating worth it? A decision rule.** Choosing an arm is a maximum-expected-utility decision. With a share $\pi$ of flawed designs and costs $c_{FA}$ per false alarm (reviewer time),
+**Is translating worth it? A decision rule.** Choosing an arm is a maximum-expected-utility decision ([3] Ch. 16). With a share $\pi$ of flawed designs and costs $c_{FA}$ per false alarm (reviewer time),
 $c_{miss}$ per flawed design left without a valid witness, $c_{rev}$ per undecided case,
 and $c_{run}$ per run (model calls),
 $$EU(arm) = -\big((1-\pi)\,P_{FA}\,c_{FA} + \pi\,P_{miss}\,c_{miss} + P_{und}\,c_{rev} + c_{run}\big).$$
@@ -57,7 +57,7 @@ dearer and leaves one bug and five controls undecided, so Direct wins; Sonnet's 
 saving must be weighed against one unresolved faulty instance and its review cost. Only Translate can *certify* absence, with a solver result and
 audit trail that hold relative to the translated model. *Direct suffices* when the specification is local and explicit, the artefact small and the model strong.
 
-As the course notes, computationally difficult problems are likely to remain difficult for LLM reasoning models, yet Sonnet and Opus Direct were right on inventory's fixed designs where the tools gave up (sizes 8–16): recognising a pattern is not solving the search. Direct will likely keep improving on small, recognisable problems (Haiku 4.5 to 5.5), but worst-case hardness and the missing certificate remain.
+Hard search problems should stay hard for reasoning models, yet Sonnet and Opus Direct were right on inventory's fixed designs where the tools gave up (sizes 8–16): recognising a pattern is not solving the search. Direct will likely keep improving on small, recognisable problems (Haiku 4.5 to 5.5), but worst-case hardness and the missing certificate remain.
 
 **Threats to validity.**
 
