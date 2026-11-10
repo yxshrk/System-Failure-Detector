@@ -37,14 +37,14 @@ testing [1]. An AI assistant for code and design review is therefore valuable on
 *witnesses*, i.e. concrete failing inputs or event traces, and only if it does not fabricate failures
 that do not exist.
 
-The GenAI lecture asks: "When should you use LLM reasoning
-directly? When should you translate problem specification then call tool?" (GenAI p.31). We compare
+The course asks: "When should you use LLM reasoning
+directly? When should you translate problem specification then call tool?" We compare
 two arms on the same inputs:
 
 * **(A) Direct.** The model reads the code (or design document) and answers with a verdict and a witness.
-* **(B) Translate.** The model writes a formal specification, and a classical solver searches for the witness (GenAI p.14). Solver errors are fed back for repair, as in Logic-LM [9] (PropLogic p.3) and the LLM+SMT method of the CSP lecture [5] (CSP p.17–18).
+* **(B) Translate.** The model writes a formal specification, and a classical solver searches for the witness. Solver errors are fed back for repair, as in Logic-LM [9] and the LLM+SMT method [5].
 
-Arm B is the course's case for a factored formulation (CSP p.6, p.12): once the structure is explicit,
+Arm B is the course's case for a factored formulation: once the structure is explicit,
 a general solver prunes what unstructured reasoning must enumerate.
 
 In **SP1** the object is one function and the witness a failing input; in **SP2** it is a
@@ -55,23 +55,22 @@ distributed-system design and the witness a failure trace; **SP3** scores the tr
 
 # 2. Formulation
 
-Both scales rest on $\alpha \models \beta$ iff $\alpha \land \lnot\beta$ is unsatisfiable (PropLogic
-p.28, p.35; [3] Ch. 7), with $\alpha$ = "the system as implemented" and $\beta$ = "the requirement". A model (PropLogic p.11) of
+Both scales rest on $\alpha \models \beta$ iff $\alpha \land \lnot\beta$ is unsatisfiable ([3] Ch. 7), with $\alpha$ = "the system as implemented" and $\beta$ = "the requirement". A model of
 $\alpha \land \lnot\beta$ is a run that breaks the requirement: a *failure witness*. For a contract
-$\forall x\,(pre \Rightarrow post)$, the negation is $\exists x\,(pre \land \lnot post)$ (FOL p.12), and
+$\forall x\,(pre \Rightarrow post)$, the negation is $\exists x\,(pre \land \lnot post)$, and
 the solver's satisfying assignment to $x$ is the witness.
 
 ## 2.1 SP1: a function as a CSP, solved by SMT
 
-**CSP.** Each instance is a CSP $(X, D, C)$ (CSP p.7).
+**CSP.** Each instance is a CSP $(X, D, C)$.
 
 * **Variables $X$:** the function's inputs. An integer input is one variable. A list input is a length variable $n$ plus element variables $e_0, \dots, e_{m-1}$, where $m$ is the maximum length.
 * **Domains $D$:** the stated ranges, e.g. $1 \le month \le 12$, $0 \le n \le m$, and each $e_i \in [lo, hi]$.
 * **Constraints $C$:** $\llbracket f \rrbracket(x, r) \land \lnot spec(x, r)$, where $\llbracket f \rrbracket(x, r)$ holds iff $r$ is what $f$ returns on $x$.
 
 The result $r$ and intermediate values are not separate variables: each is a shared sub-term of one formula DAG, fixed by
-the inputs, i.e. an auxiliary variable already eliminated (CSP p.13). The domains are finite, so this is
-a finite CSP, a class that is NP-complete (CSP p.8). Z3, however, receives SMT over unbounded integers
+the inputs, i.e. an auxiliary variable already eliminated. The domains are finite, so this is
+a finite CSP, a class that is NP-complete. Z3, however, receives SMT over unbounded integers
 (`Int`) with the bounds as ordinary constraints; products of variables and `//` or `%` by a variable
 make it non-linear integer arithmetic, undecidable in general. Our bounded queries are decidable, but
 Z3's non-linear procedures are incomplete, so it can answer *unknown* (§5.1).
@@ -119,20 +118,20 @@ entailment theorem applied to the bounded program. The same argument covers $\Ph
 differently from the reference" for "violates the spec". The build checks that no reference loop can exceed its bound, and accepts a mutant as equivalent only
 if its domain was enumerated or $unwind_{mut}$ is unsatisfiable.
 
-**The solver.** Z3 [4] decides satisfiability with DPLL(T): a DPLL core (PropLogic p.35) with
-backjumping (cf. conflict sets, CSP p.40–41) and clause learning (beyond the slides) searches the Boolean skeleton, and integer theory solvers return
+**The solver.** Z3 [4] decides satisfiability with DPLL(T): a DPLL core with
+backjumping and clause learning searches the Boolean skeleton, and integer theory solvers return
 conflicts. Every model is re-executed in Python before it counts, and Lemma 1 is tested against real execution on 25 random
 inputs per benchmark and hand-written mutant (`tests/test_symexec.py`). Appendix B.1 shows a full instance.
 
 ## 2.2 SP2: a design as a STRIPS planning problem
 
-**STRIPS task** (Planning p.7–11). Each family is a typed PDDL domain and each variant/size a
-problem; grounding (propositionalization, FOL p.17–19; up to $K^V$ instances per schema, Planning p.10)
+**STRIPS task.** Each family is a typed PDDL domain and each variant/size a
+problem; grounding (propositionalization; up to $K^V$ instances per schema)
 gives $\Pi = (F, A, I, G)$:
 
 * $F$ is the set of ground facts; a state $s \subseteq F$ is the set of facts that hold (closed world assumption).
 * $I$ is the initial state: design facts such as `(dedup-racy)`, counters `(next-tick t0 t1)` and the starting situation. $G$ is the violation, e.g. `{(charged-twice o1)}`.
-* Each action $a \in A$ has $pre(a)$, $add(a)$ and $del(a)$. It is applicable in $s$ iff $pre(a) \subseteq s$, and then $\mathrm{RESULT}(s, a) = (s \setminus del(a)) \cup add(a)$ (Planning p.9).
+* Each action $a \in A$ has $pre(a)$, $add(a)$ and $del(a)$. It is applicable in $s$ iff $pre(a) \subseteq s$, and then $\mathrm{RESULT}(s, a) = (s \setminus del(a)) \cup add(a)$.
 
 A plan reaching $s_n \supseteq G$ is a failure trace. For example, `accept-new-racy o1 a1` does *not*
 delete `no-record o1`, so a second request can pass the lookup before the first charge records the key
@@ -141,7 +140,7 @@ delete `no-record o1`, so a second request can pass the lookup before the first 
 **Modelling assumptions:** events interleave one at a time; effects are deterministic and
 unconditional, preconditions and goals positive; the environment can do exactly the failure events in
 the domain (loss, delay, pauses, crashes, ticks); object counts, hence states, are finite. PlanSAT is
-PSPACE-complete [10] (NP-hard even without negative effects, Planning p.38); each SATPlan call decides
+PSPACE-complete [10] (NP-hard even without negative effects); each SATPlan call decides
 *bounded* PlanSAT for one horizon $T$, which is NP-complete for $T$ polynomial in the task size [10].
 
 **What a plan means here.** The planner chooses *every* event, including loss, crashes and ticks, so a
@@ -150,26 +149,26 @@ plan is a counterexample, not a course of action: planning serves as explicit-st
 hypothesis [15], that most flaws already appear in small instances, and on an inductive invariant
 where search runs out (inventory from size 8, §6).
 
-**SATPlan encoding** [6] (Planning p.31–37; `planning/satplan.py`). For horizon $T$: a variable $f^t$ per
-fact and step $t \le T$, and $a^t$ per action and step $t < T$, with CNF clauses (PropLogic p.46; facts not yet reachable at step $t$ become constants):
+**SATPlan encoding** [6] (`planning/satplan.py`). For horizon $T$: a variable $f^t$ per
+fact and step $t \le T$, and $a^t$ per action and step $t < T$, with CNF clauses (facts not yet reachable at step $t$ become constants):
 
 1. **initial state:** $f^0$ for $f \in I$ and $\lnot f^0$ for $f \notin I$;
 2. **goal:** $g^T$ for each $g \in G$;
 3. **preconditions:** $a^t \Rightarrow p^t$ for each $p \in pre(a)$;
 4. **effects:** $a^t \Rightarrow f^{t+1}$ for $f \in add(a)$, and $a^t \Rightarrow \lnot f^{t+1}$ for $f \in del(a) \setminus add(a)$;
 5. **explanatory frame axioms:** $f^t \land \lnot f^{t+1} \Rightarrow \bigvee\{a^t : f \in del(a) \setminus add(a)\}$ and $\lnot f^t \land f^{t+1} \Rightarrow \bigvee\{a^t : f \in add(a)\}$;
-6. **exactly one action per step:** the exclusion axioms (Planning p.36), strengthened, in linear size.
+6. **exactly one action per step:** the exclusion axioms, strengthened, in linear size.
 
-**Lemma 2.** Under (6), clauses (4)–(5) are equivalent to the lecture's successor-state axioms
-$F^{t+1} \Leftrightarrow ActionCausesF^t \lor (F^t \land \lnot ActionCausesNotF^t)$ (Planning p.34).
+**Lemma 2.** Under (6), clauses (4)–(5) are equivalent to the standard successor-state axioms
+$F^{t+1} \Leftrightarrow ActionCausesF^t \lor (F^t \land \lnot ActionCausesNotF^t)$.
 *Proof.* Let $a$ act at step $t$. (4) forces $f^{t+1}$ if $f \in add(a)$ and $\lnot f^{t+1}$ if
 $f \in del(a) \setminus add(a)$; otherwise (5) forces $f^{t+1} = f^t$. Hence $s_{t+1} = \mathrm{RESULT}(s_t, a)$, with $a$ applicable by (3). ∎
 
 **Theorem 2.** The horizon-$T$ formula is satisfiable iff a plan of exactly $T$ actions ends in a state
 containing $G$, and the true action variables of a model form one. Iterating $T$ from 0 returns a *shortest* failure trace at the first satisfiable $T$; decoded plans are re-validated. UNSAT for all $T \le T_{max}$ proves only bounded safety.
 
-**Certifying safety: greedy best-first search with $h_{FF}$** (`planning/search.py`). $h_{FF}(s)$ is the length of a relaxed plan for the task with delete lists ignored (Planning p.28), extracted
-from layered reachability (FF's relaxed planning graph [7], beyond the slides), or $\infty$ if $G$ is unreachable even in the relaxation. GBFS expands states
+**Certifying safety: greedy best-first search with $h_{FF}$** (`planning/search.py`). $h_{FF}(s)$ is the length of a relaxed plan for the task with delete lists ignored, extracted
+from layered reachability (FF's relaxed planning graph [7]), or $\infty$ if $G$ is unreachable even in the relaxation. GBFS expands states
 in order of $h_{FF}$, never revisits one, tests for the goal on generation, and discards states with
 $h_{FF} = \infty$.
 
@@ -181,7 +180,7 @@ delete lists only adds behaviour, so if $G$ is unreachable from $s$ in the relax
 from $s$ in the real task. ∎
 
 By the same argument GBFS finds a plan whenever one exists, though not always a shortest one ($h_{FF}$
-is inadmissible in the sense of Planning p.25); FF's hill-climbing phase (Planning p.28) is incomplete and cannot
+is inadmissible); FF's hill-climbing phase is incomplete and cannot
 certify. Every fixed variant has finite $h_{FF}(I)$, so certification needs the exhaustive search and
 $h_{FF}$ contributes only its dead-end test: on sizes 1–4 it expands 1.2× (cache) to 3.8× (queue) fewer
 states than plain BFS (inventory size 4: 9,026 vs 24,992), without changing the exponential growth. **Pipeline:** in the Translate arm GBFS decides
@@ -253,7 +252,7 @@ input domain (SP1); the design document, the family's PDDL domain (events, with 
 
 **Translate arm, SP2.** The model writes the complete initial state, including design facts and counters (object names and the goal are given); the pipeline of §2.2 then solves it.
 
-**Repair loop.** Errors are fed back up to twice: syntax errors, unsupported constructs, a vacuous precondition, a wrong goal, type or arity errors: a harness with verification and retries (GenAI p.28).
+**Repair loop.** Errors are fed back up to twice: syntax errors, unsupported constructs, a vacuous precondition, a wrong goal, type or arity errors: a harness with verification and retries.
 
 **Tool budgets.** An SP1 spec check has a 120 s deadline; Z3
 queries time out at 60 s; planner search is capped at 3 M expansions or 300 s, SATPlan at 120 s. A
@@ -265,6 +264,6 @@ under review and the unmutated reference behave differently on it; an SP2 trace 
 it on the gold problem reaches the violation.
 
 Outcomes are *valid witness*, *fabricated* (an invalid witness or a false alarm on a control: a
-hallucination made checkable, GenAI p.9), *miss*, *correct no-failure*, or *undecided* (counted as no answer).
+hallucination made checkable), *miss*, *correct no-failure*, or *undecided* (counted as no answer).
 
 <!-- RESULTS -->

@@ -1,30 +1,28 @@
 # 7. Responsible AI
 
 **Automation bias: what "no failure" means.** A verdict is a belief about a *model*, not a fact about
-the world (ProbGrapModel p.4): SP1 certifies only within the domain and unroll bounds (Theorem 1), and
+the world: SP1 certifies only within the domain and unroll bounds (Theorem 1), and
 SP2 only within the event model, so a failure mode the domain lacks is invisible to both arms. We therefore say "no counterexample within the input and loop bounds" (SP1) or "no reachable
-violation in this finite event model" (SP2), never "verified safe", which certainty and framing effects (Decision p.24–25) predict reviewers over-trust. Skipping manual review is
+violation in this finite event model" (SP2), never "verified safe", which certainty and framing effects predict reviewers over-trust. Skipping manual review is
 rational only if P(hidden failure | "no failure") is below review cost divided by incident loss
-(Decision p.15–16, if review would catch the failure). On our SP2 main set, 2 of Haiku Direct's 10
+(if review would catch the failure). On our SP2 main set, 2 of Haiku Direct's 10
 "safe" verdicts were wrong and none of Haiku Translate's 13 (95% upper bound 23%); both depend on the
-base rate of flawed designs (Bayes' rule, ProbGrapModel p.24–25) and miss failure modes outside the benchmark.
+base rate of flawed designs (Bayes' rule) and miss failure modes outside the benchmark.
 
 **Fabricated failures.** False alarms waste reviewer time and train reviewers to ignore the tool. A Translate witness is correct only
 *with respect to the model's own specification*: 13 of Haiku's main-set SP2 Translate traces (40 across
-all sets) were legal only in its mistranslated problem, as the planner optimises the model as written, not as meant (the King Midas problem,
-ResponsibleAI p.35). Witnesses must therefore be replayed on the real artefact, as our scoring
+all sets) were legal only in its mistranslated problem, as the planner optimises the model as written, not as meant (the King Midas problem). Witnesses must therefore be replayed on the real artefact, as our scoring
 does.
 
 **Accountability.** Translate leaves an audit trail (spec, solver log, witness), close to a white-box
-explanation (ResponsibleAI p.24), so a named engineer can sign off on *what was checked*; Direct
-answers are post-hoc narratives (p.25–26). Responsibility stays with the humans who sign off (p.6); the tool supports a human–AI review team (p.45).
+explanation, so a named engineer can sign off on *what was checked*; Direct
+answers are post-hoc narratives. Responsibility stays with the humans who sign off; the tool supports a human–AI review team.
 
 **Dual use and attacks on the reviewer.** A witness can help construct an exploit, and AI lowers the cost of
-attacks (ResponsibleAI p.2–4); we would run the tool only on code the user owns, follow coordinated
+attacks; we would run the tool only on code the user owns, follow coordinated
 disclosure, and withhold witnesses for unpatched deployed systems. A comment planted in the code could
-steer the Direct arm to "no bug" (ResponsibleAI p.31); Translate may be less exposed, since the solver
-decides, but its spec is still model-written (untested). Sending proprietary code to a hosted model also discloses it
-(ResponsibleAI p.8–10); on-premise open-weight models avoid that.
+steer the Direct arm to "no bug"; Translate may be less exposed, since the solver
+decides, but its spec is still model-written (untested). Sending proprietary code to a hosted model also discloses it; on-premise open-weight models avoid that.
 
 # 8. Division of work and use of AI tools
 

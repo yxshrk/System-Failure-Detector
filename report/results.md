@@ -7,7 +7,7 @@ Wilson intervals (valid at 0% and 100%); paired comparisons use the exact McNema
 
 **RQ1.** Claude and Qwen find nearly every bug in both arms (Table 1, Fig. 1), but the arms part with rarity. Over model–bug pairs (four models), both find 267/268 common and 75/76 uncommon; Direct finds 84/84 rare and 32/32 very rare, Translate 82/84 and 29/32. That favours Direct, but thinly: Translate fails 3/32 very rare pairs vs 4/428 others (nominal Fisher p = 0.009), the three being two bugs with unsound specs (§6). Otherwise difficulty shows only as cost (hard-tier Direct answers use 2–5×
 the tokens) and as Z3 *unknown* on arithmetic-heavy specs. Random testing with $N$
-inputs catches a bug of rarity $r$ with probability $1-(1-r)^N$ (ProbGrapModel p.22): 100 inputs catch 34% of rare and
+inputs catches a bug of rarity $r$ with probability $1-(1-r)^N$: 100 inputs catch 34% of rare and
 5% of very rare bugs, 1,000 catch 93% and 36%. Rarity defeats *testing* far more than either LLM arm.
 Llama Direct finds 33 of 55 common base-tier bugs but only 6 of 40 rarer ones, though rarity and difficulty are confounded here.
 
@@ -76,7 +76,7 @@ design. Translate was *undecided* (not FA) on inventory's fixed design at size 8
 
 ## 5.3 The classical tools
 
-* *Worst case vs. observed.* PlanSAT is PSPACE-complete (Planning p.38), but only inventory shows pronounced state explosion (Table 3): its $S{+}1$ interchangeable customers interleave, so reachable states grow 1,500× from size 1 to 4; the other families grow roughly linearly. Trace length is not the driver: queue and inventory at size 8 need 21 and 27 events.
+* *Worst case vs. observed.* PlanSAT is PSPACE-complete, but only inventory shows pronounced state explosion (Table 3): its $S{+}1$ interchangeable customers interleave, so reachable states grow 1,500× from size 1 to 4; the other families grow roughly linearly. Trace length is not the driver: queue and inventory at size 8 need 21 and 27 events.
 * *SATPlan* finds shortest traces in milliseconds for four families. On inventory it takes 1.1 s at size 3, about 2 minutes at size 4, and times out (300 s) at sizes 6 and 8.
 * *Certification* takes 9,026 GBFS expansions at inventory size 4 and 2.7 M (176 s) at size 6. From size 8 our 3 M-expansion / 5-minute budget runs out, so Translate on inventory's fixed design is scored *undecided*, not safe (the gold label comes from a conservation invariant).
 

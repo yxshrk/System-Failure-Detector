@@ -37,14 +37,14 @@ testing [1]. An AI assistant for code and design review is therefore valuable on
 *witnesses*, i.e. concrete failing inputs or event traces, and only if it does not fabricate failures
 that do not exist.
 
-The GenAI lecture asks: "When should you use LLM reasoning
-directly? When should you translate problem specification then call tool?" (GenAI p.31). We compare
+The course asks: "When should you use LLM reasoning
+directly? When should you translate problem specification then call tool?" We compare
 two arms on the same inputs:
 
 * **(A) Direct.** The model reads the code (or design document) and answers with a verdict and a witness.
-* **(B) Translate.** The model writes a formal specification, and a classical solver searches for the witness (GenAI p.14). Solver errors are fed back for repair, as in Logic-LM [9] (PropLogic p.3) and the LLM+SMT method of the CSP lecture [5] (CSP p.17–18).
+* **(B) Translate.** The model writes a formal specification, and a classical solver searches for the witness. Solver errors are fed back for repair, as in Logic-LM [9] and the LLM+SMT method [5].
 
-Arm B is the course's case for a factored formulation (CSP p.6, p.12): once the structure is explicit,
+Arm B is the course's case for a factored formulation: once the structure is explicit,
 a general solver prunes what unstructured reasoning must enumerate.
 
 In **SP1** the object is one function and the witness a failing input; in **SP2** it is a
@@ -55,23 +55,22 @@ distributed-system design and the witness a failure trace; **SP3** scores the tr
 
 # 2. Formulation
 
-Both scales rest on $\alpha \models \beta$ iff $\alpha \land \lnot\beta$ is unsatisfiable (PropLogic
-p.28, p.35; [3] Ch. 7), with $\alpha$ = "the system as implemented" and $\beta$ = "the requirement". A model (PropLogic p.11) of
+Both scales rest on $\alpha \models \beta$ iff $\alpha \land \lnot\beta$ is unsatisfiable ([3] Ch. 7), with $\alpha$ = "the system as implemented" and $\beta$ = "the requirement". A model of
 $\alpha \land \lnot\beta$ is a run that breaks the requirement: a *failure witness*. For a contract
-$\forall x\,(pre \Rightarrow post)$, the negation is $\exists x\,(pre \land \lnot post)$ (FOL p.12), and
+$\forall x\,(pre \Rightarrow post)$, the negation is $\exists x\,(pre \land \lnot post)$, and
 the solver's satisfying assignment to $x$ is the witness.
 
 ## 2.1 SP1: a function as a CSP, solved by SMT
 
-**CSP.** Each instance is a CSP $(X, D, C)$ (CSP p.7).
+**CSP.** Each instance is a CSP $(X, D, C)$.
 
 * **Variables $X$:** the function's inputs. An integer input is one variable. A list input is a length variable $n$ plus element variables $e_0, \dots, e_{m-1}$, where $m$ is the maximum length.
 * **Domains $D$:** the stated ranges, e.g. $1 \le month \le 12$, $0 \le n \le m$, and each $e_i \in [lo, hi]$.
 * **Constraints $C$:** $\llbracket f \rrbracket(x, r) \land \lnot spec(x, r)$, where $\llbracket f \rrbracket(x, r)$ holds iff $r$ is what $f$ returns on $x$.
 
 The result $r$ and intermediate values are not separate variables: each is a shared sub-term of one formula DAG, fixed by
-the inputs, i.e. an auxiliary variable already eliminated (CSP p.13). The domains are finite, so this is
-a finite CSP, a class that is NP-complete (CSP p.8). Z3, however, receives SMT over unbounded integers
+the inputs, i.e. an auxiliary variable already eliminated. The domains are finite, so this is
+a finite CSP, a class that is NP-complete. Z3, however, receives SMT over unbounded integers
 (`Int`) with the bounds as ordinary constraints; products of variables and `//` or `%` by a variable
 make it non-linear integer arithmetic, undecidable in general. Our bounded queries are decidable, but
 Z3's non-linear procedures are incomplete, so it can answer *unknown* (§5.1).
@@ -119,20 +118,20 @@ entailment theorem applied to the bounded program. The same argument covers $\Ph
 differently from the reference" for "violates the spec". The build checks that no reference loop can exceed its bound, and accepts a mutant as equivalent only
 if its domain was enumerated or $unwind_{mut}$ is unsatisfiable.
 
-**The solver.** Z3 [4] decides satisfiability with DPLL(T): a DPLL core (PropLogic p.35) with
-backjumping (cf. conflict sets, CSP p.40–41) and clause learning (beyond the slides) searches the Boolean skeleton, and integer theory solvers return
+**The solver.** Z3 [4] decides satisfiability with DPLL(T): a DPLL core with
+backjumping and clause learning searches the Boolean skeleton, and integer theory solvers return
 conflicts. Every model is re-executed in Python before it counts, and Lemma 1 is tested against real execution on 25 random
 inputs per benchmark and hand-written mutant (`tests/test_symexec.py`). Appendix B.1 shows a full instance.
 
 ## 2.2 SP2: a design as a STRIPS planning problem
 
-**STRIPS task** (Planning p.7–11). Each family is a typed PDDL domain and each variant/size a
-problem; grounding (propositionalization, FOL p.17–19; up to $K^V$ instances per schema, Planning p.10)
+**STRIPS task.** Each family is a typed PDDL domain and each variant/size a
+problem; grounding (propositionalization; up to $K^V$ instances per schema)
 gives $\Pi = (F, A, I, G)$:
 
 * $F$ is the set of ground facts; a state $s \subseteq F$ is the set of facts that hold (closed world assumption).
 * $I$ is the initial state: design facts such as `(dedup-racy)`, counters `(next-tick t0 t1)` and the starting situation. $G$ is the violation, e.g. `{(charged-twice o1)}`.
-* Each action $a \in A$ has $pre(a)$, $add(a)$ and $del(a)$. It is applicable in $s$ iff $pre(a) \subseteq s$, and then $\mathrm{RESULT}(s, a) = (s \setminus del(a)) \cup add(a)$ (Planning p.9).
+* Each action $a \in A$ has $pre(a)$, $add(a)$ and $del(a)$. It is applicable in $s$ iff $pre(a) \subseteq s$, and then $\mathrm{RESULT}(s, a) = (s \setminus del(a)) \cup add(a)$.
 
 A plan reaching $s_n \supseteq G$ is a failure trace. For example, `accept-new-racy o1 a1` does *not*
 delete `no-record o1`, so a second request can pass the lookup before the first charge records the key
@@ -141,7 +140,7 @@ delete `no-record o1`, so a second request can pass the lookup before the first 
 **Modelling assumptions:** events interleave one at a time; effects are deterministic and
 unconditional, preconditions and goals positive; the environment can do exactly the failure events in
 the domain (loss, delay, pauses, crashes, ticks); object counts, hence states, are finite. PlanSAT is
-PSPACE-complete [10] (NP-hard even without negative effects, Planning p.38); each SATPlan call decides
+PSPACE-complete [10] (NP-hard even without negative effects); each SATPlan call decides
 *bounded* PlanSAT for one horizon $T$, which is NP-complete for $T$ polynomial in the task size [10].
 
 **What a plan means here.** The planner chooses *every* event, including loss, crashes and ticks, so a
@@ -150,26 +149,26 @@ plan is a counterexample, not a course of action: planning serves as explicit-st
 hypothesis [15], that most flaws already appear in small instances, and on an inductive invariant
 where search runs out (inventory from size 8, §6).
 
-**SATPlan encoding** [6] (Planning p.31–37; `planning/satplan.py`). For horizon $T$: a variable $f^t$ per
-fact and step $t \le T$, and $a^t$ per action and step $t < T$, with CNF clauses (PropLogic p.46; facts not yet reachable at step $t$ become constants):
+**SATPlan encoding** [6] (`planning/satplan.py`). For horizon $T$: a variable $f^t$ per
+fact and step $t \le T$, and $a^t$ per action and step $t < T$, with CNF clauses (facts not yet reachable at step $t$ become constants):
 
 1. **initial state:** $f^0$ for $f \in I$ and $\lnot f^0$ for $f \notin I$;
 2. **goal:** $g^T$ for each $g \in G$;
 3. **preconditions:** $a^t \Rightarrow p^t$ for each $p \in pre(a)$;
 4. **effects:** $a^t \Rightarrow f^{t+1}$ for $f \in add(a)$, and $a^t \Rightarrow \lnot f^{t+1}$ for $f \in del(a) \setminus add(a)$;
 5. **explanatory frame axioms:** $f^t \land \lnot f^{t+1} \Rightarrow \bigvee\{a^t : f \in del(a) \setminus add(a)\}$ and $\lnot f^t \land f^{t+1} \Rightarrow \bigvee\{a^t : f \in add(a)\}$;
-6. **exactly one action per step:** the exclusion axioms (Planning p.36), strengthened, in linear size.
+6. **exactly one action per step:** the exclusion axioms, strengthened, in linear size.
 
-**Lemma 2.** Under (6), clauses (4)–(5) are equivalent to the lecture's successor-state axioms
-$F^{t+1} \Leftrightarrow ActionCausesF^t \lor (F^t \land \lnot ActionCausesNotF^t)$ (Planning p.34).
+**Lemma 2.** Under (6), clauses (4)–(5) are equivalent to the standard successor-state axioms
+$F^{t+1} \Leftrightarrow ActionCausesF^t \lor (F^t \land \lnot ActionCausesNotF^t)$.
 *Proof.* Let $a$ act at step $t$. (4) forces $f^{t+1}$ if $f \in add(a)$ and $\lnot f^{t+1}$ if
 $f \in del(a) \setminus add(a)$; otherwise (5) forces $f^{t+1} = f^t$. Hence $s_{t+1} = \mathrm{RESULT}(s_t, a)$, with $a$ applicable by (3). ∎
 
 **Theorem 2.** The horizon-$T$ formula is satisfiable iff a plan of exactly $T$ actions ends in a state
 containing $G$, and the true action variables of a model form one. Iterating $T$ from 0 returns a *shortest* failure trace at the first satisfiable $T$; decoded plans are re-validated. UNSAT for all $T \le T_{max}$ proves only bounded safety.
 
-**Certifying safety: greedy best-first search with $h_{FF}$** (`planning/search.py`). $h_{FF}(s)$ is the length of a relaxed plan for the task with delete lists ignored (Planning p.28), extracted
-from layered reachability (FF's relaxed planning graph [7], beyond the slides), or $\infty$ if $G$ is unreachable even in the relaxation. GBFS expands states
+**Certifying safety: greedy best-first search with $h_{FF}$** (`planning/search.py`). $h_{FF}(s)$ is the length of a relaxed plan for the task with delete lists ignored, extracted
+from layered reachability (FF's relaxed planning graph [7]), or $\infty$ if $G$ is unreachable even in the relaxation. GBFS expands states
 in order of $h_{FF}$, never revisits one, tests for the goal on generation, and discards states with
 $h_{FF} = \infty$.
 
@@ -181,7 +180,7 @@ delete lists only adds behaviour, so if $G$ is unreachable from $s$ in the relax
 from $s$ in the real task. ∎
 
 By the same argument GBFS finds a plan whenever one exists, though not always a shortest one ($h_{FF}$
-is inadmissible in the sense of Planning p.25); FF's hill-climbing phase (Planning p.28) is incomplete and cannot
+is inadmissible); FF's hill-climbing phase is incomplete and cannot
 certify. Every fixed variant has finite $h_{FF}(I)$, so certification needs the exhaustive search and
 $h_{FF}$ contributes only its dead-end test: on sizes 1–4 it expands 1.2× (cache) to 3.8× (queue) fewer
 states than plain BFS (inventory size 4: 9,026 vs 24,992), without changing the exponential growth. **Pipeline:** in the Translate arm GBFS decides
@@ -253,7 +252,7 @@ input domain (SP1); the design document, the family's PDDL domain (events, with 
 
 **Translate arm, SP2.** The model writes the complete initial state, including design facts and counters (object names and the goal are given); the pipeline of §2.2 then solves it.
 
-**Repair loop.** Errors are fed back up to twice: syntax errors, unsupported constructs, a vacuous precondition, a wrong goal, type or arity errors: a harness with verification and retries (GenAI p.28).
+**Repair loop.** Errors are fed back up to twice: syntax errors, unsupported constructs, a vacuous precondition, a wrong goal, type or arity errors: a harness with verification and retries.
 
 **Tool budgets.** An SP1 spec check has a 120 s deadline; Z3
 queries time out at 60 s; planner search is capped at 3 M expansions or 300 s, SATPlan at 120 s. A
@@ -265,7 +264,7 @@ under review and the unmutated reference behave differently on it; an SP2 trace 
 it on the gold problem reaches the violation.
 
 Outcomes are *valid witness*, *fabricated* (an invalid witness or a false alarm on a control: a
-hallucination made checkable, GenAI p.9), *miss*, *correct no-failure*, or *undecided* (counted as no answer).
+hallucination made checkable), *miss*, *correct no-failure*, or *undecided* (counted as no answer).
 
 
 
@@ -278,7 +277,7 @@ Wilson intervals (valid at 0% and 100%); paired comparisons use the exact McNema
 
 **RQ1.** Claude and Qwen find nearly every bug in both arms (Table 1, Fig. 1), but the arms part with rarity. Over model–bug pairs (four models), both find 267/268 common and 75/76 uncommon; Direct finds 84/84 rare and 32/32 very rare, Translate 82/84 and 29/32. That favours Direct, but thinly: Translate fails 3/32 very rare pairs vs 4/428 others (nominal Fisher p = 0.009), the three being two bugs with unsound specs (§6). Otherwise difficulty shows only as cost (hard-tier Direct answers use 2–5×
 the tokens) and as Z3 *unknown* on arithmetic-heavy specs. Random testing with $N$
-inputs catches a bug of rarity $r$ with probability $1-(1-r)^N$ (ProbGrapModel p.22): 100 inputs catch 34% of rare and
+inputs catches a bug of rarity $r$ with probability $1-(1-r)^N$: 100 inputs catch 34% of rare and
 5% of very rare bugs, 1,000 catch 93% and 36%. Rarity defeats *testing* far more than either LLM arm.
 Llama Direct finds 33 of 55 common base-tier bugs but only 6 of 40 rarer ones, though rarity and difficulty are confounded here.
 
@@ -347,7 +346,7 @@ design. Translate was *undecided* (not FA) on inventory's fixed design at size 8
 
 ## 5.3 The classical tools
 
-* *Worst case vs. observed.* PlanSAT is PSPACE-complete (Planning p.38), but only inventory shows pronounced state explosion (Table 3): its $S{+}1$ interchangeable customers interleave, so reachable states grow 1,500× from size 1 to 4; the other families grow roughly linearly. Trace length is not the driver: queue and inventory at size 8 need 21 and 27 events.
+* *Worst case vs. observed.* PlanSAT is PSPACE-complete, but only inventory shows pronounced state explosion (Table 3): its $S{+}1$ interchangeable customers interleave, so reachable states grow 1,500× from size 1 to 4; the other families grow roughly linearly. Trace length is not the driver: queue and inventory at size 8 need 21 and 27 events.
 * *SATPlan* finds shortest traces in milliseconds for four families. On inventory it takes 1.1 s at size 3, about 2 minutes at size 4, and times out (300 s) at sizes 6 and 8.
 * *Certification* takes 9,026 GBFS expansions at inventory size 4 and 2.7 M (176 s) at size 6. From size 8 our 3 M-expansion / 5-minute budget runs out, so Translate on inventory's fixed design is scored *undecided*, not safe (the gold label comes from a conservation invariant).
 
@@ -369,7 +368,7 @@ $2^{|F|}$ bounds the state space ($2^{44}$ to $2^{218}$ at size 8), but certific
 
 **SP1: localisation, not search.** A first-order mutant leaves a visible diff against a docstring that
 states the intent, so trigger rarity, which decides whether *testing* finds a bug, did not
-hurt Direct on capable models (Fig. 1). Translate's small gap (§5.1) may come from anchoring: rare bugs sit in corner-case clauses a spec can copy. In Kang et al.'s terms [2] (GenAI p.18), base-tier SP1 is the easy case: the next step
+hurt Direct on capable models (Fig. 1). Translate's small gap (§5.1) may come from anchoring: rare bugs sit in corner-case clauses a spec can copy. In Kang et al.'s terms [2], base-tier SP1 is the easy case: the next step
 (find the line contradicting the docstring) is cheap, so the chain of thought stays short. Where a witness
 must be *constructed*, the models paid 2–5× more tokens rather than failing.
 
@@ -402,16 +401,15 @@ initial state forces one design fact per mechanism.
 
 **The tools have cliffs too (§5.3).** The standard remedies lie outside the course: *symmetry reduction* (merging states
 that differ by a permutation of interchangeable objects, such as inventory's customers), *partial-order reduction* (one order for
-independent events, Planning p.9), CBMC's [17] *unwinding assertions* (checking that $unwind$ is unsatisfiable), and *inductive
-invariants* (k-induction with $k = 1$), which prove safety by entailment (PropLogic p.28) with three checks:
+independent events), CBMC's [17] *unwinding assertions* (checking that $unwind$ is unsatisfiable), and *inductive
+invariants* (k-induction with $k = 1$), which prove safety by entailment with three checks:
 $$Inv(s_0), \qquad Inv(s_t) \land T(s_t, s_{t+1}) \models Inv(s_{t+1}), \qquad Inv \models \lnot G.$$
 Inventory's label from size 8 rests on one, proved by hand: stock + holding + sold = S. Initially stock = S; `reserve-atomic`
 moves a unit from stock to holding, `expire-hold` moves it back, `pay` moves it to sold, and the other
 actions change no count or are disabled by the fixed design facts; each customer leaves browsing once,
 so no count rises twice. Hence sold ≤ S < S + 1.
 
-**Is translating worth it? A decision rule.** Choosing an arm is a maximum-expected-utility decision
-(Decision p.16). With a share $\pi$ of flawed designs and costs $c_{FA}$ per false alarm (reviewer time),
+**Is translating worth it? A decision rule.** Choosing an arm is a maximum-expected-utility decision. With a share $\pi$ of flawed designs and costs $c_{FA}$ per false alarm (reviewer time),
 $c_{miss}$ per flawed design left without a valid witness, $c_{rev}$ per undecided case,
 and $c_{run}$ per run (model calls),
 $$EU(arm) = -\big((1-\pi)\,P_{FA}\,c_{FA} + \pi\,P_{miss}\,c_{miss} + P_{und}\,c_{rev} + c_{run}\big).$$
@@ -425,7 +423,7 @@ dearer and leaves one bug and five controls undecided, so Direct wins; Sonnet's 
 saving must be weighed against one unresolved faulty instance and its review cost. Only Translate can *certify* absence, with a solver result and
 audit trail that hold relative to the translated model. *Direct suffices* when the specification is local and explicit, the artefact small and the model strong.
 
-"Computationally difficult problems [are] likely to remain difficult for LLM reasoning models" (GenAI p.31), yet Sonnet and Opus Direct were right on inventory's fixed designs where the tools gave up (sizes 8–16): recognising a pattern is not solving the search. Direct will likely keep improving on small, recognisable problems (Haiku 4.5 to 5.5), but worst-case hardness and the missing certificate remain.
+As the course notes, computationally difficult problems are likely to remain difficult for LLM reasoning models, yet Sonnet and Opus Direct were right on inventory's fixed designs where the tools gave up (sizes 8–16): recognising a pattern is not solving the search. Direct will likely keep improving on small, recognisable problems (Haiku 4.5 to 5.5), but worst-case hardness and the missing certificate remain.
 
 **Threats to validity.**
 
@@ -433,37 +431,35 @@ audit trail that hold relative to the translated model. *Direct suffices* when t
 * *Specifications.* Docstrings are complete; vaguer real ones would hurt Translate more. Functions were selected to be encodable (integers, Booleans, lists; no strings, floats or recursion), favouring the tools.
 * *Familiarity and contamination.* SP1 functions derive from public benchmarks; renaming does not remove contamination. SP2 families are textbook patterns; the opaque set removes only lexical cues.
 * *Authorship.* The design documents and gold models were produced together; two documents contradicted their models and were corrected, with all affected instances rerun.
-* *Scaffolding.* The given action schemas contain each failure mechanism as a named, guarded event, so SP2 Translate reduces to choosing one or two design facts per family, and that choice decides the outcome: correct in 47/49 (Haiku) and 60/60 (5.5 models, Qwen) main-set problems with exact facts, 0/11 (Haiku) with wrong ones. Writing the event model (Planning p.15), as in [11], is untested.
+* *Scaffolding.* The given action schemas contain each failure mechanism as a named, guarded event, so SP2 Translate reduces to choosing one or two design facts per family, and that choice decides the outcome: correct in 47/49 (Haiku) and 60/60 (5.5 models, Qwen) main-set problems with exact facts, 0/11 (Haiku) with wrong ones. Writing the event model, as in [11], is untested.
 * *Sampling and configuration.* Instances are sampled once and share five templates (so intervals and p-values are nominal); many cells are at ceiling. Claude models used default thinking, open-weight ones temperature 0, so effort and sampling differ (Haiku 10–15k tokens, the 5.5 models about 1k).
 
 
 # 7. Responsible AI
 
 **Automation bias: what "no failure" means.** A verdict is a belief about a *model*, not a fact about
-the world (ProbGrapModel p.4): SP1 certifies only within the domain and unroll bounds (Theorem 1), and
+the world: SP1 certifies only within the domain and unroll bounds (Theorem 1), and
 SP2 only within the event model, so a failure mode the domain lacks is invisible to both arms. We therefore say "no counterexample within the input and loop bounds" (SP1) or "no reachable
-violation in this finite event model" (SP2), never "verified safe", which certainty and framing effects (Decision p.24–25) predict reviewers over-trust. Skipping manual review is
+violation in this finite event model" (SP2), never "verified safe", which certainty and framing effects predict reviewers over-trust. Skipping manual review is
 rational only if P(hidden failure | "no failure") is below review cost divided by incident loss
-(Decision p.15–16, if review would catch the failure). On our SP2 main set, 2 of Haiku Direct's 10
+(if review would catch the failure). On our SP2 main set, 2 of Haiku Direct's 10
 "safe" verdicts were wrong and none of Haiku Translate's 13 (95% upper bound 23%); both depend on the
-base rate of flawed designs (Bayes' rule, ProbGrapModel p.24–25) and miss failure modes outside the benchmark.
+base rate of flawed designs (Bayes' rule) and miss failure modes outside the benchmark.
 
 **Fabricated failures.** False alarms waste reviewer time and train reviewers to ignore the tool. A Translate witness is correct only
 *with respect to the model's own specification*: 13 of Haiku's main-set SP2 Translate traces (40 across
-all sets) were legal only in its mistranslated problem, as the planner optimises the model as written, not as meant (the King Midas problem,
-ResponsibleAI p.35). Witnesses must therefore be replayed on the real artefact, as our scoring
+all sets) were legal only in its mistranslated problem, as the planner optimises the model as written, not as meant (the King Midas problem). Witnesses must therefore be replayed on the real artefact, as our scoring
 does.
 
 **Accountability.** Translate leaves an audit trail (spec, solver log, witness), close to a white-box
-explanation (ResponsibleAI p.24), so a named engineer can sign off on *what was checked*; Direct
-answers are post-hoc narratives (p.25–26). Responsibility stays with the humans who sign off (p.6); the tool supports a human–AI review team (p.45).
+explanation, so a named engineer can sign off on *what was checked*; Direct
+answers are post-hoc narratives. Responsibility stays with the humans who sign off; the tool supports a human–AI review team.
 
 **Dual use and attacks on the reviewer.** A witness can help construct an exploit, and AI lowers the cost of
-attacks (ResponsibleAI p.2–4); we would run the tool only on code the user owns, follow coordinated
+attacks; we would run the tool only on code the user owns, follow coordinated
 disclosure, and withhold witnesses for unpatched deployed systems. A comment planted in the code could
-steer the Direct arm to "no bug" (ResponsibleAI p.31); Translate may be less exposed, since the solver
-decides, but its spec is still model-written (untested). Sending proprietary code to a hosted model also discloses it
-(ResponsibleAI p.8–10); on-premise open-weight models avoid that.
+steer the Direct arm to "no bug"; Translate may be less exposed, since the solver
+decides, but its spec is still model-written (untested). Sending proprietary code to a hosted model also discloses it; on-premise open-weight models avoid that.
 
 # 8. Division of work and use of AI tools
 
@@ -498,7 +494,7 @@ decides, but its spec is still model-written (untested). Sending proprietary cod
 
 [10] T. Bylander. The computational complexity of propositional STRIPS planning. *Artificial Intelligence*, 69, 1994.
 
-[11] L. Guan, K. Valmeekam, S. Sreedharan, S. Kambhampati. Leveraging pre-trained large language models to construct and utilize world models for model-based task planning. *NeurIPS*, 2023 (Planning lecture p.15).
+[11] L. Guan, K. Valmeekam, S. Sreedharan, S. Kambhampati. Leveraging pre-trained large language models to construct and utilize world models for model-based task planning. *NeurIPS*, 2023.
 
 [12] J. C. King. Symbolic execution and program testing. *Communications of the ACM*, 19(7), 1976.
 
@@ -516,7 +512,7 @@ decides, but its spec is still model-written (untested). Sending proprietary cod
 
 [19] A. Dubey et al. The Llama 3 herd of models. arXiv:2407.21783, 2024.
 
-Course material: CS3263 lecture slides (PropLogic, CSP, FirstOrderLogic as FOL, Planning, GenerativeReasoningAgenticAI as GenAI, Decision, ProbGrapModel, ResponsibleAI), cited as *Deck p.N*.
+Course material: CS3263 course notes.
 
 
 # Appendix A. Artefacts from the cached runs

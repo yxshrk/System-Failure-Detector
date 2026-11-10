@@ -2,7 +2,7 @@
 
 **SP1: localisation, not search.** A first-order mutant leaves a visible diff against a docstring that
 states the intent, so trigger rarity, which decides whether *testing* finds a bug, did not
-hurt Direct on capable models (Fig. 1). Translate's small gap (§5.1) may come from anchoring: rare bugs sit in corner-case clauses a spec can copy. In Kang et al.'s terms [2] (GenAI p.18), base-tier SP1 is the easy case: the next step
+hurt Direct on capable models (Fig. 1). Translate's small gap (§5.1) may come from anchoring: rare bugs sit in corner-case clauses a spec can copy. In Kang et al.'s terms [2], base-tier SP1 is the easy case: the next step
 (find the line contradicting the docstring) is cheap, so the chain of thought stays short. Where a witness
 must be *constructed*, the models paid 2–5× more tokens rather than failing.
 
@@ -35,16 +35,15 @@ initial state forces one design fact per mechanism.
 
 **The tools have cliffs too (§5.3).** The standard remedies lie outside the course: *symmetry reduction* (merging states
 that differ by a permutation of interchangeable objects, such as inventory's customers), *partial-order reduction* (one order for
-independent events, Planning p.9), CBMC's [17] *unwinding assertions* (checking that $unwind$ is unsatisfiable), and *inductive
-invariants* (k-induction with $k = 1$), which prove safety by entailment (PropLogic p.28) with three checks:
+independent events), CBMC's [17] *unwinding assertions* (checking that $unwind$ is unsatisfiable), and *inductive
+invariants* (k-induction with $k = 1$), which prove safety by entailment with three checks:
 $$Inv(s_0), \qquad Inv(s_t) \land T(s_t, s_{t+1}) \models Inv(s_{t+1}), \qquad Inv \models \lnot G.$$
 Inventory's label from size 8 rests on one, proved by hand: stock + holding + sold = S. Initially stock = S; `reserve-atomic`
 moves a unit from stock to holding, `expire-hold` moves it back, `pay` moves it to sold, and the other
 actions change no count or are disabled by the fixed design facts; each customer leaves browsing once,
 so no count rises twice. Hence sold ≤ S < S + 1.
 
-**Is translating worth it? A decision rule.** Choosing an arm is a maximum-expected-utility decision
-(Decision p.16). With a share $\pi$ of flawed designs and costs $c_{FA}$ per false alarm (reviewer time),
+**Is translating worth it? A decision rule.** Choosing an arm is a maximum-expected-utility decision. With a share $\pi$ of flawed designs and costs $c_{FA}$ per false alarm (reviewer time),
 $c_{miss}$ per flawed design left without a valid witness, $c_{rev}$ per undecided case,
 and $c_{run}$ per run (model calls),
 $$EU(arm) = -\big((1-\pi)\,P_{FA}\,c_{FA} + \pi\,P_{miss}\,c_{miss} + P_{und}\,c_{rev} + c_{run}\big).$$
@@ -58,7 +57,7 @@ dearer and leaves one bug and five controls undecided, so Direct wins; Sonnet's 
 saving must be weighed against one unresolved faulty instance and its review cost. Only Translate can *certify* absence, with a solver result and
 audit trail that hold relative to the translated model. *Direct suffices* when the specification is local and explicit, the artefact small and the model strong.
 
-"Computationally difficult problems [are] likely to remain difficult for LLM reasoning models" (GenAI p.31), yet Sonnet and Opus Direct were right on inventory's fixed designs where the tools gave up (sizes 8–16): recognising a pattern is not solving the search. Direct will likely keep improving on small, recognisable problems (Haiku 4.5 to 5.5), but worst-case hardness and the missing certificate remain.
+As the course notes, computationally difficult problems are likely to remain difficult for LLM reasoning models, yet Sonnet and Opus Direct were right on inventory's fixed designs where the tools gave up (sizes 8–16): recognising a pattern is not solving the search. Direct will likely keep improving on small, recognisable problems (Haiku 4.5 to 5.5), but worst-case hardness and the missing certificate remain.
 
 **Threats to validity.**
 
@@ -66,5 +65,5 @@ audit trail that hold relative to the translated model. *Direct suffices* when t
 * *Specifications.* Docstrings are complete; vaguer real ones would hurt Translate more. Functions were selected to be encodable (integers, Booleans, lists; no strings, floats or recursion), favouring the tools.
 * *Familiarity and contamination.* SP1 functions derive from public benchmarks; renaming does not remove contamination. SP2 families are textbook patterns; the opaque set removes only lexical cues.
 * *Authorship.* The design documents and gold models were produced together; two documents contradicted their models and were corrected, with all affected instances rerun.
-* *Scaffolding.* The given action schemas contain each failure mechanism as a named, guarded event, so SP2 Translate reduces to choosing one or two design facts per family, and that choice decides the outcome: correct in 47/49 (Haiku) and 60/60 (5.5 models, Qwen) main-set problems with exact facts, 0/11 (Haiku) with wrong ones. Writing the event model (Planning p.15), as in [11], is untested.
+* *Scaffolding.* The given action schemas contain each failure mechanism as a named, guarded event, so SP2 Translate reduces to choosing one or two design facts per family, and that choice decides the outcome: correct in 47/49 (Haiku) and 60/60 (5.5 models, Qwen) main-set problems with exact facts, 0/11 (Haiku) with wrong ones. Writing the event model, as in [11], is untested.
 * *Sampling and configuration.* Instances are sampled once and share five templates (so intervals and p-values are nominal); many cells are at ceiling. Claude models used default thinking, open-weight ones temperature 0, so effort and sampling differ (Haiku 10–15k tokens, the 5.5 models about 1k).

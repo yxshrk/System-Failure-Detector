@@ -20,7 +20,7 @@
 
 [10] T. Bylander. The computational complexity of propositional STRIPS planning. *Artificial Intelligence*, 69, 1994.
 
-[11] L. Guan, K. Valmeekam, S. Sreedharan, S. Kambhampati. Leveraging pre-trained large language models to construct and utilize world models for model-based task planning. *NeurIPS*, 2023 (Planning lecture p.15).
+[11] L. Guan, K. Valmeekam, S. Sreedharan, S. Kambhampati. Leveraging pre-trained large language models to construct and utilize world models for model-based task planning. *NeurIPS*, 2023.
 
 [12] J. C. King. Symbolic execution and program testing. *Communications of the ACM*, 19(7), 1976.
 
@@ -38,4 +38,4 @@
 
 [19] A. Dubey et al. The Llama 3 herd of models. arXiv:2407.21783, 2024.
 
-Course material: CS3263 lecture slides (PropLogic, CSP, FirstOrderLogic as FOL, Planning, GenerativeReasoningAgenticAI as GenAI, Decision, ProbGrapModel, ResponsibleAI), cited as *Deck p.N*.
+Course material: CS3263 course notes.
