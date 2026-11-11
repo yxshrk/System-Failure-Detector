@@ -17,16 +17,23 @@ author:
 
 **Summary.** On 174 functions (SP1) and 162 designs (SP2), scored exactly on gold models, we compare
 Claude Haiku 4.5, Sonnet 5.5 and Opus 5.5, and the open-weight Qwen 3.8 27B and Llama 3.1 8B,
-answering directly or translating for Z3 (in SP1), or SATPlan and GBFS (in SP2).
-Both arms receive each design's event rules, so SP2 tests finding a reachable failure under those rules, not discovering new failure mechanisms.
-In SP1, Claude and Qwen raise no false alarm and, over model–bug pairs, find 267/268 common bugs in both arms; on very rare bugs Direct finds 32/32 and Translate 29/32, the three misses from two bugs. In SP2 the 5.5 models
-find a valid trace every time in both arms, up to 51 events and even with mechanism names hidden, with no false alarms,
-and Qwen does so in Translate on the main set;
-translation cuts Haiku's false alarms on correct designs from 60% to 35% (95% to 45% with hidden names; nominal paired
-p = 0.18 and 0.002, as designs share five templates).
-Llama 3.1 8B fabricates in Direct, and translation silences rather than fixes this: its specifications and problem files
-are mostly unusable or incomplete, so it answers "safe" or nothing.
-Translation risks specs that copy the bug, permissive models that planners exploit, and solver blow-up.
+each either answering directly (Direct) or translating the problem for a classical solver (Translate).
+
+**SP1** (Translate: a specification checked by Z3). Claude and Qwen raise no false alarm. Over model–bug
+pairs (4 models × 67 common bugs) they find 267/268 in each arm; on the 8 very rare bugs (32 pairs) Direct
+finds 32 and Translate 29, the three misses from two bugs. Translation's risk is a specification that copies the bug it
+should expose. Llama 3.1 8B fabricates in Direct (false alarms on 76% of correct functions); Translate cuts this
+to 20% but finds fewer bugs (27% vs 35%), as 70 of its 174 runs end without an accepted specification.
+
+**SP2** (Translate: a PDDL problem for GBFS and SATPlan). Both arms are given each design's STRIPS actions
+(its events, with preconditions and effects), so SP2 tests finding a reachable failure, not discovering new
+failure mechanisms. The 5.5 models find a valid trace every time in both arms with no false alarms, up to
+51 events and on the *opaque* set, where names that reveal the mechanism are replaced; Qwen does so in
+Translate on the main set. Translation cuts Haiku's false alarms on correct designs from 60% to 35% (opaque:
+95% to 45%), lower in 4 of 5 families in both sets (nominal paired p = 0.18 and 0.002; designs in a family are
+not independent); its remaining errors are permissive initial facts the planner exploits. Llama fabricates
+traces in Direct; in Translate its problem files are mostly unusable or incomplete, so it answers "safe" or
+nothing. Proving the largest designs safe can exceed the solver budget.
 
 # 1. Motivation and research questions
 
