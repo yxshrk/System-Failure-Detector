@@ -82,7 +82,7 @@ def scoreboard(sp1: pd.DataFrame, sp2: pd.DataFrame):
     # One sequential hue for "how wrong": share of the column that went badly (missed bugs or false alarms).
     cmap = LinearSegmentedColormap.from_list("bad", ["#f4f3f0", "#f8c9b3", ORANGE, "#a53d12"])
     fig = plt.figure(figsize=SIZE, facecolor=SURFACE)
-    title(fig, "Frontier models are near-perfect; the 8B model is not",
+    title(fig, "Sonnet, Opus, Qwen near-perfect; Haiku, Llama are not",
           "Darker = more wrong: bugs missed, or false alarms raised on correct code")
     ax = fig.add_axes([0.25, 0.03, 0.72, 0.66])
     ax.set_facecolor(SURFACE)
@@ -115,41 +115,7 @@ def scoreboard(sp1: pd.DataFrame, sp2: pd.DataFrame):
 
 
 # ---------------------------------------------------------------------------
-# 2. Rarity: random testing vs. the LLM arms, per trigger-rarity bucket
-# ---------------------------------------------------------------------------
-
-def rarity(sp1: pd.DataFrame):
-    inst = pd.DataFrame(json.loads((ROOT / "data" / "sp1" / "instances.json").read_text())["instances"])
-    bug_inst = inst[(inst.kind == "bug") & inst.bucket.isin(BUCKETS)]
-    strong = sp1[(sp1.kind == "bug") & (sp1.model != WEAK_MODEL)]
-    series = [(f"random testing, {n:,} inputs", [100 * (1 - (1 - bug_inst[bug_inst.bucket == b].rarity) ** n).mean()
-                                                 for b in BUCKETS], col) for n, col in ((100, MUTED), (1000, INK2))]
-    for arm, col in (("direct", BLUE), ("translate", ORANGE)):
-        d = strong[strong.arm == arm]
-        series.append((f"LLM {ARM_LABEL[arm]}", [100 * (d[d.bucket == b].outcome == "valid_witness").mean() for b in BUCKETS], col))
-
-    fig = plt.figure(figsize=SIZE, facecolor=SURFACE)
-    title(fig, "Random testing misses rare bugs. The LLMs do not.",
-          "Bugs with a valid failing input, by how rare the failing inputs are "
-          "(LLMs: Haiku, Sonnet, Opus, Qwen pooled)")
-    ax = fig.add_axes([0.07, 0.17, 0.90, 0.60])
-    style(ax)
-    w = 0.2
-    x = np.arange(len(BUCKETS))
-    for i, (label, ys, col) in enumerate(series):
-        xs = x + (i - 1.5) * w
-        ax.bar(xs, ys, width=w - 0.025, color=col, label=label, linewidth=0)
-        for xx, y in zip(xs, ys):
-            ax.text(xx, y + 1.5, f"{y:.0f}%", ha="center", va="bottom", fontsize=13, color=INK2)
-    ax.set_xticks(x, BUCKET_LABEL, fontsize=16, color=INK)
-    ax.set_ylim(0, 112)
-    ax.set_yticks([0, 25, 50, 75, 100], ["0%", "25%", "50%", "75%", "100%"])
-    ax.legend(frameon=False, fontsize=15, ncol=4, loc="upper center", bbox_to_anchor=(0.5, -0.13), handlelength=1.2)
-    save(fig, "rarity.png")
-
-
-# ---------------------------------------------------------------------------
-# 3. False alarms on correct (fixed) designs: Direct -> Translate slope chart
+# 2. False alarms: Direct vs Translate on correct designs
 # ---------------------------------------------------------------------------
 
 def false_alarms(sp2: pd.DataFrame):
@@ -193,50 +159,9 @@ def false_alarms(sp2: pd.DataFrame):
         for xv in (0, 1):
             ax.axvline(xv, color=GRID, linewidth=1, zorder=1)
         ax.set_title(ptitle, fontsize=18, color=INK, loc="center", pad=14)
-    fig.text(0.04, 0.025, "Dashed: Llama's drop is mostly because its formal models were unusable, "
-             "so it gave no answer, not because it reasoned better.", fontsize=13, color=INK2, style="italic")
+    fig.text(0.04, 0.025, "Dashed: Llama's drop is mostly because its problem files left out facts, "
+             "so the planner found no violation, not because it reasoned better.", fontsize=13, color=INK2, style="italic")
     save(fig, "false_alarms.png")
-
-
-# ---------------------------------------------------------------------------
-# 4. Where translation breaks: certifying the symmetric inventory design
-# ---------------------------------------------------------------------------
-
-def inventory_blowup():
-    inst = [i for i in json.loads((ROOT / "data" / "sp2" / "instances.json").read_text())["instances"]
-            if i["variant"] == "fixed" and i.get("set", "main") in ("main", "stress")]
-    fig = plt.figure(figsize=SIZE, facecolor=SURFACE)
-    title(fig, "Proving a design safe can explode",
-          "States the planner (GBFS + h_FF) expands to prove a correct design has no failure trace")
-    ax = fig.add_axes([0.10, 0.13, 0.84, 0.62])
-    style(ax)
-    for fam in ("payments", "lock", "queue", "cache", "inventory"):
-        d = sorted([i for i in inst if i["family"] == fam], key=lambda i: i["size"])
-        xs = [i["size"] for i in d]
-        ys = [max(i["gold"]["gbfs"]["expanded"], 1) for i in d]
-        hot = fam == "inventory"
-        ax.plot(xs, ys, color=ORANGE if hot else MUTED, linewidth=4 if hot else 2.2, marker="o",
-                markersize=11 if hot else 8, markeredgecolor=SURFACE, markeredgewidth=2, zorder=3 if hot else 2)
-        if fam == "lock":
-            continue
-        ax.text(xs[-1] + 0.15, ys[-1], "lock, cache" if fam == "cache" else fam, fontsize=15, color=INK if hot else INK2, va="center",
-                weight="bold" if hot else "normal")
-        if hot:
-            for i, x, y in zip(d, xs, ys):
-                lim = i["gold"]["gbfs"]["status"] == "limit"
-                if x >= 4:
-                    txt = "search limit hit,\nno proof" if lim else f"{y:,.0f} states"
-                    ax.annotate(txt, (x, y), xytext=(0, 16), textcoords="offset points", ha="center",
-                                va="bottom", fontsize=14, color=INK)
-    ax.set_yscale("log")
-    ax.set_ylim(1, 3e7)
-    ax.set_xlim(0.6, 9)
-    ax.set_xlabel("design size", fontsize=16, color=INK2)
-    ax.set_ylabel("states expanded (log scale)", fontsize=16, color=INK2)
-    ax.minorticks_off()
-    ax.set_xticks([1, 2, 3, 4, 6, 8])
-    ax.set_yticks([1, 10, 100, 1e3, 1e4, 1e5, 1e6, 1e7], ["1", "10", "100", "1k", "10k", "100k", "1M", "10M"])
-    save(fig, "inventory_blowup.png")
 
 
 # ---------------------------------------------------------------------------
@@ -264,7 +189,7 @@ def hardness(sp1: pd.DataFrame, sp2: pd.DataFrame):
               for n, col in ((100, MUTED), (1000, INK2))]
     for arm, col in (("direct", BLUE), ("translate", ORANGE)):
         d = strong[strong.arm == arm]
-        series.append((f"LLM {ARM_LABEL[arm]}", [100 * (d[d.bucket == k].outcome == "valid_witness").mean() for k in BUCKETS], col, "-"))
+        series.append((f"LLM {ARM_LABEL[arm]} (4 models pooled)", [100 * (d[d.bucket == k].outcome == "valid_witness").mean() for k in BUCKETS], col, "-"))
     for label, ys, col, ls in series:
         a.plot(range(4), ys, color=col, linewidth=2.4, linestyle=ls, marker="o", markersize=7,
                markeredgecolor=SURFACE, markeredgewidth=1.5, label=label)
@@ -288,7 +213,7 @@ def hardness(sp1: pd.DataFrame, sp2: pd.DataFrame):
         b.plot(range(len(bins)), ys, color=col, linewidth=2.4, marker="o", markersize=7,
                markeredgecolor=SURFACE, markeredgewidth=1.5, label=label)
     b.set_xticks(range(len(bins)), [f"{lo}–{hi}" for lo, hi in bins], fontsize=11)
-    b.set_xlabel("SP2: shortest failure trace (events)", fontsize=11, color=INK2)
+    b.set_xlabel("SP2: shortest known failure trace (events)", fontsize=11, color=INK2)
     b.legend(frameon=False, fontsize=10, loc="lower left")
     b.text(3, 92, "Haiku not run\non 30–51", fontsize=9, color=INK2, ha="center", va="top")
     fig.tight_layout(w_pad=3)
@@ -308,7 +233,9 @@ def inventory_panel():
         ax.plot(xs, ys, color=ORANGE if hot else MUTED, linewidth=2.6 if hot else 1.5, marker="o",
                 markersize=6 if hot else 4, markeredgecolor=SURFACE, markeredgewidth=1.2, zorder=3 if hot else 2)
     ax.annotate("2.7M", (6, 2685810), xytext=(-6, 8), textcoords="offset points", ha="right", fontsize=10, color=INK)
-    ax.annotate("over budget", (8, 2637989), xytext=(0, 8), textcoords="offset points", ha="center", fontsize=10, color=INK)
+    # Size 8 hit the search cap before a proof: open marker, the true count is higher.
+    ax.plot([8], [2637989], marker="o", markersize=8, markerfacecolor=SURFACE, markeredgecolor=ORANGE, markeredgewidth=2, zorder=4)
+    ax.annotate("capped", (8, 2637989), xytext=(0, 9), textcoords="offset points", ha="center", fontsize=10, color=INK)
     ax.text(8.2, 9026 * 0 + 30000, "inventory", fontsize=10, color=ORANGE, weight="bold", ha="right")
     ax.text(8.2, 900, "other 4 designs", fontsize=10, color=INK2, ha="right")
     ax.set_yscale("log")
@@ -326,9 +253,7 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     sp1, sp2 = load("sp1"), sp2_frame()
     scoreboard(sp1, sp2)
-    rarity(sp1)
     false_alarms(sp2)
-    inventory_blowup()
     hardness(sp1, sp2)
     inventory_panel()
 

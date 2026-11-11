@@ -49,7 +49,7 @@ function image(file, alt, notes) {
 {
   const s = base("Motivation: an AI assistant for code and design review", "A pre-mortem asks how something will fail before it ships");
   bullets(s, [
-    "Aug 2026, Coldcard bitcoin wallets: Coinkite's AI-assisted review missed a 5-year-old randomness bug, and attackers drained US$116–140M",
+    "Aug 2026, Coldcard bitcoin wallets: a 5-year-old randomness bug let attackers drain wallets (reported losses US$38M to over US$114M). Coinkite says its own AI-assisted review missed it",
     "Failures that matter hide behind rare inputs or long event orderings (AWS DynamoDB: a 35-step data-loss trace passed every review)",
     "A useful reviewer must give a witness (a failing input or event trace), never call broken code safe, and never invent failures",
     "Course question: use the LLM directly, or have it translate the problem for a solver?",
@@ -57,8 +57,9 @@ function image(file, alt, notes) {
   s.addImage({ path: `${D}/img/coldcard_q_mk5.png`, x: 5.35, y: 1.15, w: 2.47, h: 2.25, altText: "Coldcard Q and Mk5 hardware bitcoin wallets made by Coinkite" });
   T(s, [{ text: "Coldcard Q and Mk5 hardware wallets, made by Coinkite", options: { breakLine: true } }, { text: "Image: coldcard.com", options: { fontSize: 10 } }],
     { x: 8.0, y: 1.6, w: 1.625, h: 1.2, fontSize: 12, color: INK2, paraSpaceAfter: 6 });
-  s.addImage({ path: `${D}/coldcard_timeline.png`, x: 5.25, y: 3.6, w: 4.375, h: 1.55, altText: "Timeline: Mar 2021 bug ships, Jul 2026 AI-assisted review finds nothing, Jul to Aug 2026 wallets drained of US$116-140M" });
-  s.addNotes("Open with the news. In July 2026 Coinkite disclosed that since March 2021 its Coldcard wallets had generated seed phrases from a predictable software fallback instead of the hardware random chip. Coinkite says it ran AI-assisted code review on that firmware weeks before the exploit and the review missed it; it believes the attacker probably used AI to find it first, though it has no proof and that claim is disputed. Losses are reported at US$116 to 140M. The lesson: an AI reviewer that silently says 'looks fine' is dangerous. Real failures are rare and deep, like DynamoDB's 35-step bug. So the assistant only helps if it gives concrete, checkable failures and stays quiet on correct code. That is the course question: direct LLM reasoning vs translating to a solver. Sources: Forbes 4 Aug 2026, Blockhead 3 Aug 2026, OECD AI Incidents Monitor.");
+  s.addImage({ path: `${D}/coldcard_timeline.png`, x: 5.25, y: 3.6, w: 4.375, h: 1.55, altText: "Timeline: Mar 2021 bug ships, Jul 2026 AI-assisted review misses it (Coinkite's account), Jul to Aug 2026 wallets drained, reported US$38M to over US$114M" });
+  T(s, "Sources: Decrypt (Aug 2026); Coinkite, \"Entropy technical backgrounder\"; Unchained (Aug 2026)", { x: 5.25, y: 5.18, w: 4.375, h: 0.25, fontSize: 9, color: INK2 });
+  s.addNotes("Open with the news. In July 2026 Coinkite disclosed that since March 2021 its Coldcard wallets had generated seed phrases from a predictable software fallback instead of the hardware random chip. Coinkite says it ran AI-assisted code review on that firmware weeks before the exploit and the review missed it; that is Coinkite's own account. It suspects the attackers used AI to find the bug first, but that is unproven. Reported losses vary widely by outlet and date, from about US$38M in the first wave to over US$114M. The lesson: an AI reviewer that silently says 'looks fine' is dangerous. Real failures are rare and deep, like DynamoDB's 35-step bug. So the assistant only helps if it gives concrete, checkable failures and stays quiet on correct code. That is the course question: direct LLM reasoning vs translating to a solver. Sources: Decrypt (decrypt.co/374766), Coinkite's entropy technical backgrounder (blog.coinkite.com/entropy-technical-backgrounder), Unchained (unchainedcrypto.com), Forbes 4 Aug 2026, Blockhead 3 Aug 2026, OECD AI Incidents Monitor.");
 }
 
 // 3. Method
@@ -111,7 +112,7 @@ image("method.png", "Direct vs Translate pipeline diagram",
   col(5.125, "SP2: designs", "162", [
     "60 main: 5 families × 3 variants (flawed, subtle, fixed) × 4 sizes",
     "+ 30 stress (17–27 events), 60 names hidden, 12 long (30–51 events)",
-    "Gold labels from SATPlan and GBFS",
+    "Gold labels from SATPlan and GBFS (inventory fixed, size 8: hand proof)",
   ], ORANGE);
   T(s, [{ text: "Models: ", options: { bold: true } }, { text: "Haiku 4.5, Sonnet 5.5, Opus 5.5 (Claude), Qwen 3.8 27B and Llama 3.1 8B (open-weight, SoCLaaS)" }],
     { x: 0.375, y: 4.55, w: 9.25, h: 0.5, fontSize: 13 });
@@ -124,19 +125,19 @@ image("worked_example.png", "Worked example: leap-year bug with 399 instead of 4
 
 // 8. Scoreboard
 image("scoreboard.png", "Scoreboard heatmap of all models and arms",
-  "Headline results. The 5.5 models and Qwen 27B are near-perfect on both scales with zero false alarms. Haiku 4.5 is fine on functions but struggles on designs, especially false alarms with names hidden. Llama 8B fails everywhere: in Direct it fabricates, 45 of 59 false alarms on correct code.");
+  "Headline results. The 5.5 models and Qwen 27B are near-perfect on the sets they ran with zero false alarms. Haiku 4.5 is fine on functions but struggles on designs, especially false alarms with names hidden. Llama 8B fails everywhere: in Direct it fabricates, 45 of 59 false alarms on correct code.");
 
 // 9. Harder failures
 {
   const s = base("Harder failures do not hurt the strong models", "SP1: rarer triggering inputs. SP2: longer failure traces");
   s.addImage({ path: `${D}/hardness_panel.png`, x: 0.375, y: 1.2, w: 9.25, h: 3.4, altText: "Left: failures found vs rarity for random testing and LLM arms. Right: valid traces vs trace length for Sonnet, Opus and Haiku" });
-  T(s, "Rarity defeats random testing (5% of very rare bugs at 100 inputs), not the LLMs. The 5.5 models stay perfect up to 51-event traces.", { x: 0.375, y: 4.8, w: 9.25, h: 0.5, fontSize: 14 });
+  T(s, "Rarity defeats random testing (5% of very rare bugs at 100 inputs) far more than the LLMs. The 5.5 models stay perfect up to 51-event traces.", { x: 0.375, y: 4.8, w: 9.25, h: 0.5, fontSize: 14 });
   s.addNotes("RQ1. Random testing falls off as bugs get rarer; Direct finds all of them, Translate 29 of 32 very rare pairs (two bugs, so a hint). On designs, trace length from 6 to 51 events does not hurt Sonnet or Opus; Haiku stays near 80% with no length trend. This looks like recognition rather than search.");
 }
 
 // 10. False alarms
 image("false_alarms.png", "Slope chart: false alarms Direct vs Translate",
-  "RQ2. Translation helps weaker models: Haiku false alarms 12 to 7, and 19 to 9 with names hidden. The strong models stay at zero. Caveat on Llama: its drop is not better reasoning, its formal models were unusable so it gave no answer.");
+  "RQ2. Translation helps weaker models: Haiku false alarms 12 to 7, and 19 to 9 with names hidden. The strong models stay at zero. Caveat on Llama: on the 20 correct main designs, Llama Translate said safe 16 times, raised 2 false alarms and gave no answer twice. Its problem files left out facts, so the planner found no violation; that is not better reasoning.");
 
 // 11. Where Translate breaks
 {
@@ -148,10 +149,10 @@ image("false_alarms.png", "Slope chart: false alarms Direct vs Translate",
   };
   card(1.25, "The spec copies the bug", "Haiku's spec reused the mutated leap() line, so Z3 found nothing");
   card(2.35, "The planner exploits slack", "Haiku's lock problem started a lease clock before anyone held the lock; the trace only works in its model");
-  card(3.45, "The tools run out", "SP1: 3 timeouts, 5 Z3 unknowns. Inventory: 2.7M states at size 6, over budget at 8");
+  card(3.45, "The tools run out", "SP1: 3 timeouts, 5 Z3 unknowns. Inventory: 2.7M states at size 6, search capped at 8");
   s.addImage({ path: `${D}/inventory_panel.png`, x: 5.25, y: 1.25, w: 4.375, h: 3.18, altText: "States expanded to prove safety vs design size, inventory explodes, other designs flat" });
   T(s, "Llama could not write the formal language: 46 of its 70 failed SP1 specs used one unsupported builtin.", { x: 0.375, y: 4.65, w: 9.25, h: 0.5, fontSize: 13 });
-  s.addNotes("Translate is not free. Specs can inherit the bug, permissive problem files hand the planner shortcuts, and solvers time out. Certification is exhaustive search, and the symmetric inventory design explodes: 9k states at size 4, 2.7M at 6, over budget at 8, where Translate is undecided while Sonnet and Opus Direct still answer correctly, without proof.");
+  s.addNotes("Translate is not free. Specs can inherit the bug, permissive problem files hand the planner shortcuts, and solvers time out. Certification is exhaustive search, and the symmetric inventory design explodes: 9k states at size 4, 2.7M at 6, and the search is capped at 8 (that label rests on a hand-proved invariant), where Translate is undecided while Sonnet and Opus Direct still answer correctly, without proof.");
 }
 
 // 12. Trade-offs
@@ -163,7 +164,7 @@ image("false_alarms.png", "Slope chart: false alarms Direct vs Translate",
     ["Strong models", "≈ every failure, 0 false alarms", "≈ every failure, 0 false alarms"],
     ["Weaker models", "Misreads designs, fabricates", "About half the false alarms (Haiku)"],
     ["Proof of absence", "None", "Yes, with an audit trail (bounded, as translated)"],
-    ["Needs", "Only the model", "Solver, encoder, model fluent in the spec language"],
+    ["Needs", "The model (plus, in SP2, the same event rules)", "Solver, encoder, model fluent in the spec language"],
     ["Fails by", "Pattern-matching the wrong design", "Bad spec, loose problem file, timeouts"],
   ];
   s.addTable(rows, { x: 0.375, y: 1.2, w: 9.25, colW: [2.0, 3.4, 3.85], fontFace: F, fontSize: 12, color: INK,
@@ -171,10 +172,10 @@ image("false_alarms.png", "Slope chart: false alarms Direct vs Translate",
   T(s, "Practical variations", { x: 0.375, y: 3.8, w: 9.25, h: 0.3, fontSize: 14, bold: true });
   bullets(s, [
     "Solver availability: our encoder covers integers, Booleans and lists only (no strings, floats, recursion)",
-    "Open-weight model: Qwen 3.8 27B matches the 5.5 models, so it can run locally",
+    "Open-weight model: Qwen 3.8 27B matches the 5.5 models on SP1 and the SP2 main set (the only sets it ran), so it can run locally",
     "Input type: hiding names pushed Haiku Direct false alarms from 60% to 95%; Translate held 45%",
   ], { x: 0.375, y: 4.12, w: 9.25, h: 1.2, fontSize: 12, paraSpaceAfter: 4 });
-  s.addNotes("The brief asks for advantages and disadvantages. With strong models the two tie. Translate's unique value is certifying absence, but only for the problem as translated. Direct needs nothing but the model. Practical points: solver coverage limits what Translate can check, an open-weight model is good enough here, and inputs without helpful names hurt Direct more. Beyond the course: random testing and fuzzing, model checkers like TLA+, symmetry reduction and inductive invariants.");
+  s.addNotes("The brief asks for advantages and disadvantages. With strong models the two tie. Translate's unique value is certifying absence, but only for the problem as translated. Direct needs only the model, though in SP2 both arms got the same authored event rules. Practical points: solver coverage limits what Translate can check, an open-weight model is good enough here, and inputs without helpful names hurt Direct more. Beyond the course: random testing and fuzzing, model checkers like TLA+, symmetry reduction and inductive invariants.");
 }
 
 // 13. Conclusion
