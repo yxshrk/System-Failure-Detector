@@ -17,7 +17,7 @@ author:
 
 **Summary.** On 174 functions (SP1) and 162 designs (SP2), scored exactly on gold models, we compare
 Claude Haiku 4.5, Sonnet 5.5 and Opus 5.5, and the open-weight Qwen 3.8 27B and Llama 3.1 8B,
-answering directly or translating for Z3, SATPlan and GBFS.
+answering directly or translating for Z3 (in SP1), or SATPlan and GBFS (in SP2).
 Both arms receive each design's event rules, so SP2 tests finding a reachable failure under those rules, not discovering new failure mechanisms.
 In SP1, Claude and Qwen raise no false alarm and, over model–bug pairs, find 267/268 common bugs in both arms; on very rare bugs Direct finds 32/32 and Translate 29/32, the three misses from two bugs. In SP2 the 5.5 models
 find a valid trace every time in both arms, up to 51 events and even with mechanism names hidden, with no false alarms,
