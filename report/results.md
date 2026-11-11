@@ -1,17 +1,17 @@
 # 5. Results
 
-All numbers come from `experiments/analyze.py` (full tables, with every interval, in `results/tables.md`). Brackets are 95%
-Wilson intervals (valid at 0% and 100%); paired comparisons use the exact McNemar test.
+Tables, intervals and paired tests come from `experiments/analyze.py` (full output in `results/tables.md`). Brackets are 95%
+Wilson intervals (valid at 0% and 100%); as instances share templates, intervals and tests are nominal (§6).
 
 ## 5.1 SP1: functions (115 bugs, 59 controls)
 
-**RQ1.** Claude and Qwen find nearly every bug in both arms (Table 1, Fig. 1), but the arms part with rarity. Over model–bug pairs (four models), both find 267/268 common and 75/76 uncommon; Direct finds 84/84 rare and 32/32 very rare, Translate 82/84 and 29/32. That favours Direct, but thinly: Translate fails 3/32 very rare pairs vs 4/428 others (nominal Fisher p = 0.009), the three being two bugs with unsound specs (§6). Otherwise difficulty shows only as cost (hard-tier Direct answers use 2–5×
+**RQ1.** Claude and Qwen find nearly every bug in both arms (Table 1, Fig. 1), but the arms part with rarity. Over model–bug pairs (four models), both find 267/268 common and 75/76 uncommon; Direct finds 84/84 rare and 32/32 very rare, Translate 82/84 and 29/32. That favours Direct, but thinly: Translate fails 3/32 very rare pairs vs 4/428 others, the three being two bugs with unsound specs (§6). Otherwise difficulty shows only as cost (hard-tier Direct answers use 2–5×
 the tokens) and as Z3 *unknown* on arithmetic-heavy specs. Random testing with $N$
 inputs catches a bug of rarity $r$ with probability $1-(1-r)^N$: 100 inputs catch 34% of rare and
 5% of very rare bugs, 1,000 catch 93% and 36%. Rarity defeats *testing* far more than either LLM arm.
 Llama Direct finds 33 of 55 common base-tier bugs but only 6 of 40 rarer ones, though rarity and difficulty are confounded here.
 
-**RQ2.** No Claude or Qwen run raised a false alarm on the 59 controls, 22 of them equivalent mutants built to look buggy; Translate left 1 (Haiku) and 5 (Opus) *undecided*. Llama Direct raised 45 false alarms and invented a witness for 60 of the 115 bugs. Translate cut its false alarms to 12 (exact McNemar p < 0.001), but all 12, and 20 of its 22 misses, came from unsound specs.
+**RQ2.** No Claude or Qwen run raised a false alarm on the 59 controls, 22 of them equivalent mutants built to look buggy; Translate left 1 (Haiku) and 5 (Opus) *undecided*. Llama Direct raised 45 false alarms and invented a witness for 60 of the 115 bugs. Translate cut its false alarms to 12, but all 12, and 20 of its 22 misses, came from unsound specs.
 
 ::: keep
 | model | arm | base found /95 | hard found /20 | fabri&shy;cated | false alarms /59 | no answer | $ per inst. | output tokens |
@@ -58,12 +58,12 @@ replays on the gold problem and reaches the violation (flawed + subtle designs).
 design. Translate was *undecided* (not FA) on inventory's fixed design at size 8. Qwen ran the main set only.
 :::
 
-**RQ1.** Sonnet 5.5 and Opus 5.5 produced a valid trace every time, from 6 up to 51 events (on the long set 8/8 per model and arm, 95% interval [68–100], with no false alarm; Translate was undecided on its inventory fixed designs, sizes 12 and 16). Haiku stays near 80% with no length trend. On overall correctness, paired over its 150 designs, only Translate is right on 41 and only Direct on 21 (exact McNemar p = 0.15, 0.39 and 0.17 per set; 0.015 pooled, but the sets share templates and are not independent). Qwen's Translate was right on all 60 main designs and its Direct on 57, its 3 invalid traces being format slips, not misreadings. Llama Direct produced no valid trace on any set.
+**RQ1.** Sonnet 5.5 and Opus 5.5 produced a valid trace every time, from 6 up to 51 events (on the long set 8/8 per model and arm, 95% interval [68–100], with no false alarm; Translate was undecided on its inventory fixed designs, sizes 12 and 16). Haiku stays near 80% with no length trend. On overall correctness, paired over its 150 designs, only Translate is right on 41 and only Direct on 21, an edge significant in no single set. Qwen's Translate was right on all 60 main designs and its Direct on 57, its 3 invalid traces being format slips, not misreadings. Llama Direct produced no valid trace on any set.
 
 **RQ2.** Fabrication separates the arms.
 
-* *Haiku Direct* claims violations on 60% of fixed designs (80% stress, 95% opaque). Translate roughly halves this, to 35% (40%, 45%); exact McNemar on false alarms gives p = 0.18, 0.22, 0.002. Its Direct traces fail on design facts: 16 (main) and 30 (opaque) used an event of *another* design variant, typically a familiar failure pattern (§A.4).
-* *Llama Direct* claims violations on 70% of fixed designs (60% stress, 90% opaque); Translate cuts this to 10% (10%, 40%; exact McNemar p = 0.002, 0.13, 0.002) but misses 29 of 40 violating main-set designs: its "safe" verdicts are right for the wrong reason.
+* *Haiku Direct* claims violations on 60% of fixed designs (80% stress, 95% opaque). Translate roughly halves this, to 35% (40%, 45%), and lowers it in 4 of 5 families on both main and opaque. Its Direct traces fail on design facts: 16 (main) and 30 (opaque) used an event of *another* design variant, typically a familiar failure pattern (§A.4).
+* *Llama Direct* claims violations on 70% of fixed designs (60% stress, 90% opaque); Translate cuts this to 10% (10%, 40%) but misses 29 of 40 violating main-set designs: its "safe" verdicts are right for the wrong reason.
 
 **SP3 (translation quality).**
 
