@@ -13,7 +13,7 @@ against a second, model-written implementation (N-version programming), so a spe
 bug it should expose (§A.2). Repair fixes form (Haiku 106 → 112, Opus 104 → 114 of 115) but not
 meaning; specs should be written blind to the code, or checked against known examples.
 
-**SP2: the jagged frontier runs between model generations.** The 5.5 models are never wrong in either arm on
+**SP2: the gap lies between model generations, not between arms.** The 5.5 models are never wrong in either arm on
 all four sets (Translate is undecided only where certification runs out of budget, §5.3). Haiku's Direct errors are
 design misreadings: it applies a well-known pattern, such as the check-then-act race, to a design whose text rules it out
 (§A.4). Translation does not remove misreading; Haiku moves it into the design facts and adds permissive initial facts that

@@ -135,7 +135,7 @@ inputs per benchmark and hand-written mutant (`tests/test_symexec.py`). B.1 show
 ## 2.2 SP2: a design as a STRIPS planning problem
 
 **STRIPS task** ([3] Ch. 11). Each family is a typed PDDL domain and each variant/size a
-problem; grounding (propositionalization, [3] Ch. 9; up to $K^V$ instances per schema)
+problem; grounding (propositionalization, [3] Ch. 9; $\le K^V$ per schema: $K$ objects, $V$ parameters)
 gives $\Pi = (F, A, I, G)$:
 
 * $F$ is the set of ground facts; a state $s \subseteq F$ is the set of facts that hold (closed world assumption).
@@ -197,7 +197,7 @@ reachability on the model's problem; if a plan exists, SATPlan returns a shortes
 
 **What each arm translates.** Both scales check $\alpha \land \lnot\beta$, but the model writes a
 different half: in SP1 it writes $\beta$ (`pre`/`post`) and the code $\alpha$ is encoded mechanically; in SP2
-we fix $\beta$ (the goal, plus *monitor* actions such as `charge-again`) and the model writes part of $\alpha$,
+we fix $\beta$ (the goal, e.g. `charged-twice`, and actions setting it, e.g. `charge-again`) and the model writes part of $\alpha$,
 the initial state with its design facts. The action schemas, where the failure mechanism lives, are
 given to both arms (§6).
 
@@ -223,7 +223,7 @@ execution, and equivalence is accepted only under the conditions of §2.1.
 
 **Selection.** For each function we keep every hand bug, fill the rarity buckets with automatic mutants
 (preferring rare ones), and add two controls: the clean reference, plus an equivalent mutant when one
-exists. These are deliberately hard.
+exists. Equivalent mutants are deliberately hard: they look buggy but behave correctly.
 
 **Result.** 174 instances: 115 bugs (67 common, 19 uncommon, 21 rare, 8 very rare) and 59 controls (37
 clean, 22 provably equivalent). Of the 859 candidates, 59 were dropped as non-terminating, not encodable or not provably equivalent.
