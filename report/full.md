@@ -16,17 +16,27 @@ author:
 ```
 
 **Summary.** On 174 functions (SP1) and 162 designs (SP2), scored exactly on gold models, we compare
-Claude Haiku 4.5, Sonnet 5.5 and Opus 5.5, and the open-weight Qwen 3.8 27B and Llama 3.1 8B,
-answering directly or translating for Z3, SATPlan and GBFS.
-Both arms receive each design's event rules, so SP2 tests finding a reachable failure under those rules, not discovering new failure mechanisms.
-In SP1, Claude and Qwen raise no false alarm and, over model–bug pairs, find 267/268 common bugs in both arms; on very rare bugs Direct finds 32/32 and Translate 29/32, the three misses from two bugs. In SP2 the 5.5 models
-find a valid trace every time in both arms, up to 51 events and even with mechanism names hidden, with no false alarms,
-and Qwen does so in Translate on the main set;
-translation cuts Haiku's false alarms on correct designs from 60% to 35% (95% to 45% with hidden names; nominal paired
-p = 0.18 and 0.002, as designs share five templates).
-Llama 3.1 8B fabricates in Direct, and translation silences rather than fixes this: its specifications and problem files
-are mostly unusable or incomplete, so it answers "safe" or nothing.
-Translation risks specs that copy the bug, permissive models that planners exploit, and solver blow-up.
+Claude Haiku 4.5, Sonnet 5.5 and Opus 5.5, and the open-weight Qwen 3.8 27B and Llama 3.1 8B, each answering
+directly (Direct) or translating for a solver (Translate). Translation's value depends on the model:
+it adds nothing for strong models, cuts a mid-tier one's false alarms, and cannot rescue a weak one.
+
+**SP1** (Translate: a specification checked by Z3). Bugs that random testing rarely triggers (100 inputs
+expose 5% of the very rare ones) are still found by reading the code: Claude and Qwen raise no false alarm
+and find 267/268 common bugs (4 models × 67) in each arm; on the 8 very rare bugs, Direct finds 32/32 pairs
+and Translate 29/32. Claude's Translate failures lie in the specification (which can copy the bug), never the
+search. Llama 3.1 8B fabricates in Direct (false alarms on 76% of correct functions); Translate cuts this to
+20%, mostly because 70 of 174 runs yield no usable specification.
+
+**SP2** (Translate: PDDL for GBFS and SATPlan). Both arms get each design's STRIPS actions, so SP2 tests
+finding a reachable failure, not discovering new mechanisms. The 5.5 models are never wrong in either arm,
+up to 51 events and on the *opaque* set (mechanism-revealing names replaced); Qwen matches them in Translate
+on the main set. Translation pays for Haiku, which in Direct applies familiar patterns to designs that
+rule them out: its false alarms on correct designs fall from 60% to 35% (opaque: 95% to 45%), lower in 4 of 5
+families. Llama fabricates in Direct; in Translate its broken problem files miss 29 of 40 failures, so "safe" means
+little.
+
+**In practice,** Direct suffices when the spec is explicit, the artefact small and the model strong; Translate
+adds a no-failure certificate, valid only if the model translates correctly and the solver finishes in budget.
 
 # 1. Motivation and research questions
 
@@ -55,10 +65,10 @@ distributed-system design and the witness a failure trace; **SP3** scores the tr
 
 # 2. Formulation
 
-Both scales rest on $\alpha \models \beta$ iff $\alpha \land \lnot\beta$ is unsatisfiable ([3] Ch. 7), with $\alpha$ = "the system as implemented" and $\beta$ = "the requirement". A model of
-$\alpha \land \lnot\beta$ is a run that breaks the requirement: a *failure witness*. For a contract
-$\forall x\,(pre \Rightarrow post)$, the negation is $\exists x\,(pre \land \lnot post)$, and
-the solver's satisfying assignment to $x$ is the witness.
+Both scales search for a counterexample, and the Translate arm does so literally: the solver is asked whether
+$\alpha \land \lnot\beta$ is satisfiable, with $\alpha$ = "the system as implemented" and $\beta$ = "the requirement"
+($\alpha \models \beta$ iff it is not, [3] Ch. 7). A model is a *failure witness*: in SP1 an input satisfying
+$pre \land \lnot post$ (Z3), in SP2 a plan reaching the violation $G$ (SATPlan; GBFS answers the same question by search).
 
 ## 2.1 SP1: a function as a CSP, solved by SMT
 
