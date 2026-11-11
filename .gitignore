@@ -227,3 +227,5 @@ report/report.html
 
 # Office lock files
 ~$*
+node_modules/
+package-lock.json

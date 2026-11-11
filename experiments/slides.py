@@ -239,6 +239,89 @@ def inventory_blowup():
     save(fig, "inventory_blowup.png")
 
 
+# ---------------------------------------------------------------------------
+# Deck-sized panels: drawn at the exact size of their slot in the deck, no title (the slide has it)
+# ---------------------------------------------------------------------------
+
+def panel_style(ax):
+    style(ax)
+    ax.tick_params(labelsize=11)
+
+
+def hardness(sp1: pd.DataFrame, sp2: pd.DataFrame):
+    """Slide 9: SP1 valid witnesses vs trigger rarity, SP2 valid traces vs shortest trace length."""
+    fig, (a, b) = plt.subplots(1, 2, figsize=(9.25, 3.4), facecolor=SURFACE)
+    for ax in (a, b):
+        panel_style(ax)
+        ax.set_ylim(0, 108)
+        ax.set_xlim(-0.35, 3.35)
+        ax.set_yticks([0, 25, 50, 75, 100], ["0%", "25%", "50%", "75%", "100%"])
+
+    inst = pd.DataFrame(json.loads((ROOT / "data" / "sp1" / "instances.json").read_text())["instances"])
+    bug_inst = inst[(inst.kind == "bug") & inst.bucket.isin(BUCKETS)]
+    strong = sp1[(sp1.kind == "bug") & (sp1.model != WEAK_MODEL)]
+    series = [(f"random, {n:,} inputs", [100 * (1 - (1 - bug_inst[bug_inst.bucket == k].rarity) ** n).mean() for k in BUCKETS], col, "-")
+              for n, col in ((100, MUTED), (1000, INK2))]
+    for arm, col in (("direct", BLUE), ("translate", ORANGE)):
+        d = strong[strong.arm == arm]
+        series.append((f"LLM {ARM_LABEL[arm]}", [100 * (d[d.bucket == k].outcome == "valid_witness").mean() for k in BUCKETS], col, "-"))
+    for label, ys, col, ls in series:
+        a.plot(range(4), ys, color=col, linewidth=2.4, linestyle=ls, marker="o", markersize=7,
+               markeredgecolor=SURFACE, markeredgewidth=1.5, label=label)
+    a.set_xticks(range(4), ["common", "uncommon", "rare", "very rare"], fontsize=11)
+    a.set_xlabel("SP1: how rare the failing inputs are", fontsize=11, color=INK2)
+    a.set_ylabel("failures found", fontsize=11, color=INK2)
+    a.legend(frameon=False, fontsize=10, loc="lower left")
+
+    inst2 = {i["id"]: i for i in json.loads((ROOT / "data" / "sp2" / "instances.json").read_text())["instances"]}
+    v = sp2[(sp2.violation == True) & (sp2.set != "opaque")].copy()  # noqa: E712
+    v["shortest"] = v.instance.map(lambda x: inst2[x]["shortest"])
+    bins = [(6, 10), (11, 15), (17, 27), (30, 51)]
+    lines = [("Sonnet 5.5, Opus 5.5 (both arms)", v[v.model.isin(["sonnet", "opus"])], GREEN),
+             ("Haiku 4.5 Direct", v[(v.model == "haiku") & (v.arm == "direct")], BLUE),
+             ("Haiku 4.5 Translate", v[(v.model == "haiku") & (v.arm == "translate")], ORANGE)]
+    for label, d, col in lines:
+        ys = []
+        for lo, hi in bins:
+            db = d[(d.shortest >= lo) & (d.shortest <= hi)]
+            ys.append(100 * (db.outcome == "valid_trace").mean() if len(db) else np.nan)
+        b.plot(range(len(bins)), ys, color=col, linewidth=2.4, marker="o", markersize=7,
+               markeredgecolor=SURFACE, markeredgewidth=1.5, label=label)
+    b.set_xticks(range(len(bins)), [f"{lo}–{hi}" for lo, hi in bins], fontsize=11)
+    b.set_xlabel("SP2: shortest failure trace (events)", fontsize=11, color=INK2)
+    b.legend(frameon=False, fontsize=10, loc="lower left")
+    b.text(3, 92, "Haiku not run\non 30–51", fontsize=9, color=INK2, ha="center", va="top")
+    fig.tight_layout(w_pad=3)
+    save(fig, "hardness_panel.png")
+
+
+def inventory_panel():
+    """Slide 11: states expanded to certify the fixed designs, inventory highlighted."""
+    inst = [i for i in json.loads((ROOT / "data" / "sp2" / "instances.json").read_text())["instances"]
+            if i["variant"] == "fixed" and i.get("set", "main") in ("main", "stress")]
+    fig, ax = plt.subplots(figsize=(4.375, 3.18), facecolor=SURFACE)
+    panel_style(ax)
+    for fam in ("payments", "lock", "queue", "cache", "inventory"):
+        d = sorted([i for i in inst if i["family"] == fam], key=lambda i: i["size"])
+        xs, ys = [i["size"] for i in d], [max(i["gold"]["gbfs"]["expanded"], 1) for i in d]
+        hot = fam == "inventory"
+        ax.plot(xs, ys, color=ORANGE if hot else MUTED, linewidth=2.6 if hot else 1.5, marker="o",
+                markersize=6 if hot else 4, markeredgecolor=SURFACE, markeredgewidth=1.2, zorder=3 if hot else 2)
+    ax.annotate("2.7M", (6, 2685810), xytext=(-6, 8), textcoords="offset points", ha="right", fontsize=10, color=INK)
+    ax.annotate("over budget", (8, 2637989), xytext=(0, 8), textcoords="offset points", ha="center", fontsize=10, color=INK)
+    ax.text(8.2, 9026 * 0 + 30000, "inventory", fontsize=10, color=ORANGE, weight="bold", ha="right")
+    ax.text(8.2, 900, "other 4 designs", fontsize=10, color=INK2, ha="right")
+    ax.set_yscale("log")
+    ax.minorticks_off()
+    ax.set_ylim(1, 3e7)
+    ax.set_yticks([1, 100, 1e4, 1e6], ["1", "100", "10k", "1M"])
+    ax.set_xticks([1, 2, 3, 4, 6, 8])
+    ax.set_xlabel("design size", fontsize=11, color=INK2)
+    ax.set_ylabel("states expanded to prove safe", fontsize=10, color=INK2)
+    fig.tight_layout()
+    save(fig, "inventory_panel.png")
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     sp1, sp2 = load("sp1"), sp2_frame()
@@ -246,6 +329,8 @@ def main():
     rarity(sp1)
     false_alarms(sp2)
     inventory_blowup()
+    hardness(sp1, sp2)
+    inventory_panel()
 
 
 if __name__ == "__main__":

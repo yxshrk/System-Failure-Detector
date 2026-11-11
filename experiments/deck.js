@@ -20,13 +20,6 @@ function bullets(s, items, o) {
   T(s, items.map((t, i) => ({ text: t, options: { bullet: { indent: 14 }, breakLine: i < items.length - 1 } })),
     Object.assign({ fontSize: 14, paraSpaceAfter: 8 }, o));
 }
-function placeholder(s, kind, desc, o) {
-  s.addShape(pres.shapes.ROUNDED_RECTANGLE, Object.assign({ rectRadius: 0.08, fill: { color: "F1F0EC" },
-    line: { color: "B5B3AD", width: 1.25, dashType: "dash" } }, o));
-  T(s, [{ text: `PLACEHOLDER: ${kind}`, options: { bold: true, color: INK2, fontSize: 12, breakLine: true } },
-        { text: desc, options: { color: INK2, fontSize: 12 } }],
-    { x: o.x + 0.25, y: o.y + 0.25, w: o.w - 0.5, h: o.h - 0.5, valign: "middle", align: "center", paraSpaceAfter: 6 });
-}
 function image(file, alt, notes) {
   const s = pres.addSlide();
   s.background = { color: BG };
@@ -64,7 +57,7 @@ function image(file, alt, notes) {
   s.addImage({ path: `${D}/img/coldcard_q_mk5.png`, x: 5.35, y: 1.15, w: 2.47, h: 2.25, altText: "Coldcard Q and Mk5 hardware bitcoin wallets made by Coinkite" });
   T(s, [{ text: "Coldcard Q and Mk5 hardware wallets, made by Coinkite", options: { breakLine: true } }, { text: "Image: coldcard.com", options: { fontSize: 10 } }],
     { x: 8.0, y: 1.6, w: 1.625, h: 1.2, fontSize: 12, color: INK2, paraSpaceAfter: 6 });
-  placeholder(s, "diagram", "Coldcard timeline: Mar 2021 bug ships → Jul 2026 AI-assisted review misses it → exploit → US$116–140M drained", { x: 5.25, y: 3.6, w: 4.375, h: 1.55 });
+  s.addImage({ path: `${D}/coldcard_timeline.png`, x: 5.25, y: 3.6, w: 4.375, h: 1.55, altText: "Timeline: Mar 2021 bug ships, Jul 2026 AI-assisted review finds nothing, Jul to Aug 2026 wallets drained of US$116-140M" });
   s.addNotes("Open with the news. In July 2026 Coinkite disclosed that since March 2021 its Coldcard wallets had generated seed phrases from a predictable software fallback instead of the hardware random chip. Coinkite says it ran AI-assisted code review on that firmware weeks before the exploit and the review missed it; it believes the attacker probably used AI to find it first, though it has no proof and that claim is disputed. Losses are reported at US$116 to 140M. The lesson: an AI reviewer that silently says 'looks fine' is dangerous. Real failures are rare and deep, like DynamoDB's 35-step bug. So the assistant only helps if it gives concrete, checkable failures and stays quiet on correct code. That is the course question: direct LLM reasoning vs translating to a solver. Sources: Forbes 4 Aug 2026, Blockhead 3 Aug 2026, OECD AI Incidents Monitor.");
 }
 
@@ -82,7 +75,7 @@ image("method.png", "Direct vs Translate pipeline diagram",
     "Bounded symbolic execution turns the code into one formula: if x > 0: y = 1 else: y = 2  →  If(x > 0, 1, 2)",
     "Translate: the LLM writes pre / post, Z3 finds x. Every witness is re-run in Python",
   ], { x: 0.375, y: 1.25, w: 4.6, h: 3.9 });
-  placeholder(s, "diagram", "Code → symbolic execution → formula ∧ ¬spec → Z3 → witness x → re-executed against the reference. Course topics: CSP, logical reasoning (entailment).", { x: 5.25, y: 1.25, w: 4.375, h: 3.9 });
+  s.addImage({ path: `${D}/sp1_formulation.png`, x: 5.25, y: 1.25, w: 4.375, h: 3.9, altText: "SP1 pipeline on a toy function: code becomes ret = If(x > 0, 1, 2), conjoined with not post, Z3 returns x = 0" });
   s.addNotes("SP1 is constraint satisfaction. The inputs are variables with finite domains, and the constraint is that the code's output violates the spec. We wrote our own bounded symbolic executor to turn Python into a Z3 formula. Key idea: system entails spec iff system AND NOT spec is unsatisfiable, so Z3's satisfying assignment is the failing input.");
 }
 
@@ -97,7 +90,7 @@ image("method.png", "Direct vs Translate pipeline diagram",
     "SATPlan finds a shortest trace. GBFS + h_FF searches exhaustively and certifies \"safe\"",
     "Translate: the LLM writes the problem file (initial state)",
   ], { x: 0.375, y: 1.25, w: 4.6, h: 3.9 });
-  placeholder(s, "diagram", "payments-subtle-1, 8 events: send a0 → accept (racy) → tick → time out and retry → send a1 → accept (racy) → charge a1 → charge again a0 ⇒ charged twice. Course topic: planning.", { x: 5.25, y: 1.25, w: 4.375, h: 3.9 });
+  s.addImage({ path: `${D}/sp2_trace.png`, x: 5.25, y: 1.25, w: 4.375, h: 3.9, altText: "Shortest failure trace for payments-subtle-1: eight events ending in charged-twice" });
   s.addNotes("SP2 is classical planning. The planner controls every event, including failures, so a plan is a counterexample, not a course of action: planning used as model checking of a safety property. Walk through the payments trace: the retry passes the duplicate check because the record is written only after charging, so the card is charged twice.");
 }
 
@@ -136,7 +129,7 @@ image("scoreboard.png", "Scoreboard heatmap of all models and arms",
 // 9. Harder failures
 {
   const s = base("Harder failures do not hurt the strong models", "SP1: rarer triggering inputs. SP2: longer failure traces");
-  placeholder(s, "plot (matplotlib, two panels)", "Left: SP1 valid witness % vs trigger rarity for random testing (100 and 1,000 inputs), Direct and Translate. Right: SP2 valid trace % vs shortest trace length (6 to 51 events): 5.5 models at 100%, Haiku near 80%.", { x: 0.375, y: 1.2, w: 9.25, h: 3.4 });
+  s.addImage({ path: `${D}/hardness_panel.png`, x: 0.375, y: 1.2, w: 9.25, h: 3.4, altText: "Left: failures found vs rarity for random testing and LLM arms. Right: valid traces vs trace length for Sonnet, Opus and Haiku" });
   T(s, "Rarity defeats random testing (5% of very rare bugs at 100 inputs), not the LLMs. The 5.5 models stay perfect up to 51-event traces.", { x: 0.375, y: 4.8, w: 9.25, h: 0.5, fontSize: 14 });
   s.addNotes("RQ1. Random testing falls off as bugs get rarer; Direct finds all of them, Translate 29 of 32 very rare pairs (two bugs, so a hint). On designs, trace length from 6 to 51 events does not hurt Sonnet or Opus; Haiku stays near 80% with no length trend. This looks like recognition rather than search.");
 }
@@ -156,7 +149,7 @@ image("false_alarms.png", "Slope chart: false alarms Direct vs Translate",
   card(1.25, "The spec copies the bug", "Haiku's spec reused the mutated leap() line, so Z3 found nothing");
   card(2.35, "The planner exploits slack", "Haiku's lock problem started a lease clock before anyone held the lock; the trace only works in its model");
   card(3.45, "The tools run out", "SP1: 3 timeouts, 5 Z3 unknowns. Inventory: 2.7M states at size 6, over budget at 8");
-  placeholder(s, "plot", "Inventory blow-up: states expanded to prove safety vs design size, inventory highlighted, other families flat.", { x: 5.25, y: 1.25, w: 4.375, h: 3.18 });
+  s.addImage({ path: `${D}/inventory_panel.png`, x: 5.25, y: 1.25, w: 4.375, h: 3.18, altText: "States expanded to prove safety vs design size, inventory explodes, other designs flat" });
   T(s, "Llama could not write the formal language: 46 of its 70 failed SP1 specs used one unsupported builtin.", { x: 0.375, y: 4.65, w: 9.25, h: 0.5, fontSize: 13 });
   s.addNotes("Translate is not free. Specs can inherit the bug, permissive problem files hand the planner shortcuts, and solvers time out. Certification is exhaustive search, and the symmetric inventory design explodes: 9k states at size 4, 2.7M at 6, over budget at 8, where Translate is undecided while Sonnet and Opus Direct still answer correctly, without proof.");
 }
