@@ -15,18 +15,9 @@ author:
 <div class="pagebreak"></div>
 ```
 
-**Summary.** On 174 functions (SP1) and 162 designs (SP2), scored exactly on gold models, we compare
-Claude Haiku 4.5, Sonnet 5.5 and Opus 5.5, and the open-weight Qwen 3.8 27B and Llama 3.1 8B,
-answering directly or translating for Z3, SATPlan and GBFS.
-Both arms receive each design's event rules, so SP2 tests finding a reachable failure under those rules, not discovering new failure mechanisms.
-In SP1, Claude and Qwen raise no false alarm and, over model–bug pairs, find 267/268 common bugs in both arms; on very rare bugs Direct finds 32/32 and Translate 29/32, the three misses from two bugs. In SP2 the 5.5 models
-find a valid trace every time in both arms, up to 51 events and even with mechanism names hidden, with no false alarms,
-and Qwen does so in Translate on the main set;
-translation cuts Haiku's false alarms on correct designs from 60% to 35% (95% to 45% with hidden names; nominal paired
-p = 0.18 and 0.002, as designs share five templates).
-Llama 3.1 8B fabricates in Direct, and translation silences rather than fixes this: its specifications and problem files
-are mostly unusable or incomplete, so it answers "safe" or nothing.
-Translation risks specs that copy the bug, permissive models that planners exploit, and solver blow-up.
+**Summary.** Can an LLM show concretely how unshipped software would fail? We test function review (SP1: find an input that breaks a Python function's docstring) and distributed-system design review (SP2: given a design document and its event rules, find an order of timeouts, retries, lost messages and crashes that breaks a safety property such as "no order is charged twice"). On 174 functions and 162 designs, scored exactly against ground truth, we compare answering directly with translating for a solver (Z3 or planners), using Claude Haiku 4.5, Sonnet 5.5, Opus 5.5 and the open-weight Qwen 3.8 27B and Llama 3.1 8B.
+**Results.** In SP1, Claude and Qwen raise no false alarm and find nearly every bug either way; Translate trails only on rare bugs (very rare, 8 bugs × 4 models: 29/32 vs 32/32). In SP2, the 5.5 models find a valid trace every time either way, up to 51 events and with mechanism names hidden. Translation cuts Haiku's false alarms on correct designs from 60% to 35% (95% to 45% with hidden names; nominal paired p = 0.18 and 0.002). Llama fabricates when answering directly, and translation silences rather than fixes this.
+**Answer.** On these small, fully specified problems capable models were about as accurate directly as through a solver. Translation pays off mainly when a certificate or audit trail is needed or a mid-tier model misreads designs; it did not rescue a model that could not write the formal language.
 
 # 1. Motivation and research questions
 
@@ -38,29 +29,32 @@ testing [1]. An AI assistant for code and design review is therefore valuable on
 that do not exist.
 
 The course asks: "When should you use LLM reasoning
-directly? When should you translate problem specification then call tool?" We compare
+directly? When should you translate problem specification then call tool?", and whether that is "likely to change in the near future". We compare
 two arms on the same inputs:
 
-* **(A) Direct.** The model reads the code (or design document) and answers with a verdict and a witness.
-* **(B) Translate.** The model writes a formal specification, and a classical solver searches for the witness. Solver errors are fed back for repair, as in Logic-LM [9] and the LLM+SMT method [5].
+* **(A) Direct.** The LLM reads the input and answers with a verdict and a witness.
+* **(B) Translate.** The LLM writes a formal description of the problem, and a classical solver searches for the witness. Solver errors are fed back for repair, as in Logic-LM [9] and the LLM+SMT method [5].
 
 Arm B is the course's case for a factored formulation: once the structure is explicit,
 a general solver prunes what unstructured reasoning must enumerate.
 
-In **SP1** the object is one function and the witness a failing input; in **SP2** it is a
-distributed-system design and the witness a failure trace; **SP3** scores the translations themselves.
+We study this on two review sub-problems; a third, SP3, scores the translations themselves.
 
-* **RQ1.** Which arm finds more *valid* failure witnesses, and does the gap widen with trigger rarity (SP1) and with shortest-trace length (SP2)?
-* **RQ2.** Which arm fabricates more failures on correct controls?
+* **SP1: function review.** The LLM gets a Python function and a docstring saying what it must do, and must find an input that breaks the docstring. For example, `days_in_month` with 400 mistyped as 399 returns 28 instead of 29 for February of year 400, so `month=2, year=400` is a witness. In Translate it writes pre- and postconditions, and Z3 searches.
+* **SP2: distributed-system design review.** The LLM gets a design document of about 200 words for a service (payments, inventory, lock, queue or cache) and the list of events that can occur, and must find an order of events (timeouts, retries, lost or delayed messages, crashes) that breaks a safety property. For example, a timed-out checkout retries, both attempts pass the duplicate check before either is recorded, and the card is charged twice. In Translate it writes only the initial state of a planning problem; the events and the goal are given, and planners search.
+* **RQ1.** Which arm finds more *valid* witnesses, and does the gap widen as failures get harder to reach (*trigger rarity* in SP1, the chance that a random input exposes the bug; *shortest-trace length* in SP2, the fewest events that reach the failure)?
+* **RQ2.** Which arm fabricates more failures on correct *controls*, i.e. functions or designs with no failure?
 
 # 2. Formulation
 
-Both scales rest on $\alpha \models \beta$ iff $\alpha \land \lnot\beta$ is unsatisfiable ([3] Ch. 7), with $\alpha$ = "the system as implemented" and $\beta$ = "the requirement". A model of
+Both problems rest on $\alpha \models \beta$ iff $\alpha \land \lnot\beta$ is unsatisfiable ([3] Ch. 7), with $\alpha$ = "the system as implemented" and $\beta$ = "the requirement". A model of
 $\alpha \land \lnot\beta$ is a run that breaks the requirement: a *failure witness*. For a contract
 $\forall x\,(pre \Rightarrow post)$, the negation is $\exists x\,(pre \land \lnot post)$, and
-the solver's satisfying assignment to $x$ is the witness.
+the solver's satisfying assignment to $x$ is the witness. The LLM writes a different half in each problem. In SP1 it writes $\beta$ (`pre`, `post`) and the code $\alpha$ is encoded automatically. In SP2 we fix $\beta$ (the goal, and actions such as `charge-again` that record its violation) and the LLM writes part of $\alpha$, the initial state; the action schemas, where the failure mechanism lives, are given to both arms.
 
 ## 2.1 SP1: a function as a CSP, solved by SMT
+
+**Setting.** A *reference* is a correct function and a *mutant* a copy with one small injected change; the LLM is not told which it sees. Below, $\Phi_{spec}$ is what the Translate arm solves (does some input break the LLM's specification?), while $\Phi_{gold}$ is ours, used only for ground truth (does some input make mutant and reference differ?).
 
 **CSP.** Each instance is a CSP $(X, D, C)$ ([3] Ch. 6).
 
@@ -68,34 +62,30 @@ the solver's satisfying assignment to $x$ is the witness.
 * **Domains $D$:** the stated ranges, e.g. $1 \le month \le 12$, $0 \le n \le m$, and each $e_i \in [lo, hi]$.
 * **Constraints $C$:** $\llbracket f \rrbracket(x, r) \land \lnot spec(x, r)$, where $\llbracket f \rrbracket(x, r)$ holds iff $r$ is what $f$ returns on $x$.
 
-The result $r$ and intermediate values are not separate variables: each is a shared sub-term of one formula DAG, fixed by
-the inputs, i.e. an auxiliary variable already eliminated. The domains are finite, so this is
-a finite CSP, a class that is NP-complete. Z3, however, receives SMT over unbounded integers
+The result and intermediate values are not separate variables but shared sub-terms fixed by the inputs.
+The domains are finite, so this is
+a finite CSP, a class that is NP-complete. Z3, however, receives SMT (SAT extended with theories such as integer arithmetic) over unbounded integers
 (`Int`) with the bounds as ordinary constraints; products of variables and `//` or `%` by a variable
 make it non-linear integer arithmetic, undecidable in general. Our bounded queries are decidable, but
 Z3's non-linear procedures are incomplete, so it can answer *unknown* (§5.1).
 
-**Building $\llbracket f \rrbracket$: bounded symbolic execution** [12] (`sp1/symexec.py`). The proposal
-planned an off-the-shelf executor; we wrote our own because tools such as CrossHair [16] cannot prove
-unsatisfiability within a bound, which Theorem 1 needs. The executor walks the syntax tree once with a symbolic environment
+**Building $\llbracket f \rrbracket$: bounded symbolic execution** [12]. Rather than running the code on one input, the executor runs it once on symbolic inputs and produces one formula covering every path: a branch setting `y = 1` if `x > 0` and `y = 2` otherwise, then returning `y`, becomes $ret = \mathit{If}(x > 0, 1, 2)$. We wrote our own because tools such as CrossHair [16] cannot prove unsatisfiability within a bound, which Theorem 1 needs. It walks the syntax tree once with a symbolic environment
 $\rho$ (variable → Z3 term) and a *path condition* $\pi$ (when control reaches the statement).
 `x = e` sets $\rho[x] \leftarrow \llbracket e \rrbracket_\rho$. `if c` runs both branches, from $(\rho, \pi \land c)$ and
 $(\rho, \pi \land \lnot c)$, and joins them with $\rho[x] = \mathit{If}(\pi_1, \rho_1[x], \rho_2[x])$ and $\pi = \pi_1 \lor \pi_2$
 (`break`/`continue` likewise). `return e` sets $ret \leftarrow \mathit{If}(\pi, \llbracket e \rrbracket, ret)$ and $\pi \leftarrow \bot$. An
-operation that raises when $b$ (bad index, `x // 0`, …) sets $exc \leftarrow exc \lor (\pi \land b)$ and $\pi \leftarrow \pi \land \lnot b$. A
+operation that raises when $b$ (bad index, `x // 0`, …) sets $exc \leftarrow exc \lor (\pi \land b)$ and $\pi \leftarrow \pi \land \lnot b$. A `while` or symbolic-`range`
 loop is unrolled $k$ times, iteration $j$ under $\pi \land cond_j$, then $unwind \leftarrow unwind \lor (\pi \land cond_k)$. The
-result is three terms over $X$: $ret$, $exc$ ("raises") and $unwind$ ("needs more than $k$ iterations"). Integers are unbounded and `//`, `%`
+result is three terms over $X$: $ret$, $exc$ ("raises") and $unwind$ ("exceeds a bound"). Integers are unbounded and `//`, `%`
 follow Python's floor semantics. Lists are values: aliasing (`ys = xs; ys.sort()`) is not modelled.
 
-**Lemma 1 (encoding correctness).** For $f$ in the supported, alias-free subset, let $x_0 \in D$ be an input whose execution needs at most $k$
-iterations of every loop. Then $unwind[x_0] = \bot$; $exc[x_0] = \top$ iff $f(x_0)$ raises; and otherwise
-$ret[x_0] = f(x_0)$. If the execution needs more than $k$ iterations, $unwind[x_0] = \top$.
+**Lemma 1 (encoding correctness).** Call $x_0 \in D$ *covered* if $unwind[x_0] = \bot$: its run needs at most $k$ iterations of each `while` or symbolic-`range` loop and at most $k$ elements in each list built from a symbolic count (concrete `range` loops are expanded in full). For $f$ in the supported, alias-free subset and covered $x_0$: $exc[x_0] = \top$ iff $f(x_0)$ raises, and otherwise $ret[x_0] = f(x_0)$.
 
 *Proof sketch.* Induction over statements, with the invariant: $\pi[x_0] = \top$ iff the concrete run
 on $x_0$ reaches this point, and then $\rho[x][x_0]$ is the concrete value of $x$. The join selects the branch taken, `return` and raises record the outcome under the path condition, and $cond_k$ marks a
 $(k{+}1)$-th iteration. ∎
 
-**The two queries.** The model-written `pre` and `post` are compiled the same way, unrolled to
+**The two queries.** The LLM-written `pre` and `post` are compiled the same way, unrolled to
 $k' = \max(k, L{+}1)$ where $L$ is the longest list input (doubled up to $4k'$ while the coverage
 query $\Psi$ below is satisfiable), and $pre(x)$ stands for "returns normally with a true value" (likewise $post$).
 
@@ -103,59 +93,59 @@ $$\Phi_{spec} = D(x) \land \lnot unwind_f \land \lnot unwind_{pre} \land pre(x) 
 
 $$\begin{aligned}\Phi_{gold} = {} & D(x) \land \lnot unwind_{ref} \land \lnot unwind_{mut} \\ & \land \big((exc_{ref} \oplus exc_{mut}) \lor (\lnot exc_{ref} \land \lnot exc_{mut} \land ret_{ref} \ne ret_{mut})\big)\end{aligned}$$
 
+In words, $\Phi_{spec}$ seeks an in-domain input, within the loop bounds, that satisfies $pre$ and on which $f$ raises or breaks $post$; $\Phi_{gold}$ seeks an input on which exactly one of reference and mutant raises, or both return and differ.
+
 **Theorem 1 (soundness and bounded completeness).** Suppose the *coverage* query
 $\Psi = D(x) \land \lnot unwind_f \land \big(unwind_{pre} \lor (pre(x) \land \lnot exc_f \land unwind_{post})\big)$
-is unsatisfiable, i.e. on every input within $f$'s bound the spec's own loops fit $k'$. Then $\Phi_{spec}$
-is satisfiable iff some $x_0 \in D$ within the bound satisfies $pre$ while $f$ raises or violates $post$ (a
-$pre$ that raises counts as false, a $post$ that raises as violated), and every model is such an $x_0$.
+is unsatisfiable, i.e. on every input covered by $f$ the spec's own loops fit $k'$. Then $\Phi_{spec}$
+is satisfiable iff some covered $x_0 \in D$ satisfies $pre$ while $f$ raises or violates $post$ (a
+$pre$ that raises counts as false, a $post$ that raises as violated), and every satisfying assignment is such an $x_0$.
 
 *Proof sketch.* By Lemma 1 on $f$, $pre$ and $post$, each conjunct has its concrete meaning wherever
 the relevant function fits its bound; $\lnot\Psi$ says that it does at every input where it is
 evaluated. If $\Psi$ is still satisfiable at $4k'$, `spec_check` reports *undecided*, never "no failure". ∎
 
-Equivalently, $\Phi_{spec}$ is unsatisfiable iff $f \models spec$ on all inputs within the bound: the
+Equivalently, $\Phi_{spec}$ is unsatisfiable iff $f \models spec$ on all covered inputs: the
 entailment theorem applied to the bounded program. The same argument covers $\Phi_{gold}$ with "behaves
 differently from the reference" for "violates the spec". The build checks that no reference loop can exceed its bound, and accepts a mutant as equivalent only
-if its domain was enumerated or $unwind_{mut}$ is unsatisfiable.
+if its domain was enumerated or $unwind_{mut}$ is unsatisfiable (cf. CBMC's [17] unwinding assertions).
 
-**The solver.** Z3 [4] decides satisfiability with DPLL(T): a DPLL core with
-backjumping and clause learning searches the Boolean skeleton, and integer theory solvers return
-conflicts. Every model is re-executed in Python before it counts, and Lemma 1 is tested against real execution on 25 random
-inputs per benchmark and hand-written mutant (`tests/test_symexec.py`). Appendix B.1 shows a full instance.
+**The solver.** Z3 [4] decides satisfiability. Every satisfying assignment is re-executed in Python before it counts, and Lemma 1 is tested against real execution on 25 random
+inputs per benchmark and hand-written mutant. Appendix B.1 shows a full instance.
 
-## 2.2 SP2: a design as a STRIPS planning problem
+## 2.2 SP2: a distributed-system design as a STRIPS planning problem
 
-**STRIPS task** ([3] Ch. 11). Each family is a typed PDDL domain and each variant/size a
-problem; grounding (propositionalization, [3] Ch. 9; up to $K^V$ instances per schema)
-gives $\Pi = (F, A, I, G)$:
+**Setting.** A distributed system is a set of components communicating over an unreliable network, so failures often depend on event order: SP2 asks whether a design permits an unlucky order, such as a timer expiring while a request is in flight. We use five classic designs, the *families*, each with one safety property and three *variants*: *flawed*, *subtle* (looks fixed but is not) and *fixed* (safe).
 
-* $F$ is the set of ground facts; a state $s \subseteq F$ is the set of facts that hold (closed world assumption).
-* $I$ is the initial state: design facts such as `(dedup-racy)`, counters `(next-tick t0 t1)` and the starting situation. $G$ is the violation, e.g. `{(charged-twice o1)}`.
-* Each action $a \in A$ has $pre(a)$, $add(a)$ and $del(a)$. It is applicable in $s$ iff $pre(a) \subseteq s$, and then $\mathrm{RESULT}(s, a) = (s \setminus del(a)) \cup add(a)$.
+* *payments:* a retried charge must not bill twice (no dedup; key saved after charge; atomic insert)
+* *inventory:* must not oversell (lost update; payment after hold expiry; atomic decrement + hold check)
+* *lock:* a stale writer must not win (no fencing or lease check; lease check only; fencing tokens [14])
+* *queue:* redelivery must not pay out twice (no dedup; ids in memory; id in the DB transaction)
+* *cache:* must not end stale (update DB then delete cache; the reverse; leases revoked by delete)
 
-A plan reaching $s_n \supseteq G$ is a failure trace. For example, `accept-new-racy o1 a1` does *not*
-delete `no-record o1`, so a second request can pass the lookup before the first charge records the key
-(B.2 lists its $pre$, $add$ and $del$).
+Variants differ only in their *design facts*; in payments one initial fact says whether deduplication is absent, racy or atomic. *Size* scales a timer or capacity, lengthening the shortest failure.
+
+**STRIPS task** ([3] Ch. 11). Each family is a typed PDDL domain and each variant and size a problem; grounding (propositionalization, [3] Ch. 9; up to $K^V$ instances per schema with $K$ objects, $V$ parameters) gives $\Pi = (F, A, I, G)$:
+
+* $F$, what can be true: ground facts such as `(no-record o1)`. A state $s \subseteq F$ is the set of facts that hold (closed world assumption).
+* $A$, what can happen: each action has $pre(a)$, $add(a)$, $del(a)$. It is applicable in $s$ iff $pre(a) \subseteq s$, and then $\mathrm{RESULT}(s, a) = (s \setminus del(a)) \cup add(a)$.
+* $I$, how this design starts and behaves: design facts such as `(dedup-racy)`, counters `(next-tick t0 t1)` and the starting situation.
+* $G$, what must never happen: e.g. `{(charged-twice o1)}`.
+
+A plan reaching $s_n \supseteq G$ is a failure trace. The planner chooses *every* event, including loss and crashes, so a plan is a counterexample, not a course of action: planning serves as explicit-state model checking of a **safety** property. In payments, attempt a0 passes the duplicate check, the timer expires, retry a1 also passes because `accept-new-racy` does *not* delete `no-record o1`, and both charge (B.2 shows it).
 
 **Modelling assumptions:** events interleave one at a time; effects are deterministic and
-unconditional, preconditions and goals positive; the environment can do exactly the failure events in
-the domain (loss, delay, pauses, crashes, ticks); object counts, hence states, are finite. PlanSAT is
-PSPACE-complete [10] (NP-hard even without negative effects); each SATPlan call decides
+unconditional, preconditions and goals positive; the environment can do exactly the domain's failure events; object counts, hence states, are finite. PlanSAT is
+PSPACE-complete [10] (its delete-free relaxation is polynomial given positive preconditions, as here, so $h_{FF}$ is tractable); each SATPlan call decides
 *bounded* PlanSAT for one horizon $T$, which is NP-complete for $T$ polynomial in the task size [10].
 
-**What a plan means here.** The planner chooses *every* event, including loss, crashes and ticks, so a
-plan is a counterexample, not a course of action: planning serves as explicit-state model checking of a
-**safety** property. Liveness failures are not STRIPS goals and are out of scope. "Safe" covers the instance at its size, not every size; we rely on the small-scope
-hypothesis [15], that most flaws already appear in small instances, and on an inductive invariant
-where search runs out (inventory from size 8, §6).
+**Scope.** Liveness failures are not STRIPS goals and are out of scope. "Safe" covers the instance at its size, not every size; we rely on the small-scope hypothesis [15], that most flaws already appear in small instances, and on an inductive invariant where search runs out (inventory from size 8, §6).
 
-**SATPlan encoding** [6] (`planning/satplan.py`). For horizon $T$: a variable $f^t$ per
+**SATPlan encoding** [6]. For horizon $T$: a variable $f^t$ per
 fact and step $t \le T$, and $a^t$ per action and step $t < T$, with CNF clauses (facts not yet reachable at step $t$ become constants):
 
-1. **initial state:** $f^0$ for $f \in I$ and $\lnot f^0$ for $f \notin I$;
-2. **goal:** $g^T$ for each $g \in G$;
-3. **preconditions:** $a^t \Rightarrow p^t$ for each $p \in pre(a)$;
-4. **effects:** $a^t \Rightarrow f^{t+1}$ for $f \in add(a)$, and $a^t \Rightarrow \lnot f^{t+1}$ for $f \in del(a) \setminus add(a)$;
+**1. initial state:** $f^0$ for $f \in I$, $\lnot f^0$ for $f \notin I$; **2. goal:** $g^T$ for each $g \in G$; **3. preconditions:** $a^t \Rightarrow p^t$ for each $p \in pre(a)$; **4. effects:** $a^t \Rightarrow f^{t+1}$ for $f \in add(a)$, $a^t \Rightarrow \lnot f^{t+1}$ for $f \in del(a) \setminus add(a)$; and
+
 5. **explanatory frame axioms:** $f^t \land \lnot f^{t+1} \Rightarrow \bigvee\{a^t : f \in del(a) \setminus add(a)\}$ and $\lnot f^t \land f^{t+1} \Rightarrow \bigvee\{a^t : f \in add(a)\}$;
 6. **exactly one action per step:** the exclusion axioms, strengthened, in linear size.
 
@@ -165,9 +155,9 @@ $F^{t+1} \Leftrightarrow ActionCausesF^t \lor (F^t \land \lnot ActionCausesNotF^
 $f \in del(a) \setminus add(a)$; otherwise (5) forces $f^{t+1} = f^t$. Hence $s_{t+1} = \mathrm{RESULT}(s_t, a)$, with $a$ applicable by (3). ∎
 
 **Theorem 2.** The horizon-$T$ formula is satisfiable iff a plan of exactly $T$ actions ends in a state
-containing $G$, and the true action variables of a model form one. Iterating $T$ from 0 returns a *shortest* failure trace at the first satisfiable $T$; decoded plans are re-validated. UNSAT for all $T \le T_{max}$ proves only bounded safety.
+containing $G$, and the true action variables of a model form one. Iterating $T$ from 0 returns a *shortest* trace at the first satisfiable $T$; decoded plans are re-validated. UNSAT for all $T \le T_{max}$ proves only bounded safety.
 
-**Certifying safety: greedy best-first search with $h_{FF}$** (`planning/search.py`). $h_{FF}(s)$ is the length of a relaxed plan for the task with delete lists ignored, extracted
+**Certifying safety: greedy best-first search with $h_{FF}$**. $h_{FF}(s)$ is the length of a relaxed plan for the task with delete lists ignored, extracted
 from layered reachability (FF's relaxed planning graph [7]), or $\infty$ if $G$ is unreachable even in the relaxation. GBFS expands states
 in order of $h_{FF}$, never revisits one, tests for the goal on generation, and discards states with
 $h_{FF} = \infty$.
@@ -181,16 +171,11 @@ from $s$ in the real task. ∎
 
 By the same argument GBFS finds a plan whenever one exists, though not always a shortest one ($h_{FF}$
 is inadmissible); FF's hill-climbing phase is incomplete and cannot
-certify. Every fixed variant has finite $h_{FF}(I)$, so certification needs the exhaustive search and
+certify. Every safe (*fixed*) variant has finite $h_{FF}(I)$, so certification needs the exhaustive search and
 $h_{FF}$ contributes only its dead-end test: on sizes 1–4 it expands 1.2× (cache) to 3.8× (queue) fewer
-states than plain BFS (inventory size 4: 9,026 vs 24,992), without changing the exponential growth. **Pipeline:** in the Translate arm GBFS decides
-reachability on the model's problem; if a plan exists, SATPlan returns a shortest trace within its 120 s budget, else the GBFS trace is kept (B.2–B.3 show real clauses and a certificate).
+states than plain BFS, without changing the exponential growth. **Pipeline:** in the Translate arm GBFS decides
+reachability on the model's problem; if a plan exists, SATPlan returns a shortest trace within its 120 s budget, else the GBFS trace is kept (B.2–3).
 
-**What each arm translates.** Both scales check $\alpha \land \lnot\beta$, but the model writes a
-different half: in SP1 it writes $\beta$ (`pre`/`post`) and the code $\alpha$ is encoded mechanically; in SP2
-we fix $\beta$ (the goal, plus *monitor* actions such as `charge-again`) and the model writes part of $\alpha$,
-the initial state with its design facts. The action schemas, where the failure mechanism lives, are
-given to both arms (§6).
 
 # 3. Problem instances
 
@@ -198,13 +183,11 @@ given to both arms (§6).
 
 **Benchmarks.** 27 *base* functions, HumanEval/EvalPlus-style tasks [8] (`below_zero`, `is_prime`, …)
 plus business rules (calendar, grade bands, discounts, withdrawals), and 10 *hard* ones where a witness
-must be *constructed* (sorting networks, comparator medians, token-bucket rate limiters, a debouncer,
-Luhn, Zeller's congruence, banker's rounding, subset-sum DP). As planned, identifiers are renamed and
+must be *constructed* (sorting networks, rate limiters, Luhn, subset-sum DP, …). To limit memorisation from training data, identifiers are renamed and
 docstrings rewritten without examples; each docstring fixes the return value on the stated domain, so
 the docstring *is* the specification.
 
-**Mutants and labels.** The candidates are 808 automatic first-order mutants, 42 hand-written realistic bugs (a
-forgotten 400-year rule, a comparator dropped as an "optimisation") and 9
+**Mutants and labels.** The candidates are 808 automatic first-order (single-change) mutants, 42 hand-written bugs (e.g. a forgotten 400-year rule) and 9
 equivalent rewrites.
 
 Each candidate is labelled in four steps. Its *trigger rarity* is the probability that a random
@@ -216,50 +199,36 @@ execution, and equivalence is accepted only under the conditions of §2.1.
 (preferring rare ones), and add two controls: the clean reference, plus an equivalent mutant when one
 exists. These are deliberately hard.
 
-**Result.** 174 instances: 115 bugs (67 common, 19 uncommon, 21 rare, 8 very rare) and 59 controls (37
+**Result.** 174 instances: 115 bugs (trigger rarity: 67 common ≥10%, 19 uncommon 1–10%, 21 rare 0.1–1%, 8 very rare <0.1%) and 59 controls (37
 clean, 22 provably equivalent). Of the 859 candidates, 59 were dropped as non-terminating, not encodable or not provably equivalent.
 
 ## 3.2 SP2: 60 designs, plus 30 stress, 60 opaque and 12 long variants
 
-Each design document (about 200 words) states the components, the failure model and the mechanism
-without judging it; subtle variants read like a fix the engineer believes works. Gold shortest traces
-are 6–15 events. Three further sets were added:
+The main set crosses the five families of §2.2, three variants and sizes 1–4. Each design document (about 200 words; A.7 shows one) states the components, the failure model and the mechanism without judging it; subtle variants read like a fix the engineer believes works. Gold shortest traces are 6–15 events. Three further sets were added:
 
 * *Stress* (sizes 6 and 8): 17–27 events.
 * *Opaque:* the main set with design facts and design-specific events renamed (`mode-2`, `accept-3`) and comments removed; the semantics are unchanged.
 * *Long:* payments and inventory at sizes 12 and 16 (30–51 events), 5.5 models and Llama only.
-
-Each family has one violation and three variants (flawed; subtle, which looks fixed; fixed):
-
-* *payments*, charged twice: no deduplication; key saved only after charge; atomic insert-if-absent
-* *inventory*, sold > stock: lost stock update; payment after hold expiry; atomic decrement + hold check
-* *lock*, stale write wins: no fencing or lease check; lease checked before write; fencing tokens [14]
-* *queue*, payout twice: no consumer dedup; dedup ids in memory; dedup id in the DB transaction
-* *cache*, stale cache at end: update DB, delete cache; delete cache, update DB; leases revoked by delete
 
 # 4. Method
 
 **Models.** Claude Haiku 4.5, Sonnet 5.5 and Opus 5.5 with default extended thinking, called through
 the Claude Code CLI with *all tools disabled* (so Direct cannot run code). Two open-weight models on SoC's endpoint (SoCLaaS)
 bracket them: Qwen 3.8 27B [18], which reasons before answering, and Llama 3.1 8B [19], which does not, both at temperature 0; Llama's answers never exceed 8,192
-output tokens (21 Direct answers stop exactly there, 18 of them scored *no answer*). Qwen ran SP1 and the SP2 main set only, as one SP2 answer took 5–10 minutes on the shared endpoint.
-Requests dropped under load were resubmitted, not scored. Both arms see the same inputs: the code with its docstring and the
+output tokens. Qwen ran SP1 and the SP2 main set only, as one SP2 answer took 5–10 minutes on the shared endpoint.
+Both arms see the same inputs: the code with its docstring and the
 input domain (SP1); the design document, the family's PDDL domain (events, with comments) and object names (SP2).
 
-**Direct arm.** JSON with a verdict and a witness: a failing input (SP1) or a list of ground actions (SP2).
+**Arms.** Direct returns JSON with a verdict and a witness (a failing input, or a list of ground actions). Translate returns `pre(...)` and `post(..., result)` in the supported Python subset, stating the docstring's intent, not the code's behaviour (SP1), or the complete initial state, including design facts and counters, with object names and the goal given (SP2); `spec_check` or the pipeline of §2.2 then runs.
 
-**Translate arm, SP1.** The model writes `pre(...)` and `post(..., result)` in the supported Python subset, stating the docstring's intent, not the code's behaviour; `spec_check` then runs.
-
-**Translate arm, SP2.** The model writes the complete initial state, including design facts and counters (object names and the goal are given); the pipeline of §2.2 then solves it.
-
-**Repair loop.** Errors are fed back up to twice: syntax errors, unsupported constructs, a vacuous precondition, a wrong goal, type or arity errors: a harness with verification and retries.
+**Repair loop (Translate only).** Errors are fed back up to twice: syntax, unsupported constructs, a vacuous precondition, a wrong goal, type or arity.
 
 **Tool budgets.** An SP1 spec check has a 120 s deadline; Z3
 queries time out at 60 s; planner search is capped at 3 M expansions or 300 s, SATPlan at 120 s. A
 budget hit, a Z3 *unknown* or a failed coverage check ($\Psi$ satisfiable) is reported as *undecided*,
 never as "no failure".
 
-**Scoring** is exact, on gold models: an SP1 witness is valid only if it is in-domain and the code
+**Scoring** is exact, against ground truth (our *gold* reference functions and problem files): an SP1 witness is valid only if it is in-domain and the code
 under review and the unmutated reference behave differently on it; an SP2 trace is valid if replaying
 it on the gold problem reaches the violation.
 

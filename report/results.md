@@ -1,15 +1,14 @@
 # 5. Results
 
 All numbers come from `experiments/analyze.py` (full tables, with every interval, in `results/tables.md`). Brackets are 95%
-Wilson intervals (valid at 0% and 100%); paired comparisons use the exact McNemar test.
+Wilson intervals; paired comparisons use the exact McNemar test.
 
 ## 5.1 SP1: functions (115 bugs, 59 controls)
 
-**RQ1.** Claude and Qwen find nearly every bug in both arms (Table 1, Fig. 1), but the arms part with rarity. Over model–bug pairs (four models), both find 267/268 common and 75/76 uncommon; Direct finds 84/84 rare and 32/32 very rare, Translate 82/84 and 29/32. That favours Direct, but thinly: Translate fails 3/32 very rare pairs vs 4/428 others (nominal Fisher p = 0.009), the three being two bugs with unsound specs (§6). Otherwise difficulty shows only as cost (hard-tier Direct answers use 2–5×
+**RQ1.** Claude and Qwen find nearly every bug in both arms (Table 1, Fig. 1), but the arms part with rarity. Over model–bug pairs (four models), both find 267/268 common and 75/76 uncommon; Direct finds 84/84 rare and 32/32 very rare (eight distinct bugs), Translate 82/84 and 29/32. That favours Direct, but thinly: Translate fails 3/32 very rare pairs vs 4/428 others (nominal Fisher p = 0.009), the three being two bugs with unsound specs (§6). Otherwise difficulty shows only as cost (hard-tier Direct answers use 2–5×
 the tokens) and as Z3 *unknown* on arithmetic-heavy specs. Random testing with $N$
 inputs catches a bug of rarity $r$ with probability $1-(1-r)^N$: 100 inputs catch 34% of rare and
-5% of very rare bugs, 1,000 catch 93% and 36%. Rarity defeats *testing* far more than either LLM arm.
-Llama Direct finds 33 of 55 common base-tier bugs but only 6 of 40 rarer ones, though rarity and difficulty are confounded here.
+5% of very rare bugs, 1,000 catch 93% and 36%. Rarity defeats *random testing* far more than either LLM arm.
 
 **RQ2.** No Claude or Qwen run raised a false alarm on the 59 controls, 22 of them equivalent mutants built to look buggy; Translate left 1 (Haiku) and 5 (Opus) *undecided*. Llama Direct raised 45 false alarms and invented a witness for 60 of the 115 bugs. Translate cut its false alarms to 12 (exact McNemar p < 0.001), but all 12, and 20 of its 22 misses, came from unsound specs.
 
@@ -18,26 +17,24 @@ Llama Direct finds 33 of 55 common base-tier bugs but only 6 of 40 rarer ones, t
 |---|---|---|---|---|---|---|---|---|
 | Haiku&nbsp;4.5 | Direct | 100% | 95% | 0 | 0 | – | 0.025 | 4,838 |
 | Haiku&nbsp;4.5 | Translate | 98% | 95% | 1 | 0 | 1 | 0.026 | 4,968 |
-| Sonnet&nbsp;5.5 | Direct | 100% | 100% | 0 | 0 | – | 0.009 | 431 |
-| Sonnet&nbsp;5.5 | Translate | 100% | 95% | 0 | 0 | 1 | 0.008 | 208 |
-| Opus&nbsp;5.5 | Direct | 100% | 100% | 0 | 0 | – | 0.018 | 470 |
-| Opus&nbsp;5.5 | Translate | 100% | 95% | 0 | 0 | 6 | 0.021 | 383 |
+| Sonnet,&nbsp;Opus&nbsp;5.5 | Direct | 100% | 100% | 0 | 0 | – | 0.009, 0.018 | 431, 470 |
+| Sonnet,&nbsp;Opus&nbsp;5.5 | Translate | 100% | 95% | 0 | 0 | 1, 6 | 0.008, 0.021 | 208, 383 |
 | Qwen&nbsp;3.8&nbsp;27B | Direct | 99% | 100% | 0 | 0 | 1 | – | 1,200 |
 | Qwen&nbsp;3.8&nbsp;27B | Translate | 99% | 95% | 0 | 0 | 4 | – | 6,447 |
 | Llama&nbsp;3.1&nbsp;8B | Direct | 41% | 5% | 60 | 45 | 7 | – | 451 |
 | Llama&nbsp;3.1&nbsp;8B | Translate | 28% | 20% | 14 | 12 | 70 | – | 429 |
 
-*Table 1.* SP1 outcomes. In *Translate* the named model writes the specification and Z3 searches it. *No answer*
-(bugs and controls): a checker timeout or Z3 *unknown* (*undecided*) for Claude; no verdict, no accepted spec, or (Qwen's 4) the endpoint's 15-minute limit for open-weight models.
+*Table 1.* SP1 outcomes. *Fabricated* counts invalid witnesses on bugs; false alarms are separate. *No answer*
+(bugs and controls): a checker timeout or Z3 *unknown* (*undecided*) for Claude; no verdict, no accepted spec or an endpoint limit for open-weight models.
 :::
 
-*SP3.* Of the specifications whose soundness check completed, these were *sound* (the reference satisfies them): 169/172 (Haiku), 173/173 (Sonnet), 165/165 (Opus) and 169/170 (Qwen). *Discriminating* (the mutant violates them) is the valid-witness rate above. Haiku's three unsound specs are model errors (§A.2–A.3): the docstring fixes the answer on each violating reference input. Llama differs in kind: only 104 of its 174 specs passed the checker (70 runs failed after two repairs, 46 of them calling the unsupported `isinstance`), and only 45 of the 103 with a soundness verdict are sound.
+*SP3.* Of the specifications whose soundness check completed, these were *sound* (the reference satisfies them): 169/172 (Haiku), 173/173 (Sonnet), 165/165 (Opus) and 169/170 (Qwen). *Discriminating* (the mutant violates them) is the valid-witness rate above. Llama differs in kind: only 104 of its 174 specs passed the checker (70 runs failed after two repairs, 46 of them calling the unsupported `isinstance`), and only 45 of the 103 with a soundness verdict are sound.
 
 **Translate failures.** For the Claude models every one comes from the specification or the tool, never the search: two postconditions copied the code's bug (§A.2), one spec raised an exception and produced a fabricated witness (§A.3), and eight checks were undecided (three timeouts, five Z3 *unknown*s).
 
 ![](../results/figures/sp1_rarity.png){width=48%} ![](../results/figures/sp2_length.png){width=48%}
 
-*Fig. 1 (left):* SP1 base tier, valid witnesses vs. trigger rarity (Llama dashed) against random testing. *Fig. 2 (right):* SP2 valid traces vs. shortest trace length (main + stress).
+*Fig. 1 (left):* SP1 base tier, valid witnesses vs. trigger rarity (Llama dashed) against random testing. *Fig. 2 (right):* SP2 valid traces vs. shortest trace length (main + stress; inventory sizes 6 and 8: best known).
 
 ## 5.2 SP2: designs (60 main + 30 stress + 60 opaque + 12 long)
 
@@ -58,26 +55,23 @@ replays on the gold problem and reaches the violation (flawed + subtle designs).
 design. Translate was *undecided* (not FA) on inventory's fixed design at size 8. Qwen ran the main set only.
 :::
 
-**RQ1.** Sonnet 5.5 and Opus 5.5 produced a valid trace every time, from 6 up to 51 events (on the long set 8/8 per model and arm, 95% interval [68–100], with no false alarm; Translate was undecided on its inventory fixed designs, sizes 12 and 16). Haiku stays near 80% with no length trend. On overall correctness, paired over its 150 designs, only Translate is right on 41 and only Direct on 21 (exact McNemar p = 0.15, 0.39 and 0.17 per set; 0.015 pooled, but the sets share templates and are not independent). Qwen's Translate was right on all 60 main designs and its Direct on 57, its 3 invalid traces being format slips, not misreadings. Llama Direct produced no valid trace on any set.
+**RQ1.** Sonnet 5.5 and Opus 5.5 produced a valid trace every time, from 6 up to 51 events (on the long set 8/8 per model and arm, 95% interval [68–100], with no false alarm; Translate was undecided on its inventory fixed designs, sizes 12 and 16). Haiku stays near 80% with no length trend. Paired over the 150 designs Haiku ran, only Translate is right on 41 and only Direct on 21 (nominal exact McNemar p = 0.015 pooled; 0.15 to 0.39 per set). Qwen's Translate was right on all 60 main designs and its Direct on 57, its 3 invalid traces being format slips, not misreadings. Llama Direct produced no valid trace on any set.
 
-**RQ2.** Fabrication separates the arms.
+**RQ2.** Fabrication separates the arms for Haiku and Llama; the 5.5 models and Qwen raise no false alarm.
 
-* *Haiku Direct* claims violations on 60% of fixed designs (80% stress, 95% opaque). Translate roughly halves this, to 35% (40%, 45%); exact McNemar on false alarms gives p = 0.18, 0.22, 0.002. Its Direct traces fail on design facts: 16 (main) and 30 (opaque) used an event of *another* design variant, typically a familiar failure pattern (§A.4).
+* *Haiku Direct* claims violations on 60% of fixed designs (80% stress, 95% opaque). Translate roughly halves this, to 35% (40%, 45%); exact McNemar on false alarms gives p = 0.18, 0.22, 0.002 (main, stress, opaque). Its Direct traces fail on design facts: 16 (main) and 30 (opaque) used an event of *another* design variant, typically a familiar failure pattern (§A.4).
 * *Llama Direct* claims violations on 70% of fixed designs (60% stress, 90% opaque); Translate cuts this to 10% (10%, 40%; exact McNemar p = 0.002, 0.13, 0.002) but misses 29 of 40 violating main-set designs: its "safe" verdicts are right for the wrong reason.
 
 **SP3 (translation quality).**
 
-* *Sonnet and Opus* reproduced the gold initial state exactly in all 90 main and stress problems, and *Qwen* in all 60 main ones. On the opaque set the 5.5 models omitted one fact in 8/60, which no action's precondition uses.
-* *Haiku's design facts* were exact in 49/60 main and 35/60 opaque. Its other errors were permissive initial facts the planner exploited (§A.5). Only 2 of 474 Claude translations (Opus, long) needed repair.
-* *Llama* left out about a third of the gold initial facts (mean recall 0.64 on the main set; design facts exact in 22/60; 8 never parsed), mostly the static successor and ordering facts of clocks and tokens. With facts missing the violation can become unreachable: the planner proved "no violation" on all 29 missed flawed designs and on 16 of the 20 fixed ones.
-
-**Cost.** Over the 150 instances all Claude models ran, Translate is cheaper on average for each model (US$ per instance: Haiku 0.053 vs
-0.063, Sonnet 0.019 vs 0.025, Opus 0.040 vs 0.048). Total Claude usage was US$80 for 2,553 calls; SoC serves the open-weight models free.
+* *Sonnet and Opus* reproduced the gold initial state exactly in all 90 main and stress problems, and *Qwen* in all 60 main ones.
+* *Haiku's design facts* were exact in 49/60 main and 35/60 opaque. Its other errors were permissive facts the planner exploited (§A.5). Only 2 of 474 Claude translations (Opus, long) needed repair.
+* *Llama* left out about a third of the gold initial facts (mean recall 0.64 on the main set; design facts exact in 22/60; 8 never parsed). With facts missing the violation can become unreachable: the planner proved "no violation" on all 29 missed flawed designs and on 16 of the 20 fixed ones.
 
 ## 5.3 The classical tools
 
-* *Worst case vs. observed.* PlanSAT is PSPACE-complete, but only inventory shows pronounced state explosion (Table 3): its $S{+}1$ interchangeable customers interleave, so reachable states grow 1,500× from size 1 to 4; the other families grow roughly linearly. Trace length is not the driver: queue and inventory at size 8 need 21 and 27 events.
-* *SATPlan* finds shortest traces in milliseconds for four families. On inventory it takes 1.1 s at size 3, about 2 minutes at size 4, and times out (300 s) at sizes 6 and 8.
+* *Worst case vs. observed.* PlanSAT is PSPACE-complete, but only inventory shows pronounced state explosion (Table 3): its $S{+}1$ interchangeable customers interleave, so reachable states grow 1,500× from size 1 to 4; the other families grow roughly linearly. Trace length is not the driver: queue and inventory at size 8 have traces of 21 and 27 events.
+* *SATPlan* finds shortest traces in milliseconds for four families. On inventory it takes 1.1 s at size 3, about 2 minutes at size 4, and times out (300 s, the gold-label budget) at sizes 6 and 8.
 * *Certification* takes 9,026 GBFS expansions at inventory size 4 and 2.7 M (176 s) at size 6. From size 8 our 3 M-expansion / 5-minute budget runs out, so Translate on inventory's fixed design is scored *undecided*, not safe (the gold label comes from a conservation invariant).
 
 ::: keep
@@ -90,5 +84,5 @@ design. Translate was *undecided* (not FA) on inventory's fixed design at size 8
 | cache | 20 / 13 → 97 / 153 | 7 → 21 | 978 / 3,564 | 26 / 80 / 180 |
 
 *Table 3.* Difficulty in course terms (SATPlan at the shortest $T$; $F$ of the flawed variant). A state is a subset of $F$, so
-$2^{|F|}$ bounds the state space ($2^{44}$ to $2^{218}$ at size 8), but certification only visits reachable states.
+$2^{|F|}$ bounds the state space ($2^{44}$ to $2^{218}$ at size 8), but certification only visits reachable states. Inventory from size 6: best known length, not proven shortest.
 :::

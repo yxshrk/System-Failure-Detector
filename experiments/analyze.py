@@ -443,7 +443,7 @@ def fig_sp2(df: pd.DataFrame):
     labels = [(f"{lo}-{hi}" if lo != hi else f"{lo}") + f"\n(n={n})" for (lo, hi), n in zip(bins, ns)]
     ax.set_xticks(range(len(bins)), labels, fontsize=8)
     ax.tick_params(axis="y", labelsize=8.5)
-    ax.set_xlabel("shortest violating trace (events)", fontsize=9, color=INK2)
+    ax.set_xlabel("shortest known violating trace (events)", fontsize=9, color=INK2)
     ax.set_ylim(0, 112)
     ax.set_ylabel("valid failure trace (%)", fontsize=9, color=INK2)
     ax.legend(frameon=False, fontsize=8, loc="lower left")
