@@ -32,8 +32,7 @@ finding a reachable failure, not discovering new mechanisms. The 5.5 models are 
 up to 51 events and on the *opaque* set (mechanism-revealing names replaced); Qwen matches them in Translate
 on the main set. Translation pays for Haiku, which in Direct applies familiar patterns to designs that
 rule them out: its false alarms on correct designs fall from 60% to 35% (opaque: 95% to 45%), lower in 4 of 5
-families. Llama fabricates in Direct; in Translate its broken problem files miss 29 of 40 failures, so "safe" means
-little.
+families. Llama fabricates in Direct; its broken Translate files miss 29 of 40 failures, so "safe" means little.
 
 **In practice,** Direct suffices when the spec is explicit, the artefact small and the model strong; Translate
 adds a no-failure certificate, valid only if the model translates correctly and the solver finishes in budget.
@@ -54,21 +53,22 @@ two arms on the same inputs:
 * **(A) Direct.** The model reads the code (or design document) and answers with a verdict and a witness.
 * **(B) Translate.** The model writes a formal specification, and a classical solver searches for the witness. Solver errors are fed back for repair, as in Logic-LM [9] and the LLM+SMT method [5].
 
-Arm B is the course's case for a factored formulation: once the structure is explicit,
-a general solver prunes what unstructured reasoning must enumerate.
+Arm B is the course's bet: with the structure explicit, a solver prunes what reasoning must enumerate.
 
 In **SP1** the object is one function and the witness a failing input; in **SP2** it is a
-distributed-system design and the witness a failure trace; **SP3** scores the translations themselves.
+distributed-system design and the witness a failure trace. **SP3** is not a third problem: it scores Translate's
+translations against gold (SP1: sound, discriminating spec? SP2: exact initial state?), to tell translation
+errors from solver errors.
 
 * **RQ1.** Which arm finds more *valid* failure witnesses, and does the gap widen with trigger rarity (SP1) and with shortest-trace length (SP2)?
 * **RQ2.** Which arm fabricates more failures on correct controls?
 
 # 2. Formulation
 
-Both scales rest on $\alpha \models \beta$ iff $\alpha \land \lnot\beta$ is unsatisfiable ([3] Ch. 7), with $\alpha$ = "the system as implemented" and $\beta$ = "the requirement". A model of
-$\alpha \land \lnot\beta$ is a run that breaks the requirement: a *failure witness*. For a contract
-$\forall x\,(pre \Rightarrow post)$, the negation is $\exists x\,(pre \land \lnot post)$, and
-the solver's satisfying assignment to $x$ is the witness.
+Both scales search for a counterexample, and the Translate arm does so literally: the solver is asked whether
+$\alpha \land \lnot\beta$ is satisfiable, with $\alpha$ = "the system as implemented" and $\beta$ = "the requirement"
+($\alpha \models \beta$ iff it is not, [3] Ch. 7). A model is a *failure witness*: in SP1 an input satisfying
+$pre \land \lnot post$ (Z3), in SP2 a plan reaching the violation $G$ (SATPlan; GBFS answers the same question by search).
 
 ## 2.1 SP1: a function as a CSP, solved by SMT
 
@@ -123,15 +123,14 @@ $pre$ that raises counts as false, a $post$ that raises as violated), and every 
 the relevant function fits its bound; $\lnot\Psi$ says that it does at every input where it is
 evaluated. If $\Psi$ is still satisfiable at $4k'$, `spec_check` reports *undecided*, never "no failure". ∎
 
-Equivalently, $\Phi_{spec}$ is unsatisfiable iff $f \models spec$ on all inputs within the bound: the
-entailment theorem applied to the bounded program. The same argument covers $\Phi_{gold}$ with "behaves
+The same argument covers $\Phi_{gold}$ with "behaves
 differently from the reference" for "violates the spec". The build checks that no reference loop can exceed its bound, and accepts a mutant as equivalent only
 if its domain was enumerated or $unwind_{mut}$ is unsatisfiable.
 
 **The solver.** Z3 [4] decides satisfiability with DPLL(T): a DPLL core with
 backjumping and clause learning searches the Boolean skeleton, and integer theory solvers return
 conflicts. Every model is re-executed in Python before it counts, and Lemma 1 is tested against real execution on 25 random
-inputs per benchmark and hand-written mutant (`tests/test_symexec.py`). Appendix B.1 shows a full instance.
+inputs per benchmark and hand-written mutant (`tests/test_symexec.py`). B.1 shows a full instance.
 
 ## 2.2 SP2: a design as a STRIPS planning problem
 

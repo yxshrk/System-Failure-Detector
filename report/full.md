@@ -32,8 +32,7 @@ finding a reachable failure, not discovering new mechanisms. The 5.5 models are 
 up to 51 events and on the *opaque* set (mechanism-revealing names replaced); Qwen matches them in Translate
 on the main set. Translation pays for Haiku, which in Direct applies familiar patterns to designs that
 rule them out: its false alarms on correct designs fall from 60% to 35% (opaque: 95% to 45%), lower in 4 of 5
-families. Llama fabricates in Direct; in Translate its broken problem files miss 29 of 40 failures, so "safe" means
-little.
+families. Llama fabricates in Direct; its broken Translate files miss 29 of 40 failures, so "safe" means little.
 
 **In practice,** Direct suffices when the spec is explicit, the artefact small and the model strong; Translate
 adds a no-failure certificate, valid only if the model translates correctly and the solver finishes in budget.
@@ -54,11 +53,12 @@ two arms on the same inputs:
 * **(A) Direct.** The model reads the code (or design document) and answers with a verdict and a witness.
 * **(B) Translate.** The model writes a formal specification, and a classical solver searches for the witness. Solver errors are fed back for repair, as in Logic-LM [9] and the LLM+SMT method [5].
 
-Arm B is the course's case for a factored formulation: once the structure is explicit,
-a general solver prunes what unstructured reasoning must enumerate.
+Arm B is the course's bet: with the structure explicit, a solver prunes what reasoning must enumerate.
 
 In **SP1** the object is one function and the witness a failing input; in **SP2** it is a
-distributed-system design and the witness a failure trace; **SP3** scores the translations themselves.
+distributed-system design and the witness a failure trace. **SP3** is not a third problem: it scores Translate's
+translations against gold (SP1: sound, discriminating spec? SP2: exact initial state?), to tell translation
+errors from solver errors.
 
 * **RQ1.** Which arm finds more *valid* failure witnesses, and does the gap widen with trigger rarity (SP1) and with shortest-trace length (SP2)?
 * **RQ2.** Which arm fabricates more failures on correct controls?
@@ -123,15 +123,14 @@ $pre$ that raises counts as false, a $post$ that raises as violated), and every 
 the relevant function fits its bound; $\lnot\Psi$ says that it does at every input where it is
 evaluated. If $\Psi$ is still satisfiable at $4k'$, `spec_check` reports *undecided*, never "no failure". ∎
 
-Equivalently, $\Phi_{spec}$ is unsatisfiable iff $f \models spec$ on all inputs within the bound: the
-entailment theorem applied to the bounded program. The same argument covers $\Phi_{gold}$ with "behaves
+The same argument covers $\Phi_{gold}$ with "behaves
 differently from the reference" for "violates the spec". The build checks that no reference loop can exceed its bound, and accepts a mutant as equivalent only
 if its domain was enumerated or $unwind_{mut}$ is unsatisfiable.
 
 **The solver.** Z3 [4] decides satisfiability with DPLL(T): a DPLL core with
 backjumping and clause learning searches the Boolean skeleton, and integer theory solvers return
 conflicts. Every model is re-executed in Python before it counts, and Lemma 1 is tested against real execution on 25 random
-inputs per benchmark and hand-written mutant (`tests/test_symexec.py`). Appendix B.1 shows a full instance.
+inputs per benchmark and hand-written mutant (`tests/test_symexec.py`). B.1 shows a full instance.
 
 ## 2.2 SP2: a design as a STRIPS planning problem
 
@@ -311,7 +310,7 @@ Llama Direct finds 33 of 55 common base-tier bugs but only 6 of 40 rarer ones, t
 (bugs and controls): a checker timeout or Z3 *unknown* (*undecided*) for Claude; no verdict, no accepted spec, or (Qwen's 4) the endpoint's 15-minute limit for open-weight models.
 :::
 
-*SP3.* Of the specifications whose soundness check completed, these were *sound* (the reference satisfies them): 169/172 (Haiku), 173/173 (Sonnet), 165/165 (Opus) and 169/170 (Qwen). *Discriminating* (the mutant violates them) is the valid-witness rate above. Haiku's three unsound specs are model errors (§A.2–A.3): the docstring fixes the answer on each violating reference input. Llama differs in kind: only 104 of its 174 specs passed the checker (70 runs failed after two repairs, 46 of them calling the unsupported `isinstance`), and only 45 of the 103 with a soundness verdict are sound.
+*SP3 (translation quality).* Of the specifications whose soundness check completed, these were *sound* (the reference satisfies them): 169/172 (Haiku), 173/173 (Sonnet), 165/165 (Opus) and 169/170 (Qwen). *Discriminating* (the mutant violates them) is the valid-witness rate above. Haiku's three unsound specs are model errors (§A.2–A.3): the docstring fixes the answer on each violating reference input. Llama differs in kind: only 104 of its 174 specs passed the checker (70 runs failed after two repairs, 46 of them calling the unsupported `isinstance`), and only 45 of the 103 with a soundness verdict are sound.
 
 **Translate failures.** For the Claude models every one comes from the specification or the tool, never the search: two postconditions copied the code's bug (§A.2), one spec raised an exception and produced a fabricated witness (§A.3), and eight checks were undecided (three timeouts, five Z3 *unknown*s).
 
@@ -348,7 +347,7 @@ design. Translate was *undecided* (not FA) on inventory's fixed design at size 8
 **SP3 (translation quality).**
 
 * *Sonnet and Opus* reproduced the gold initial state exactly in all 90 main and stress problems, and *Qwen* in all 60 main ones. On the opaque set the 5.5 models omitted one fact in 8/60, which no action's precondition uses.
-* *Haiku's design facts* were exact in 49/60 main and 35/60 opaque. Its other errors were permissive initial facts the planner exploited (§A.5). Only 2 of 474 Claude translations (Opus, long) needed repair.
+* *Haiku's design facts* were exact in 49/60 main and 35/60 opaque. Its other errors were permissive initial facts the planner exploited (§A.5). Only 2 of 474 Claude translations needed repair.
 * *Llama* left out about a third of the gold initial facts (mean recall 0.64 on the main set; design facts exact in 22/60; 8 never parsed), mostly the static successor and ordering facts of clocks and tokens. With facts missing the violation can become unreachable: the planner proved "no violation" on all 29 missed flawed designs and on 16 of the 20 fixed ones.
 
 **Cost.** Over the 150 instances all Claude models ran, Translate is cheaper on average for each model (US$ per instance: Haiku 0.053 vs

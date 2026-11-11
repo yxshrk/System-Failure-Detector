@@ -31,7 +31,7 @@ Llama Direct finds 33 of 55 common base-tier bugs but only 6 of 40 rarer ones, t
 (bugs and controls): a checker timeout or Z3 *unknown* (*undecided*) for Claude; no verdict, no accepted spec, or (Qwen's 4) the endpoint's 15-minute limit for open-weight models.
 :::
 
-*SP3.* Of the specifications whose soundness check completed, these were *sound* (the reference satisfies them): 169/172 (Haiku), 173/173 (Sonnet), 165/165 (Opus) and 169/170 (Qwen). *Discriminating* (the mutant violates them) is the valid-witness rate above. Haiku's three unsound specs are model errors (§A.2–A.3): the docstring fixes the answer on each violating reference input. Llama differs in kind: only 104 of its 174 specs passed the checker (70 runs failed after two repairs, 46 of them calling the unsupported `isinstance`), and only 45 of the 103 with a soundness verdict are sound.
+*SP3 (translation quality).* Of the specifications whose soundness check completed, these were *sound* (the reference satisfies them): 169/172 (Haiku), 173/173 (Sonnet), 165/165 (Opus) and 169/170 (Qwen). *Discriminating* (the mutant violates them) is the valid-witness rate above. Haiku's three unsound specs are model errors (§A.2–A.3): the docstring fixes the answer on each violating reference input. Llama differs in kind: only 104 of its 174 specs passed the checker (70 runs failed after two repairs, 46 of them calling the unsupported `isinstance`), and only 45 of the 103 with a soundness verdict are sound.
 
 **Translate failures.** For the Claude models every one comes from the specification or the tool, never the search: two postconditions copied the code's bug (§A.2), one spec raised an exception and produced a fabricated witness (§A.3), and eight checks were undecided (three timeouts, five Z3 *unknown*s).
 
@@ -68,7 +68,7 @@ design. Translate was *undecided* (not FA) on inventory's fixed design at size 8
 **SP3 (translation quality).**
 
 * *Sonnet and Opus* reproduced the gold initial state exactly in all 90 main and stress problems, and *Qwen* in all 60 main ones. On the opaque set the 5.5 models omitted one fact in 8/60, which no action's precondition uses.
-* *Haiku's design facts* were exact in 49/60 main and 35/60 opaque. Its other errors were permissive initial facts the planner exploited (§A.5). Only 2 of 474 Claude translations (Opus, long) needed repair.
+* *Haiku's design facts* were exact in 49/60 main and 35/60 opaque. Its other errors were permissive initial facts the planner exploited (§A.5). Only 2 of 474 Claude translations needed repair.
 * *Llama* left out about a third of the gold initial facts (mean recall 0.64 on the main set; design facts exact in 22/60; 8 never parsed), mostly the static successor and ordering facts of clocks and tokens. With facts missing the violation can become unreachable: the planner proved "no violation" on all 29 missed flawed designs and on 16 of the 20 fixed ones.
 
 **Cost.** Over the 150 instances all Claude models ran, Translate is cheaper on average for each model (US$ per instance: Haiku 0.053 vs
