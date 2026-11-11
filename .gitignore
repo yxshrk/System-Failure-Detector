@@ -224,3 +224,6 @@ results/logs/
 
 # report build intermediate (build.sh renders it, then prints it to report.pdf)
 report/report.html
+
+# Office lock files
+~$*

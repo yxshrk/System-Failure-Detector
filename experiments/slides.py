@@ -1,0 +1,252 @@
+"""Presentation figures (16:9, large type) built from the scored results.
+
+    python -m experiments.slides      -> results/figures/slides/*.png
+
+Separate from analyze.py so the report figures stay untouched.
+"""
+
+from __future__ import annotations
+
+import json
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from matplotlib.colors import LinearSegmentedColormap
+
+from experiments.analyze import (ARM_LABEL, GRID, INK, INK2, MODEL_LABEL, MODEL_ORDER, ROOT, SURFACE, WEAK_MODEL,
+                                 load)
+
+OUT = ROOT / "results" / "figures" / "slides"
+SIZE = (13.33, 7.5)  # 16:9 at 150 dpi -> 2000 x 1125
+DPI = 150
+BLUE, ORANGE, GREEN, PURPLE, MUTED = "#2a78d6", "#eb6834", "#1baf7a", "#6250d6", "#b5b3ad"
+BUCKETS = ["common", "uncommon", "rare", "very_rare"]
+BUCKET_LABEL = ["common\n(≥10% of inputs)", "uncommon\n(1–10%)", "rare\n(0.1–1%)", "very rare\n(<0.1%)"]
+
+
+def style(ax, grid="y"):
+    ax.set_facecolor(SURFACE)
+    for side in ("top", "right"):
+        ax.spines[side].set_visible(False)
+    for side in ("left", "bottom"):
+        ax.spines[side].set_color(GRID)
+    ax.tick_params(colors=INK2, labelsize=15, length=0)
+    if grid:
+        ax.grid(axis=grid, color=GRID, linewidth=1)
+    ax.set_axisbelow(True)
+
+
+def title(fig, head, sub=None):
+    fig.text(0.04, 0.93, head, fontsize=28, color=INK, weight="bold", ha="left", va="top")
+    if sub:
+        fig.text(0.04, 0.855, sub, fontsize=17, color=INK2, ha="left", va="top")
+
+
+def save(fig, name):
+    fig.savefig(OUT / name, dpi=DPI, facecolor=SURFACE)
+    plt.close(fig)
+    print("wrote", OUT / name)
+
+
+def sp2_frame() -> pd.DataFrame:
+    inst = {i["id"]: i for i in json.loads((ROOT / "data" / "sp2" / "instances.json").read_text())["instances"]}
+    d = load("sp2")
+    d = d[d.instance.isin(inst)].copy()
+    d["set"] = d.instance.map(lambda x: inst[x].get("set", "main"))
+    return d
+
+
+# ---------------------------------------------------------------------------
+# 1. Scoreboard: every model x arm against the four headline numbers
+# ---------------------------------------------------------------------------
+
+def scoreboard(sp1: pd.DataFrame, sp2: pd.DataFrame):
+    cols = [("SP1 bugs\nfound", "found"), ("SP1 false\nalarms", "alarm"),
+            ("SP2 traces\nfound", "found"), ("SP2 false\nalarms", "alarm"), ("SP2 false alarms\n(names hidden)", "alarm")]
+    rows, cells = [], []
+    for model in MODEL_ORDER:
+        for arm in ("direct", "translate"):
+            a, m, o = sp1[(sp1.model == model) & (sp1.arm == arm)], sp2[(sp2.model == model) & (sp2.arm == arm)], None
+            main, opaque = m[m.set == "main"], m[m.set == "opaque"]
+            bugs, ctrl = a[a.kind == "bug"], a[a.kind == "control"]
+            viol, fixed, ofixed = main[main.violation == True], main[main.violation == False], opaque[opaque.violation == False]  # noqa: E712
+            counts = [((bugs.outcome == "valid_witness").sum(), len(bugs)),
+                      ((ctrl.outcome == "false_alarm").sum(), len(ctrl)),
+                      ((viol.outcome == "valid_trace").sum(), len(viol)),
+                      ((fixed.outcome == "false_alarm").sum(), len(fixed)),
+                      ((ofixed.outcome == "false_alarm").sum(), len(ofixed)) if len(ofixed) else o]
+            rows.append(f"{MODEL_LABEL[model]} · {ARM_LABEL[arm]}")
+            cells.append(counts)
+
+    # One sequential hue for "how wrong": share of the column that went badly (missed bugs or false alarms).
+    cmap = LinearSegmentedColormap.from_list("bad", ["#f4f3f0", "#f8c9b3", ORANGE, "#a53d12"])
+    fig = plt.figure(figsize=SIZE, facecolor=SURFACE)
+    title(fig, "Frontier models are near-perfect; the 8B model is not",
+          "Darker = more wrong: bugs missed, or false alarms raised on correct code")
+    ax = fig.add_axes([0.25, 0.03, 0.72, 0.66])
+    ax.set_facecolor(SURFACE)
+    for r, counts in enumerate(cells):
+        for c, cnt in enumerate(counts):
+            if cnt is None:
+                ax.add_patch(plt.Rectangle((c + 0.04, r + 0.06), 0.92, 0.88, color="#ebeae6", linewidth=0))
+                ax.text(c + 0.5, r + 0.5, "not run", ha="center", va="center", fontsize=14, color=INK2)
+                continue
+            k, n = cnt
+            bad = (n - k) / n if cols[c][1] == "found" else k / n
+            ax.add_patch(plt.Rectangle((c + 0.04, r + 0.06), 0.92, 0.88, color=cmap(bad), linewidth=0))
+            ax.text(c + 0.5, r + 0.5, f"{k}/{n}", ha="center", va="center", fontsize=17,
+                    color="white" if bad > 0.45 else INK, weight="bold" if bad > 0.1 else "normal")
+    ax.set_xlim(0, len(cols))
+    ax.set_ylim(len(rows), 0)
+    ax.set_xticks(np.arange(len(cols)) + 0.5, [c[0] for c in cols], fontsize=15, color=INK)
+    ax.xaxis.tick_top()
+    ax.set_yticks(np.arange(len(rows)) + 0.5, rows, fontsize=15)
+    for lbl, row in zip(ax.get_yticklabels(), rows):
+        lbl.set_color(INK if row.startswith(MODEL_LABEL[WEAK_MODEL]) else INK2)
+        if row.startswith(MODEL_LABEL[WEAK_MODEL]):
+            lbl.set_weight("bold")
+    ax.tick_params(length=0, pad=8)
+    for side in ax.spines.values():
+        side.set_visible(False)
+    for y in range(2, len(rows), 2):
+        ax.axhline(y, color=SURFACE, linewidth=5)
+    save(fig, "scoreboard.png")
+
+
+# ---------------------------------------------------------------------------
+# 2. Rarity: random testing vs. the LLM arms, per trigger-rarity bucket
+# ---------------------------------------------------------------------------
+
+def rarity(sp1: pd.DataFrame):
+    inst = pd.DataFrame(json.loads((ROOT / "data" / "sp1" / "instances.json").read_text())["instances"])
+    bug_inst = inst[(inst.kind == "bug") & inst.bucket.isin(BUCKETS)]
+    strong = sp1[(sp1.kind == "bug") & (sp1.model != WEAK_MODEL)]
+    series = [(f"random testing, {n:,} inputs", [100 * (1 - (1 - bug_inst[bug_inst.bucket == b].rarity) ** n).mean()
+                                                 for b in BUCKETS], col) for n, col in ((100, MUTED), (1000, INK2))]
+    for arm, col in (("direct", BLUE), ("translate", ORANGE)):
+        d = strong[strong.arm == arm]
+        series.append((f"LLM {ARM_LABEL[arm]}", [100 * (d[d.bucket == b].outcome == "valid_witness").mean() for b in BUCKETS], col))
+
+    fig = plt.figure(figsize=SIZE, facecolor=SURFACE)
+    title(fig, "Random testing misses rare bugs. The LLMs do not.",
+          "Bugs with a valid failing input, by how rare the failing inputs are "
+          "(LLMs: Haiku, Sonnet, Opus, Qwen pooled)")
+    ax = fig.add_axes([0.07, 0.17, 0.90, 0.60])
+    style(ax)
+    w = 0.2
+    x = np.arange(len(BUCKETS))
+    for i, (label, ys, col) in enumerate(series):
+        xs = x + (i - 1.5) * w
+        ax.bar(xs, ys, width=w - 0.025, color=col, label=label, linewidth=0)
+        for xx, y in zip(xs, ys):
+            ax.text(xx, y + 1.5, f"{y:.0f}%", ha="center", va="bottom", fontsize=13, color=INK2)
+    ax.set_xticks(x, BUCKET_LABEL, fontsize=16, color=INK)
+    ax.set_ylim(0, 112)
+    ax.set_yticks([0, 25, 50, 75, 100], ["0%", "25%", "50%", "75%", "100%"])
+    ax.legend(frameon=False, fontsize=15, ncol=4, loc="upper center", bbox_to_anchor=(0.5, -0.13), handlelength=1.2)
+    save(fig, "rarity.png")
+
+
+# ---------------------------------------------------------------------------
+# 3. False alarms on correct (fixed) designs: Direct -> Translate slope chart
+# ---------------------------------------------------------------------------
+
+def false_alarms(sp2: pd.DataFrame):
+    fig = plt.figure(figsize=SIZE, facecolor=SURFACE)
+    title(fig, "Translating to a formal model cuts false alarms",
+          "False alarms on the 20 correct (fixed) designs, Direct vs. Translate")
+    panels = (("main", "Readable names"), ("opaque", "Mechanism names hidden"))
+    colors = {"haiku": BLUE, WEAK_MODEL: ORANGE}
+    for p, (setname, ptitle) in enumerate(panels):
+        ax = fig.add_axes([0.17 + p * 0.47, 0.11, 0.30, 0.62])
+        style(ax)
+        d = sp2[(sp2.set == setname) & (sp2.violation == False)]  # noqa: E712
+        zero_group = []
+        for model in MODEL_ORDER:
+            dm = d[d.model == model]
+            if dm.empty:
+                continue
+            ys = [int((dm[dm.arm == arm].outcome == "false_alarm").sum()) for arm in ("direct", "translate")]
+            if model not in colors:
+                zero_group.append((MODEL_LABEL[model], ys))
+                continue
+            col = colors[model]
+            ls = "--" if model == WEAK_MODEL else "-"
+            ax.plot([0, 1], ys, color=col, linewidth=3, linestyle=ls, marker="o", markersize=12,
+                    markeredgecolor=SURFACE, markeredgewidth=2.5, zorder=3)
+            name = MODEL_LABEL[model]
+            ax.text(-0.06, ys[0], f"{name}  {ys[0]}", ha="right", va="center", fontsize=15, color=INK)
+            ax.text(1.06, ys[1], f"{ys[1]}", ha="left", va="center", fontsize=15, color=INK, weight="bold")
+        zs = [z for z in zero_group if z[1] == [0, 0]]
+        if zs:
+            ax.plot([0, 1], [0, 0], color=GREEN, linewidth=3, marker="o", markersize=12,
+                    markeredgecolor=SURFACE, markeredgewidth=2.5, zorder=3)
+            names = ", ".join(n.replace(" 5.5", "").replace(" 3.8 27B", "") for n, _ in zs)
+            ax.text(0.5, 0.7, f"{names}: 0 → 0", ha="center", va="bottom", fontsize=15, color=INK)
+        ax.set_xlim(-0.05, 1.12)
+        ax.set_ylim(-1, 20.5)
+        ax.set_xticks([0, 1], ["Direct", "Translate"], fontsize=17, color=INK)
+        ax.set_yticks([])
+        ax.spines["left"].set_visible(False)
+        ax.grid(False)
+        for xv in (0, 1):
+            ax.axvline(xv, color=GRID, linewidth=1, zorder=1)
+        ax.set_title(ptitle, fontsize=18, color=INK, loc="center", pad=14)
+    fig.text(0.04, 0.025, "Dashed: Llama's drop is mostly because its formal models were unusable, "
+             "so it gave no answer, not because it reasoned better.", fontsize=13, color=INK2, style="italic")
+    save(fig, "false_alarms.png")
+
+
+# ---------------------------------------------------------------------------
+# 4. Where translation breaks: certifying the symmetric inventory design
+# ---------------------------------------------------------------------------
+
+def inventory_blowup():
+    inst = [i for i in json.loads((ROOT / "data" / "sp2" / "instances.json").read_text())["instances"]
+            if i["variant"] == "fixed" and i.get("set", "main") in ("main", "stress")]
+    fig = plt.figure(figsize=SIZE, facecolor=SURFACE)
+    title(fig, "Proving a design safe can explode",
+          "States the planner (GBFS + h_FF) expands to prove a correct design has no failure trace")
+    ax = fig.add_axes([0.10, 0.13, 0.84, 0.62])
+    style(ax)
+    for fam in ("payments", "lock", "queue", "cache", "inventory"):
+        d = sorted([i for i in inst if i["family"] == fam], key=lambda i: i["size"])
+        xs = [i["size"] for i in d]
+        ys = [max(i["gold"]["gbfs"]["expanded"], 1) for i in d]
+        hot = fam == "inventory"
+        ax.plot(xs, ys, color=ORANGE if hot else MUTED, linewidth=4 if hot else 2.2, marker="o",
+                markersize=11 if hot else 8, markeredgecolor=SURFACE, markeredgewidth=2, zorder=3 if hot else 2)
+        if fam == "lock":
+            continue
+        ax.text(xs[-1] + 0.15, ys[-1], "lock, cache" if fam == "cache" else fam, fontsize=15, color=INK if hot else INK2, va="center",
+                weight="bold" if hot else "normal")
+        if hot:
+            for i, x, y in zip(d, xs, ys):
+                lim = i["gold"]["gbfs"]["status"] == "limit"
+                if x >= 4:
+                    txt = "search limit hit,\nno proof" if lim else f"{y:,.0f} states"
+                    ax.annotate(txt, (x, y), xytext=(0, 16), textcoords="offset points", ha="center",
+                                va="bottom", fontsize=14, color=INK)
+    ax.set_yscale("log")
+    ax.set_ylim(1, 3e7)
+    ax.set_xlim(0.6, 9)
+    ax.set_xlabel("design size", fontsize=16, color=INK2)
+    ax.set_ylabel("states expanded (log scale)", fontsize=16, color=INK2)
+    ax.minorticks_off()
+    ax.set_xticks([1, 2, 3, 4, 6, 8])
+    ax.set_yticks([1, 10, 100, 1e3, 1e4, 1e5, 1e6, 1e7], ["1", "10", "100", "1k", "10k", "100k", "1M", "10M"])
+    save(fig, "inventory_blowup.png")
+
+
+def main():
+    OUT.mkdir(parents=True, exist_ok=True)
+    sp1, sp2 = load("sp1"), sp2_frame()
+    scoreboard(sp1, sp2)
+    rarity(sp1)
+    false_alarms(sp2)
+    inventory_blowup()
+
+
+if __name__ == "__main__":
+    main()
