@@ -34,7 +34,7 @@ inputs catches a bug of rarity $r$ with probability $1-(1-r)^N$: 100 inputs catc
 
 ![](../results/figures/sp1_rarity.png){width=48%} ![](../results/figures/sp2_length.png){width=48%}
 
-*Fig. 1 (left):* SP1 base tier, valid witnesses vs. trigger rarity (Llama dashed) against random testing. *Fig. 2 (right):* SP2 valid traces vs. shortest trace length (main + stress).
+*Fig. 1 (left):* SP1 base tier, valid witnesses vs. trigger rarity (Llama dashed) against random testing. *Fig. 2 (right):* SP2 valid traces vs. shortest trace length (main + stress; inventory sizes 6 and 8: best known).
 
 ## 5.2 SP2: designs (60 main + 30 stress + 60 opaque + 12 long)
 
@@ -70,7 +70,7 @@ design. Translate was *undecided* (not FA) on inventory's fixed design at size 8
 
 ## 5.3 The classical tools
 
-* *Worst case vs. observed.* PlanSAT is PSPACE-complete, but only inventory shows pronounced state explosion (Table 3): its $S{+}1$ interchangeable customers interleave, so reachable states grow 1,500× from size 1 to 4; the other families grow roughly linearly. Trace length is not the driver: queue and inventory at size 8 need 21 and 27 events.
+* *Worst case vs. observed.* PlanSAT is PSPACE-complete, but only inventory shows pronounced state explosion (Table 3): its $S{+}1$ interchangeable customers interleave, so reachable states grow 1,500× from size 1 to 4; the other families grow roughly linearly. Trace length is not the driver: queue and inventory at size 8 have traces of 21 and 27 events.
 * *SATPlan* finds shortest traces in milliseconds for four families. On inventory it takes 1.1 s at size 3, about 2 minutes at size 4, and times out (300 s, the gold-label budget) at sizes 6 and 8.
 * *Certification* takes 9,026 GBFS expansions at inventory size 4 and 2.7 M (176 s) at size 6. From size 8 our 3 M-expansion / 5-minute budget runs out, so Translate on inventory's fixed design is scored *undecided*, not safe (the gold label comes from a conservation invariant).
 
