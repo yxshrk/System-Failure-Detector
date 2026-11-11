@@ -395,7 +395,7 @@ decides, but its spec is still model-written (untested). Sending proprietary cod
 
 * *Yash:* coordination; directed the build of the SP1 and SP2 pipelines; ran all Claude experiments; and drafted the report.
 * *Joshua:* the backend for the SoC open-weight models (`premortem/llm.py`) and the Qwen and Llama runs (§5–6).
-* *Hein:* the SP3 analyses (spec-style classifier, design facts vs. outcomes) and the precise statements of both formulations and their limits (§2, §6).
+* *Hein:* the SP3 analyses (spec-style classifier, design facts vs. outcomes); the precise statements of both formulations and their limits (§2, §6); and the final clarity review (summary, definitions, statistical claims).
 
 **Use of AI tools.** We used Claude Code (Anthropic) to execute our proposal design and perform the experiments in accordance with our specifications. We then vetted the outputs and refined our preliminary analysis with AI assistance, ultimately reviewing and making the final edits and modifications ourselves to produce our final submission.
 
