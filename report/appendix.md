@@ -44,3 +44,30 @@ skipping the visibility timeout.
 idempotency lookup because the record is written only after a charge):
 `send o1 a0 t0` → `accept-new-racy o1 a0` → `tick o1 a0 t0 t1` → `time-out-and-retry o1 a0 a1 t1` →
 `send o1 a1 t0` → `accept-new-racy o1 a1` → `charge o1 a1` → `charge-again o1 a0`.
+
+**A.7 A design document as the LLM sees it** (`payments-subtle-1`):
+
+> Checkout payment flow (design doc)
+>
+> When a customer places order o1, the checkout service (the client) sends a charge request to an
+> external payment provider and waits for the reply. The network between them is unreliable: a request
+> or a response can be lost, and messages can be delayed arbitrarily, so a request may still be in
+> transit after the client has stopped waiting for it. The provider serves requests concurrently on
+> several worker threads, in whatever order they arrive, so the steps of different requests (looking up
+> records, charging, writing records) can interleave.
+>
+> Each request is one attempt (a0 for the first try). After sending an attempt the client starts a
+> timer at t0; every clock tick advances it by one, and when it reaches t1 (1 tick after sending)
+> without a response the client gives up on that attempt and retries with the next attempt number
+> (a1, then a2). At most two retries are made. If a success response arrives while the client is still
+> waiting, the order is confirmed and no further attempts are made.
+>
+> Charging and duplicate protection. Every attempt for an order carries the same idempotency key
+> (derived from the order number). When a request arrives, the provider looks the key up in its
+> idempotency table. If a record is found, the provider does not charge again; it just returns the
+> stored success response. If no record is found, the provider approves the request, charges the card,
+> and, once the charge has succeeded, writes the record for the key together with the response.
+>
+> Initially the client is about to send attempt a0 for order o1; nothing has been charged and the provider has no record for o1.
+
+**A.8 The inventory invariant behind the fixed label from size 8** (proved by hand, because search runs out of budget there). In every reachable state, stock + holding + sold = $S$. Initially stock = $S$; `reserve-atomic` moves a unit from stock to holding, `expire-hold` moves it back, `pay` moves it to sold, and the other actions change no count or are disabled by the fixed design facts; each customer leaves browsing once, so no count rises twice. Hence sold ≤ $S$ < $S + 1$.
