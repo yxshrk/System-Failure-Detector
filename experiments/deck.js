@@ -98,8 +98,8 @@ const B = t => ({ text: t, options: { bold: true } });
 // 4. The two arms (§1, §4 scoring)
 {
   const s = base(1, "Direct vs Translate");
-  s.addImage({ path: `${D}/method.png`, x: 0.375, y: 1.05, w: 9.25, h: 3.956, altText: "Direct: the LLM finds the failure itself. Translate: the LLM writes the problem formally as a specification and a solver searches, with errors fed back for repair. Either failing case is run on the real code or design." });
-  s.addNotes("We compare two ways of using the AI, which we call arms. Direct: the AI finds the failure itself. Translate: the AI writes the problem formally, a solver searches, and errors go back for repair. Either way, we run the answer on the real code or design, and it counts only if it fails.");
+  s.addImage({ path: `${D}/method.png`, x: 0.375, y: 1.1, w: 9.25, h: 9.25 * 560 / 1520, altText: "Direct: the LLM finds the failure itself. Translate: the LLM writes the problem formally as a specification and a solver searches. Either failing case is run on the real code or design." });
+  s.addNotes("We compare two ways of using the AI, which we call arms. Direct: the AI finds the failure itself. Translate: the AI writes the problem down formally, and a solver then searches for the failure. Either way, we run the answer on the real code or design, and it counts only if it fails.");
 }
 
 // 5. Research questions (§1)

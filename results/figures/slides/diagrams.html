@@ -66,7 +66,7 @@
 <!-- ============================================================= -->
 <figure>
 <div class="frame">
-<svg id="method" viewBox="40 165 1520 650" role="img" aria-label="Two pipelines. Direct: the LLM reads the code or design and outputs a failing case. Translate: the LLM writes a formal spec, a solver searches for the failing case, and solver errors are fed back for repair. Either failing case is run on the real code or design: it either really fails or was made up.">
+<svg id="method" viewBox="40 165 1520 560" role="img" aria-label="Two pipelines. Direct: the LLM reads the code or design and outputs a failing case. Translate: the LLM writes a formal spec, and a solver searches for the failing case. Either failing case is run on the real code or design: it either really fails or was made up.">
   <defs>
     <marker id="a-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#52514e"/></marker>
     <marker id="a-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#2a78d6"/></marker>
@@ -114,9 +114,6 @@
   <path d="M1240 645 H1345 V545" fill="none" stroke="#eb6834" stroke-width="3" marker-end="url(#a-orange)"/>
   <text x="1355" y="610" font-size="20">failing case</text>
 
-  <!-- repair loop -->
-  <path d="M1115 705 V772 H505 V710" fill="none" stroke="#eb6834" stroke-width="2.5" stroke-dasharray="9 7" marker-end="url(#a-orange)"/>
-  <text x="810" y="800" font-size="19" text-anchor="middle">parse and solver errors fed back for repair</text>
 
   <!-- gold check -->
   <rect x="1220" y="370" width="320" height="170" rx="14" fill="#fff" stroke="#0b0b0b" stroke-width="2.5"/>

@@ -71,7 +71,7 @@ Two kinds of review. For a function, the AI must find an input that breaks it: F
 
 *Starts at 1:18 · 54 words · On screen: the diagram, Direct along the top and Translate along the bottom, both into the check on the right.*
 
-We compare two ways of using the AI, which we call arms. Direct: the AI finds the failure itself. Translate: the AI writes the problem formally, a solver searches, and errors go back for repair. Either way, we run the answer on the real code or design, and it counts only if it fails.
+We compare two ways of using the AI, which we call arms. Direct: the AI finds the failure itself. Translate: the AI writes the problem down formally, and a solver then searches for the failure. Either way, we run the answer on the real code or design, and it counts only if it fails.
 
 ### Slide 5 · Two research questions, and one check
 
