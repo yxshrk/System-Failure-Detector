@@ -116,10 +116,10 @@ const B = t => ({ text: t, options: { bold: true } });
 
 // 4. The two arms (§1, §4 scoring)
 {
-  const s = base(1, "Direct: the LLM searches. Translate: a solver searches", "Two arms, same input, same exact scoring. The only difference is who searches for the failure.");
-  s.addImage({ path: `${D}/method.png`, x: 0.908, y: 1.3, w: 8.185, h: 3.5, altText: "Direct: the LLM searches for the failure itself. Translate: the LLM writes the problem formally as a specification and a solver searches, with errors fed back for repair. Both witnesses are replayed on the reference." });
+  const s = base(1, "Direct: the LLM answers itself. Translate: a solver searches", "Two arms, same input, same exact scoring. The only difference is who looks for the failure.");
+  s.addImage({ path: `${D}/method.png`, x: 0.908, y: 1.3, w: 8.185, h: 3.5, altText: "Direct: the LLM finds the failure itself. Translate: the LLM writes the problem formally as a specification and a solver searches, with errors fed back for repair. Both witnesses are replayed on the reference." });
   takeaway(s, "Both arms are scored the same way: a witness counts only if it replays on the gold reference.");
-  s.addNotes("We find witnesses in two ways, which we call arms. Direct: the LLM searches for the failure itself. Translate: the LLM writes the problem formally as a specification, a solver searches, and errors go back for repair. Both arms are scored the same way: a witness counts only if it replays on the gold reference.");
+  s.addNotes("We find witnesses in two ways, which we call arms. Direct: the LLM finds the failure itself. Translate: the LLM writes the problem formally as a specification, a solver searches, and errors go back for repair. Both arms are scored the same way: a witness counts only if it replays on the gold reference.");
 }
 
 // 5. Research questions (§1)
