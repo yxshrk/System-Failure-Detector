@@ -92,7 +92,7 @@ Here is one bug through both arms. One mutated constant, 400 to 399. Only 7 of 3
 
 *Starts at 2:26 · 78 words · On screen: the table on the left; the diagram on the right from top to bottom, ending at Satisfiable.*
 
-How does Translate turn this into a solver problem? SP1 is constraint satisfaction: month and year are variables with finite domains, and the constraint is that the code's result breaks the requirement. Symbolic execution turns the code into one formula; the LLM writes the requirement from the docstring, and Z3 searches for an input where both hold. Here it finds February 2400. Underneath is entailment: the code meets its requirement exactly when code and not requirement is unsatisfiable.
+How does Translate turn this into a solver problem? For SP1, we turn it into a constraint as you can see on the left. In practice, this is what it's going to look like: we have a buggy line of code. Our symbolic execution turns the code into one formula and then feed it to our solver Z3; the LLM also writes a similar requirement but from the docstring that correctly describes the desired behavior rather than from the buggy code. Z3 then solves the CSP which is where the condition is that these two disagree. This exact instance is then verified by the actual correct code.  
 
 *Reading note: say "code and not requirement" as one phrase, then pause briefly before "is unsatisfiable".*
 

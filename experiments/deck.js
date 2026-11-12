@@ -154,16 +154,11 @@ const B = t => ({ text: t, options: { bold: true } });
   table(s, [
     [hcell(""), hcell("In general"), hcell("In the leap-year example")],
     [lab("Variables"), "the function's inputs", "month, year"],
-    [lab("Domains"), "the stated input ranges", "1 ≤ month ≤ 12, 1 ≤ year ≤ 3000 (36,000 inputs)"],
-    [lab("Constraint"), "the code's result breaks the requirement", "result = code(month, year) and not post(month, year, result)"],
-  ], { x: X, y: 1.3, w: 4.8, colW: [0.95, 1.6, 2.25], rowH: [0.3, 0.3, 0.46, 0.62], fontSize: 10.5 });
-  bullets(s, [
-    "Bounded symbolic execution turns the code into one formula covering every path, with loops unrolled k times",
-    "A solution is an input on which the code breaks its requirement. Here: month = 2, year = 2400, one of 7",
-    "No solution means no such input exists within the bounds",
-  ], { x: X, y: 3.15, w: 4.8, h: 1.6, fontSize: 12, paraSpaceAfter: 6 });
-  T(s, "How Translate builds and solves the problem", { x: 5.425, y: 1.28, w: 4.2, h: 0.2, fontSize: 10, bold: true, color: INK2 });
-  s.addImage({ path: `${D}/sp1_formulation.png`, x: 5.425, y: 1.5, w: 4.2, h: 3.22, altText: "SP1 on the leap-year bug: symbolic execution turns the code into one formula, the LLM writes the requirement from the docstring, and Z3 searches for an input where the code's result breaks it. Satisfiable: month 2, year 2400, re-run in Python. Unsatisfiable: no failing input within the bounds." });
+    [lab("Domains"), "the stated input ranges", { text: [{ text: "1 ≤ month ≤ 12", options: { breakLine: true } }, { text: "1 ≤ year ≤ 3000", options: { breakLine: true } }, { text: "(36,000 inputs)" }] }],
+    [lab("Constraint"), "the code's result breaks the requirement", { text: [{ text: "result = code(month, year)", options: { breakLine: true } }, { text: "and not", options: { breakLine: true } }, { text: "post(month, year, result)" }] }],
+  ], { x: X, y: 1.3, w: 4.7, colW: [1.0, 1.4, 2.3], rowH: [0.4, 0.62, 1.04, 1.04], fontSize: 12 });
+  T(s, "How Translate builds and solves the problem", { x: 5.325, y: 1.28, w: 4.3, h: 0.2, fontSize: 10, bold: true, color: INK2 });
+  s.addImage({ path: `${D}/sp1_formulation.png`, x: 5.325, y: 1.5, w: 4.3, h: 3.297, altText: "SP1 on the leap-year bug: symbolic execution turns the code into one formula, the LLM writes the requirement from the docstring, and Z3 searches for an input where the code's result breaks it. Satisfiable: month 2, year 2400, re-run in Python. Unsatisfiable: no failing input within the bounds." });
   takeaway(s, [{ text: "The code meets its requirement (" }, B("code ⊨ requirement"), { text: ") exactly when " }, B("code ∧ ¬requirement"), { text: " is unsatisfiable, so any solution is a failure witness." }]);
   s.addNotes("How does Translate turn this into a solver problem? SP1 is constraint satisfaction: month and year are variables with finite domains, and the constraint is that the code's result breaks the requirement. Symbolic execution turns the code into one formula; the LLM writes the requirement from the docstring, and Z3 searches for an input where both hold. Here it finds February 2400. Underneath is entailment: the code meets its requirement exactly when code and not requirement is unsatisfiable.");
 }
