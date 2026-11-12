@@ -1,6 +1,6 @@
 # Pre-Mortems video script
 
-Read this slide by slide while recording: Joshua presents slides 1 to 6, Hein 7 to 12 and Yash 13 to 18. The words are the deck's checked speaker notes, about 1,398 words, roughly 10:45 at 130 words a minute.
+Read this slide by slide while recording: Joshua presents slides 1 to 6, Hein 7 to 12 and Yash 13 to 18. The words are the deck's checked speaker notes, about 1,372 words, roughly 10:33 at 130 words a minute.
 
 ## Who presents what
 
@@ -10,14 +10,14 @@ Each of you reads six slides, and the handovers come after slides 6 and 12. Swap
 | --- | --- | --- | --- | --- |
 | Joshua | 1 to 6 | Question | 316 | 2:26 |
 | Hein | 7 to 12 | Formulation, Experiment | 427 | 3:17 |
-| Yash | 13 to 18 | Results, Answer | 655 | 5:02 |
-| All three | 18 | | 1,398 | 10:45 |
+| Yash | 13 to 18 | Results, Answer | 629 | 4:50 |
+| All three | 18 | | 1,372 | 10:33 |
 
-Times assume 130 words a minute. At 120 words a minute the total is 11:39, against the 10:00 limit, so keep a steady pace and do not pause long between slides.
+Times assume 130 words a minute. At 120 words a minute the total is 11:26, against the 10:00 limit, so keep a steady pace and do not pause long between slides.
 
 ## If the run-through goes past 9:30
 
-Make these cuts in this order, rather than improvising: each drops a point that is already on screen, so no claim is lost. All six save 80 words, bringing the total to 1,318 words (10:08 at 130 words a minute, 10:59 at 120).
+Make these cuts in this order, rather than improvising: each drops a point that is already on screen, so no claim is lost. All six save 80 words, bringing the total to 1,292 words (9:56 at 130 words a minute, 10:46 at 120).
 
 | Order | Slide | Presenter | Cut | Words saved |
 | --- | --- | --- | --- | --- |
@@ -159,17 +159,17 @@ So what is our answer? One: with a strong model, both arms nearly tie. Two: tran
 
 ### Slide 17 · Trade-offs, and when to use which arm
 
-*Starts at 8:53 · 155 words · On screen: the two cards, then the formula, then the Haiku table.*
+*Starts at 8:53 · 129 words · On screen: the two cards, then the formula, then the Haiku table.*
 
-So which arm should you use? That is a maximum-expected-utility decision, as in the course: weigh what a false alarm costs against what a missed failure costs. Take Haiku. With readable names, Translate raises fewer false alarms, finds more failures and is cheaper to run, so at these estimates it wins whatever an error costs. We also ran the same designs with their revealing names replaced by neutral labels, so a name cannot give the flaw away. With names hidden, Translate finds two fewer failures but raises half the false alarms. On screen, that is 10 fewer false alarms on 20 correct designs, 19 down to 9, and 2 more misses on 40 flawed designs. With equal numbers of each, that is 20 fewer false alarms for 2 more misses, so each extra miss saves ten false alarms. Counting errors only, Translate therefore wins as long as a miss costs less than ten false alarms.
+So which arm should you use? As in the course, this is a maximum-expected-utility choice: pick the arm whose mistakes cost less on average. Take Haiku. With readable names, Translate makes fewer mistakes of both kinds and is cheaper to run, so it wins outright. With names hidden, it's a trade-off. Out of 20 correct designs, Translate raises 9 false alarms instead of 19, so it saves 10. Out of 40 flawed designs, it finds 25 failures instead of 27, so it misses 1 more for every 20. So picture a review of 20 correct and 20 flawed designs: Translate would save ten false alarms but miss one more failure. Ignoring running costs, that makes Translate the better choice unless one missed failure is worse than ten false alarms.
 
 ### Slide 18 · Limitations, and will this change?
 
-*Starts at 10:05 · 88 words · On screen: the two columns, then the Will this change? card.*
+*Starts at 9:53 · 88 words · On screen: the two columns, then the Will this change? card.*
 
 Finally, how far can you trust this answer? Both arms were given the failure mechanisms as named events, so we have not tested a model writing the event model itself. We also chose functions that can be encoded, which favours Translate. Will the answer change? Direct will likely keep improving on small, recognisable problems. But it still cannot prove there is no failure, and for the solvers, search can still take exponential time in the worst case. So the value of translating depends on the model. Thank you.
 
-*End of the video, at about 10:45.*
+*End of the video, at about 10:33.*
 
 ## Before recording
 
