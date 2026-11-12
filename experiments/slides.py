@@ -196,50 +196,58 @@ def false_alarms(sp2: pd.DataFrame):
 # ---------------------------------------------------------------------------
 
 def hardness(sp1: pd.DataFrame, sp2: pd.DataFrame):
+    """Lines are labelled at their ends (no legends), so each line says what it is."""
     fig, (a, b) = plt.subplots(1, 2, figsize=(9.25, 3.45), facecolor=SURFACE)
     for ax in (a, b):
         style(ax)
         ax.set_ylim(0, 108)
-        ax.set_xlim(-0.35, 3.35)
+        ax.set_xlim(-0.3, 4.55)
         ax.set_yticks([0, 25, 50, 75, 100], ["0%", "25%", "50%", "75%", "100%"])
+        ax.spines["bottom"].set_bounds(-0.3, 3.3)
+
+    def end_label(ax, x, y, text, col, dy=0.0, weight="bold"):
+        ax.text(x + 0.14, y + dy, text, color=col, fontsize=9.5, weight=weight, ha="left", va="center")
 
     inst = pd.DataFrame(json.loads((ROOT / "data" / "sp1" / "instances.json").read_text())["instances"])
     bug_inst = inst[(inst.kind == "bug") & inst.bucket.isin(BUCKETS)]
     pooled = sp1[(sp1.kind == "bug") & (sp1.model != WEAK_MODEL)]
-    series = [(f"random testing, {n:,} inputs", [100 * (1 - (1 - bug_inst[bug_inst.bucket == k].rarity) ** n).mean() for k in BUCKETS], col)
+    series = [(f"{n:,} random inputs", [100 * (1 - (1 - bug_inst[bug_inst.bucket == k].rarity) ** n).mean() for k in BUCKETS], col, "normal")
               for n, col in ((100, MUTED), (1000, INK2))]
     for arm in ("direct", "translate"):
         d = pooled[pooled.arm == arm]
-        series.append((f"{ARM_LABEL[arm]}, pooled: Sonnet, Opus, Qwen, Haiku",
-                       [100 * (d[d.bucket == k].outcome == "valid_witness").mean() for k in BUCKETS], ARM_COLOR[arm]))
-    for label, ys, col in series:
+        series.append((ARM_LABEL[arm], [100 * (d[d.bucket == k].outcome == "valid_witness").mean() for k in BUCKETS], ARM_COLOR[arm], "bold"))
+    for label, ys, col, w in series:
         a.plot(range(4), ys, color=col, linewidth=2.4, marker="o", markersize=7,
                markeredgecolor=SURFACE, markeredgewidth=1.5, label=label)
+        dy = {"Direct": 3.0, "Translate": -3.0}.get(label, 0.0)
+        end_label(a, 3, ys[-1], label, col, dy, w)
     a.set_xticks(range(4), ["common", "uncommon", "rare", "very rare"])
+    a.tick_params(axis="x", labelsize=9.5)
     a.set_xlabel("Functions, by how rare the failing input is", fontsize=10, color=INK)
     a.set_ylabel("failures found", fontsize=11, color=INK2)
-    a.legend(frameon=False, fontsize=8.5, loc="lower left")
+    a.set_title("Direct and Translate pool Sonnet, Opus, Qwen and Haiku", fontsize=9, color=INK2, loc="left", pad=6)
 
     inst2 = {i["id"]: i for i in json.loads((ROOT / "data" / "sp2" / "instances.json").read_text())["instances"]}
     v = sp2[(sp2.violation == True) & (sp2.set != "opaque")].copy()  # noqa: E712
     v["shortest"] = v.instance.map(lambda x: inst2[x]["shortest"])
     bins = [(6, 10), (11, 15), (17, 27), (30, 51)]
-    lines = [("Sonnet 5.5 and Opus 5.5 (both arms)", v[v.model.isin(["sonnet", "opus"])], GREEN),
-             ("Haiku 4.5, Direct", v[(v.model == "haiku") & (v.arm == "direct")], BLUE),
-             ("Haiku 4.5, Translate", v[(v.model == "haiku") & (v.arm == "translate")], ORANGE)]
-    for label, d, col in lines:
+    lines = [("Sonnet and Opus,\nboth arms", v[v.model.isin(["sonnet", "opus"])], GREEN, 0.0),
+             ("Haiku, Direct", v[(v.model == "haiku") & (v.arm == "direct")], BLUE, -2.5),
+             ("Haiku, Translate", v[(v.model == "haiku") & (v.arm == "translate")], ORANGE, 2.5)]
+    for label, d, col, dy in lines:
         ys = []
         for lo, hi in bins:
             db = d[(d.shortest >= lo) & (d.shortest <= hi)]
             ys.append(100 * (db.outcome == "valid_trace").mean() if len(db) else np.nan)
         b.plot(range(len(bins)), ys, color=col, linewidth=2.4, marker="o", markersize=7,
                markeredgecolor=SURFACE, markeredgewidth=1.5, label=label)
+        last = max(i for i, y in enumerate(ys) if not np.isnan(y))
+        end_label(b, last, ys[last], label, col, dy)
     b.set_xticks(range(len(bins)), [f"{lo}–{hi}" for lo, hi in bins])
     b.set_xlabel("Designs, by the shortest known failure trace (events)", fontsize=10, color=INK)
     b.set_ylabel("failure traces found", fontsize=11, color=INK2)
-    b.legend(frameon=False, fontsize=9, loc="lower left")
-    b.text(3, 92, "Haiku not run\non 30–51", fontsize=9, color=INK2, ha="center", va="top")
-    fig.tight_layout(w_pad=3)
+    b.set_title("Haiku was not run on traces of 30–51 events", fontsize=9, color=INK2, loc="left", pad=6)
+    fig.tight_layout(w_pad=2)
     save(fig, "hardness_panel.png")
 
 
