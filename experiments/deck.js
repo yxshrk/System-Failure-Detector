@@ -110,7 +110,7 @@ image("method.png", "Direct vs Translate pipeline diagram",
     [lab("\"Failure found\" means"), "Theorem 1: every Z3 answer is an input that breaks the spec",
       "Theorem 2: satisfiable at horizon T iff a T-step trace reaches G; the first such T gives a shortest trace"],
     [lab("\"No failure\" means"), "Theorem 1: none within the input and loop bounds; otherwise \"undecided\"",
-      "Theorem 3: GBFS exhausted every reachable state, so G is unreachable at this size"],
+      "Theorem 3: if GBFS empties its queue without reaching G, G is unreachable at this size"],
     [lab("Worst case"), "Finite CSP: NP-complete. Non-linear integers: Z3 can answer \"unknown\"",
       sup("PlanSAT: PSPACE-complete; each SATPlan call is NP-complete. Up to 2", "218", " states at size 8")],
   ];
@@ -119,7 +119,7 @@ image("method.png", "Direct vs Translate pipeline diagram",
   T(s, [{ text: "h" }, { text: "FF", options: { subscript: true } },
     { text: " only prunes dead ends, which is safe because ignoring deletes only adds behaviour (1.2× to 3.8× fewer states than BFS). Every witness is replayed on the real code or gold problem before it counts." }],
     { x: 0.375, y: 4.55, w: 9.25, h: 0.6, fontSize: 12 });
-  s.addNotes("Why trust the solver? For SP1 we proved the encoding matches Python on every input within the loop bounds, so a Z3 answer is a real failing input, and unsatisfiable means no failure within those bounds. A finite CSP is NP-complete, and with non-linear arithmetic Z3 can answer unknown, which we score as undecided. For SP2, our SATPlan clauses are equivalent to the successor-state axioms, so the first satisfiable horizon gives a shortest failure trace. To certify safety, greedy best-first search visits every reachable state; the FF heuristic only prunes dead ends. Planning is PSPACE-complete, so this is where the tools can run out, as inventory shows later.");
+  s.addNotes("Why trust the solver? For SP1 we proved the encoding matches Python on every input within the loop bounds, so every Z3 answer is an input that breaks the spec, and unsatisfiable means no failure within those bounds. A finite CSP is NP-complete, and with non-linear arithmetic Z3 can answer unknown, which we score as undecided. For SP2, our SATPlan clauses are equivalent to the successor-state axioms, so the first satisfiable horizon gives a shortest failure trace. To certify safety, greedy best-first search runs until its queue is empty; the FF heuristic only prunes dead ends, which is safe. Planning is PSPACE-complete, so this is where the tools can run out, as inventory shows later.");
 }
 
 // 7. Problem instances
