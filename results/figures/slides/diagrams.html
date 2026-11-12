@@ -31,7 +31,7 @@
 <!-- ============================================================= -->
 <figure>
 <div class="frame" style="aspect-ratio: 925 / 320">
-<svg id="two_tasks" viewBox="0 0 925 320" role="img" aria-label="SP1, a function: days_in_feb checks divisibility by 399 instead of 400. Passing criteria: 29 days in a leap year. Fails on 2000, which gets 28 days. SP2, a system design: a payments service retries a charge that times out and records a payment only after charging it. Passing criteria: never charge a card twice. Fails on a retry that charges twice.">
+<svg id="two_tasks" viewBox="0 0 925 320" role="img" aria-label="SP1, a function: days_in_feb checks divisibility by 399 instead of 400; the AI tries to find an input where the output is not as expected. SP2, a system design (simplified): a payments service retries a charge that times out and records a payment only after charging it; the AI tries to find a sequence of events that causes an error.">
   <!-- SP1 card -->
   <rect x="0" y="0" width="452" height="320" rx="14" fill="#f4f3f0"/>
   <text x="24" y="44" font-size="20" font-weight="700">SP1: a function</text>
@@ -43,20 +43,20 @@
     <text x="40" y="176" class="mono">    if year % 4 == 0:   return 29</text>
     <text x="40" y="202" class="mono">    return 28</text>
   </g>
-  <text x="24" y="262" font-size="17"><tspan font-weight="700">Passing criteria:</tspan> 29 days in a leap year</text>
-  <text x="24" y="292" font-size="17" class="muted"><tspan font-weight="700">Fails on:</tspan> 2000 gets 28 days</text>
+  <text x="24" y="262" font-size="18">The AI tries to find an input where</text>
+  <text x="24" y="290" font-size="18">the output is not as expected.</text>
 
   <!-- SP2 card -->
   <rect x="473" y="0" width="452" height="320" rx="14" fill="#f4f3f0"/>
-  <text x="497" y="44" font-size="20" font-weight="700">SP2: a system design</text>
+  <text x="497" y="44" font-size="20" font-weight="700">SP2: a system design <tspan font-weight="400" class="muted">(simplified)</tspan></text>
   <g font-size="18">
     <text x="497" y="96">A payments service retries a charge</text>
     <text x="497" y="124">that times out. It checks for duplicates,</text>
     <text x="497" y="152">but records a payment only after</text>
     <text x="497" y="180">charging it.</text>
   </g>
-  <text x="497" y="262" font-size="17"><tspan font-weight="700">Passing criteria:</tspan> never charge a card twice</text>
-  <text x="497" y="292" font-size="17" class="muted"><tspan font-weight="700">Fails on:</tspan> a retry that charges twice</text>
+  <text x="497" y="262" font-size="18">The AI tries to find a sequence of events</text>
+  <text x="497" y="290" font-size="18">that causes an error.</text>
 </svg>
 </div>
 </figure>
