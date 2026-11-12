@@ -91,7 +91,7 @@ const B = t => ({ text: t, options: { bold: true } });
 // 3. The two sub-problems, one worked example each (§1)
 {
   const s = base(1, "Subproblems");
-  s.addImage({ path: `${D}/two_tasks.png`, x: X, y: 1.0, w: W, h: W * 400 / 925, altText: "SP1, a function: the AI finds month 2, year 2000, and days_in_month returns 28 instead of 29. SP2, a payments design: the AI finds five events in which a timed-out payment is retried, both attempts are approved before either is recorded, and the card is charged twice." });
+  s.addImage({ path: `${D}/two_tasks.png`, x: X, y: 1.1, w: W, h: W * 330 / 925, altText: "SP1, a function: a leap-year check uses 399 instead of 400, and the AI finds that February 2000 gets 28 days instead of 29. SP2, a payments design that retries timed-out charges and records a payment only after charging it: the AI finds a retry that charges the card twice." });
   s.addNotes("Two kinds of review. For a function, the AI must find an input that breaks it: February 2000 gets 28 days, not 29. For a system design, an order of events that breaks it: here, a card charged twice. Either way, we replay it.");
 }
 

@@ -30,40 +30,34 @@
 <!-- Slide 3. The two sub-problems, each as one worked example       -->
 <!-- ============================================================= -->
 <figure>
-<div class="frame" style="aspect-ratio: 925 / 400">
-<svg id="two_tasks" viewBox="0 0 925 400" role="img" aria-label="Two sub-problems, one example each. SP1, a function: days_in_month, whose docstring says February has 29 days in a leap year. The AI finds the input month 2, year 2000; running it returns 28 instead of 29. SP2, a system design: a payments service that must never charge a card twice. The AI finds an order of five events in which a timed-out payment is retried and both attempts are approved before either is recorded; replaying it charges the card twice.">
+<div class="frame" style="aspect-ratio: 925 / 330">
+<svg id="two_tasks" viewBox="0 0 925 330" role="img" aria-label="SP1, a function: days_in_feb checks divisibility by 399 instead of 400; the AI finds year 2000, which gets 28 days instead of 29. SP2, a system design: a payments service retries timed-out charges and records a payment only after charging it; the AI finds a retry that charges the card twice.">
   <!-- SP1 card -->
-  <rect x="0" y="0" width="452" height="400" rx="14" fill="#f4f3f0"/>
-  <text x="24" y="38" font-size="15" font-weight="700" letter-spacing="1.5" class="muted">SP1 · A FUNCTION</text>
-  <text x="24" y="82" font-size="21" class="mono">days_in_month(month, year)</text>
-  <text x="24" y="114" font-size="18" font-style="italic" class="muted">“February has 29 days in a leap year”</text>
-  <text x="24" y="150" font-size="13" font-weight="700" letter-spacing="1.2" class="muted">THE AI FINDS AN INPUT</text>
-  <rect x="24" y="160" width="404" height="56" rx="8" fill="#fff" stroke="#e4e3df" stroke-width="1.5"/>
-  <text x="44" y="196" font-size="21" font-weight="700" class="mono">month = 2, year = 2000</text>
-  <text x="24" y="252" font-size="16" class="muted">One of only 7 failing inputs among 36,000</text>
-
-  <rect x="24" y="318" width="404" height="58" rx="10" fill="#0b0b0b"/>
-  <text x="44" y="353" font-size="17" style="fill:#b5b3ad">▶ run it</text>
-  <text x="408" y="353" font-size="18" font-weight="700" text-anchor="end" style="fill:#fcfcfb">returns 28, should be 29  <tspan style="fill:#ff6b6b">✗</tspan></text>
+  <rect x="0" y="0" width="452" height="330" rx="14" fill="#f4f3f0"/>
+  <text x="24" y="44" font-size="20" font-weight="700">SP1: a function</text>
+  <rect x="24" y="68" width="404" height="150" rx="8" fill="#fff" stroke="#e4e3df" stroke-width="1.5"/>
+  <g font-size="16">
+    <text x="40" y="98" class="mono">def days_in_feb(year):</text>
+    <text x="40" y="124" class="mono">    if year % <tspan font-weight="700">399</tspan> == 0: return 29</text>
+    <text x="40" y="150" class="mono">    if year % 100 == 0: return 28</text>
+    <text x="40" y="176" class="mono">    if year % 4 == 0:   return 29</text>
+    <text x="40" y="202" class="mono">    return 28</text>
+  </g>
+  <rect x="24" y="248" width="404" height="58" rx="10" fill="#0b0b0b"/>
+  <text x="44" y="283" font-size="17" style="fill:#fcfcfb">AI finds: <tspan font-weight="700">2000 gets 28 days, not 29</tspan> <tspan style="fill:#ff6b6b">✗</tspan></text>
 
   <!-- SP2 card -->
-  <rect x="473" y="0" width="452" height="400" rx="14" fill="#f4f3f0"/>
-  <text x="497" y="38" font-size="15" font-weight="700" letter-spacing="1.5" class="muted">SP2 · A SYSTEM DESIGN</text>
-  <text x="497" y="82" font-size="21" font-weight="700">Payments service</text>
-  <text x="497" y="114" font-size="18" font-style="italic" class="muted">“Never charge a card twice”</text>
-  <text x="497" y="150" font-size="13" font-weight="700" letter-spacing="1.2" class="muted">THE AI FINDS AN ORDER OF EVENTS</text>
-  <rect x="497" y="160" width="404" height="140" rx="8" fill="#fff" stroke="#e4e3df" stroke-width="1.5"/>
-  <g font-size="16">
-    <text x="513" y="186"><tspan font-weight="700">1</tspan><tspan x="537">Customer pays; charge request sent</tspan></text>
-    <text x="513" y="212"><tspan font-weight="700">2</tspan><tspan x="537">Approved: no record of it yet</tspan></text>
-    <text x="513" y="238"><tspan font-weight="700">3</tspan><tspan x="537">Timer runs out, so the system retries</tspan></text>
-    <text x="513" y="264"><tspan font-weight="700">4</tspan><tspan x="537">Retry approved too: still no record</tspan></text>
-    <text x="513" y="290"><tspan font-weight="700">5</tspan><tspan x="537">Both attempts charge the card</tspan></text>
+  <rect x="473" y="0" width="452" height="330" rx="14" fill="#f4f3f0"/>
+  <text x="497" y="44" font-size="20" font-weight="700">SP2: a system design</text>
+  <g font-size="18">
+    <text x="497" y="96">A payments service retries a charge</text>
+    <text x="497" y="124">that times out. It checks for duplicates,</text>
+    <text x="497" y="152">but records a payment only after</text>
+    <text x="497" y="180">charging it.</text>
+    <text x="497" y="216">Rule: never charge a card twice.</text>
   </g>
-
-  <rect x="497" y="318" width="404" height="58" rx="10" fill="#0b0b0b"/>
-  <text x="517" y="353" font-size="17" style="fill:#b5b3ad">▶ replay it</text>
-  <text x="881" y="353" font-size="18" font-weight="700" text-anchor="end" style="fill:#fcfcfb">card charged twice  <tspan style="fill:#ff6b6b">✗</tspan></text>
+  <rect x="497" y="248" width="404" height="58" rx="10" fill="#0b0b0b"/>
+  <text x="517" y="283" font-size="17" style="fill:#fcfcfb">AI finds: <tspan font-weight="700">a retry that charges twice</tspan> <tspan style="fill:#ff6b6b">✗</tspan></text>
 </svg>
 </div>
 </figure>
