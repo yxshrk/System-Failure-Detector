@@ -1,6 +1,6 @@
 # Pre-Mortems video script
 
-Read this slide by slide while recording: Joshua presents slides 1 to 5, Hein 6 to 11 and Yash 12 to 17. The words are the deck's checked speaker notes, about 1,347 words, roughly 10:22 at 130 words a minute.
+Read this slide by slide while recording: Joshua presents slides 1 to 5, Hein 6 to 11 and Yash 12 to 17. The words are the deck's checked speaker notes, about 1,375 words, roughly 10:35 at 130 words a minute.
 
 ## Who presents what
 
@@ -8,16 +8,16 @@ Joshua reads five slides and Hein and Yash six each; the handovers come after sl
 
 | Presenter | Slides | Steps | Words | Speaking time |
 | --- | --- | --- | --- | --- |
-| Joshua | 1 to 5 | Question | 273 | 2:06 |
+| Joshua | 1 to 5 | Question | 301 | 2:19 |
 | Hein | 6 to 11 | Formulation, Experiment | 445 | 3:25 |
 | Yash | 12 to 17 | Results, Answer | 629 | 4:50 |
-| All three | 17 | | 1,347 | 10:22 |
+| All three | 17 | | 1,375 | 10:35 |
 
-Times assume 130 words a minute. At 120 words a minute the total is 11:14, against the 10:00 limit, so keep a steady pace and do not pause long between slides.
+Times assume 130 words a minute. At 120 words a minute the total is 11:28, against the 10:00 limit, so keep a steady pace and do not pause long between slides.
 
 ## If the run-through goes past 9:30
 
-Make these cuts in this order, rather than improvising: each drops a point that is already on screen, so no claim is lost. All five save 69 words, bringing the total to 1,278 words (9:50 at 130 words a minute, 10:39 at 120).
+Make these cuts in this order, rather than improvising: each drops a point that is already on screen, so no claim is lost. All five save 69 words, bringing the total to 1,306 words (10:03 at 130 words a minute, 10:53 at 120).
 
 | Order | Slide | Presenter | Cut | Words saved |
 | --- | --- | --- | --- | --- |
@@ -50,33 +50,33 @@ Say these abbreviations, names and numbers the same way across all three parts.
 
 ### Slide 1 · AI Pre-Mortems
 
-*Starts at 0:00 · 55 words · On screen: the title, the two sub-problems (SP1, SP2), and Direct against Translate.*
+*Starts at 0:00 · 51 words · On screen: the title, the two sub-problems (SP1, SP2), and Direct against Translate.*
 
-We're Group 19: Yash, Joshua and Hein. Our project asks: can an AI review code and system designs, and tell us how they will break before they ship? We test two ways of using the AI, Direct and Translate, on two kinds of problem. Our short answer: it depends on how strong the model is.
+We're Group 19, comprising myself, Yash and Colin. Our project asks: can an AI review code and system designs, and tell us how they will break before they ship? We tested two ways of using the AI, Direct and Translate, on two kinds of problems, from Python functions to system designs.
 
 ### Slide 2 · AI code reviews
 
-*Starts at 0:25 · 64 words · On screen: the bullets on the left; point to the timeline as you mention the disclosure.*
+*Starts at 0:24 · 66 words · On screen: the bullets on the left; point to the timeline as you mention the disclosure.*
 
-Here's why this matters. On July 30, 2026, Coinkite, the maker of Coldcard bitcoin wallets, was hit by an attack that stole over a hundred million dollars in bitcoin. In its own investigation, Coinkite said its AI-assisted security reviews had failed to flag the bug beforehand. So if we use AI to review code, can we trust it to find the failures that matter?
+So this is what motivated this project. A while back, Coinkite, the maker of Coldcard bitcoin wallets, was hit by an attack that stole over 100 million dollars in bitcoin. In their own internal investigation, Coinkite said its AI-assisted security reviews had failed to flag the bug beforehand. From this catastrophe, we can see how important it is to create accurate AI reviews in today's age.
 
 ### Slide 3 · Subproblems
 
-*Starts at 0:55 · 55 words · On screen: the SP1 code on the left, then the SP2 description on the right.*
+*Starts at 0:54 · 54 words · On screen: the SP1 code on the left, then the SP2 description on the right.*
 
-We look at two kinds of problem. For a function, the AI tries to find an input where the output is wrong, like 2000 getting 28 days instead of 29. For a simplified system design, it tries to find a sequence of events that causes an error, like a retry that charges a card twice.
+We broke down the problem into two sub-problems. First, SP1, a function: given Python code, the AI tries to find an input where the output is wrong. For SP2, a system design, the AI tries to find a sequence of events that causes an error, such as a retry that charges a card twice.
 
 ### Slide 4 · Direct vs Translate
 
-*Starts at 1:20 · 63 words · On screen: the diagram, Direct along the top and Translate along the bottom, both into the check on the right.*
+*Starts at 1:19 · 81 words · On screen: the diagram, Direct along the top and Translate along the bottom, both into the check on the right.*
 
-We compare two ways of using the AI, which we call arms. In Direct, the AI reads the code and points out the failure itself. In Translate, the AI writes the problem down formally, and a solver searches for the failure. Either way, we run the failing case on the real code or design, to tell a real failure from a made-up one.
+There were two ways that we compared using the AI. The first way, Direct, we just got the AI to read the code and actually point out the failure itself. In the second way, Translate, the AI actually writes the problem down formally, and then a separate solver searches for this failure. Either way, we run the failing case it found on the real code or design, and this helps us decide whether the failure was real or a made-up one.
 
 ### Slide 5 · Research questions
 
-*Starts at 1:49 · 36 words · On screen: RQ1, RQ2 and SP3, top to bottom.*
+*Starts at 1:56 · 49 words · On screen: RQ1, RQ2 and SP3, top to bottom.*
 
-That gives us three questions. RQ1: which approach finds more real failures, especially the hard-to-find ones? RQ2: which one makes up failures that aren't there? And SP3: for Translate, how accurate are the AI's formal write-ups?
+To help us solve the project's problem, we broke it down into two research questions. Which approach finds more real failures, especially the hard-to-find ones? And which one makes up failures that aren't there? And we added one more sub-problem for Translate: how accurate are the AI's formal write-ups?
 
 *Hand over to Hein.*
 
@@ -84,7 +84,7 @@ That gives us three questions. RQ1: which approach finds more real failures, esp
 
 ### Slide 6 · SP1 as a CSP: a solution is a failing input
 
-*Starts at 2:06 · 96 words · On screen: the table on the left; the diagram on the right from top to bottom, ending at Satisfiable.*
+*Starts at 2:19 · 96 words · On screen: the table on the left; the diagram on the right from top to bottom, ending at Satisfiable.*
 
 How does Translate turn the leap-year bug into a solver problem? Random testing catches it only 18% of the time, since just 7 of 36,000 inputs fail. SP1 is constraint satisfaction: month and year are variables with finite domains, and the constraint is that the code's result breaks the requirement. Symbolic execution turns the code into one formula; the LLM writes the requirement from the docstring, and Z3 searches for an input where both hold. Here it finds February 2400. Underneath is entailment: the code meets its requirement exactly when code and not requirement is unsatisfiable.
 
@@ -92,25 +92,25 @@ How does Translate turn the leap-year bug into a solver problem? Random testing 
 
 ### Slide 7 · SP2 as a planning problem: a plan is a failure trace
 
-*Starts at 2:50 · 82 words · On screen: the table on the left; the eight-step trace on the right, with steps 2 and 6 highlighted.*
+*Starts at 3:03 · 82 words · On screen: the table on the left; the eight-step trace on the right, with steps 2 and 6 highlighted.*
 
 SP2 is classical planning: facts are the state, actions are events including failures, the initial state encodes the design, and the goal is the violation. The planner chooses every event, so a plan is a counterexample: planning as model checking. Here the retry passes the duplicate check because the record is written only after charging. Both arms are given these actions; in Translate the model writes only the initial state. Names like dedup-racy give the mechanism away, so one set replaces them.
 
 ### Slide 8 · What a solver's answer proves, and what it costs
 
-*Starts at 3:28 · 84 words · On screen: the table row by row; do not read every cell.*
+*Starts at 3:41 · 84 words · On screen: the table row by row; do not read every cell.*
 
 Why should we trust a solver's answer? For SP1 we show the encoding matches Python on every input within the loop bounds, and test it on 25 random inputs per function. So every Z3 answer is an input that breaks the spec, and unsatisfiable means no input within those bounds breaks it. For SP2, our SATPlan clauses are equivalent to the successor-state axioms, so the first satisfiable horizon gives a shortest trace. To certify safety, greedy best-first search runs until its queue is empty.
 
 ### Slide 9 · Problem instances, each with a known answer
 
-*Starts at 4:07 · 65 words · On screen: the two cards, functions then designs.*
+*Starts at 4:20 · 65 words · On screen: the two cards, functions then designs.*
 
 Now the experiment, starting with what we tested. SP1 has 174 instances from 37 functions: bugs from common to very rare triggers, plus controls, including equivalent mutants that look buggy but are not. SP2 has five services, each flawed, subtle or fixed; size scales a timer or capacity, so failures get longer. Our solvers supply the ground truth, so what Translate tests is the translation.
 
 ### Slide 10 · Method: five models, the same inputs, exact scoring
 
-*Starts at 4:37 · 54 words · On screen: the tier table, then the four bullets.*
+*Starts at 4:50 · 54 words · On screen: the tier table, then the four bullets.*
 
 Then how we ran it. Five models in three tiers: strong, mid-tier Haiku, and weak Llama. Direct runs with all tools disabled, so it must reason rather than execute. Translate gets up to two repairs. Every answer gets exactly one label, and a tool that runs out of budget is undecided, never no failure.
 
@@ -118,7 +118,7 @@ Then how we ran it. Five models in three tiers: strong, mid-tier Haiku, and weak
 
 ### Slide 11 · Strong models are near-perfect; Haiku and Llama are not
 
-*Starts at 5:02 · 64 words · On screen: the scoreboard, strong models at the top, Haiku in the middle, Llama at the bottom.*
+*Starts at 5:15 · 64 words · On screen: the scoreboard, strong models at the top, Haiku in the middle, Llama at the bottom.*
 
 Now the results, first at a glance. The 5.5 models and Qwen are near-perfect on the sets they ran, with zero false alarms; Qwen's three invalid traces in Direct were format slips, not misreadings. Haiku is fine on functions but struggles on designs, especially false alarms with names hidden. Llama fails everywhere: in Direct it fabricates, with 45 false alarms on 59 correct functions.
 
@@ -128,41 +128,41 @@ Now the results, first at a glance. The 5.5 models and Qwen are near-perfect on 
 
 ### Slide 12 · Strong models find nearly every failure, even the hardest
 
-*Starts at 5:31 · 101 words · On screen: the left panel (functions), then the right panel (designs); each line is labelled at its end.*
+*Starts at 5:44 · 101 words · On screen: the left panel (functions), then the right panel (designs); each line is labelled at its end.*
 
 RQ1 asked whether harder-to-reach failures hurt either arm. On the left, random testing finds fewer bugs as they get rarer, because a rare bug needs a lucky input, yet both arms keep finding them. On the right, longer traces don't hurt Sonnet or Opus, and Haiku stays near 80%. That matters, because a search has to explore more states as traces get longer. But while the traces got several times longer, the answers from Sonnet and Opus grew by only about a quarter. That fits recognising a familiar bug pattern rather than searching, though we did not measure how they reasoned.
 
 ### Slide 13 · Translation cuts the mid-tier model's false alarms
 
-*Starts at 6:18 · 137 words · On screen: Haiku's solid line in each panel, then the two lines under the chart.*
+*Starts at 6:31 · 137 words · On screen: Haiku's solid line in each panel, then the two lines under the chart.*
 
 So the strong models find the failures. RQ2 asks the opposite: which arm invents failures that aren't there? On correct designs, translating cuts Haiku's false alarms from 12 to 7 of 20. Why? In Direct, Haiku recognises a famous failure, like the double charge on a retry, and reports it even when this design prevents it. In Translate, it must first write down this design's facts. Every event is a planning action with preconditions. So if the facts say this design prevents an event, the planner can never use it, and the false failure cannot be built. And the drop is a real gain, because Haiku still finds 34 of 40 real failures. Llama's drop is not, because its problem files leave out facts, so the planner finds no violation in 29 of the 40 flawed designs.
 
 ### Slide 14 · Translate fails through its specification or its tools
 
-*Starts at 7:21 · 110 words · On screen: the four cards, then the inventory chart.*
+*Starts at 7:34 · 110 words · On screen: the four cards, then the inventory chart.*
 
 Translating helps Haiku, but it can also fail, and SP3 asks how. We saw four ways. First, if the LLM copies the buggy line into the requirement, code and requirement agree, so Z3 finds no failing input. Second, if the problem file allows things the real design doesn't, the planner finds a failure that exists only in that wrong problem. Third, a weak model can't write the formal language reliably, so the solver often gets no usable spec. Fourth, to prove a design safe, the planner must rule out every route to a violation. For inventory that means millions of states, so from size 8 it runs out of budget.
 
 ### Slide 15 · The answer in brief
 
-*Starts at 8:12 · 64 words · On screen: the three numbered cards.*
+*Starts at 8:25 · 64 words · On screen: the three numbered cards.*
 
 So what is our answer? One: with a strong model, both arms nearly tie. Two: translating doesn't remove errors; it moves them into the spec the LLM writes, so it helps only a model that writes the formal language well. Three: only a solver can prove there is no failure, but that proof needs exhaustive search, which is exactly where the tools run out.
 
 ### Slide 16 · Trade-offs, and when to use which arm
 
-*Starts at 8:42 · 129 words · On screen: the two cards, then the formula, then the Haiku table.*
+*Starts at 8:54 · 129 words · On screen: the two cards, then the formula, then the Haiku table.*
 
 So which arm should you use? As in the course, this is a maximum-expected-utility choice: pick the arm whose mistakes cost less on average. Take Haiku. With readable names, Translate makes fewer mistakes of both kinds and is cheaper to run, so it wins outright. With names hidden, it's a trade-off. Out of 20 correct designs, Translate raises 9 false alarms instead of 19, so it saves 10. Out of 40 flawed designs, it finds 25 failures instead of 27, so it misses 1 more for every 20. So picture a review of 20 correct and 20 flawed designs: Translate would save ten false alarms but miss one more failure. Ignoring running costs, that makes Translate the better choice unless one missed failure is worse than ten false alarms.
 
 ### Slide 17 · Limitations, and will this change?
 
-*Starts at 9:41 · 88 words · On screen: the two columns, then the Will this change? card.*
+*Starts at 9:54 · 88 words · On screen: the two columns, then the Will this change? card.*
 
 Finally, how far can you trust this answer? Both arms were given the failure mechanisms as named events, so we have not tested a model writing the event model itself. We also chose functions that can be encoded, which favours Translate. Will the answer change? Direct will likely keep improving on small, recognisable problems. But it still cannot prove there is no failure, and for the solvers, search can still take exponential time in the worst case. So the value of translating depends on the model. Thank you.
 
-*End of the video, at about 10:22.*
+*End of the video, at about 10:35.*
 
 ## Before recording
 
