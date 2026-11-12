@@ -100,7 +100,7 @@ How does Translate turn this into a solver problem? For SP1, we turn it into a c
 
 *Starts at 3:02 · 82 words · On screen: the table on the left; the eight-step trace on the right, with steps 2 and 6 highlighted.*
 
-Similarly, SP2 is modeled as a planning problem but our goal condition would be the condition where the design fails. Here's how translation is gonna work. We first have a gold model of states and actions; this will be fed to our solvers SATPlan and BFS; we will definitely find a failure if it exists because best first search is complete within reasonable sizes. On the other hand, LLM will read the expected system behavior and will write out initial states that might cause a problem. This will then be compared with the results of our gold model to see if the LLM correctly spotted an error if it exists.  
+Similarly, SP2 is modeled as a planning problem but our goal condition would be the condition where the design fails. Here's how translation is gonna work. We first have a gold model of states and actions; this will be fed to our solvers SATPlan and GBFS; we will definitely find a failure if it exists because best first search is complete within reasonable sizes. On the other hand, LLM will read the expected system behavior and will write out initial states based on its interpretation. This will then be compared with the results of our gold model to see if the LLM correctly spotted an error if it exists.  
 
 
 ### Slide 9 · What a solver's answer proves, and what it costs
