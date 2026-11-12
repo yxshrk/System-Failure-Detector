@@ -83,7 +83,7 @@ With the arms defined, here is what we measure. RQ1 asks which arm finds more re
 
 *Starts at 2:00 · 56 words · On screen: the highlighted 399 line, then the three cards from top to bottom.*
 
-Here is one bug through both arms. One mutated constant, 400 to 399. Only 7 of 36,000 inputs fail, so 1,000 random tests catch it 18% of the time. Opus Direct answers February 2000. Opus Translate writes the spec from the docstring and Z3 finds February 2400 in 0.01 seconds. Running the code confirms both answers.
+Here is one bug through both arms. One mutated constant, 400 to 399. Only 7 of 36,000 inputs fail, so 1,000 random tests catch it 18% of the time. Opus Direct answers February 2000. Opus Translate writes the rule from the docstring, and the Z3 solver then finds February 2400. Running the code confirms both answers.
 
 *Hand over to Hein.*
 

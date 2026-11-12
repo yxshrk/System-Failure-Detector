@@ -124,7 +124,7 @@ const B = t => ({ text: t, options: { bold: true } });
 {
   const s = base(1, "Worked example");
   s.addImage({ path: `${D}/worked_example.png`, x: X, y: 1.1, w: W, h: W * 590 / 1520, altText: "days_in_month with 399 instead of 400: random testing finds it 18% of the time with 1,000 inputs; Opus 5.5 Direct answers February 2000; Opus 5.5 Translate writes a spec and Z3 returns February 2400." });
-  s.addNotes("Here is one bug through both arms. One mutated constant, 400 to 399. Only 7 of 36,000 inputs fail, so 1,000 random tests catch it 18% of the time. Opus Direct answers February 2000. Opus Translate writes the spec from the docstring and Z3 finds February 2400 in 0.01 s. Running the code confirms both answers.");
+  s.addNotes("Here is one bug through both arms. One mutated constant, 400 to 399. Only 7 of 36,000 inputs fail, so 1,000 random tests catch it 18% of the time. Opus Direct answers February 2000. Opus Translate writes the rule from the docstring, and the Z3 solver then finds February 2400. Running the code confirms both answers.");
 }
 
 // 7. SP1 formulation (§2.1)
