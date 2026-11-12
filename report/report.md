@@ -15,9 +15,22 @@ author:
 <div class="pagebreak"></div>
 ```
 
-**Summary.** Can an LLM show concretely how unshipped software would fail? We test function review (SP1: find an input that breaks a Python function's docstring) and distributed-system design review (SP2: given a design document and its event rules, find an order of timeouts, retries, lost messages and crashes that breaks a safety property such as "no order is charged twice"). On 174 functions and 162 designs, scored exactly against ground truth, we compare answering directly with translating for a solver (Z3 or planners), using Claude Haiku 4.5, Sonnet 5.5, Opus 5.5 and the open-weight Qwen 3.8 27B and Llama 3.1 8B.
-**Results.** In SP1, Claude and Qwen raise no false alarm and find nearly every bug either way; Translate trails only on rare bugs (very rare, 8 bugs × 4 models: 29/32 vs 32/32). In SP2, the 5.5 models find a valid trace every time either way, up to 51 events and with mechanism names hidden. Translation cuts Haiku's false alarms on correct designs from 60% to 35% (95% to 45% with hidden names; nominal paired p = 0.18 and 0.002). Llama fabricates when answering directly, and translation silences rather than fixes this.
-**Answer.** On these small, fully specified problems capable models were about as accurate directly as through a solver. Translation pays off mainly when a certificate or audit trail is needed or a mid-tier model misreads designs; it did not rescue a model that could not write the formal language.
+**Summary.** Can an LLM show concretely how unshipped software would fail? We test function review (SP1: find an input that breaks a Python function's docstring) and distributed-system design review (SP2: find an order of timeouts, retries, lost messages and crashes that breaks a safety property like "no order is charged twice"). On 174 functions and 162 designs, scored exactly against ground truth, we compare Claude Haiku 4.5, Sonnet 5.5 and Opus 5.5, and the open-weight Qwen 3.8 27B and Llama 3.1 8B, each answering directly (Direct) or translating for a solver (Translate). Translation's value depends on the model: it adds no accuracy for strong models, cuts mid-tier false alarms, and cannot rescue a weak one.
+
+**SP1** (Translate: a specification checked by Z3). Claude and Qwen raise no false alarm and find nearly every
+bug in both arms, even bugs random testing rarely triggers (100 inputs expose 5% of the very rare ones); Translate
+trails only there (29/32 vs 32/32 model–bug pairs), as its specification can copy the bug. Llama 3.1 8B fabricates
+in Direct (false alarms on 76% of correct functions); Translate cuts this to 20%, mostly as 70 of 174 runs
+yield no usable spec.
+
+**SP2** (Translate: PDDL for the planners; both arms get the STRIPS actions). The 5.5 models are
+never wrong in either arm, up to 51 events and on the *opaque* set (mechanism-revealing names replaced); Qwen matches
+them in Translate on the main set. Translation pays for Haiku, which in Direct applies familiar patterns to designs that rule them
+out: its false alarms on correct designs fall from 60% to 35% (opaque: 95% to 45%), lower in 4 of 5 families. Llama
+fabricates in Direct; its broken Translate files miss 29 of 40 failures, so "safe" means little.
+
+**In practice,** Direct suffices when the spec is explicit and the model strong; Translate adds a no-failure
+certificate, valid only if the translation is correct and the solver finishes.
 
 # 1. Motivation and research questions
 
@@ -35,10 +48,9 @@ two arms on the same inputs:
 * **(A) Direct.** The LLM reads the input and answers with a verdict and a witness.
 * **(B) Translate.** The LLM writes a formal description of the problem, and a classical solver searches for the witness. Solver errors are fed back for repair, as in Logic-LM [9] and the LLM+SMT method [5].
 
-Arm B is the course's case for a factored formulation: once the structure is explicit,
-a general solver prunes what unstructured reasoning must enumerate.
+Arm B is the course's bet: with the structure explicit, a solver prunes what reasoning must enumerate.
 
-We study this on two review sub-problems; a third, SP3, scores the translations themselves.
+We study two review sub-problems; **SP3** is not a third but scores Translate's translations against gold (SP1: sound, discriminating spec? SP2: exact initial state?), to tell translation errors from solver errors.
 
 * **SP1: function review.** The LLM gets a Python function and a docstring saying what it must do, and must find an input that breaks the docstring. For example, `days_in_month` with 400 mistyped as 399 returns 28 instead of 29 for February of year 400, so `month=2, year=400` is a witness. In Translate it writes pre- and postconditions, and Z3 searches.
 * **SP2: distributed-system design review.** The LLM gets a design document of about 200 words for a service (payments, inventory, lock, queue or cache) and the list of events that can occur, and must find an order of events (timeouts, retries, lost or delayed messages, crashes) that breaks a safety property. For example, a timed-out checkout retries, both attempts pass the duplicate check before either is recorded, and the card is charged twice. In Translate it writes only the initial state of a planning problem; the events and the goal are given, and planners search.
@@ -47,10 +59,7 @@ We study this on two review sub-problems; a third, SP3, scores the translations 
 
 # 2. Formulation
 
-Both problems rest on $\alpha \models \beta$ iff $\alpha \land \lnot\beta$ is unsatisfiable ([3] Ch. 7), with $\alpha$ = "the system as implemented" and $\beta$ = "the requirement". A model of
-$\alpha \land \lnot\beta$ is a run that breaks the requirement: a *failure witness*. For a contract
-$\forall x\,(pre \Rightarrow post)$, the negation is $\exists x\,(pre \land \lnot post)$, and
-the solver's satisfying assignment to $x$ is the witness. The LLM writes a different half in each problem. In SP1 it writes $\beta$ (`pre`, `post`) and the code $\alpha$ is encoded automatically. In SP2 we fix $\beta$ (the goal, and actions such as `charge-again` that record its violation) and the LLM writes part of $\alpha$, the initial state; the action schemas, where the failure mechanism lives, are given to both arms.
+Both problems search for a counterexample, and the Translate arm does so literally: the solver is asked whether $\alpha \land \lnot\beta$ is satisfiable, with $\alpha$ = "the system as implemented" and $\beta$ = "the requirement" ($\alpha \models \beta$ iff it is not, [3] Ch. 7). A model is a *failure witness*: in SP1 an input satisfying $pre \land \lnot post$ (Z3), in SP2 a plan reaching the violation $G$ (SATPlan; GBFS answers the same question by search). The LLM writes a different half in each problem. In SP1 it writes $\beta$ (`pre`, `post`) and the code $\alpha$ is encoded automatically. In SP2 we fix $\beta$ (the goal, e.g. `charged-twice`, and actions such as `charge-again` that set it) and the LLM writes part of $\alpha$, the initial state; the action schemas, where the failure mechanism lives, are given to both arms.
 
 ## 2.1 SP1: a function as a CSP, solved by SMT
 
@@ -105,8 +114,7 @@ $pre$ that raises counts as false, a $post$ that raises as violated), and every 
 the relevant function fits its bound; $\lnot\Psi$ says that it does at every input where it is
 evaluated. If $\Psi$ is still satisfiable at $4k'$, `spec_check` reports *undecided*, never "no failure". ∎
 
-Equivalently, $\Phi_{spec}$ is unsatisfiable iff $f \models spec$ on all covered inputs: the
-entailment theorem applied to the bounded program. The same argument covers $\Phi_{gold}$ with "behaves
+The same argument covers $\Phi_{gold}$ with "behaves
 differently from the reference" for "violates the spec". The build checks that no reference loop can exceed its bound, and accepts a mutant as equivalent only
 if its domain was enumerated or $unwind_{mut}$ is unsatisfiable (cf. CBMC's [17] unwinding assertions).
 
@@ -197,7 +205,7 @@ execution, and equivalence is accepted only under the conditions of §2.1.
 
 **Selection.** For each function we keep every hand bug, fill the rarity buckets with automatic mutants
 (preferring rare ones), and add two controls: the clean reference, plus an equivalent mutant when one
-exists. These are deliberately hard.
+exists; equivalent mutants look buggy but are not.
 
 **Result.** 174 instances: 115 bugs (trigger rarity: 67 common ≥10%, 19 uncommon 1–10%, 21 rare 0.1–1%, 8 very rare <0.1%) and 59 controls (37
 clean, 22 provably equivalent). Of the 859 candidates, 59 were dropped as non-terminating, not encodable or not provably equivalent.

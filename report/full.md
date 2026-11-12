@@ -15,9 +15,22 @@ author:
 <div class="pagebreak"></div>
 ```
 
-**Summary.** Can an LLM show concretely how unshipped software would fail? We test function review (SP1: find an input that breaks a Python function's docstring) and distributed-system design review (SP2: given a design document and its event rules, find an order of timeouts, retries, lost messages and crashes that breaks a safety property such as "no order is charged twice"). On 174 functions and 162 designs, scored exactly against ground truth, we compare answering directly with translating for a solver (Z3 or planners), using Claude Haiku 4.5, Sonnet 5.5, Opus 5.5 and the open-weight Qwen 3.8 27B and Llama 3.1 8B.
-**Results.** In SP1, Claude and Qwen raise no false alarm and find nearly every bug either way; Translate trails only on rare bugs (very rare, 8 bugs × 4 models: 29/32 vs 32/32). In SP2, the 5.5 models find a valid trace every time either way, up to 51 events and with mechanism names hidden. Translation cuts Haiku's false alarms on correct designs from 60% to 35% (95% to 45% with hidden names; nominal paired p = 0.18 and 0.002). Llama fabricates when answering directly, and translation silences rather than fixes this.
-**Answer.** On these small, fully specified problems capable models were about as accurate directly as through a solver. Translation pays off mainly when a certificate or audit trail is needed or a mid-tier model misreads designs; it did not rescue a model that could not write the formal language.
+**Summary.** Can an LLM show concretely how unshipped software would fail? We test function review (SP1: find an input that breaks a Python function's docstring) and distributed-system design review (SP2: find an order of timeouts, retries, lost messages and crashes that breaks a safety property like "no order is charged twice"). On 174 functions and 162 designs, scored exactly against ground truth, we compare Claude Haiku 4.5, Sonnet 5.5 and Opus 5.5, and the open-weight Qwen 3.8 27B and Llama 3.1 8B, each answering directly (Direct) or translating for a solver (Translate). Translation's value depends on the model: it adds no accuracy for strong models, cuts mid-tier false alarms, and cannot rescue a weak one.
+
+**SP1** (Translate: a specification checked by Z3). Claude and Qwen raise no false alarm and find nearly every
+bug in both arms, even bugs random testing rarely triggers (100 inputs expose 5% of the very rare ones); Translate
+trails only there (29/32 vs 32/32 model–bug pairs), as its specification can copy the bug. Llama 3.1 8B fabricates
+in Direct (false alarms on 76% of correct functions); Translate cuts this to 20%, mostly as 70 of 174 runs
+yield no usable spec.
+
+**SP2** (Translate: PDDL for the planners; both arms get the STRIPS actions). The 5.5 models are
+never wrong in either arm, up to 51 events and on the *opaque* set (mechanism-revealing names replaced); Qwen matches
+them in Translate on the main set. Translation pays for Haiku, which in Direct applies familiar patterns to designs that rule them
+out: its false alarms on correct designs fall from 60% to 35% (opaque: 95% to 45%), lower in 4 of 5 families. Llama
+fabricates in Direct; its broken Translate files miss 29 of 40 failures, so "safe" means little.
+
+**In practice,** Direct suffices when the spec is explicit and the model strong; Translate adds a no-failure
+certificate, valid only if the translation is correct and the solver finishes.
 
 # 1. Motivation and research questions
 
@@ -35,10 +48,9 @@ two arms on the same inputs:
 * **(A) Direct.** The LLM reads the input and answers with a verdict and a witness.
 * **(B) Translate.** The LLM writes a formal description of the problem, and a classical solver searches for the witness. Solver errors are fed back for repair, as in Logic-LM [9] and the LLM+SMT method [5].
 
-Arm B is the course's case for a factored formulation: once the structure is explicit,
-a general solver prunes what unstructured reasoning must enumerate.
+Arm B is the course's bet: with the structure explicit, a solver prunes what reasoning must enumerate.
 
-We study this on two review sub-problems; a third, SP3, scores the translations themselves.
+We study two review sub-problems; **SP3** is not a third but scores Translate's translations against gold (SP1: sound, discriminating spec? SP2: exact initial state?), to tell translation errors from solver errors.
 
 * **SP1: function review.** The LLM gets a Python function and a docstring saying what it must do, and must find an input that breaks the docstring. For example, `days_in_month` with 400 mistyped as 399 returns 28 instead of 29 for February of year 400, so `month=2, year=400` is a witness. In Translate it writes pre- and postconditions, and Z3 searches.
 * **SP2: distributed-system design review.** The LLM gets a design document of about 200 words for a service (payments, inventory, lock, queue or cache) and the list of events that can occur, and must find an order of events (timeouts, retries, lost or delayed messages, crashes) that breaks a safety property. For example, a timed-out checkout retries, both attempts pass the duplicate check before either is recorded, and the card is charged twice. In Translate it writes only the initial state of a planning problem; the events and the goal are given, and planners search.
@@ -47,10 +59,7 @@ We study this on two review sub-problems; a third, SP3, scores the translations 
 
 # 2. Formulation
 
-Both problems rest on $\alpha \models \beta$ iff $\alpha \land \lnot\beta$ is unsatisfiable ([3] Ch. 7), with $\alpha$ = "the system as implemented" and $\beta$ = "the requirement". A model of
-$\alpha \land \lnot\beta$ is a run that breaks the requirement: a *failure witness*. For a contract
-$\forall x\,(pre \Rightarrow post)$, the negation is $\exists x\,(pre \land \lnot post)$, and
-the solver's satisfying assignment to $x$ is the witness. The LLM writes a different half in each problem. In SP1 it writes $\beta$ (`pre`, `post`) and the code $\alpha$ is encoded automatically. In SP2 we fix $\beta$ (the goal, and actions such as `charge-again` that record its violation) and the LLM writes part of $\alpha$, the initial state; the action schemas, where the failure mechanism lives, are given to both arms.
+Both problems search for a counterexample, and the Translate arm does so literally: the solver is asked whether $\alpha \land \lnot\beta$ is satisfiable, with $\alpha$ = "the system as implemented" and $\beta$ = "the requirement" ($\alpha \models \beta$ iff it is not, [3] Ch. 7). A model is a *failure witness*: in SP1 an input satisfying $pre \land \lnot post$ (Z3), in SP2 a plan reaching the violation $G$ (SATPlan; GBFS answers the same question by search). The LLM writes a different half in each problem. In SP1 it writes $\beta$ (`pre`, `post`) and the code $\alpha$ is encoded automatically. In SP2 we fix $\beta$ (the goal, e.g. `charged-twice`, and actions such as `charge-again` that set it) and the LLM writes part of $\alpha$, the initial state; the action schemas, where the failure mechanism lives, are given to both arms.
 
 ## 2.1 SP1: a function as a CSP, solved by SMT
 
@@ -105,8 +114,7 @@ $pre$ that raises counts as false, a $post$ that raises as violated), and every 
 the relevant function fits its bound; $\lnot\Psi$ says that it does at every input where it is
 evaluated. If $\Psi$ is still satisfiable at $4k'$, `spec_check` reports *undecided*, never "no failure". ∎
 
-Equivalently, $\Phi_{spec}$ is unsatisfiable iff $f \models spec$ on all covered inputs: the
-entailment theorem applied to the bounded program. The same argument covers $\Phi_{gold}$ with "behaves
+The same argument covers $\Phi_{gold}$ with "behaves
 differently from the reference" for "violates the spec". The build checks that no reference loop can exceed its bound, and accepts a mutant as equivalent only
 if its domain was enumerated or $unwind_{mut}$ is unsatisfiable (cf. CBMC's [17] unwinding assertions).
 
@@ -197,7 +205,7 @@ execution, and equivalence is accepted only under the conditions of §2.1.
 
 **Selection.** For each function we keep every hand bug, fill the rarity buckets with automatic mutants
 (preferring rare ones), and add two controls: the clean reference, plus an equivalent mutant when one
-exists. These are deliberately hard.
+exists; equivalent mutants look buggy but are not.
 
 **Result.** 174 instances: 115 bugs (trigger rarity: 67 common ≥10%, 19 uncommon 1–10%, 21 rare 0.1–1%, 8 very rare <0.1%) and 59 controls (37
 clean, 22 provably equivalent). Of the 859 candidates, 59 were dropped as non-terminating, not encodable or not provably equivalent.
@@ -239,17 +247,17 @@ hallucination made checkable), *miss*, *correct no-failure*, or *undecided* (cou
 
 # 5. Results
 
-All numbers come from `experiments/analyze.py` (full tables, with every interval, in `results/tables.md`). Brackets are 95%
-Wilson intervals; paired comparisons use the exact McNemar test.
+Tables, intervals and paired tests come from `experiments/analyze.py` (full output in `results/tables.md`). Brackets are 95%
+Wilson intervals; as instances share templates, intervals and tests are nominal (§6).
 
 ## 5.1 SP1: functions (115 bugs, 59 controls)
 
-**RQ1.** Claude and Qwen find nearly every bug in both arms (Table 1, Fig. 1), but the arms part with rarity. Over model–bug pairs (four models), both find 267/268 common and 75/76 uncommon; Direct finds 84/84 rare and 32/32 very rare (eight distinct bugs), Translate 82/84 and 29/32. That favours Direct, but thinly: Translate fails 3/32 very rare pairs vs 4/428 others (nominal Fisher p = 0.009), the three being two bugs with unsound specs (§6). Otherwise difficulty shows only as cost (hard-tier Direct answers use 2–5×
+**RQ1.** Claude and Qwen find nearly every bug in both arms (Table 1, Fig. 1), but the arms part with rarity. Over model–bug pairs (four models), both find 267/268 common and 75/76 uncommon; Direct finds 84/84 rare and 32/32 very rare (eight distinct bugs), Translate 82/84 and 29/32. That favours Direct, but thinly: Translate fails 3/32 very rare pairs vs 4/428 others, the three being two bugs with unsound specs (§6). Otherwise difficulty shows only as cost (hard-tier Direct answers use 2–5×
 the tokens) and as Z3 *unknown* on arithmetic-heavy specs. Random testing with $N$
 inputs catches a bug of rarity $r$ with probability $1-(1-r)^N$: 100 inputs catch 34% of rare and
 5% of very rare bugs, 1,000 catch 93% and 36%. Rarity defeats *random testing* far more than either LLM arm.
 
-**RQ2.** No Claude or Qwen run raised a false alarm on the 59 controls, 22 of them equivalent mutants built to look buggy; Translate left 1 (Haiku) and 5 (Opus) *undecided*. Llama Direct raised 45 false alarms and invented a witness for 60 of the 115 bugs. Translate cut its false alarms to 12 (exact McNemar p < 0.001), but all 12, and 20 of its 22 misses, came from unsound specs.
+**RQ2.** No Claude or Qwen run raised a false alarm on the 59 controls, 22 of them equivalent mutants built to look buggy; Translate left 1 (Haiku) and 5 (Opus) *undecided*. Llama Direct raised 45 false alarms and invented a witness for 60 of the 115 bugs. Translate cut its false alarms to 12, but all 12, and 20 of its 22 misses, came from unsound specs.
 
 ::: keep
 | model | arm | base found /95 | hard found /20 | fabri&shy;cated | false alarms /59 | no answer | $ per inst. | output tokens |
@@ -267,7 +275,7 @@ inputs catches a bug of rarity $r$ with probability $1-(1-r)^N$: 100 inputs catc
 (bugs and controls): a checker timeout or Z3 *unknown* (*undecided*) for Claude; no verdict, no accepted spec or an endpoint limit for open-weight models.
 :::
 
-*SP3.* Of the specifications whose soundness check completed, these were *sound* (the reference satisfies them): 169/172 (Haiku), 173/173 (Sonnet), 165/165 (Opus) and 169/170 (Qwen). *Discriminating* (the mutant violates them) is the valid-witness rate above. Llama differs in kind: only 104 of its 174 specs passed the checker (70 runs failed after two repairs, 46 of them calling the unsupported `isinstance`), and only 45 of the 103 with a soundness verdict are sound.
+*SP3 (translation quality).* Of the specifications whose soundness check completed, these were *sound* (the reference satisfies them): 169/172 (Haiku), 173/173 (Sonnet), 165/165 (Opus) and 169/170 (Qwen). *Discriminating* (the mutant violates them) is the valid-witness rate above. Llama differs in kind: only 104 of its 174 specs passed the checker (70 runs failed after two repairs, 46 of them calling the unsupported `isinstance`), and only 45 of the 103 with a soundness verdict are sound.
 
 **Translate failures.** For the Claude models every one comes from the specification or the tool, never the search: two postconditions copied the code's bug (§A.2), one spec raised an exception and produced a fabricated witness (§A.3), and eight checks were undecided (three timeouts, five Z3 *unknown*s).
 
@@ -290,21 +298,21 @@ inputs catches a bug of rarity $r$ with probability $1-(1-r)^N$: 100 inputs catc
 | Llama&nbsp;3.1&nbsp;8B | Translate | 3% | 10% | 0% | 10% | 0% | 40% | – |
 
 *Table 2.* SP2 outcomes. In *Translate* the named model writes the PDDL problem and the planners search it. "Valid" = a trace that
-replays on the gold problem and reaches the violation (flawed + subtle designs). FA = false alarm, a violation claimed on a fixed
-design. Translate was *undecided* (not FA) on inventory's fixed design at size 8. Qwen ran the main set only.
+replays on the gold problem and reaches the violation (flawed + subtle designs). FA = false alarm on a fixed
+design. Translate was *undecided* on inventory's fixed design at size 8.
 :::
 
-**RQ1.** Sonnet 5.5 and Opus 5.5 produced a valid trace every time, from 6 up to 51 events (on the long set 8/8 per model and arm, 95% interval [68–100], with no false alarm; Translate was undecided on its inventory fixed designs, sizes 12 and 16). Haiku stays near 80% with no length trend. Paired over the 150 designs Haiku ran, only Translate is right on 41 and only Direct on 21 (nominal exact McNemar p = 0.015 pooled; 0.15 to 0.39 per set). Qwen's Translate was right on all 60 main designs and its Direct on 57, its 3 invalid traces being format slips, not misreadings. Llama Direct produced no valid trace on any set.
+**RQ1.** Sonnet 5.5 and Opus 5.5 produced a valid trace every time, from 6 up to 51 events (on the long set 8/8 per model and arm, 95% interval [68–100], with no false alarm; Translate was undecided on its inventory fixed designs, sizes 12 and 16). Haiku stays near 80% with no length trend. Paired over the 150 designs Haiku ran, only Translate is right on 41 and only Direct on 21, an edge significant in no single set. Qwen's Translate was right on all 60 main designs and its Direct on 57, its 3 invalid traces being format slips, not misreadings. Llama Direct produced no valid trace on any set.
 
 **RQ2.** Fabrication separates the arms for Haiku and Llama; the 5.5 models and Qwen raise no false alarm.
 
-* *Haiku Direct* claims violations on 60% of fixed designs (80% stress, 95% opaque). Translate roughly halves this, to 35% (40%, 45%); exact McNemar on false alarms gives p = 0.18, 0.22, 0.002 (main, stress, opaque). Its Direct traces fail on design facts: 16 (main) and 30 (opaque) used an event of *another* design variant, typically a familiar failure pattern (§A.4).
-* *Llama Direct* claims violations on 70% of fixed designs (60% stress, 90% opaque); Translate cuts this to 10% (10%, 40%; exact McNemar p = 0.002, 0.13, 0.002) but misses 29 of 40 violating main-set designs: its "safe" verdicts are right for the wrong reason.
+* *Haiku Direct* claims violations on 60% of fixed designs (80% stress, 95% opaque). Translate cuts this to 35% (40%, 45%), lower in 4 of 5 families on main and opaque. Its Direct traces fail on design facts: 16 (main) and 30 (opaque) used an event of *another* design variant, typically a familiar pattern (§A.4).
+* *Llama Direct* claims violations on 70% of fixed designs (60% stress, 90% opaque); Translate cuts this to 10% (10%, 40%) but misses 29 of 40 violating main-set designs: "safe" for the wrong reason.
 
 **SP3 (translation quality).**
 
 * *Sonnet and Opus* reproduced the gold initial state exactly in all 90 main and stress problems, and *Qwen* in all 60 main ones.
-* *Haiku's design facts* were exact in 49/60 main and 35/60 opaque. Its other errors were permissive facts the planner exploited (§A.5). Only 2 of 474 Claude translations (Opus, long) needed repair.
+* *Haiku's design facts* were exact in 49/60 main and 35/60 opaque. Its other errors were permissive facts the planner exploited (§A.5). Only 2 of 474 Claude translations needed repair.
 * *Llama* left out about a third of the gold initial facts (mean recall 0.64 on the main set; design facts exact in 22/60; 8 never parsed). With facts missing the violation can become unreachable: the planner proved "no violation" on all 29 missed flawed designs and on 16 of the 20 fixed ones.
 
 ## 5.3 The classical tools
@@ -333,7 +341,7 @@ $2^{|F|}$ bounds the state space ($2^{44}$ to $2^{218}$ at size 8), but certific
 
 **1. Capable models nearly tie, consistent with recognition rather than search.** In SP1 a first-order mutant leaves a visible diff against a docstring that states the intent, so trigger rarity, which decides whether *random testing* finds a bug, did not hurt Direct on capable models (Fig. 1). In Kang et al.'s terms [2], the next step (find the line contradicting the docstring) is cheap, so the chain of thought stays short. SP2's violations are textbook patterns; once one is recognised, a longer trace is bookkeeping: from 6–15 to 30–51 events the 5.5 models found a valid trace on every violating design, and Direct answers grew only from about 1.2k to 1.5k tokens. With facts renamed `mode-N` they were still never wrong: names were not what they relied on. Most cells are at ceiling, so these benchmarks cannot rank the strongest models.
 
-**2. Translation moves the error.** In SP1 the spec must state the docstring's intent while the LLM reads code that contradicts it. Most specs are *constructive*: `post` recomputes the answer and compares it with `result` (Claude 169–172/174, Qwen 168/170, Llama 125/174). SP1 Translate is thus a differential check against a second, LLM-written implementation (N-version programming), so a spec can inherit the bug it should expose (§A.2), which may explain Translate's small gap on rare bugs. Repair fixes form (Haiku 106 → 112, Opus 104 → 114 of 115) but not meaning. In SP2, Haiku's Direct errors are design misreadings: it applies a well-known pattern, such as the check-then-act race, to a design whose text rules it out (§A.4). Translation moves this into the design facts and adds permissive initial facts that the planner turns into shortcuts (§A.5), yet it still helps Haiku: with names hidden its Direct false alarms rose from 60% to 95%, while Translate held them to 45%, as the initial state forces one design fact per mechanism. Llama 3.1 8B, which does not reason, fabricates in Direct, and translation silences this rather than repairing it: it cannot write the formal language reliably (SP2 shows this best: 46 of its 70 SP1 failures are one unsupported builtin), and problem files missing a third of the initial state make flawed and fixed designs alike look safe. Llama alone cannot locate a threshold: it differs from Qwen in size, reasoning and generation at once, and Qwen did not run the other SP2 sets.
+**2. Translation moves the error.** In SP1 the spec must state the docstring's intent while the LLM reads code that contradicts it. Most specs are *constructive*: `post` recomputes the answer and compares it with `result` (Claude 169–172/174, Qwen 168/170, Llama 125/174). SP1 Translate is thus a differential check against a second, LLM-written implementation (N-version programming), so a spec can inherit the bug it should expose (§A.2), which may explain Translate's small gap on rare bugs. Repair fixes form (Haiku 106 → 112, Opus 104 → 114 of 115) but not meaning. In SP2, Haiku's Direct errors are design misreadings: it applies a well-known pattern, such as the check-then-act race, to a design whose text rules it out (§A.4). Translation moves this into the design facts and adds permissive initial facts that the planner turns into shortcuts (§A.5), yet it still helps Haiku: on the opaque set its Direct false alarms rose from 60% to 95%, while Translate held them to 45%, as the initial state forces one design fact per mechanism. Llama 3.1 8B, which does not reason, fabricates in Direct, and translation silences this rather than repairing it: it cannot write the formal language reliably (§5), and problem files missing a third of the initial state make flawed and fixed designs alike look safe. Llama alone cannot locate a threshold: it differs from Qwen in size, reasoning and generation at once, and Qwen did not run the other SP2 sets.
 
 **3. Only the tools certify absence, and that is their limit.** Only Translate can *certify* absence, with a solver result and audit trail, but that value is argued, not measured, and holds only for the problem as translated: Llama's 29 wrong "no violation" proofs show how hollow it can be. Yet on inventory, the one family with state explosion, certification runs out of budget from size 8; Translate is then undecided while Sonnet and Opus Direct answer correctly, without proof. Recognising a pattern is not solving the search, though we did not measure how they answered. The standard remedies lie outside the course: *symmetry reduction* (merging states that differ by a permutation of interchangeable objects, such as inventory's customers), *partial-order reduction* (one order for independent events), and *inductive invariants* (k-induction with $k = 1$), which prove safety by entailment with three checks:
 $$Inv(s_0), \qquad Inv(s_t) \land T(s_t, s_{t+1}) \models Inv(s_{t+1}), \qquad Inv \models \lnot G.$$
@@ -341,7 +349,7 @@ Inventory's label from size 8 rests on one, proved by hand (§A.8): stock + hold
 
 **When to use which.** Choosing an arm is a maximum-expected-utility decision ([3] Ch. 16). With a share $q$ of flawed designs and costs $c_{FA}$ per false alarm (reviewer time), $c_{miss}$ per flawed design left without a valid witness, $c_{rev}$ per undecided case, and $c_{run}$ per run (model calls),
 $$EU(arm) = -\big((1-q)\,P_{FA}\,c_{FA} + q\,P_{miss}\,c_{miss} + P_{und}\,c_{rev} + c_{run}\big).$$
-For Haiku on the SP2 main set, Translate has fewer false alarms (35% vs 60%), fewer flawed designs without a valid trace (6 vs 9 of 40), nothing undecided and the lower cost (US$0.051 vs 0.062), so at these point estimates it wins for any $q$ and positive costs; the false-alarm gap is individually significant only on the opaque set, where Translate trades two detections (27 to 25 of 40) for half the false alarms (19 to 9 of 20): at $q = 1/2$, counting errors alone, it wins while a miss costs under ten false alarms. For the 5.5 models on SP2 the error rates are zero: Translate is cheaper per run and wins on the main set, but abstains on inventory's fixed designs from size 8. $c_{run}$ omits fixed costs, which were not measured: SP1's encoder serves only Translate, while SP2 gave both arms the authored domain, so Direct without it is untested. *Use Direct* when the model is strong (judged on validation cases with known answers), the review small, the specification complete, and an answer without proof is acceptable. *Use Translate* when absence must be certified or audited, or when a mid-tier model, by the same test, misreads designs but writes the formal language reliably, and replay every witness on the real artefact. Neither the amount reviewed nor specification completeness was varied, so these conditions are argued.
+For Haiku on the SP2 main set, Translate has fewer false alarms (35% vs 60%), fewer flawed designs without a valid trace (6 vs 9 of 40), nothing undecided and the lower cost (US$0.051 vs 0.062), so at these point estimates it wins for any $q$ and positive costs; the false-alarm gap is clearest on the opaque set, where Translate trades two detections (27 to 25 of 40) for half the false alarms (19 to 9 of 20): at $q = 1/2$, counting errors alone, it wins while a miss costs under ten false alarms. For the 5.5 models on SP2 the error rates are zero: Translate is cheaper per run and wins on the main set, but abstains on inventory's fixed designs from size 8. $c_{run}$ omits fixed costs, which were not measured: SP1's encoder serves only Translate, while SP2 gave both arms the authored domain, so Direct without it is untested. *Use Direct* when the model is strong (judged on validation cases with known answers), the review small, the specification complete, and an answer without proof is acceptable. *Use Translate* when absence must be certified or audited, or when a mid-tier model, by the same test, misreads designs but writes the formal language reliably, and replay every witness on the real artefact. Neither the amount reviewed nor specification completeness was varied, so these conditions are argued.
 
 **Will this change?** Direct will likely keep improving on small, recognisable problems (Haiku 4.5 to the 5.5 models, which also differ in tier), but worst-case hardness and the missing certificate remain.
 
@@ -387,7 +395,7 @@ decides, but its spec is still model-written (untested). Sending proprietary cod
 
 * *Yash:* coordination; directed the build of the SP1 and SP2 pipelines; ran all Claude experiments; and drafted the report.
 * *Joshua:* the backend for the SoC open-weight models (`premortem/llm.py`) and the Qwen and Llama runs (§5–6).
-* *Hein:* the SP3 analyses (spec-style classifier, design facts vs. outcomes) and the precise statements of both formulations and their limits (§2, §6).
+* *Hein:* the SP3 analyses (spec-style classifier, design facts vs. outcomes); the precise statements of both formulations and their limits (§2, §6); and the final clarity review (summary, definitions, statistical claims).
 
 **Use of AI tools.** We used Claude Code (Anthropic) to execute our proposal design and perform the experiments in accordance with our specifications. We then vetted the outputs and refined our preliminary analysis with AI assistance, ultimately reviewing and making the final edits and modifications ourselves to produce our final submission.
 
