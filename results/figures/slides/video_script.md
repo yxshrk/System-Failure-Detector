@@ -119,7 +119,7 @@ Now the experiment, here's what we tested. SP1 has 174 instances from 37 functio
 
 *Starts at 4:48 · 54 words · On screen: the tier table, then the four bullets.*
 
-Then how we ran it. Five models in three tiers: strong, mid-tier Haiku, and weak Llama. Direct runs with all tools disabled, so it must reason rather than execute. Translate gets up to two repairs. Every answer gets exactly one label, and a tool that runs out of budget is undecided, never no failure.
+Then how we ran it. Five models in three tiers: strong, mid-tier Haiku, and weak Llama. Direct runs with all tools disabled, so it must reason rather than execute. For translation, our LLMs can refine their work up to 2 times. Every test instance gets exactly one label. For our labels, undecided happens when a tool overan its reasonble resource constraints.
 
 *Reading note: stress the two labels, "undecided" and "no failure".*
 
@@ -127,7 +127,7 @@ Then how we ran it. Five models in three tiers: strong, mid-tier Haiku, and weak
 
 *Starts at 5:13 · 64 words · On screen: the scoreboard, strong models at the top, Haiku in the middle, Llama at the bottom.*
 
-Now the results, first at a glance. The 5.5 models and Qwen are near-perfect on the sets they ran, with zero false alarms; Qwen's three invalid traces in Direct were format slips, not misreadings. Haiku is fine on functions but struggles on designs, especially false alarms with names hidden. Llama fails everywhere: in Direct it fabricates, with 45 false alarms on 59 correct functions.
+Now the results, first at a glance. The 5.5 models and Qwen are near-perfect on the sets they ran, with zero false alarms; Qwen's had three invalid traces in Direct but they were formatting slips, and not misreadings. Haiku is fine on SP1 functions but struggles on SP2 designs; it is particularly prone to false alarms when the test names are covered to stop giving hints. Llama fails everywhere: in Direct it fabricates, with 45 false alarms on 59 correct functions; and its translation is also poor. 
 
 *Hand over to Yash.*
 
