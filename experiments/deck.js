@@ -238,12 +238,12 @@ tag(image("false_alarms.png", "Slope chart: false alarms Direct vs Translate",
     T(s, head, { x: 1.35, y: y + 0.15, w: 8.05, h: 0.32, fontSize: 15, bold: true });
     T(s, body, { x: 1.35, y: y + 0.5, w: 8.05, h: 0.55, fontSize: 12, color: INK2 });
   };
-  a(1.2, "1", "With a strong model the two arms nearly tie: recognition rather than search",
+  a(1.2, "1", "Strong models: the arms nearly tie, consistent with recognition, not search",
     "Sonnet 5.5 and Opus 5.5 were never wrong on designs in either arm, up to 51 events and with names hidden.");
   a(2.45, "2", "Translation moves the error into the specification; it does not remove it",
     "It cuts Haiku's false alarms (12 to 7 of 20 correct designs; 19 to 9 with names hidden) but cannot rescue Llama, which cannot write the formal language.");
   a(3.7, "3", "Only the tools can certify \"no failure\", and that is where they run out",
-    "Inventory from size 8: Translate is undecided, while Sonnet and Opus Direct answer correctly, without proof.");
+    "Inventory's safe design from size 8: Translate is undecided, while Sonnet and Opus Direct answer correctly, without proof.");
   s.addNotes("So, the answer in brief. One: with a strong model the two arms nearly tie, consistent with recognising patterns rather than searching. Two: translation moves part of the error into the specification rather than removing it, so it helps only a model that writes the formal language reliably: Haiku yes, Llama no. Three: only the tools can certify that there is no failure, and that is exactly where they run out of budget.");
 }
 
@@ -275,7 +275,7 @@ tag(image("false_alarms.png", "Slope chart: false alarms Direct vs Translate",
   bullets(s, [
     "Scaffolding: SP2 gives both arms the failure mechanisms as named events; writing the event model is untested",
     "Bugs are mostly single-change mutants, docstrings are complete, and functions were chosen to be encodable (integers, Booleans, lists)",
-    "Ceiling effect: most cells are at 100%, so these benchmarks cannot rank the strongest models",
+    "Ceiling effect: most cells are at or near 100%, so these benchmarks cannot rank the strongest models",
     "Public benchmarks and textbook designs may be in training data; hiding names removes only lexical cues",
   ], { x: 0.375, y: 1.2, w: 9.25, h: 2.2, fontSize: 13, paraSpaceAfter: 6 });
   card(s, 0.375, 3.2, 9.25, 0.95);
@@ -285,7 +285,7 @@ tag(image("false_alarms.png", "Slope chart: false alarms Direct vs Translate",
   T(s, [{ text: "In practice: ", options: { bold: true } },
     { text: "Direct suffices when the spec is explicit and the model strong; Translate adds a no-failure certificate, valid only if the translation is correct and the solver finishes." }],
     { x: 0.375, y: 4.4, w: 9.25, h: 0.6, fontSize: 13 });
-  s.addNotes("What this does not show. SP2 hands both arms the failure mechanisms as named events; writing the event model is untested. Most cells are at 100%, so we cannot rank the strongest models. Will this change? Direct will likely keep improving on small, recognisable problems, but worst-case hardness and the missing certificate remain. In practice: Direct suffices when the spec is explicit and the model strong; Translate adds a certificate, valid only if the translation is right and the solver finishes. Thank you.");
+  s.addNotes("What this does not show. SP2 hands both arms the failure mechanisms as named events; writing the event model is untested. Most cells are at or near 100%, so we cannot rank the strongest models. Will this change? Direct will likely keep improving on small, recognisable problems, but worst-case hardness and the missing certificate remain. In practice: Direct suffices when the spec is explicit and the model strong; Translate adds a certificate, valid only if the translation is right and the solver finishes. Thank you.");
 }
 
 pres.writeFile({ fileName: `${D}/premortem_slides.pptx` }).then(f => console.log("wrote", f));
