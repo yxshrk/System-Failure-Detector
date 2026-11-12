@@ -15,11 +15,11 @@ author:
 <div class="pagebreak"></div>
 ```
 
-**Summary.** Can an LLM show concretely how unshipped software would fail? We test function review (SP1: find an input that breaks a Python function's docstring) and distributed-system design review (SP2: find an order of timeouts, retries, lost messages and crashes that breaks a safety property like "no order is charged twice"). On 174 functions and 162 designs, scored exactly against ground truth, we compare Claude Haiku 4.5, Sonnet 5.5 and Opus 5.5, and the open-weight Qwen 3.8 27B and Llama 3.1 8B, each answering directly (Direct) or translating for a solver (Translate). Translation's value depends on the model: it adds no accuracy for strong models, cuts mid-tier false alarms, and cannot rescue a weak one.
+**Summary.** Can an LLM show concretely how unshipped software would fail? We test function review (SP1: find an input that breaks a Python function's docstring) and distributed-system design review (SP2: find an order of timeouts, retries, lost messages and crashes that breaks a safety property like "no order is charged twice"). On 174 functions and 162 designs, scored exactly against ground truth, we compare Claude Haiku 4.5, Sonnet 5.5 and Opus 5.5, and the open-weight Qwen 3.8 27B and Llama 3.1 8B, each answering directly (Direct) or translating for a solver (Translate). Translation's value depends on the model: it adds little accuracy for strong models, cuts mid-tier false alarms, and cannot rescue a weak one.
 
 **SP1** (Translate: a specification checked by Z3). Claude and Qwen raise no false alarm and find nearly every
 bug in both arms, even bugs random testing rarely triggers (100 inputs expose 5% of the very rare ones); Translate
-trails only there (29/32 vs 32/32 model–bug pairs), as its specification can copy the bug. Llama 3.1 8B fabricates
+trails slightly on the rarer bugs (rare 82/84 vs 84/84 model–bug pairs; very rare 29/32 vs 32/32, where its specification copied the bug). Llama 3.1 8B fabricates
 in Direct (false alarms on 76% of correct functions); Translate cuts this to 20%, mostly as 70 of 174 runs
 yield no usable spec.
 
@@ -59,7 +59,7 @@ We study two review sub-problems; **SP3** is not a third but scores Translate's 
 
 # 2. Formulation
 
-Both problems search for a counterexample, and the Translate arm does so literally: the solver is asked whether $\alpha \land \lnot\beta$ is satisfiable, with $\alpha$ = "the system as implemented" and $\beta$ = "the requirement" ($\alpha \models \beta$ iff it is not, [3] Ch. 7). A model is a *failure witness*: in SP1 an input satisfying $pre \land \lnot post$ (Z3), in SP2 a plan reaching the violation $G$ (SATPlan; GBFS answers the same question by search). The LLM writes a different half in each problem. In SP1 it writes $\beta$ (`pre`, `post`) and the code $\alpha$ is encoded automatically. In SP2 we fix $\beta$ (the goal, e.g. `charged-twice`, and actions such as `charge-again` that set it) and the LLM writes part of $\alpha$, the initial state; the action schemas, where the failure mechanism lives, are given to both arms.
+Both problems search for a counterexample, and the Translate arm does so literally: the solver is asked whether $\alpha \land \lnot\beta$ is satisfiable, with $\alpha$ = "the system as implemented" and $\beta$ = "the requirement" ($\alpha \models \beta$ iff it is not, [3] Ch. 7). A model is a *failure witness*: in SP1 an input satisfying $pre \land \lnot post$ (Z3), in SP2 a plan reaching the violation $G$ (SATPlan; GBFS answers the same question by search). The LLM writes a different half in each problem. In SP1 it writes $\beta$ (`pre`, `post`) and the code $\alpha$ is encoded automatically. In SP2 the requirement $\beta$ is fixed: no reachable state satisfies the violation $G$, e.g. `charged-twice`. The LLM writes part of $\alpha$, the initial state; the rest of $\alpha$, the action schemas, where the failure mechanism lives, is given to both arms.
 
 ## 2.1 SP1: a function as a CSP, solved by SMT
 
@@ -94,15 +94,15 @@ follow Python's floor semantics. Lists are values: aliasing (`ys = xs; ys.sort()
 on $x_0$ reaches this point, and then $\rho[x][x_0]$ is the concrete value of $x$. The join selects the branch taken, `return` and raises record the outcome under the path condition, and $cond_k$ marks a
 $(k{+}1)$-th iteration. ∎
 
-**The two queries.** The LLM-written `pre` and `post` are compiled the same way, unrolled to
+**The two queries.** The LLM's specification is two Python functions, `pre(x)` (is $x$ a valid input?) and `post(x, r)` (is $r$ correct for $x$?), compiled like $f$ and unrolled to
 $k' = \max(k, L{+}1)$ where $L$ is the longest list input (doubled up to $4k'$ while the coverage
-query $\Psi$ below is satisfiable), and $pre(x)$ stands for "returns normally with a true value" (likewise $post$).
+query $\Psi$ below is satisfiable). In the formulas, $pre(x)$ means "running `pre` on $x$ returns True without raising an exception", and $post(x, r)$ means the same for `post`. A subscript names a term's function ($ret_f$: what $f$ returns).
 
 $$\Phi_{spec} = D(x) \land \lnot unwind_f \land \lnot unwind_{pre} \land pre(x) \land \big(exc_f \lor (\lnot unwind_{post} \land \lnot post(x, ret_f))\big)$$
 
 $$\begin{aligned}\Phi_{gold} = {} & D(x) \land \lnot unwind_{ref} \land \lnot unwind_{mut} \\ & \land \big((exc_{ref} \oplus exc_{mut}) \lor (\lnot exc_{ref} \land \lnot exc_{mut} \land ret_{ref} \ne ret_{mut})\big)\end{aligned}$$
 
-In words, $\Phi_{spec}$ seeks an in-domain input, within the loop bounds, that satisfies $pre$ and on which $f$ raises or breaks $post$; $\Phi_{gold}$ seeks an input on which exactly one of reference and mutant raises, or both return and differ.
+In words: $\Phi_{spec}$ seeks a valid, in-bounds input on which $f$ raises or breaks $post$; $\Phi_{gold}$ seeks an input on which exactly one of reference and mutant raises, or both return and differ.
 
 **Theorem 1 (soundness and bounded completeness).** Suppose the *coverage* query
 $\Psi = D(x) \land \lnot unwind_f \land \big(unwind_{pre} \lor (pre(x) \land \lnot exc_f \land unwind_{post})\big)$

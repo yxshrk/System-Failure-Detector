@@ -27,11 +27,46 @@
 </header>
 
 <!-- ============================================================= -->
+<!-- Slide 3. The two sub-problems, each as one worked example       -->
+<!-- ============================================================= -->
+<figure>
+<div class="frame" style="aspect-ratio: 925 / 320">
+<svg id="two_tasks" viewBox="0 0 925 320" role="img" aria-label="SP1, a function: days_in_feb checks divisibility by 399 instead of 400; the AI tries to find an input where the output is not as expected. SP2, a system design (simplified): a payments service retries a charge that times out and records a payment only after charging it; the AI tries to find a sequence of events that causes an error.">
+  <!-- SP1 card -->
+  <rect x="0" y="0" width="452" height="320" rx="14" fill="#f4f3f0"/>
+  <text x="24" y="44" font-size="20" font-weight="700">SP1: a function</text>
+  <rect x="24" y="68" width="404" height="150" rx="8" fill="#fff" stroke="#e4e3df" stroke-width="1.5"/>
+  <g font-size="16">
+    <text x="40" y="98" class="mono">def days_in_feb(year):</text>
+    <text x="40" y="124" class="mono">    if year % <tspan font-weight="700">399</tspan> == 0: return 29</text>
+    <text x="40" y="150" class="mono">    if year % 100 == 0: return 28</text>
+    <text x="40" y="176" class="mono">    if year % 4 == 0:   return 29</text>
+    <text x="40" y="202" class="mono">    return 28</text>
+  </g>
+  <text x="24" y="262" font-size="18">The AI tries to find an input where</text>
+  <text x="24" y="290" font-size="18">the output is not as expected.</text>
+
+  <!-- SP2 card -->
+  <rect x="473" y="0" width="452" height="320" rx="14" fill="#f4f3f0"/>
+  <text x="497" y="44" font-size="20" font-weight="700">SP2: a system design <tspan font-weight="400" class="muted">(simplified)</tspan></text>
+  <g font-size="18">
+    <text x="497" y="96">A payments service retries a charge</text>
+    <text x="497" y="124">that times out. It checks for duplicates,</text>
+    <text x="497" y="152">but records a payment only after</text>
+    <text x="497" y="180">charging it.</text>
+  </g>
+  <text x="497" y="262" font-size="18">The AI tries to find a sequence of events</text>
+  <text x="497" y="290" font-size="18">that causes an error.</text>
+</svg>
+</div>
+</figure>
+
+<!-- ============================================================= -->
 <!-- 1. Direct vs Translate pipeline                                -->
 <!-- ============================================================= -->
 <figure>
 <div class="frame">
-<svg id="method" viewBox="40 165 1520 650" role="img" aria-label="Two pipelines. Direct: the LLM reads the code or design and outputs a witness. Translate: the LLM writes a formal spec, a solver searches for the witness, and solver errors are fed back for repair. Both witnesses are replayed on the gold model.">
+<svg id="method" viewBox="40 165 1520 560" role="img" aria-label="Two pipelines. Direct: the LLM reads the code or design and outputs a failing case. Translate: the LLM writes a formal spec, and a solver searches for the failing case. Either failing case is run on the real code or design: it either really fails or was made up.">
   <defs>
     <marker id="a-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#52514e"/></marker>
     <marker id="a-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#2a78d6"/></marker>
@@ -53,7 +88,7 @@
   <text x="505" y="280" font-size="18" text-anchor="middle">finds the failure</text>
   <text x="505" y="302" font-size="18" text-anchor="middle">itself</text>
   <path d="M620 265 H1345 V365" fill="none" stroke="#2a78d6" stroke-width="3" marker-end="url(#a-blue)"/>
-  <text x="980" y="250" font-size="20" text-anchor="middle">witness</text>
+  <text x="980" y="250" font-size="20" text-anchor="middle">failing case</text>
 
   <!-- TRANSLATE lane -->
   <text x="390" y="578" font-size="20" font-weight="700" letter-spacing="2" style="fill:#eb6834">TRANSLATE</text>
@@ -77,80 +112,18 @@
   <text x="1115" y="696" font-size="15" text-anchor="middle" class="muted">SP2: SATPlan, GBFS with h<tspan font-size="11" dy="4">FF</tspan></text>
 
   <path d="M1240 645 H1345 V545" fill="none" stroke="#eb6834" stroke-width="3" marker-end="url(#a-orange)"/>
-  <text x="1355" y="610" font-size="20">witness</text>
+  <text x="1355" y="610" font-size="20">failing case</text>
 
-  <!-- repair loop -->
-  <path d="M1115 705 V772 H505 V710" fill="none" stroke="#eb6834" stroke-width="2.5" stroke-dasharray="9 7" marker-end="url(#a-orange)"/>
-  <text x="810" y="800" font-size="19" text-anchor="middle">parse and solver errors fed back for repair</text>
 
   <!-- gold check -->
   <rect x="1220" y="370" width="320" height="170" rx="14" fill="#fff" stroke="#0b0b0b" stroke-width="2.5"/>
-  <text x="1380" y="415" font-size="23" font-weight="700" text-anchor="middle">Gold check</text>
-  <text x="1380" y="450" font-size="18" text-anchor="middle">the witness is replayed</text>
-  <text x="1380" y="476" font-size="18" text-anchor="middle">on the reference</text>
+  <text x="1380" y="415" font-size="23" font-weight="700" text-anchor="middle">Check</text>
+  <text x="1380" y="450" font-size="18" text-anchor="middle">run the failing case on</text>
+  <text x="1380" y="476" font-size="18" text-anchor="middle">the real code or design</text>
 
   <line x1="1250" y1="494" x2="1510" y2="494" stroke="#e4e3df" stroke-width="1.5"/>
-  <text x="1300" y="524" font-size="19" font-weight="700" text-anchor="middle">✓ valid</text>
-  <text x="1455" y="524" font-size="19" font-weight="700" text-anchor="middle" class="muted">✗ fabricated</text>
-
-</svg>
-</div>
-</figure>
-
-<!-- ============================================================= -->
-<!-- 2. SP1 worked example                                          -->
-<!-- ============================================================= -->
-<figure>
-<div class="frame">
-<svg id="worked_example" viewBox="40 160 1520 632" role="img" aria-label="Worked example. A days_in_month function whose leap-year check uses 399 instead of 400 fails on only 7 of 36,000 inputs. 1,000 random inputs find it 18% of the time. Opus 5.5 Direct answers February 2000; Opus 5.5 Translate writes a spec and Z3 returns February 2400. Both are confirmed against the reference.">
-  <!-- code panel -->
-  <rect x="60" y="170" width="720" height="560" rx="14" fill="#f4f3f0"/>
-  <rect x="60" y="208" width="720" height="38" fill="#f6ecc2"/>
-  <g class="mono" font-size="19">
-    <text x="84" y="202" class="mono">def leap(y):</text>
-    <text x="84" y="234" class="mono">    return y % 4 == 0 and (y % 100 != 0 or y % <tspan font-weight="700">399</tspan> == 0)</text>
-    <text x="84" y="298" class="mono">def days_in_month(month, year):</text>
-    <text x="84" y="330" class="mono" style="fill:#52514e">    """... February has 29 days in leap</text>
-    <text x="84" y="362" class="mono" style="fill:#52514e">    years (divisible by 4, except years</text>
-    <text x="84" y="394" class="mono" style="fill:#52514e">    divisible by 100 unless also divisible</text>
-    <text x="84" y="426" class="mono" style="fill:#52514e">    by <tspan font-weight="700" style="fill:#0b0b0b">400</tspan>) and 28 otherwise; ..."""</text>
-    <text x="84" y="458" class="mono">    if month == 2:</text>
-    <text x="84" y="490" class="mono">        return 29 if leap(year) else 28</text>
-    <text x="84" y="522" class="mono">    if month in (4, 6, 9, 11):</text>
-    <text x="84" y="554" class="mono">        return 30</text>
-    <text x="84" y="586" class="mono">    return 31</text>
-  </g>
-  <line x1="84" y1="630" x2="756" y2="630" stroke="#e4e3df" stroke-width="2"/>
-  <text x="84" y="668" font-size="20"><tspan font-weight="700">Mutation:</tspan> constant 400 → 399 in <tspan class="mono">leap</tspan></text>
-  <text x="84" y="702" font-size="20" class="muted">Docstring says 400, code says 399.</text>
-
-  <!-- card 1: random testing -->
-  <rect x="820" y="170" width="720" height="170" rx="14" fill="#fff" stroke="#e4e3df" stroke-width="2"/>
-  <rect x="820" y="170" width="10" height="170" rx="4" fill="#b5b3ad"/>
-  <text x="860" y="212" font-size="20" font-weight="700" letter-spacing="1.5" class="muted">RANDOM TESTING</text>
-  <text x="860" y="290" font-size="64" font-weight="700">18%</text>
-  <text x="1010" y="262" font-size="21">chance that 1,000 random inputs</text>
-  <text x="1010" y="292" font-size="21">hit a failing one</text>
-  <text x="1010" y="322" font-size="18" class="muted">(2% with 100 inputs)</text>
-
-  <!-- card 2: Direct -->
-  <rect x="820" y="365" width="720" height="170" rx="14" fill="#fff" stroke="#e4e3df" stroke-width="2"/>
-  <rect x="820" y="365" width="10" height="170" rx="4" fill="#2a78d6"/>
-  <text x="860" y="407" font-size="20" font-weight="700" letter-spacing="1.5" style="fill:#2a78d6">OPUS 5.5 · DIRECT</text>
-  <text x="860" y="455" font-size="28" font-weight="700" class="mono">month = 2, year = 2000</text>
-  <text x="860" y="492" font-size="19">Paraphrased: 2000 is divisible by 400, so February has 29 days,</text>
-  <text x="860" y="520" font-size="19">but 2000 % 399 is 5, so the code returns 28.</text>
-
-  <!-- card 3: Translate -->
-  <rect x="820" y="560" width="720" height="170" rx="14" fill="#fff" stroke="#e4e3df" stroke-width="2"/>
-  <rect x="820" y="560" width="10" height="170" rx="4" fill="#eb6834"/>
-  <text x="860" y="602" font-size="20" font-weight="700" letter-spacing="1.5" style="fill:#eb6834">OPUS 5.5 · TRANSLATE</text>
-  <text x="860" y="650" font-size="20">Writes the requirement from the docstring (the 400 rule)</text>
-  <text x="860" y="702" font-size="20">Z3 returns</text>
-  <text x="975" y="702" font-size="26" font-weight="700" class="mono">month = 2, year = 2400</text>
-  <text x="1390" y="702" font-size="20" class="muted">in 0.01 s</text>
-
-  <text x="1180" y="774" font-size="19" text-anchor="middle">The two arms name different years; any year divisible by 400 exposes the bug.</text>
+  <text x="1300" y="524" font-size="19" font-weight="700" text-anchor="middle">✓ really fails</text>
+  <text x="1455" y="524" font-size="19" font-weight="700" text-anchor="middle" class="muted">✗ made up</text>
 
 </svg>
 </div>
@@ -188,7 +161,7 @@
 </figure>
 
 <!-- ============================================================= -->
-<!-- 4. SP1 formulation on the leap-year bug (slide 7 slot)        -->
+<!-- 4. SP1 formulation on the leap-year bug (slide 6 slot)        -->
 <!-- ============================================================= -->
 <figure>
 <div class="frame" style="aspect-ratio: 600 / 460; max-width: 600px">
