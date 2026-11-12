@@ -216,7 +216,7 @@ def hardness(sp1: pd.DataFrame, sp2: pd.DataFrame):
         a.plot(range(4), ys, color=col, linewidth=2.4, marker="o", markersize=7,
                markeredgecolor=SURFACE, markeredgewidth=1.5, label=label)
     a.set_xticks(range(4), ["common", "uncommon", "rare", "very rare"])
-    a.set_xlabel("Functions, by how rare the failing input is", fontsize=11, color=INK)
+    a.set_xlabel("Functions, by how rare the failing input is", fontsize=10, color=INK)
     a.set_ylabel("failures found", fontsize=11, color=INK2)
     a.legend(frameon=False, fontsize=8.5, loc="lower left")
 
@@ -235,7 +235,7 @@ def hardness(sp1: pd.DataFrame, sp2: pd.DataFrame):
         b.plot(range(len(bins)), ys, color=col, linewidth=2.4, marker="o", markersize=7,
                markeredgecolor=SURFACE, markeredgewidth=1.5, label=label)
     b.set_xticks(range(len(bins)), [f"{lo}–{hi}" for lo, hi in bins])
-    b.set_xlabel("Designs, by the length of the shortest failure trace (events)", fontsize=11, color=INK)
+    b.set_xlabel("Designs, by the shortest known failure trace (events)", fontsize=10, color=INK)
     b.set_ylabel("failure traces found", fontsize=11, color=INK2)
     b.legend(frameon=False, fontsize=9, loc="lower left")
     b.text(3, 92, "Haiku not run\non 30–51", fontsize=9, color=INK2, ha="center", va="top")
