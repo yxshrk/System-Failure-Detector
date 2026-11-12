@@ -1,6 +1,6 @@
 # Pre-Mortems video script
 
-Read this slide by slide while recording: Joshua presents slides 1 to 6, Hein 7 to 12 and Yash 13 to 18. The words are the deck's checked speaker notes, about 1,271 words, roughly 9:47 at 130 words a minute.
+Read this slide by slide while recording: Joshua presents slides 1 to 6, Hein 7 to 12 and Yash 13 to 18. The words are the deck's checked speaker notes, about 1,322 words, roughly 10:10 at 130 words a minute.
 
 ## Who presents what
 
@@ -10,14 +10,14 @@ Each of you reads six slides, and the handovers come after slides 6 and 12. Swap
 | --- | --- | --- | --- | --- |
 | Joshua | 1 to 6 | Question | 316 | 2:26 |
 | Hein | 7 to 12 | Formulation, Experiment | 427 | 3:17 |
-| Yash | 13 to 18 | Results, Answer | 528 | 4:04 |
-| All three | 18 | | 1,271 | 9:47 |
+| Yash | 13 to 18 | Results, Answer | 579 | 4:27 |
+| All three | 18 | | 1,322 | 10:10 |
 
-Times assume 130 words a minute. At 120 words a minute the total is 10:36, against the 10:00 limit, so keep a steady pace and do not pause long between slides.
+Times assume 130 words a minute. At 120 words a minute the total is 11:01, against the 10:00 limit, so keep a steady pace and do not pause long between slides.
 
 ## If the run-through goes past 9:30
 
-Make these cuts in this order, rather than improvising: each drops a point that is already on screen, so no claim is lost. All six save 80 words, bringing the total to 1,191 words (9:10 at 130 words a minute, 9:56 at 120).
+Make these cuts in this order, rather than improvising: each drops a point that is already on screen, so no claim is lost. All six save 80 words, bringing the total to 1,242 words (9:33 at 130 words a minute, 10:21 at 120).
 
 | Order | Slide | Presenter | Cut | Words saved |
 | --- | --- | --- | --- | --- |
@@ -25,7 +25,7 @@ Make these cuts in this order, rather than improvising: each drops a point that 
 | 2 | 2 | Joshua | "Should it find the failure directly, or translate for a solver?" | 11 |
 | 3 | 10 | Hein | "Our solvers supply the ground truth, so what Translate tests is the translation." | 13 |
 | 4 | 9 | Hein | "and test it on 25 random inputs per function" (and the comma before it) | 9 |
-| 5 | 14 | Yash | "Llama's drop is not, because its problem files leave out facts, so its planner finds no violation in 29 of the 40 flawed designs." | 24 |
+| 5 | 14 | Yash | "Llama's drop is not, because its problem files leave out facts, so the planner finds no violation in 29 of the 40 flawed designs." | 24 |
 | 6 | 16 | Yash | Say the three points more briefly, after "So what is our answer?": "With a strong model, both arms nearly tie. Translating doesn't remove errors; it moves them into the spec the LLM writes. And only a solver can prove there is no failure, but that proof is exactly where the tools run out." | 18 |
 
 ## Saying the terms
@@ -141,35 +141,35 @@ RQ1 asked whether harder-to-reach failures hurt either arm. On the left, random 
 
 ### Slide 14 · Translation cuts the mid-tier model's false alarms
 
-*Starts at 6:18 · 108 words · On screen: Haiku's solid line in each panel, then the interval line under the chart.*
+*Starts at 6:18 · 137 words · On screen: Haiku's solid line in each panel, then the two lines under the chart.*
 
-So the strong models find the failures. RQ2 asks the opposite: which arm invents failures that aren't there? On correct designs, translating cuts Haiku's false alarms from 12 to 7 of 20. Why? In Direct, Haiku matches a familiar failure pattern to a design that rules it out. In Translate, it must first write down this design's facts, and those facts decide which events the planner can use. And the drop is a real gain, because Haiku still finds 34 of 40 real failures. Llama's drop is not, because its problem files leave out facts, so its planner finds no violation in 29 of the 40 flawed designs.
+So the strong models find the failures. RQ2 asks the opposite: which arm invents failures that aren't there? On correct designs, translating cuts Haiku's false alarms from 12 to 7 of 20. Why? In Direct, Haiku recognises a famous failure, like the double charge on a retry, and reports it even when this design prevents it. In Translate, it must first write down this design's facts. Every event is a planning action with preconditions. So if the facts say this design prevents an event, the planner can never use it, and the false failure cannot be built. And the drop is a real gain, because Haiku still finds 34 of 40 real failures. Llama's drop is not, because its problem files leave out facts, so the planner finds no violation in 29 of the 40 flawed designs.
 
 ### Slide 15 · Translate fails through its specification or its tools
 
-*Starts at 7:08 · 102 words · On screen: the four cards, then the inventory chart.*
+*Starts at 7:22 · 102 words · On screen: the four cards, then the inventory chart.*
 
 Translating helps Haiku, but it can also fail, and SP3 asks how. We saw four ways. First, if the LLM copies the buggy line into the requirement, code and requirement agree, so Z3 finds no failing input. Second, if the problem file allows things the real design doesn't, the planner finds a failure that exists only in that wrong problem. Third, a weak model can't write the formal language reliably, so the solver often gets no usable spec. Fourth, proving a design safe means searching every reachable state; for inventory that explodes, so from size 8 the search runs out of budget.
 
 ### Slide 16 · The answer in brief
 
-*Starts at 7:55 · 64 words · On screen: the three numbered cards.*
+*Starts at 8:09 · 64 words · On screen: the three numbered cards.*
 
 So what is our answer? One: with a strong model, both arms nearly tie. Two: translating doesn't remove errors; it moves them into the spec the LLM writes, so it helps only a model that writes the formal language well. Three: only a solver can prove there is no failure, but that proof needs exhaustive search, which is exactly where the tools run out.
 
 ### Slide 17 · Trade-offs, and when to use which arm
 
-*Starts at 8:25 · 89 words · On screen: the two cards, then the formula, then the Haiku table.*
+*Starts at 8:38 · 111 words · On screen: the two cards, then the formula, then the Haiku table.*
 
-So which arm should you use? That is a maximum-expected-utility decision, as in the course: weigh what a false alarm costs against what a missed failure costs. Take Haiku. With readable names, Translate raises fewer false alarms, finds more failures and is cheaper to run, so at these estimates it wins whatever an error costs. With names hidden, it finds two fewer failures but raises half the false alarms, so if half the designs are flawed, it wins as long as a miss costs less than ten false alarms.
+So which arm should you use? That is a maximum-expected-utility decision, as in the course: weigh what a false alarm costs against what a missed failure costs. Take Haiku. With readable names, Translate raises fewer false alarms, finds more failures and is cheaper to run, so at these estimates it wins whatever an error costs. We also ran the same designs with their revealing names replaced by neutral labels, so a name cannot give the flaw away. With names hidden, Translate finds two fewer failures but raises half the false alarms, so if half the designs are flawed, it wins as long as a miss costs less than ten false alarms.
 
 ### Slide 18 · Limitations, and will this change?
 
-*Starts at 9:06 · 88 words · On screen: the two columns, then the Will this change? card.*
+*Starts at 9:30 · 88 words · On screen: the two columns, then the Will this change? card.*
 
 Finally, how far can you trust this answer? Both arms were given the failure mechanisms as named events, so we have not tested a model writing the event model itself. We also chose functions that can be encoded, which favours Translate. Will the answer change? Direct will likely keep improving on small, recognisable problems. But it still cannot prove there is no failure, and for the solvers, search can still take exponential time in the worst case. So the value of translating depends on the model. Thank you.
 
-*End of the video, at about 9:47.*
+*End of the video, at about 10:10.*
 
 ## Before recording
 
