@@ -113,7 +113,7 @@ You may notice that our experiment depends on solvers working properly. How do w
 
 *Starts at 4:18 · 65 words · On screen: the two cards, functions then designs.*
 
-Now the experiment, starting with what we tested. SP1 has 174 instances from 37 functions: bugs from common to very rare triggers, plus controls, including equivalent mutants that look buggy but are not. SP2 has five services, each flawed, subtle or fixed; size scales a timer or capacity, so failures get longer. Our solvers supply the ground truth, so what Translate tests is the translation.
+Now the experiment, here's what we tested. SP1 has 174 instances from 37 functions: bugs range from common to very rare triggers; we also have controls that are actually correct, including equivalent mutants that look buggy but are not. SP2 has five design scenarios, each flawed, subtle or fixed versions; we also have a variation in length for how many steps it takes to reach a failure goal. One thing to note is that our solvers supply the ground truth correctly, so in translate, whether LLM gets it right or wrong hinges entirely on how well it could translate.
 
 ### Slide 11 · Method: five models, the same inputs, exact scoring
 
