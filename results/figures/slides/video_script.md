@@ -86,7 +86,7 @@ To help us solve the project's problem, we broke it down into two research quest
 
 *Starts at 2:19 · 96 words · On screen: the table on the left; the diagram on the right from top to bottom, ending at Satisfiable.*
 
-How does Translate turn the leap-year bug into a solver problem? Random testing catches it only 18% of the time, since just 7 of 36,000 inputs fail. For SP1, we turn it into a constraint as you can see on the left. In practice, this is what it's going to look like: we have a buggy line of code. Our symbolic execution turns the code into one formula and then feed it to our solver Z3; the LLM also writes a similar requirement but from the docstring that correctly describes the desired behavior rather than from the buggy code. Z3 then solves the CSP which is where the condition is that these two disagree. This exact instance is then verified by the actual correct code.  
+How does Translate turn the leap-year bug into a solver problem?  For SP1, we turn it into a constraint as you can see on the left. In practice, this is what it's going to look like: we have a buggy line of code. Our symbolic execution turns the code into one formula and then feed it to our solver Z3; the LLM also writes a similar requirement but from the docstring that correctly describes the desired behavior rather than from the buggy code. Z3 then solves the CSP which is where the condition is that these two disagree. This exact instance is then verified by the actual correct code.  
 
 *Reading note: say "code and not requirement" as one phrase, then pause briefly before "is unsatisfiable".*
 
