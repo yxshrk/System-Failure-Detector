@@ -66,7 +66,7 @@
 <!-- ============================================================= -->
 <figure>
 <div class="frame">
-<svg id="method" viewBox="40 165 1520 650" role="img" aria-label="Two pipelines. Direct: the LLM reads the code or design and outputs a witness. Translate: the LLM writes a formal spec, a solver searches for the witness, and solver errors are fed back for repair. Both witnesses are replayed on the gold model.">
+<svg id="method" viewBox="40 165 1520 650" role="img" aria-label="Two pipelines. Direct: the LLM reads the code or design and outputs a failing case. Translate: the LLM writes a formal spec, a solver searches for the failing case, and solver errors are fed back for repair. Either failing case is run on the real code or design: it either really fails or was made up.">
   <defs>
     <marker id="a-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#52514e"/></marker>
     <marker id="a-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#2a78d6"/></marker>
@@ -88,7 +88,7 @@
   <text x="505" y="280" font-size="18" text-anchor="middle">finds the failure</text>
   <text x="505" y="302" font-size="18" text-anchor="middle">itself</text>
   <path d="M620 265 H1345 V365" fill="none" stroke="#2a78d6" stroke-width="3" marker-end="url(#a-blue)"/>
-  <text x="980" y="250" font-size="20" text-anchor="middle">witness</text>
+  <text x="980" y="250" font-size="20" text-anchor="middle">failing case</text>
 
   <!-- TRANSLATE lane -->
   <text x="390" y="578" font-size="20" font-weight="700" letter-spacing="2" style="fill:#eb6834">TRANSLATE</text>
@@ -112,7 +112,7 @@
   <text x="1115" y="696" font-size="15" text-anchor="middle" class="muted">SP2: SATPlan, GBFS with h<tspan font-size="11" dy="4">FF</tspan></text>
 
   <path d="M1240 645 H1345 V545" fill="none" stroke="#eb6834" stroke-width="3" marker-end="url(#a-orange)"/>
-  <text x="1355" y="610" font-size="20">witness</text>
+  <text x="1355" y="610" font-size="20">failing case</text>
 
   <!-- repair loop -->
   <path d="M1115 705 V772 H505 V710" fill="none" stroke="#eb6834" stroke-width="2.5" stroke-dasharray="9 7" marker-end="url(#a-orange)"/>
@@ -120,13 +120,13 @@
 
   <!-- gold check -->
   <rect x="1220" y="370" width="320" height="170" rx="14" fill="#fff" stroke="#0b0b0b" stroke-width="2.5"/>
-  <text x="1380" y="415" font-size="23" font-weight="700" text-anchor="middle">Gold check</text>
-  <text x="1380" y="450" font-size="18" text-anchor="middle">the witness is replayed</text>
-  <text x="1380" y="476" font-size="18" text-anchor="middle">on the reference</text>
+  <text x="1380" y="415" font-size="23" font-weight="700" text-anchor="middle">Check</text>
+  <text x="1380" y="450" font-size="18" text-anchor="middle">run the failing case on</text>
+  <text x="1380" y="476" font-size="18" text-anchor="middle">the real code or design</text>
 
   <line x1="1250" y1="494" x2="1510" y2="494" stroke="#e4e3df" stroke-width="1.5"/>
-  <text x="1300" y="524" font-size="19" font-weight="700" text-anchor="middle">✓ valid</text>
-  <text x="1455" y="524" font-size="19" font-weight="700" text-anchor="middle" class="muted">✗ fabricated</text>
+  <text x="1300" y="524" font-size="19" font-weight="700" text-anchor="middle">✓ really fails</text>
+  <text x="1455" y="524" font-size="19" font-weight="700" text-anchor="middle" class="muted">✗ made up</text>
 
 </svg>
 </div>

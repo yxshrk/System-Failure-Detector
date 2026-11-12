@@ -67,11 +67,11 @@ In July 2026 Coinkite disclosed that since 2021 its Coldcard wallets had generat
 
 Two kinds of review. For a function, the AI must find an input that breaks it: February 2000 gets 28 days, not 29. For a system design, an order of events that breaks it: here, a card charged twice. Either way, we replay it.
 
-### Slide 4 · Direct: the LLM answers itself. Translate: a solver searches
+### Slide 4 · Direct vs Translate
 
-*Starts at 1:18 · 54 words · On screen: the diagram, Direct along the top and Translate along the bottom, both into the gold check.*
+*Starts at 1:18 · 54 words · On screen: the diagram, Direct along the top and Translate along the bottom, both into the check on the right.*
 
-We find witnesses in two ways, which we call arms. Direct: the LLM finds the failure itself. Translate: the LLM writes the problem formally as a specification, a solver searches, and errors go back for repair. Both arms are scored the same way: a witness counts only if it replays on the gold reference.
+We compare two ways of using the AI, which we call arms. Direct: the AI finds the failure itself. Translate: the AI writes the problem formally, a solver searches, and errors go back for repair. Either way, we run the answer on the real code or design, and it counts only if it fails.
 
 ### Slide 5 · Two research questions, and one check
 
