@@ -89,13 +89,40 @@ image("method.png", "Direct vs Translate pipeline diagram",
     "Initial state I: the design facts, e.g. (dedup-racy)",
     "Goal G: the violation, e.g. (charged-twice o1)",
     "SATPlan finds a shortest trace. GBFS + h_FF searches exhaustively and certifies \"safe\"",
-    "Translate: the LLM writes the problem file (initial state)",
+    "Both arms get the event rules (actions). Translate: the LLM writes only the initial state",
   ], { x: 0.375, y: 1.25, w: 4.6, h: 3.9 });
   s.addImage({ path: `${D}/sp2_trace.png`, x: 5.25, y: 1.25, w: 4.375, h: 3.9, altText: "Shortest failure trace for payments-subtle-1: eight events ending in charged-twice" });
   s.addNotes("SP2 is classical planning. The planner controls every event, including failures, so a plan is a counterexample, not a course of action: planning used as model checking of a safety property. Walk through the payments trace: the retry passes the duplicate check because the record is written only after charging, so the card is charged twice.");
 }
 
-// 6. Problem instances
+// 6. Guarantees and complexity
+{
+  const s = base("What the solvers guarantee, and what it costs", "Why a solver's answer can be trusted, and where it stops");
+  const h = (t, c) => ({ text: t, options: { bold: true, color: c || INK, fill: { color: "EBEAE6" } } });
+  const lab = t => ({ text: t, options: { bold: true } });
+  const sup = (a, b, c) => ({ text: [{ text: a }, { text: b, options: { superscript: true } }, { text: c }] });
+  const rows = [
+    [h(""), h("SP1: Z3 on a CSP", BLUE), h("SP2: SATPlan + GBFS on STRIPS", ORANGE)],
+    [lab("Encoding"), "Bounded symbolic execution: one formula for all paths, loops unrolled k times",
+      "A variable per fact and action per step; effects, explanatory frame axioms, exactly one action per step"],
+    [lab("Encoding is correct"), "Lemma 1: within the bounds, the formula returns what Python returns (tested on 25 random inputs per function)",
+      "Lemma 2: these clauses equal the textbook successor-state axioms"],
+    [lab("\"Failure found\" means"), "Theorem 1: every Z3 answer is an input that breaks the spec",
+      "Theorem 2: satisfiable at horizon T iff a T-step trace reaches G; the first such T gives a shortest trace"],
+    [lab("\"No failure\" means"), "Theorem 1: none within the input and loop bounds; otherwise \"undecided\"",
+      "Theorem 3: GBFS exhausted every reachable state, so G is unreachable at this size"],
+    [lab("Worst case"), "Finite CSP: NP-complete. Non-linear integers: Z3 can answer \"unknown\"",
+      sup("PlanSAT: PSPACE-complete; each SATPlan call is NP-complete. Up to 2", "218", " states at size 8")],
+  ];
+  s.addTable(rows, { x: 0.375, y: 1.15, w: 9.25, colW: [1.6, 3.8, 3.85], fontFace: F, fontSize: 11, color: INK,
+    border: { type: "solid", pt: 0.75, color: "E4E3DF" }, rowH: [0.3, 0.62, 0.62, 0.62, 0.46, 0.46], margin: 0.06, valign: "middle" });
+  T(s, [{ text: "h" }, { text: "FF", options: { subscript: true } },
+    { text: " only prunes dead ends, which is safe because ignoring deletes only adds behaviour (1.2× to 3.8× fewer states than BFS). Every witness is replayed on the real code or gold problem before it counts." }],
+    { x: 0.375, y: 4.55, w: 9.25, h: 0.6, fontSize: 12 });
+  s.addNotes("Why trust the solver? For SP1 we proved the encoding matches Python on every input within the loop bounds, so a Z3 answer is a real failing input, and unsatisfiable means no failure within those bounds. A finite CSP is NP-complete, and with non-linear arithmetic Z3 can answer unknown, which we score as undecided. For SP2, our SATPlan clauses are equivalent to the successor-state axioms, so the first satisfiable horizon gives a shortest failure trace. To certify safety, greedy best-first search visits every reachable state; the FF heuristic only prunes dead ends. Planning is PSPACE-complete, so this is where the tools can run out, as inventory shows later.");
+}
+
+// 7. Problem instances
 {
   const s = base("Problem instances", "Built and labelled automatically, scored by exact replay on the gold model");
   const col = (x, head, big, lines, color) => {
@@ -119,15 +146,15 @@ image("method.png", "Direct vs Translate pipeline diagram",
   s.addNotes("SP1: 174 instances. Bugs are single-line mutants plus hand-written bugs, chosen to cover common through very rare triggers; controls include equivalent mutants that look buggy but are not. SP2: 60 main designs, plus stress, hidden-name and long-trace sets. Five models from small open-weight to frontier. Scoring is exact: a witness counts only if it replays on the gold model.");
 }
 
-// 7. Worked example
+// 8. Worked example
 image("worked_example.png", "Worked example: leap-year bug with 399 instead of 400",
   "One mutated constant, 400 to 399. Only 7 of 36,000 inputs fail, so 1,000 random tests catch it 18% of the time. Opus Direct reasons its way to February 2000. Opus Translate writes the spec from the docstring and Z3 finds February 2400 in 0.01 s. Both are confirmed against the reference.");
 
-// 8. Scoreboard
+// 9. Scoreboard
 image("scoreboard.png", "Scoreboard heatmap of all models and arms",
   "Headline results. The 5.5 models and Qwen 27B are near-perfect on the sets they ran with zero false alarms. Haiku 4.5 is fine on functions but struggles on designs, especially false alarms with names hidden. Llama 8B fails everywhere: in Direct it fabricates, 45 of 59 false alarms on correct code.");
 
-// 9. Harder failures
+// 10. Harder failures
 {
   const s = base("Harder failures do not hurt the strong models", "SP1: rarer triggering inputs. SP2: longer failure traces");
   s.addImage({ path: `${D}/hardness_panel.png`, x: 0.375, y: 1.2, w: 9.25, h: 3.4, altText: "Left: failures found vs rarity for random testing and LLM arms. Right: valid traces vs trace length for Sonnet, Opus and Haiku" });
@@ -135,11 +162,11 @@ image("scoreboard.png", "Scoreboard heatmap of all models and arms",
   s.addNotes("RQ1. Random testing falls off as bugs get rarer; Direct finds all of them, Translate 29 of 32 very rare pairs (two bugs, so a hint). On designs, trace length from 6 to 51 events does not hurt Sonnet or Opus; Haiku stays near 80% with no length trend. This looks like recognition rather than search.");
 }
 
-// 10. False alarms
+// 11. False alarms
 image("false_alarms.png", "Slope chart: false alarms Direct vs Translate",
   "RQ2. Translation helps weaker models: Haiku false alarms 12 to 7, and 19 to 9 with names hidden. The strong models stay at zero. Caveat on Llama: on the 20 correct main designs, Llama Translate said safe 16 times, raised 2 false alarms and gave no answer twice. Its problem files left out facts, so the planner found no violation; that is not better reasoning.");
 
-// 11. Where Translate breaks
+// 12. Where Translate breaks
 {
   const s = base("Where Translate breaks", "Translation moves the error into the specification, and the tools have limits");
   const card = (y, head, body) => {
@@ -151,11 +178,11 @@ image("false_alarms.png", "Slope chart: false alarms Direct vs Translate",
   card(2.35, "The planner exploits slack", "Haiku's lock problem started a lease clock before anyone held the lock; the trace only works in its model");
   card(3.45, "The tools run out", "SP1: 3 timeouts, 5 Z3 unknowns. Inventory: 2.7M states at size 6, search capped at 8");
   s.addImage({ path: `${D}/inventory_panel.png`, x: 5.25, y: 1.25, w: 4.375, h: 3.18, altText: "States expanded to prove safety vs design size, inventory explodes, other designs flat" });
-  T(s, "Llama could not write the formal language: 46 of its 70 failed SP1 specs used one unsupported builtin.", { x: 0.375, y: 4.65, w: 9.25, h: 0.5, fontSize: 13 });
+  T(s, "Llama could not write the formal language: its SP2 problem files left out about a third of the initial facts, and 70 of its 174 SP1 runs gave no usable spec.", { x: 0.375, y: 4.65, w: 9.25, h: 0.5, fontSize: 13 });
   s.addNotes("Translate is not free. Specs can inherit the bug, permissive problem files hand the planner shortcuts, and solvers time out. Certification is exhaustive search, and the symmetric inventory design explodes: 9k states at size 4, 2.7M at 6, and the search is capped at 8 (that label rests on a hand-proved invariant), where Translate is undecided while Sonnet and Opus Direct still answer correctly, without proof.");
 }
 
-// 12. Trade-offs
+// 13. Trade-offs
 {
   const s = base("Direct vs Translate: trade-offs", "Evidence from both scales");
   const h = (t, c) => ({ text: t, options: { bold: true, color: c || INK, fill: { color: "EBEAE6" } } });
@@ -178,7 +205,7 @@ image("false_alarms.png", "Slope chart: false alarms Direct vs Translate",
   s.addNotes("The brief asks for advantages and disadvantages. With strong models the two tie. Translate's unique value is certifying absence, but only for the problem as translated. Direct needs only the model, though in SP2 both arms got the same authored event rules. Practical points: solver coverage limits what Translate can check, an open-weight model is good enough here, and inputs without helpful names hurt Direct more. Beyond the course: random testing and fuzzing, model checkers like TLA+, symmetry reduction and inductive invariants.");
 }
 
-// 13. Conclusion
+// 14. Conclusion
 {
   const s = base("When to use which", "A maximum-expected-utility choice: cost of a false alarm vs cost of a miss");
   const box = (x, head, color, lines) => {
