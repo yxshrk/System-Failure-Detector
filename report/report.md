@@ -15,7 +15,7 @@ author:
 <div class="pagebreak"></div>
 ```
 
-**Summary.** Can an LLM show concretely how unshipped software would fail? We test function review (SP1: find an input that breaks a Python function's docstring) and distributed-system design review (SP2: find an order of timeouts, retries, lost messages and crashes that breaks a safety property like "no order is charged twice"). On 174 functions and 162 designs, scored exactly against ground truth, we compare Claude Haiku 4.5, Sonnet 5.5 and Opus 5.5, and the open-weight Qwen 3.8 27B and Llama 3.1 8B, each answering directly (Direct) or translating for a solver (Translate). Translation's value depends on the model: it adds nothing for strong models, cuts a mid-tier one's false alarms, and cannot rescue a weak one.
+**Summary.** Can an LLM show concretely how unshipped software would fail? We test function review (SP1: find an input that breaks a Python function's docstring) and distributed-system design review (SP2: find an order of timeouts, retries, lost messages and crashes that breaks a safety property like "no order is charged twice"). On 174 functions and 162 designs, scored exactly against ground truth, we compare Claude Haiku 4.5, Sonnet 5.5 and Opus 5.5, and the open-weight Qwen 3.8 27B and Llama 3.1 8B, each answering directly (Direct) or translating for a solver (Translate). Translation's value depends on the model: it adds no accuracy for strong models, cuts mid-tier false alarms, and cannot rescue a weak one.
 
 **SP1** (Translate: a specification checked by Z3). Claude and Qwen raise no false alarm and find nearly every
 bug in both arms, even bugs random testing rarely triggers (100 inputs expose 5% of the very rare ones); Translate
@@ -25,7 +25,7 @@ yield no usable spec.
 
 **SP2** (Translate: PDDL for the planners; both arms get the STRIPS actions). The 5.5 models are
 never wrong in either arm, up to 51 events and on the *opaque* set (mechanism-revealing names replaced); Qwen matches
-them in Translate. Translation pays for Haiku, which in Direct applies familiar patterns to designs that rule them
+them in Translate on the main set. Translation pays for Haiku, which in Direct applies familiar patterns to designs that rule them
 out: its false alarms on correct designs fall from 60% to 35% (opaque: 95% to 45%), lower in 4 of 5 families. Llama
 fabricates in Direct; its broken Translate files miss 29 of 40 failures, so "safe" means little.
 
