@@ -216,7 +216,7 @@ def hardness(sp1: pd.DataFrame, sp2: pd.DataFrame):
         a.plot(range(4), ys, color=col, linewidth=2.4, marker="o", markersize=7,
                markeredgecolor=SURFACE, markeredgewidth=1.5, label=label)
     a.set_xticks(range(4), ["common", "uncommon", "rare", "very rare"])
-    a.set_xlabel("Functions, by how rare the failing input is", fontsize=11, color=INK)
+    a.set_xlabel("Functions, by how rare the failing input is", fontsize=10, color=INK)
     a.set_ylabel("failures found", fontsize=11, color=INK2)
     a.legend(frameon=False, fontsize=8.5, loc="lower left")
 
@@ -235,7 +235,7 @@ def hardness(sp1: pd.DataFrame, sp2: pd.DataFrame):
         b.plot(range(len(bins)), ys, color=col, linewidth=2.4, marker="o", markersize=7,
                markeredgecolor=SURFACE, markeredgewidth=1.5, label=label)
     b.set_xticks(range(len(bins)), [f"{lo}–{hi}" for lo, hi in bins])
-    b.set_xlabel("Designs, by the length of the shortest failure trace (events)", fontsize=11, color=INK)
+    b.set_xlabel("Designs, by the shortest known failure trace (events)", fontsize=10, color=INK)
     b.set_ylabel("failure traces found", fontsize=11, color=INK2)
     b.legend(frameon=False, fontsize=9, loc="lower left")
     b.text(3, 92, "Haiku not run\non 30–51", fontsize=9, color=INK2, ha="center", va="top")
@@ -257,8 +257,14 @@ def inventory_panel():
         d = sorted([i for i in inst if i["family"] == fam], key=lambda i: i["size"])
         xs, ys = [i["size"] for i in d], [max(i["gold"]["gbfs"]["expanded"], 1) for i in d]
         hot = fam == "inventory"
-        ax.plot(xs, ys, color=INK if hot else MUTED, linewidth=2.4 if hot else 1.4, marker="o",
-                markersize=5 if hot else 3.5, markeredgecolor=SURFACE, markeredgewidth=1.0, zorder=3 if hot else 2)
+        if hot:  # solid up to the last proof (size 6); dashed to size 8, where the budget ran out first
+            k = xs.index(6) + 1
+            ax.plot(xs[:k], ys[:k], color=INK, linewidth=2.4, marker="o", markersize=5,
+                    markeredgecolor=SURFACE, markeredgewidth=1.0, zorder=3)
+            ax.plot(xs[k - 1:], ys[k - 1:], color=INK, linewidth=1.8, linestyle=(0, (3, 2)), zorder=3)
+            continue
+        ax.plot(xs, ys, color=MUTED, linewidth=1.4, marker="o", markersize=3.5,
+                markeredgecolor=SURFACE, markeredgewidth=1.0, zorder=2)
     ax.annotate("2.7M", (6, 2685810), xytext=(-6, 6), textcoords="offset points", ha="right", fontsize=9, color=INK)
     # Size 8 exceeded the search budget before a proof: open marker, the true count is higher.
     ax.plot([8], [2637989], marker="o", markersize=7, markerfacecolor=SURFACE, markeredgecolor=INK, markeredgewidth=1.8, zorder=4)
@@ -271,7 +277,7 @@ def inventory_panel():
     ax.set_yticks([1, 100, 1e4, 1e6], ["1", "100", "10k", "1M"])
     ax.set_xticks([1, 2, 3, 4, 6, 8])
     ax.set_xlabel("design size", fontsize=9.5, color=INK2)
-    ax.set_ylabel("states expanded to prove safe", fontsize=9, color=INK2)
+    ax.set_ylabel("states expanded to prove safe\n(log scale)", fontsize=9, color=INK2)
     fig.tight_layout()
     save(fig, "inventory_panel.png")
 
