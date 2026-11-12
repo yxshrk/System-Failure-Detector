@@ -70,7 +70,7 @@ const B = t => ({ text: t, options: { bold: true } });
   T(s, [{ text: "Yash Raj Khandelwal", options: { breakLine: true } }, { text: "Joshua Tan Yu Jie", options: { breakLine: true } }, { text: "Hein Htet Zaw" }],
     { x: 0.6, y: 3.95, w: 6, h: 1.1, fontSize: 18, paraSpaceAfter: 4 });
   T(s, "Semester 1, AY2026/27", { x: 6.4, y: 4.7, w: 3.0, h: 0.35, fontSize: 14, color: INK2, align: "right" });
-  s.addNotes("Introduce the team. Our question: can an LLM act as a pre-mortem reviewer, finding how a function or a system design will fail before it ships? We compare two ways of using it, Direct and Translate, on functions and on designs. Our short answer: it depends on how strong the model is.");
+  s.addNotes("We're Group 19, comprising myself, Yash and Colin. Our project asks: can an AI review code and system designs, and tell us how they will break before they ship? We tested two ways of using the AI, Direct and Translate, on two kinds of problems, from Python functions to system designs.");
 }
 
 // 2. Motivation (§1)
@@ -85,21 +85,21 @@ const B = t => ({ text: t, options: { bold: true } });
     { x: 7.4, y: 1.35, w: 2.225, h: 0.8, fontSize: 11, color: INK2, paraSpaceAfter: 4 });
   T(s, "Sources: Decrypt (Aug 2026); Coinkite, \"Entropy technical backgrounder\"; Unchained (Aug 2026)", { x: 7.4, y: 2.35, w: 2.225, h: 0.7, fontSize: 8, color: INK2 });
   s.addImage({ path: `${D}/coldcard_timeline.png`, x: 5.25, y: 3.2, w: 4.375, h: 1.55, altText: "Timeline: Mar 2021 bug ships, Jul 2026 AI-assisted review misses it (Coinkite's account), Jul to Aug 2026 wallets drained, reported US$38M to over US$114M" });
-  s.addNotes("In July 2026 Coinkite disclosed that since 2021 its Coldcard wallets had generated seed phrases from a predictable fallback; by its own account, an AI-assisted review missed it. Real failures are rare and deep, like DynamoDB's 35-step trace that passed every review. So an AI reviewer helps only if it gives a checkable witness and never invents failures. Should it find the failure directly, or translate for a solver?");
+  s.addNotes("So this is what motivated this project. A while back, Coinkite, the maker of Coldcard bitcoin wallets, was hit by an attack that stole over 100 million dollars in bitcoin. In their own internal investigation, Coinkite said its AI-assisted security reviews had failed to flag the bug beforehand. From this catastrophe, we can see how important it is to create accurate AI reviews in today's age.");
 }
 
 // 3. The two sub-problems, one worked example each (§1)
 {
   const s = base(1, "Subproblems");
   s.addImage({ path: `${D}/two_tasks.png`, x: X, y: 1.1, w: W, h: W * 320 / 925, altText: "SP1, a function: a leap-year check uses 399 instead of 400, and the AI finds that February 2000 gets 28 days instead of 29. SP2, a payments design that retries timed-out charges and records a payment only after charging it: the AI finds a retry that charges the card twice." });
-  s.addNotes("Two kinds of review. For a function, the AI must find an input that breaks it: February 2000 gets 28 days, not 29. For a system design, an order of events that breaks it: here, a card charged twice. Either way, we replay it.");
+  s.addNotes("We broke down the problem into two sub-problems. First, SP1, a function: given Python code, the AI tries to find an input where the output is wrong. For SP2, a system design, the AI tries to find a sequence of events that causes an error, such as a retry that charges a card twice.");
 }
 
 // 4. The two arms (§1, §4 scoring)
 {
   const s = base(1, "Direct vs Translate");
   s.addImage({ path: `${D}/method.png`, x: 0.375, y: 1.1, w: 9.25, h: 9.25 * 560 / 1520, altText: "Direct: the LLM finds the failure itself. Translate: the LLM writes the problem formally as a specification and a solver searches. Either failing case is run on the real code or design." });
-  s.addNotes("We compare two ways of using the AI, which we call arms. Direct: the AI finds the failure itself. Translate: the AI writes the problem down formally, and a solver then searches for the failure. Either way, we run the answer on the real code or design, and it counts only if it fails.");
+  s.addNotes("There were two ways that we compared using the AI. The first way, Direct, we just got the AI to read the code and actually point out the failure itself. In the second way, Translate, the AI actually writes the problem down formally, and then a separate solver searches for this failure. Either way, we run the failing case it found on the real code or design, and this helps us decide whether the failure was real or a made-up one.");
 }
 
 // 5. Research questions (§1)
@@ -117,7 +117,7 @@ const B = t => ({ text: t, options: { bold: true } });
     "Tested on code and designs that have no bug");
   q(3.7, "SP3", "How accurate are the AI's formal write-ups?",
     "Translate only: compared with our own correct version");
-  s.addNotes("With the arms defined, here is what we measure. RQ1 asks which arm finds more real failures, especially the hard-to-find ones. RQ2 asks which arm makes up failures that aren't there. SP3 checks the formal write-ups themselves.");
+  s.addNotes("To help us solve the project's problem, we broke it down into two research questions. Which approach finds more real failures, especially the hard-to-find ones? And which one makes up failures that aren't there? And we added one more sub-problem for Translate: how accurate are the AI's formal write-ups?");
 }
 
 // 6. SP1 formulation (§2.1)
