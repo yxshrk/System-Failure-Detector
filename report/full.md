@@ -96,13 +96,13 @@ $(k{+}1)$-th iteration. ∎
 
 **The two queries.** The LLM's specification is two Python functions, `pre(x)` (is $x$ a valid input?) and `post(x, r)` (is $r$ correct for $x$?), compiled like $f$ and unrolled to
 $k' = \max(k, L{+}1)$ where $L$ is the longest list input (doubled up to $4k'$ while the coverage
-query $\Psi$ below is satisfiable); $pre(x)$ means "returns normally with a true value" (likewise $post$), and a subscript names a term's function ($ret_f$: what $f$ returns).
+query $\Psi$ below is satisfiable). In the formulas, $pre(x)$ means "running `pre` on $x$ returns True without raising an exception", and $post(x, r)$ means the same for `post`. A subscript names a term's function ($ret_f$: what $f$ returns).
 
 $$\Phi_{spec} = D(x) \land \lnot unwind_f \land \lnot unwind_{pre} \land pre(x) \land \big(exc_f \lor (\lnot unwind_{post} \land \lnot post(x, ret_f))\big)$$
 
 $$\begin{aligned}\Phi_{gold} = {} & D(x) \land \lnot unwind_{ref} \land \lnot unwind_{mut} \\ & \land \big((exc_{ref} \oplus exc_{mut}) \lor (\lnot exc_{ref} \land \lnot exc_{mut} \land ret_{ref} \ne ret_{mut})\big)\end{aligned}$$
 
-In words: $\Phi_{spec}$ seeks a valid, in-bounds input on which $f$ raises or breaks $post$; $\Phi_{gold}$, one on which exactly one of reference and mutant raises, or both return and differ.
+In words: $\Phi_{spec}$ seeks a valid, in-bounds input on which $f$ raises or breaks $post$; $\Phi_{gold}$ seeks an input on which exactly one of reference and mutant raises, or both return and differ.
 
 **Theorem 1 (soundness and bounded completeness).** Suppose the *coverage* query
 $\Psi = D(x) \land \lnot unwind_f \land \big(unwind_{pre} \lor (pre(x) \land \lnot exc_f \land unwind_{post})\big)$
@@ -304,7 +304,7 @@ design. Translate was *undecided* on inventory's fixed design at size 8.
 
 **RQ1: who finds more traces as they get longer?** Sonnet 5.5 and Opus 5.5 produced a valid trace every time, from 6 to 51 events (on the long set 8/8 per model and arm, 95% interval [68–100], with no false alarm; Translate was undecided on its inventory fixed designs, sizes 12 and 16). Haiku stays near 80% with no length trend. Paired over the 150 designs Haiku ran, only Translate is right on 41 and only Direct on 21, an edge significant in no single set. Qwen's Translate was right on all 60 main designs and its Direct on 57, its 3 invalid traces being format slips, not misreadings. Llama Direct had no valid trace.
 
-**RQ2: who raises false alarms on safe designs?** Haiku and Llama; the 5.5 models and Qwen raise none.
+**RQ2: who raises false alarms on correct designs?** Haiku and Llama; the other models raise none.
 
 * *Haiku Direct* claims violations on 60% of fixed designs (80% stress, 95% opaque). Translate cuts this to 35% (40%, 45%), lower in 4 of 5 families on main and opaque. Its Direct traces fail on design facts: 16 (main) and 30 (opaque) used an event of *another* design variant, typically a familiar pattern (§A.4).
 * *Llama Direct* claims violations on 70% of fixed designs (60% stress, 90% opaque); Translate cuts this to 10% (10%, 40%) but misses 29 of 40 violating main-set designs: "safe" for the wrong reason.
@@ -351,7 +351,7 @@ Inventory's label from size 8 rests on one, proved by hand (§A.8): stock + hold
 $$EU(arm) = -\big((1-q)\,P_{FA}\,c_{FA} + q\,P_{miss}\,c_{miss} + P_{und}\,c_{rev} + c_{run}\big).$$
 For Haiku on the SP2 main set, Translate has fewer false alarms (35% vs 60%), fewer flawed designs without a valid trace (6 vs 9 of 40), nothing undecided and the lower cost (US$0.051 vs 0.062), so at these point estimates it wins for any $q$ and positive costs; the false-alarm gap is clearest on the opaque set, where Translate trades two detections (27 to 25 of 40) for half the false alarms (19 to 9 of 20): at $q = 1/2$, counting errors alone, it wins while a miss costs under ten false alarms. For the 5.5 models on SP2 the error rates are zero: Translate is cheaper per run and wins on the main set, but abstains on inventory's fixed designs from size 8. $c_{run}$ omits fixed costs, which were not measured: SP1's encoder serves only Translate, while SP2 gave both arms the authored domain, so Direct without it is untested. *Use Direct* when the model is strong (judged on validation cases with known answers), the review small, the specification complete, and an answer without proof is acceptable. *Use Translate* when a "no failure" answer must be proved or audited, or when a mid-tier model, by the same test, misreads designs but writes the formal language reliably, and replay every witness on the real artefact. Neither the amount reviewed nor specification completeness was varied, so these conditions are argued.
 
-**Will this change?** Direct will likely keep improving on small, recognisable problems (Haiku 4.5 to the 5.5 models, which also differ in tier), but worst-case hardness and the missing certificate remain.
+**Will this change?** Direct will likely keep improving on small, recognisable problems (Haiku 4.5 to the 5.5 models, which also differ in tier), but worst-case hardness and the missing proof remain.
 
 **Threats to validity.**
 
@@ -391,7 +391,7 @@ decides, but its spec is still model-written (untested). Sending proprietary cod
 
 # 8. Division of work and use of AI tools
 
-**Contributions.** The work departed from the proposal's planned split.
+**Contributions.**
 
 * *Yash:* coordination; directed the build of the SP1 and SP2 pipelines; ran all Claude experiments; and drafted the report.
 * *Joshua:* the backend for the SoC open-weight models (`premortem/llm.py`) and the Qwen and Llama runs (§5–6).

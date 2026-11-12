@@ -57,7 +57,7 @@ design. Translate was *undecided* on inventory's fixed design at size 8.
 
 **RQ1: who finds more traces as they get longer?** Sonnet 5.5 and Opus 5.5 produced a valid trace every time, from 6 to 51 events (on the long set 8/8 per model and arm, 95% interval [68–100], with no false alarm; Translate was undecided on its inventory fixed designs, sizes 12 and 16). Haiku stays near 80% with no length trend. Paired over the 150 designs Haiku ran, only Translate is right on 41 and only Direct on 21, an edge significant in no single set. Qwen's Translate was right on all 60 main designs and its Direct on 57, its 3 invalid traces being format slips, not misreadings. Llama Direct had no valid trace.
 
-**RQ2: who raises false alarms on safe designs?** Haiku and Llama; the 5.5 models and Qwen raise none.
+**RQ2: who raises false alarms on correct designs?** Haiku and Llama; the other models raise none.
 
 * *Haiku Direct* claims violations on 60% of fixed designs (80% stress, 95% opaque). Translate cuts this to 35% (40%, 45%), lower in 4 of 5 families on main and opaque. Its Direct traces fail on design facts: 16 (main) and 30 (opaque) used an event of *another* design variant, typically a familiar pattern (§A.4).
 * *Llama Direct* claims violations on 70% of fixed designs (60% stress, 90% opaque); Translate cuts this to 10% (10%, 40%) but misses 29 of 40 violating main-set designs: "safe" for the wrong reason.
