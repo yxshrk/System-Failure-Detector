@@ -73,11 +73,11 @@ Two kinds of review. For a function, the AI must find an input that breaks it: F
 
 We compare two ways of using the AI, which we call arms. Direct: the AI finds the failure itself. Translate: the AI writes the problem down formally, and a solver then searches for the failure. Either way, we run the answer on the real code or design, and it counts only if it fails.
 
-### Slide 5 · Two research questions, and one check
+### Slide 5 · Research questions
 
 *Starts at 1:43 · 37 words · On screen: RQ1, RQ2 and SP3, top to bottom.*
 
-With the arms defined, here is what we measure. RQ1 asks whether one arm finds more real failures, especially the hard-to-reach ones. RQ2 asks which arm invents failures that are not there. SP3 checks the translations themselves.
+With the arms defined, here is what we measure. RQ1 asks which arm finds more real failures, especially the hard-to-find ones. RQ2 asks which arm makes up failures that aren't there. SP3 checks the formal write-ups themselves.
 
 ### Slide 6 · Worked example: a bug random testing misses
 

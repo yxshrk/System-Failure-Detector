@@ -104,20 +104,20 @@ const B = t => ({ text: t, options: { bold: true } });
 
 // 5. Research questions (§1)
 {
-  const s = base(1, "Two research questions, and one check", "What we measure for each arm");
+  const s = base(1, "Research questions");
   const q = (y, label, head, body) => {
     s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: X, y, w: 0.85, h: 0.42, rectRadius: 0.08, fill: { color: HEAD }, line: { color: HEAD } });
     T(s, label, { x: X, y, w: 0.85, h: 0.42, fontSize: 13, bold: true, align: "center", valign: "middle" });
-    T(s, [B(head), { text: " " + body }], { x: 1.45, y: y - 0.01, w: 8.175, h: 0.95, fontSize: 13 });
+    T(s, head, { x: 1.45, y: y - 0.02, w: 8.175, h: 0.3, fontSize: 15, bold: true });
+    T(s, body, { x: 1.45, y: y + 0.32, w: 8.175, h: 0.3, fontSize: 13, color: INK2 });
   };
-  q(1.35, "RQ1", "Which arm finds more valid witnesses, and does the gap widen as failures get harder to reach?",
-    "Measured on buggy functions (by how rare the failing input is) and flawed designs (by the length of the shortest failure trace).");
-  q(2.5, "RQ2", "Which arm invents more failures where there are none?",
-    "Measured on controls: functions and designs with no failure.");
-  q(3.45, "SP3", "Also: how good are the translations?",
-    "We score each one against our gold version, to tell a translation error from a solver error.");
-  takeaway(s, "First, one bug through both arms.");
-  s.addNotes("With the arms defined, here is what we measure. RQ1 asks whether one arm finds more real failures, especially the hard-to-reach ones. RQ2 asks which arm invents failures that are not there. SP3 checks the translations themselves.");
+  q(1.3, "RQ1", "Which approach finds more real failures, especially hard-to-find ones?",
+    "Hard = a rare failing input, or a long chain of events");
+  q(2.5, "RQ2", "Which approach makes up failures that aren't there?",
+    "Tested on code and designs that have no bug");
+  q(3.7, "SP3", "How accurate are the AI's formal write-ups?",
+    "Translate only: compared with our own correct version");
+  s.addNotes("With the arms defined, here is what we measure. RQ1 asks which arm finds more real failures, especially the hard-to-find ones. RQ2 asks which arm makes up failures that aren't there. SP3 checks the formal write-ups themselves.");
 }
 
 // 6. Worked example (§1)
