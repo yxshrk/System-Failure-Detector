@@ -266,7 +266,7 @@ const B = t => ({ text: t, options: { bold: true } });
   const s = base(4, "Strong models find nearly every failure, even the hardest", "RQ1. Does one arm find more real failures, and does the gap grow as failures get harder to reach?");
   s.addImage({ path: `${D}/hardness_panel.png`, x: X, y: 1.28, w: W, h: 3.45, altText: "Left: failures found as the failing input gets rarer; random testing collapses while Direct and Translate stay near 100%. Right: failure traces found as traces get longer; Sonnet and Opus stay at 100%, Haiku near 80%" });
   takeaway(s, "Random testing collapses as bugs get rarer; the LLMs do not. Translate trails only slightly.");
-  s.addNotes("RQ1 asks: as failures get harder to reach, does one arm find more of them? On the left, random testing collapses as bugs get rarer, but both arms keep finding them; Translate misses only a handful. On the right, longer traces don't hurt Sonnet or Opus, and Haiku stays near 80%. Difficulty didn't hurt the strong models, which looks like recognising patterns rather than searching.");
+  s.addNotes("RQ1 asks whether harder-to-reach failures hurt either arm. On the left, random testing finds fewer bugs as they get rarer, because a rare bug needs a lucky input. Both arms keep finding them; Translate misses only a handful. On the right, longer traces don't hurt Sonnet or Opus, and Haiku stays near 80%. If the models were searching, harder failures would hurt them. They don't, which fits recognising a familiar bug pattern rather than searching.");
 }
 
 // 14. RQ2 (§5.1-5.2)
@@ -274,8 +274,8 @@ const B = t => ({ text: t, options: { bold: true } });
   const s = base(4, "Translation cuts the mid-tier model's false alarms", "RQ2. Which arm invents failures that aren't there? Here: the 20 correct designs.");
   s.addImage({ path: `${D}/false_alarms.png`, x: 0.98, y: 1.22, w: 8.04, h: 3.0, altText: "False alarms on correct designs, Direct vs Translate: Haiku 12 to 7 of 20 (19 to 9 with names hidden), Llama 14 to 2 (18 to 8), Sonnet, Opus and Qwen 0 in both arms" });
   T(s, "20 designs per cell, one run each. With readable names the 95% intervals overlap (60% [39–78] against 35% [18–57]); the drop appears in 4 of 5 families.", { x: X, y: 4.27, w: W, h: 0.42, fontSize: 11, color: INK2, align: "center" });
-  takeaway(s, "The strong models raise none in either arm. Llama's drop is silence, not skill: its files left out facts, so the planner found nothing.");
-  s.addNotes("RQ2 asks which arm invents failures that aren't there. On correct designs, translating cuts Haiku's false alarms from 12 to 7, and from 19 to 9 with names hidden. Why? In Direct, Haiku matches a familiar failure pattern to a design that rules it out: 16 of its traces used an event from a different version of the design. Writing the initial state forces it to commit to this design's facts. And it still finds 34 of 40 real failures, so unlike Llama, it isn't just staying quiet.");
+  takeaway(s, "The strong models raise no false alarms in either arm. Llama's drop is not a real gain: its problem files leave out facts, so it calls almost everything safe and misses 29 of 40 real failures.");
+  s.addNotes("RQ2 is about false alarms. On correct designs, translating cuts Haiku's false alarms from 12 to 7, and from 19 to 9 with names hidden. In Direct, Haiku matches a familiar failure pattern to a design that rules it out: 16 of its traces used an event from a different version of the design. In Translate it must write down this design's facts, and those facts decide which events the planner can use. Haiku's drop is a real gain: it still finds 34 of 40 real failures. Llama's is not: its problem files leave out facts, so the planner finds no violation even in flawed designs.");
 }
 
 // 15. SP3 (§5, §5.3): four kinds of failure, one count each
@@ -289,13 +289,13 @@ const B = t => ({ text: t, options: { bold: true } });
     T(s, big, { x: x + 0.16, y: y + 0.38, w: 2.75, h: 0.42, fontSize: 22, bold: true });
     T(s, body, { x: x + 0.16, y: y + 0.82, w: 2.75, h: 0.62, fontSize: 10.5, color: INK2 });
   };
-  kind(X, 1.65, "The specification copies the bug", "2", "Claude specs copied the code's bug, so Z3 found nothing");
-  kind(3.525, 1.65, "The translation is too permissive", "13", "Haiku main-set traces that only work in its own wrong problem");
+  kind(X, 1.65, "The specification copies the bug", "2", "Claude specs copied the buggy line into the requirement, so code and requirement agree and Z3 finds no failing input");
+  kind(3.525, 1.65, "The translation is too permissive", "13", "Haiku main-set traces that work only in its too-loose problem, not in the real design");
   kind(X, 3.27, "The model cannot write the spec", "70 of 174", "Llama runs with no usable spec; its design files left out about a third of the facts");
-  kind(3.525, 3.27, "The solver runs out", "From size 8", "inventory exceeds the search budget, after 2.7M states at size 6. Functions: 3 timeouts and 5 Z3 \"unknown\"");
+  kind(3.525, 3.27, "The solver runs out", "From size 8", "proving inventory safe means searching every reachable state: 2.7M at size 6, over budget from size 8");
   s.addImage({ path: `${D}/inventory_panel.png`, x: 6.78, y: 1.7, w: 2.845, h: 2.87, altText: "States expanded to prove safety vs design size: inventory explodes and exceeds the budget at size 8, the other designs stay small" });
   takeaway(s, "A Translate answer is only as good as the translation, so every witness is replayed on the real code or design.");
-  s.addNotes("SP3 asks how good the translations were. Sonnet and Opus got the main and stress designs exactly right; where translation failed, it failed in four ways. A spec can copy the bug, so the solver finds nothing. A loose problem file lets the planner take shortcuts. A weak model can't write the formal language reliably. And the search can blow up: from size 8, inventory runs out of budget. Fixes like symmetry reduction exist, but they're outside the course.");
+  s.addNotes("SP3 asks how good the translations were. Where translation failed, it failed in four ways. First, the LLM writes the requirement; if it copies the buggy line from the code, code and requirement agree, so Z3 finds no failing input. Second, if the problem file allows things the real design doesn't, the planner finds a failure that exists only in that wrong problem. Third, a weak model can't write the formal language reliably. Fourth, proving a design safe means searching every reachable state; for inventory that explodes, and from size 8 we run out of budget. Fixes like symmetry reduction lie outside the course.");
 }
 
 // 16. The answer in brief (§6 opening)
@@ -315,7 +315,7 @@ const B = t => ({ text: t, options: { bold: true } });
   a(3.58, "3", "Only the tools can prove there is no failure, and that's where they run out",
     "Inventory's safe design from size 8: Translate is undecided, while Sonnet and Opus Direct answer correctly but without proof.");
   takeaway(s, "Which arm to use depends on how strong the model is, and on whether you need proof.");
-  s.addNotes("So, the answer. One: with a strong model, both arms nearly tie, which fits recognising patterns, not searching. Two: translating moves the error into the spec; it helps a model that writes the formal language well, like Haiku, but not Llama. Three: only the tools can prove there's no failure, and that's exactly where they run out.");
+  s.addNotes("So, the answer. One: with a strong model, both arms nearly tie, which fits recognising patterns, not searching. Two: translating doesn't remove errors, it moves them into the spec the LLM writes, so it helps only a model that writes the formal language well, like Haiku, not Llama. Three: only a solver can prove there's no failure, but that proof needs exhaustive search, and that's exactly where the tools run out.");
 }
 
 // 17. When to use which arm (§6)
@@ -345,7 +345,7 @@ const B = t => ({ text: t, options: { bold: true } });
     [lab("Names hidden"), "27 → 25 of 40", "19 → 9 of 20", "Translate wins while a miss costs under 10 false alarms (even mix, errors only)"],
   ], { x: X, y: 3.3, w: W, colW: [1.95, 1.35, 1.3, 4.65], rowH: [0.28, 0.3, 0.45], fontSize: 11 });
   takeaway(s, "At these estimates, Translate wins for Haiku at any costs with readable names, and with names hidden unless a miss costs 10 false alarms or more.");
-  s.addNotes("Choosing an arm is a maximum-expected-utility decision, as in the course: weigh what a false alarm costs against what a missed failure costs. Use Direct with a strong model when no proof is needed; use Translate when 'no failure' must be proved, or for a mid-tier model that misreads designs. For Haiku with readable names, Translate is better on every term, so at these estimates it wins whatever the costs. With names hidden, at an even mix, it wins as long as a miss costs less than ten false alarms.");
+  s.addNotes("Choosing an arm is a maximum-expected-utility decision, as in the course: weigh what a false alarm costs against what a missed failure costs. For Haiku with readable names, Translate is better on every term, so at these estimates it wins whatever the costs. With names hidden, it finds two fewer failures but raises half the false alarms, so at an even mix it wins as long as a miss costs less than ten false alarms.");
 }
 
 // 18. Limitations and will this change (§6)
@@ -367,10 +367,10 @@ const B = t => ({ text: t, options: { bold: true } });
   ]);
   card(s, X, 3.38, W, 1.0);
   T(s, "Will this change?", { x: 0.6, y: 3.47, w: 8.8, h: 0.3, fontSize: 14, bold: true });
-  T(s, "Direct will likely keep improving on small, recognisable problems (Haiku 4.5 to the 5.5 models, which also differ in tier), but worst-case hardness and the missing certificate remain.",
+  T(s, "Direct will likely keep improving on small, recognisable problems (Haiku 4.5 to the 5.5 models, which also differ in tier), but it still cannot prove there is no failure, and the hardest searches stay hard.",
     { x: 0.6, y: 3.8, w: 8.8, h: 0.5, fontSize: 12 });
   takeaway(s, "Bottom line: translation's value depends on the model. It adds no accuracy for strong models, cuts false alarms for a mid-tier one, and cannot rescue a weak one.");
-  s.addNotes("Finally, what we did not test, and whether this will change. Both arms were given the failure mechanisms as named events, so writing the event model is untested. Functions were chosen to be encodable, which favours Translate, and most cells are at or near 100%, so we cannot rank the strongest models. Will this change? Direct will likely keep improving on small, recognisable problems, but worst-case hardness and the missing certificate remain. Bottom line: translation's value depends on the model. Thank you.");
+  s.addNotes("Finally, the limits, and whether this will change. Both arms were given the failure mechanisms as named events, so writing the event model is untested. Functions were chosen to be encodable, which favours Translate, and most scores are at or near 100%, so we cannot rank the strongest models. Will this change? Direct will likely keep improving on small, recognisable problems, but it still cannot prove there is no failure, and the hardest searches stay hard. Bottom line: translation's value depends on the model. Thank you.");
 }
 
 pres.writeFile({ fileName: `${D}/premortem_slides.pptx` }).then(f => console.log("wrote", f));
