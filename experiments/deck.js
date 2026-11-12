@@ -287,7 +287,7 @@ const B = t => ({ text: t, options: { bold: true } });
   ], { x: X, y: 1.8, w: 6.15, colW: [1.95, 4.2], rowH: [0.28, 0.6, 0.6, 0.6, 0.6], fontSize: 10.5 });
   s.addImage({ path: `${D}/inventory_panel.png`, x: 6.75, y: 1.8, w: 2.875, h: 2.9, altText: "States expanded to prove safety vs design size: inventory explodes and exceeds the budget at size 8, the other designs stay small" });
   takeaway(s, "A Translate answer is only as good as the translation, so every witness is replayed on the real artefact.");
-  s.addNotes("SP3 asks how good the translations were. Sonnet and Opus wrote the exact initial state every time, but translation is not free. The table shows the four ways it failed. Inventory explodes: 2.7 million states at size 6, and from size 8 the budget runs out. On its safe design Translate is then undecided, while Sonnet and Opus Direct still answer correctly, without proof. The standard remedies, symmetry reduction and inductive invariants, lie outside the course; we proved the inventory invariant by hand.");
+  s.addNotes("SP3 asks how good the translations were. Sonnet and Opus wrote the exact initial state in all 90 main and stress designs, but translation is not free. The table shows the four ways it failed. Inventory explodes: 2.7 million states at size 6, and from size 8 the budget runs out. On its safe design Translate is then undecided, while Sonnet and Opus Direct still answer correctly, without proof. The standard remedies, symmetry reduction and inductive invariants, lie outside the course; we proved the inventory invariant by hand.");
 }
 
 // 16. The answer in brief (§6 opening)
