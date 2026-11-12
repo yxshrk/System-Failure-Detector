@@ -14,7 +14,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SLIDES = ROOT / "results" / "figures" / "slides"
 # Each panel is <svg id="NAME" viewBox="x y w h">, written to NAME.png at 2x.
-NAMES = ["two_tasks", "method", "coldcard_timeline", "sp1_formulation", "sp2_trace"]
+NAMES = ["two_tasks", "method", "coldcard_timeline", "sp1_formulation", "sp2_formulation"]
 SCALE = 2
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 

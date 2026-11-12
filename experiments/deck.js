@@ -126,16 +126,11 @@ const B = t => ({ text: t, options: { bold: true } });
   table(s, [
     [hcell(""), hcell("In general"), hcell("In the leap-year example")],
     [lab("Variables"), "the function's inputs", "month, year"],
-    [lab("Domains"), "the stated input ranges", "1 ≤ month ≤ 12, 1 ≤ year ≤ 3000 (36,000 inputs)"],
-    [lab("Constraint"), "the code's result breaks the requirement", "result = code(month, year) and not post(month, year, result)"],
-  ], { x: X, y: 1.3, w: 4.8, colW: [0.95, 1.6, 2.25], rowH: [0.3, 0.3, 0.46, 0.62], fontSize: 10.5 });
-  bullets(s, [
-    "Bounded symbolic execution turns the code into one formula covering every path, with loops unrolled k times",
-    "A solution is an input on which the code breaks its requirement. Here: month = 2, year = 2400, one of 7",
-    "No solution means no such input exists within the bounds",
-  ], { x: X, y: 3.15, w: 4.8, h: 1.6, fontSize: 12, paraSpaceAfter: 6 });
-  T(s, "How Translate builds and solves the problem", { x: 5.425, y: 1.28, w: 4.2, h: 0.2, fontSize: 10, bold: true, color: INK2 });
-  s.addImage({ path: `${D}/sp1_formulation.png`, x: 5.425, y: 1.5, w: 4.2, h: 3.22, altText: "SP1 on the leap-year bug: symbolic execution turns the code into one formula, the LLM writes the requirement from the docstring, and Z3 searches for an input where the code's result breaks it. Satisfiable: month 2, year 2400, re-run in Python. Unsatisfiable: no failing input within the bounds." });
+    [lab("Domains"), "the stated input ranges", { text: [{ text: "1 ≤ month ≤ 12", options: { breakLine: true } }, { text: "1 ≤ year ≤ 3000", options: { breakLine: true } }, { text: "(36,000 inputs)" }] }],
+    [lab("Constraint"), "the code's result breaks the requirement", { text: [{ text: "result = code(month, year)", options: { breakLine: true } }, { text: "and not", options: { breakLine: true } }, { text: "post(month, year, result)" }] }],
+  ], { x: X, y: 1.3, w: 4.7, colW: [1.0, 1.4, 2.3], rowH: [0.4, 0.62, 1.04, 1.04], fontSize: 12 });
+  T(s, "How Translate builds and solves the problem", { x: 5.325, y: 1.28, w: 4.3, h: 0.2, fontSize: 10, bold: true, color: INK2 });
+  s.addImage({ path: `${D}/sp1_formulation.png`, x: 5.325, y: 1.5, w: 4.3, h: 3.297, altText: "SP1 on the leap-year bug: symbolic execution turns the code into one formula, the LLM writes the requirement from the docstring, and Z3 searches for an input where the code's result breaks it. Satisfiable: month 2, year 2400, re-run in Python. Unsatisfiable: no failing input within the bounds." });
   takeaway(s, [{ text: "The code meets its requirement (" }, B("code ⊨ requirement"), { text: ") exactly when " }, B("code ∧ ¬requirement"), { text: " is unsatisfiable, so any solution is a failure witness." }]);
   s.addNotes("How does Translate turn the leap-year bug into a solver problem? Random testing catches it only 18% of the time, since just 7 of 36,000 inputs fail. SP1 is constraint satisfaction: month and year are variables with finite domains, and the constraint is that the code's result breaks the requirement. Symbolic execution turns the code into one formula; the LLM writes the requirement from the docstring, and Z3 searches for an input where both hold. Here it finds February 2400. Underneath is entailment: the code meets its requirement exactly when code and not requirement is unsatisfiable.");
 }
@@ -149,37 +144,29 @@ const B = t => ({ text: t, options: { bold: true } });
     [lab("Actions"), "events that can happen, including failures", "accept-new-racy, time-out-and-retry"],
     [lab("Initial state"), "the design, written as facts", "(dedup-racy): the record is written only after the charge"],
     [lab("Goal"), "the violation we look for", "(charged-twice o1)"],
-  ], { x: X, y: 1.3, w: 5.4, colW: [1.1, 1.95, 2.35], rowH: [0.3, 0.46, 0.46, 0.46, 0.3], fontSize: 10.5 });
-  bullets(s, [
-    "The planner chooses every event, including the failures, so a plan is an order of events that breaks the design",
-    [{ text: "SATPlan finds a shortest such trace; greedy best-first search (GBFS) with h" }, sub("FF"), { text: " proves that none exists" }],
-  ], { x: X, y: 3.5, w: 5.4, h: 1.25, fontSize: 12, paraSpaceAfter: 6 });
-  T(s, "Shortest failure trace found by SATPlan (8 events)", { x: 6.05, y: 1.3, w: 3.575, h: 0.22, fontSize: 10, bold: true, color: INK2 });
-  T(s, "a0 is the first attempt and a1 the retry, for order o1. Highlighted: both attempts pass the duplicate check.", { x: 6.05, y: 1.53, w: 3.575, h: 0.34, fontSize: 9.5, color: INK2 });
-  s.addImage({ path: `${D}/sp2_trace.png`, x: 6.239, y: 1.9, w: 3.197, h: 2.85, altText: "Shortest failure trace for payments-subtle-1: eight events ending in charged-twice" });
-  takeaway(s, "Both arms are given the actions. In Translate, the LLM writes only the initial state.");
+  ], { x: X, y: 1.3, w: 5.15, colW: [1.15, 1.75, 2.25], rowH: [0.4, 0.72, 0.72, 0.9, 0.5], fontSize: 12 });
+  T(s, "How Translate builds and solves the problem", { x: 5.815, y: 1.28, w: 3.81, h: 0.2, fontSize: 10, bold: true, color: INK2 });
+  s.addImage({ path: `${D}/sp2_formulation.png`, x: 5.815, y: 1.5, w: 3.81, h: 3.302, altText: "SP2 in Translate on the payments design: the LLM writes the initial state, including dedup-racy; the actions and goal are given; a planner searches. Plan found: an eight-event failure trace in which both attempts pass the duplicate check, replayed on the correct problem. No plan: GBFS searched every state, so the design is safe at this size." });
+  takeaway(s, "Both arms get the design and the actions. Direct writes the trace itself; Translate writes only the initial state, and the planner searches.");
   s.addNotes("SP2 is classical planning: facts are the state, actions are events including failures, the initial state encodes the design, and the goal is the violation. The planner chooses every event, so a plan is a counterexample: planning as model checking. Here the retry passes the duplicate check because the record is written only after charging. Both arms are given these actions; in Translate the model writes only the initial state. Names like dedup-racy give the mechanism away, so one set replaces them.");
 }
 
-// 8. Guarantees and complexity (§2)
+// 8. Guarantees and limits (§2), in plain words
 {
   const s = base(2, "What a solver's answer proves, and what it costs", "Why a solver's answer can be trusted, and where it stops");
-  const sup = (a, b, c) => ({ text: [{ text: a }, { text: b, options: { superscript: true } }, { text: c }] });
   table(s, [
     [hcell(""), hcell("SP1: Z3"), hcell("SP2: SATPlan and GBFS")],
-    [lab("How is it encoded?"), "Symbolic execution turns the code into one formula covering every path, with loops unrolled k times",
-      "One Boolean per fact and per action at each step, with effect and frame axioms and exactly one action per step"],
-    [lab("Why is the encoding right?"), "Lemma 1: within the bounds, the formula gives exactly what Python gives",
-      "Lemma 2: these clauses are equivalent to the textbook successor-state axioms"],
-    [lab("It reports a failure. What does that prove?"), "Theorem 1: the input breaks the LLM's specification",
-      "Theorem 2: the trace reaches the violation, and the first horizon that works gives a shortest trace"],
-    [lab("It reports none. What does that prove?"), "Theorem 1: no input within the bounds breaks the specification. If the bounds are exceeded, the answer is \"undecided\"",
-      "Theorem 3: the violation is unreachable at this size"],
-    [lab("How hard is the worst case?"), "NP-complete. On non-linear arithmetic Z3 may answer \"unknown\"",
-      sup("PSPACE-complete; each SATPlan call is NP-complete. Up to 2", "218", " states at size 8")],
-  ], { x: X, y: 1.28, w: W, colW: [2.05, 3.5, 3.7], rowH: [0.28, 0.6, 0.48, 0.6, 0.6, 0.48] });
-  takeaway(s, [{ text: "h" }, sub("FF"), { text: " only prunes dead ends, which is safe because ignoring deletes only adds behaviour. Every witness is replayed on the real code or gold problem before it counts." }]);
-  s.addNotes("Why should we trust a solver's answer? For SP1 we show the encoding matches Python on every input within the loop bounds, and test it on 25 random inputs per function, so every Z3 answer is an input that breaks the spec, and unsatisfiable means no input within those bounds breaks it. For SP2, our SATPlan clauses are equivalent to the successor-state axioms, so the first satisfiable horizon gives a shortest trace. To certify safety, greedy best-first search runs until its queue is empty.");
+    [lab("Is the problem translated faithfully?"), "The code's formula is built to match Python on every input within the loop bounds. We argue this, but test it only on 25 random inputs per function",
+      "Each step follows the action rules exactly: an event can happen only when its preconditions hold, and only its effects change"],
+    [lab("It finds a failure. Can we trust it?"), "Yes: we re-run the input in Python before it counts",
+      "Yes: we replay the trace event by event. SATPlan tries 1 event, then 2, 3, …, so its first trace is a shortest one"],
+    [lab("It finds none. What does that mean?"), "No input within the bounds fails, if the formula matches Python. Inputs needing more loop rounds than the bound give \"undecided\"",
+      "GBFS tried every reachable state and none was a failure: safe at this size, not at every size"],
+    [lab("When does it run out?"), "Multiplying two variables (such as x · y) can make Z3 answer \"unknown\"",
+      "States multiply as the design grows: inventory needs 2.7 million at size 6 and exceeds our budget from size 8"],
+  ], { x: X, y: 1.28, w: W, colW: [2.05, 3.6, 3.6], rowH: [0.3, 0.78, 0.62, 0.78, 0.62], fontSize: 12 });
+  takeaway(s, "A reported failure is always replayed, so it is never invented. \"No failure\" relies on our encoding being right, and holds only within the bounds and the budget.");
+  s.addNotes("Why should we trust a solver's answer? First, the translation: for SP1, the code's formula is built to match Python within the loop bounds; we argue this, but test it only on 25 random inputs per function. Second, a reported failure is replayed before it counts, and SATPlan tries one event, then two, and so on, so its first trace is a shortest one. Third, no failure is weaker: it relies on our encoding being right, GBFS says safe only after trying every reachable state, and both solvers can run out.");
 }
 
 // 9. Problem instances (§3)

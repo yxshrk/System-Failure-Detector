@@ -86,7 +86,7 @@ To help us solve the project's problem, we broke it down into two research quest
 
 *Starts at 2:19 · 96 words · On screen: the table on the left; the diagram on the right from top to bottom, ending at Satisfiable.*
 
-How does Translate turn the leap-year bug into a solver problem? Random testing catches it only 18% of the time, since just 7 of 36,000 inputs fail. SP1 is constraint satisfaction: month and year are variables with finite domains, and the constraint is that the code's result breaks the requirement. Symbolic execution turns the code into one formula; the LLM writes the requirement from the docstring, and Z3 searches for an input where both hold. Here it finds February 2400. Underneath is entailment: the code meets its requirement exactly when code and not requirement is unsatisfiable.
+How does Translate turn the leap-year bug into a solver problem?  For SP1, we turn it into a constraint as you can see on the left. In practice, this is what it's going to look like: we have a buggy line of code. Our symbolic execution turns the code into one formula and then feed it to our solver Z3; the LLM also writes a similar requirement but from the docstring that correctly describes the desired behavior rather than from the buggy code. Z3 then solves the CSP which is where the condition is that these two disagree. This exact instance is then verified by the actual correct code.  
 
 *Reading note: say "code and not requirement" as one phrase, then pause briefly before "is unsatisfiable".*
 
@@ -94,25 +94,26 @@ How does Translate turn the leap-year bug into a solver problem? Random testing 
 
 *Starts at 3:03 · 82 words · On screen: the table on the left; the eight-step trace on the right, with steps 2 and 6 highlighted.*
 
-SP2 is classical planning: facts are the state, actions are events including failures, the initial state encodes the design, and the goal is the violation. The planner chooses every event, so a plan is a counterexample: planning as model checking. Here the retry passes the duplicate check because the record is written only after charging. Both arms are given these actions; in Translate the model writes only the initial state. Names like dedup-racy give the mechanism away, so one set replaces them.
+Similarly, SP2 is modeled as a planning problem but our goal condition would be the condition where the design fails. Here's how translation is gonna work. We first have a gold model of states and actions; this will be fed to our solvers SATPlan and GBFS; we will definitely find a failure if it exists because best first search is complete within reasonable sizes. On the other hand, LLM will read the expected system behavior and will write out initial states based on its interpretation. This will also be fed to the solver to find if a path to failure exists. LLM results will then be compared with the results of our gold model to see if the LLM correctly spot an error if it exists.  
+
 
 ### Slide 8 · What a solver's answer proves, and what it costs
 
 *Starts at 3:41 · 84 words · On screen: the table row by row; do not read every cell.*
 
-Why should we trust a solver's answer? For SP1 we show the encoding matches Python on every input within the loop bounds, and test it on 25 random inputs per function. So every Z3 answer is an input that breaks the spec, and unsatisfiable means no input within those bounds breaks it. For SP2, our SATPlan clauses are equivalent to the successor-state axioms, so the first satisfiable horizon gives a shortest trace. To certify safety, greedy best-first search runs until its queue is empty.
+You may notice that our experiment depends on solvers working properly. How do we make sure? For SP1 we ensure that the result from our formula and Z3 agrees with the verified python code and test it on 25 random inputs per function. For SP2, our planning problem is modeled exactly as in lecture; including successor-state axioms, so we know that it is decidable and the first satisfiable horizon gives a shortest trace. To certify safety, greedy best-first search also runs until its queue is empty.
 
 ### Slide 9 · Problem instances, each with a known answer
 
 *Starts at 4:20 · 65 words · On screen: the two cards, functions then designs.*
 
-Now the experiment, starting with what we tested. SP1 has 174 instances from 37 functions: bugs from common to very rare triggers, plus controls, including equivalent mutants that look buggy but are not. SP2 has five services, each flawed, subtle or fixed; size scales a timer or capacity, so failures get longer. Our solvers supply the ground truth, so what Translate tests is the translation.
+Now the experiment, here's what we tested. SP1 has 174 instances from 37 functions: bugs range from common to very rare triggers; we also have controls that are actually correct, including equivalent mutants that look buggy but are not. SP2 has five design scenarios, each flawed, subtle or fixed versions; we also have a variation in length for how many steps it takes to reach a failure goal. One thing to note is that our solvers supply the ground truth correctly, so in translate, whether LLM gets it right or wrong hinges entirely on how well it could translate.
 
 ### Slide 10 · Method: five models, the same inputs, exact scoring
 
 *Starts at 4:50 · 54 words · On screen: the tier table, then the four bullets.*
 
-Then how we ran it. Five models in three tiers: strong, mid-tier Haiku, and weak Llama. Direct runs with all tools disabled, so it must reason rather than execute. Translate gets up to two repairs. Every answer gets exactly one label, and a tool that runs out of budget is undecided, never no failure.
+And here's how we ran it. Five models in three tiers: strong, mid-tier Haiku, and weak Llama. Direct runs with all tools disabled, so it must reason rather than execute. For translation, our LLMs can refine their work up to 2 times. Every test instance gets exactly one label. For our labels, undecided happens when a tool overan its reasonble resource constraints.
 
 *Reading note: stress the two labels, "undecided" and "no failure".*
 
@@ -120,7 +121,7 @@ Then how we ran it. Five models in three tiers: strong, mid-tier Haiku, and weak
 
 *Starts at 5:15 · 64 words · On screen: the scoreboard, strong models at the top, Haiku in the middle, Llama at the bottom.*
 
-Now the results, first at a glance. The 5.5 models and Qwen are near-perfect on the sets they ran, with zero false alarms; Qwen's three invalid traces in Direct were format slips, not misreadings. Haiku is fine on functions but struggles on designs, especially false alarms with names hidden. Llama fails everywhere: in Direct it fabricates, with 45 false alarms on 59 correct functions.
+Now the results, first at a glance. The 5.5 models and Qwen are near-perfect on the sets they ran, with zero false alarms; Qwen's had three invalid traces in Direct but they were formatting slips, and not misreadings. Haiku is fine on SP1 functions but struggles on SP2 designs; it is particularly prone to false alarms when the test names are covered to stop giving hints. Llama fails everywhere: in Direct it fabricates, with 45 false alarms on 59 correct functions; and its translation is also poor. 
 
 *Hand over to Yash.*
 
