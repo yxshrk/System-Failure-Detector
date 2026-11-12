@@ -122,10 +122,9 @@ const B = t => ({ text: t, options: { bold: true } });
 
 // 6. Worked example (§1)
 {
-  const s = base(1, "Worked example: a bug random testing misses", "One mutated constant. Only 7 of the 36,000 valid inputs (0.02%) expose it.");
-  s.addImage({ path: `${D}/worked_example.png`, x: 0.85, y: 1.3, w: 8.3, h: 3.451, altText: "days_in_month with 399 instead of 400: random testing finds it 18% of the time with 1,000 inputs; Opus 5.5 Direct answers February 2000; Opus 5.5 Translate writes a spec and Z3 returns February 2400." });
-  takeaway(s, "Gold check: the reference returns 29 and the mutant 28 on both inputs, so both arms found a valid witness.");
-  s.addNotes("Here is one bug through both arms. One mutated constant, 400 to 399. Only 7 of 36,000 inputs fail, so 1,000 random tests catch it 18% of the time. Opus Direct answers February 2000. Opus Translate writes the spec from the docstring and Z3 finds February 2400 in 0.01 s. Both are confirmed against the reference.");
+  const s = base(1, "Worked example");
+  s.addImage({ path: `${D}/worked_example.png`, x: X, y: 1.1, w: W, h: W * 590 / 1520, altText: "days_in_month with 399 instead of 400: random testing finds it 18% of the time with 1,000 inputs; Opus 5.5 Direct answers February 2000; Opus 5.5 Translate writes a spec and Z3 returns February 2400." });
+  s.addNotes("Here is one bug through both arms. One mutated constant, 400 to 399. Only 7 of 36,000 inputs fail, so 1,000 random tests catch it 18% of the time. Opus Direct answers February 2000. Opus Translate writes the spec from the docstring and Z3 finds February 2400 in 0.01 s. Running the code confirms both answers.");
 }
 
 // 7. SP1 formulation (§2.1)

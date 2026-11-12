@@ -79,11 +79,11 @@ We compare two ways of using the AI, which we call arms. Direct: the AI finds th
 
 With the arms defined, here is what we measure. RQ1 asks which arm finds more real failures, especially the hard-to-find ones. RQ2 asks which arm makes up failures that aren't there. SP3 checks the formal write-ups themselves.
 
-### Slide 6 · Worked example: a bug random testing misses
+### Slide 6 · Worked example
 
 *Starts at 2:00 · 56 words · On screen: the highlighted 399 line, then the three cards from top to bottom.*
 
-Here is one bug through both arms. One mutated constant, 400 to 399. Only 7 of 36,000 inputs fail, so 1,000 random tests catch it 18% of the time. Opus Direct answers February 2000. Opus Translate writes the spec from the docstring and Z3 finds February 2400 in 0.01 seconds. Both are confirmed against the reference.
+Here is one bug through both arms. One mutated constant, 400 to 399. Only 7 of 36,000 inputs fail, so 1,000 random tests catch it 18% of the time. Opus Direct answers February 2000. Opus Translate writes the spec from the docstring and Z3 finds February 2400 in 0.01 seconds. Running the code confirms both answers.
 
 *Hand over to Hein.*
 
