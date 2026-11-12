@@ -100,14 +100,14 @@ How does Translate turn this into a solver problem? For SP1, we turn it into a c
 
 *Starts at 3:02 · 82 words · On screen: the table on the left; the eight-step trace on the right, with steps 2 and 6 highlighted.*
 
-Similarly, SP2 is modeled as a planning problem but our goal condition would be the condition where the design fails. Here's how translation is gonna work. We first have a gold model of states and actions; this will be fed to our solvers SATPlan and GBFS; we will definitely find a failure if it exists because best first search is complete within reasonable sizes. On the other hand, LLM will read the expected system behavior and will write out initial states based on its interpretation. This will then be compared with the results of our gold model to see if the LLM correctly spotted an error if it exists.  
+Similarly, SP2 is modeled as a planning problem but our goal condition would be the condition where the design fails. Here's how translation is gonna work. We first have a gold model of states and actions; this will be fed to our solvers SATPlan and GBFS; we will definitely find a failure if it exists because best first search is complete within reasonable sizes. On the other hand, LLM will read the expected system behavior and will write out initial states based on its interpretation. This will also be fed to the solver to find if a path to failure exists. LLM results will then be compared with the results of our gold model to see if the LLM correctly spot an error if it exists.  
 
 
 ### Slide 9 · What a solver's answer proves, and what it costs
 
 *Starts at 3:40 · 84 words · On screen: the table row by row; do not read every cell.*
 
-You may notice that our experiment depends on solvers working properly. How do we ensure that? For SP1 we ensure that the result from our formula and Z3 agrees with the verified python code and test it on 25 random inputs per function. For SP2, our planning problem is modeled exactly as in lecture; including successor-state axioms, so we know that it is decidable and the first satisfiable horizon gives a shortest trace. To certify safety, greedy best-first search also runs until its queue is empty.
+You may notice that our experiment depends on solvers working properly. How do we make sure? For SP1 we ensure that the result from our formula and Z3 agrees with the verified python code and test it on 25 random inputs per function. For SP2, our planning problem is modeled exactly as in lecture; including successor-state axioms, so we know that it is decidable and the first satisfiable horizon gives a shortest trace. To certify safety, greedy best-first search also runs until its queue is empty.
 
 ### Slide 10 · Problem instances, each with a known answer
 
@@ -119,7 +119,7 @@ Now the experiment, here's what we tested. SP1 has 174 instances from 37 functio
 
 *Starts at 4:48 · 54 words · On screen: the tier table, then the four bullets.*
 
-Then how we ran it. Five models in three tiers: strong, mid-tier Haiku, and weak Llama. Direct runs with all tools disabled, so it must reason rather than execute. For translation, our LLMs can refine their work up to 2 times. Every test instance gets exactly one label. For our labels, undecided happens when a tool overan its reasonble resource constraints.
+And here's how we ran it. Five models in three tiers: strong, mid-tier Haiku, and weak Llama. Direct runs with all tools disabled, so it must reason rather than execute. For translation, our LLMs can refine their work up to 2 times. Every test instance gets exactly one label. For our labels, undecided happens when a tool overan its reasonble resource constraints.
 
 *Reading note: stress the two labels, "undecided" and "no failure".*
 
