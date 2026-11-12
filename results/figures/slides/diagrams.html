@@ -49,46 +49,49 @@
   <text x="390" y="198" font-size="20" font-weight="700" fill="#2a78d6" letter-spacing="2" style="fill:#2a78d6">DIRECT</text>
   <path d="M290 400 H335 V265 H385" fill="none" stroke="#2a78d6" stroke-width="3" marker-end="url(#a-blue)"/>
   <rect x="390" y="215" width="230" height="100" rx="14" fill="#eaf2fc" stroke="#2a78d6" stroke-width="2.5"/>
-  <text x="505" y="258" font-size="24" font-weight="700" text-anchor="middle">LLM</text>
-  <text x="505" y="290" font-size="18" text-anchor="middle" class="muted">reads and reasons</text>
+  <text x="505" y="252" font-size="24" font-weight="700" text-anchor="middle">LLM</text>
+  <text x="505" y="280" font-size="18" text-anchor="middle">searches for</text>
+  <text x="505" y="302" font-size="18" text-anchor="middle">the failure itself</text>
   <path d="M620 265 H1345 V365" fill="none" stroke="#2a78d6" stroke-width="3" marker-end="url(#a-blue)"/>
-  <text x="980" y="250" font-size="20" text-anchor="middle">witness: a failing input, or an event trace</text>
+  <text x="980" y="250" font-size="20" text-anchor="middle">witness</text>
 
   <!-- TRANSLATE lane -->
   <text x="390" y="578" font-size="20" font-weight="700" letter-spacing="2" style="fill:#eb6834">TRANSLATE</text>
   <path d="M290 480 H335 V645 H385" fill="none" stroke="#eb6834" stroke-width="3" marker-end="url(#a-orange)"/>
-  <rect x="390" y="595" width="230" height="100" rx="14" fill="#fdeee7" stroke="#eb6834" stroke-width="2.5"/>
-  <text x="505" y="638" font-size="24" font-weight="700" text-anchor="middle">LLM</text>
-  <text x="505" y="670" font-size="18" text-anchor="middle" class="muted">writes a formal model</text>
+  <rect x="390" y="595" width="230" height="110" rx="14" fill="#fdeee7" stroke="#eb6834" stroke-width="2.5"/>
+  <text x="505" y="636" font-size="24" font-weight="700" text-anchor="middle">LLM</text>
+  <text x="505" y="664" font-size="18" text-anchor="middle">writes the problem</text>
+  <text x="505" y="686" font-size="18" text-anchor="middle">formally</text>
 
   <path d="M620 645 H675" fill="none" stroke="#eb6834" stroke-width="3" marker-end="url(#a-orange)"/>
-  <rect x="680" y="595" width="250" height="100" rx="14" fill="#fff" stroke="#eb6834" stroke-width="2"/>
-  <text x="805" y="635" font-size="21" font-weight="700" text-anchor="middle">Formal spec</text>
-  <text x="805" y="665" font-size="16" text-anchor="middle" class="muted">SP1: pre- and postconditions</text>
-  <text x="805" y="687" font-size="17" text-anchor="middle" class="muted">SP2: PDDL problem</text>
+  <rect x="680" y="595" width="250" height="110" rx="14" fill="#fff" stroke="#eb6834" stroke-width="2"/>
+  <text x="805" y="636" font-size="21" font-weight="700" text-anchor="middle">Specification</text>
+  <text x="805" y="666" font-size="16" text-anchor="middle" class="muted">SP1: pre- and postconditions</text>
+  <text x="805" y="690" font-size="16" text-anchor="middle" class="muted">SP2: PDDL problem</text>
 
   <path d="M930 645 H985" fill="none" stroke="#eb6834" stroke-width="3" marker-end="url(#a-orange)"/>
-  <rect x="990" y="595" width="250" height="100" rx="14" fill="#fff" stroke="#eb6834" stroke-width="2"/>
-  <text x="1115" y="635" font-size="21" font-weight="700" text-anchor="middle">Solver searches</text>
-  <text x="1115" y="665" font-size="17" text-anchor="middle" class="muted">SP1: Z3 (SMT)</text>
-  <text x="1115" y="687" font-size="17" text-anchor="middle" class="muted">SP2: SATPlan; GBFS with h<tspan font-size="12" dy="4">FF</tspan></text>
+  <rect x="990" y="595" width="250" height="110" rx="14" fill="#fff" stroke="#eb6834" stroke-width="2"/>
+  <text x="1115" y="628" font-size="21" font-weight="700" text-anchor="middle">Solver</text>
+  <text x="1115" y="654" font-size="17" text-anchor="middle">searches for the failure</text>
+  <text x="1115" y="676" font-size="15" text-anchor="middle" class="muted">SP1: Z3</text>
+  <text x="1115" y="696" font-size="15" text-anchor="middle" class="muted">SP2: SATPlan, GBFS with h<tspan font-size="11" dy="4">FF</tspan></text>
 
   <path d="M1240 645 H1345 V545" fill="none" stroke="#eb6834" stroke-width="3" marker-end="url(#a-orange)"/>
   <text x="1355" y="610" font-size="20">witness</text>
 
   <!-- repair loop -->
-  <path d="M1115 695 V770 H505 V700" fill="none" stroke="#eb6834" stroke-width="2.5" stroke-dasharray="9 7" marker-end="url(#a-orange)"/>
+  <path d="M1115 705 V772 H505 V710" fill="none" stroke="#eb6834" stroke-width="2.5" stroke-dasharray="9 7" marker-end="url(#a-orange)"/>
   <text x="810" y="800" font-size="19" text-anchor="middle">parse and solver errors fed back for repair</text>
 
   <!-- gold check -->
-  <rect x="1220" y="370" width="320" height="170" rx="14" fill="#0b0b0b"/>
-  <text x="1380" y="415" font-size="23" font-weight="700" text-anchor="middle" style="fill:#fcfcfb">Gold check</text>
-  <text x="1380" y="450" font-size="18" text-anchor="middle" style="fill:#d9d8d3">replay on the unmutated code</text>
-  <text x="1380" y="476" font-size="18" text-anchor="middle" style="fill:#d9d8d3">or the gold PDDL problem</text>
+  <rect x="1220" y="370" width="320" height="170" rx="14" fill="#fff" stroke="#0b0b0b" stroke-width="2.5"/>
+  <text x="1380" y="415" font-size="23" font-weight="700" text-anchor="middle">Gold check</text>
+  <text x="1380" y="450" font-size="18" text-anchor="middle">the witness is replayed</text>
+  <text x="1380" y="476" font-size="18" text-anchor="middle">on the reference</text>
 
-  <line x1="1250" y1="494" x2="1510" y2="494" stroke="#3a3a38" stroke-width="1.5"/>
-  <text x="1300" y="524" font-size="19" font-weight="700" text-anchor="middle" style="fill:#fcfcfb">✓ valid</text>
-  <text x="1455" y="524" font-size="19" font-weight="700" text-anchor="middle" style="fill:#b5b3ad">✗ fabricated</text>
+  <line x1="1250" y1="494" x2="1510" y2="494" stroke="#e4e3df" stroke-width="1.5"/>
+  <text x="1300" y="524" font-size="19" font-weight="700" text-anchor="middle">✓ valid</text>
+  <text x="1455" y="524" font-size="19" font-weight="700" text-anchor="middle" class="muted">✗ fabricated</text>
 
 </svg>
 </div>
@@ -99,7 +102,7 @@
 <!-- ============================================================= -->
 <figure>
 <div class="frame">
-<svg id="worked_example" viewBox="40 160 1520 590" role="img" aria-label="Worked example. A days_in_month function whose leap-year check uses 399 instead of 400 fails on only 7 of 36,000 inputs. 1,000 random inputs find it 18% of the time. Opus 5.5 Direct answers February 2000; Opus 5.5 Translate writes a spec and Z3 returns February 2400. Both are confirmed against the reference.">
+<svg id="worked_example" viewBox="40 160 1520 632" role="img" aria-label="Worked example. A days_in_month function whose leap-year check uses 399 instead of 400 fails on only 7 of 36,000 inputs. 1,000 random inputs find it 18% of the time. Opus 5.5 Direct answers February 2000; Opus 5.5 Translate writes a spec and Z3 returns February 2400. Both are confirmed against the reference.">
   <!-- code panel -->
   <rect x="60" y="170" width="720" height="560" rx="14" fill="#f4f3f0"/>
   <rect x="60" y="208" width="720" height="38" fill="#f6ecc2"/>
@@ -142,12 +145,12 @@
   <rect x="820" y="560" width="720" height="170" rx="14" fill="#fff" stroke="#e4e3df" stroke-width="2"/>
   <rect x="820" y="560" width="10" height="170" rx="4" fill="#eb6834"/>
   <text x="860" y="602" font-size="20" font-weight="700" letter-spacing="1.5" style="fill:#eb6834">OPUS 5.5 · TRANSLATE</text>
-  <text x="860" y="642" font-size="19">writes the spec</text>
-  <text x="1010" y="642" font-size="19" class="mono">post: result == expected_days(month, year)</text>
-  <text x="860" y="672" font-size="19" class="muted">(its own leap rule, using 400, straight from the docstring)</text>
-  <text x="860" y="712" font-size="19">Z3 returns</text>
-  <text x="975" y="712" font-size="24" font-weight="700" class="mono">month = 2, year = 2400</text>
-  <text x="1355" y="712" font-size="19" class="muted">in 0.01 s</text>
+  <text x="860" y="650" font-size="20">Writes the requirement from the docstring (the 400 rule)</text>
+  <text x="860" y="702" font-size="20">Z3 returns</text>
+  <text x="975" y="702" font-size="26" font-weight="700" class="mono">month = 2, year = 2400</text>
+  <text x="1390" y="702" font-size="20" class="muted">in 0.01 s</text>
+
+  <text x="1180" y="774" font-size="19" text-anchor="middle">The two arms name different years; any year divisible by 400 exposes the bug.</text>
 
 </svg>
 </div>
@@ -185,57 +188,59 @@
 </figure>
 
 <!-- ============================================================= -->
-<!-- 4. SP1 formulation (slide 4 slot, 4.375 x 3.9 in)              -->
+<!-- 4. SP1 formulation on the leap-year bug (slide 7 slot)        -->
 <!-- ============================================================= -->
 <figure>
-<div class="frame" style="aspect-ratio: 875 / 780; max-width: 875px">
-<svg id="sp1_formulation" viewBox="0 0 875 780" role="img" aria-label="SP1 pipeline on a toy function: the code is turned into the formula ret = If(x > 0, 1, 2) by symbolic execution, conjoined with the negated spec, and Z3 returns x = 0, a failing input that is re-run in Python.">
+<div class="frame" style="aspect-ratio: 600 / 460; max-width: 600px">
+<svg id="sp1_formulation" viewBox="0 0 600 460" role="img" aria-label="SP1 on the leap-year bug: symbolic execution turns the code into one formula, the LLM writes the requirement from the docstring, and Z3 searches for an input where the code's result breaks the requirement. Satisfiable gives a failing input, month 2 and year 2400, re-run in Python; unsatisfiable means no failing input within the bounds.">
   <defs>
-    <marker id="s1a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#52514e"/></marker>
+    <marker id="s1a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#52514e"/></marker>
   </defs>
-  <!-- code -->
-  <rect x="10" y="10" width="420" height="200" rx="14" fill="#f4f3f0"/>
-  <text x="32" y="48" font-size="20" font-weight="700" letter-spacing="1.5" class="muted">CODE</text>
-  <g font-size="26">
-    <text x="32" y="92" class="mono">def f(x):</text>
-    <text x="32" y="128" class="mono">    if x <tspan font-weight="700">&gt;</tspan> 0:</text>
-    <text x="32" y="164" class="mono">        return 1</text>
-    <text x="32" y="200" class="mono">    return 2</text>
-  </g>
-  <!-- spec -->
-  <rect x="445" y="10" width="420" height="200" rx="14" fill="#fdeee7"/>
-  <text x="467" y="48" font-size="20" font-weight="700" letter-spacing="1.5" style="fill:#eb6834">SPEC (LLM writes it)</text>
-  <g font-size="26">
-    <text x="467" y="92" class="mono">pre:  -100 ≤ x ≤ 100</text>
-    <text x="467" y="128" class="mono">post: ret == 1 if</text>
-    <text x="467" y="164" class="mono">      x <tspan font-weight="700">&gt;=</tspan> 0 else 2</text>
-  </g>
+  <!-- code under review -->
+  <rect x="2" y="2" width="596" height="70" rx="10" fill="#f4f3f0"/>
+  <text x="16" y="24" font-size="13" font-weight="700" letter-spacing="1" class="muted">CODE UNDER REVIEW</text>
+  <rect x="2" y="36" width="596" height="26" fill="#f6ecc2"/>
+  <text x="12" y="55" font-size="15" class="mono">leap(y): return y % 4 == 0 and (y % 100 != 0 or y % <tspan font-weight="700">399</tspan> == 0)</text>
 
-  <!-- symbolic execution -->
-  <line x1="220" y1="210" x2="220" y2="282" stroke="#52514e" stroke-width="3" marker-end="url(#s1a)"/>
-  <text x="236" y="254" font-size="22" class="muted">symbolic execution</text>
-  <rect x="10" y="290" width="420" height="80" rx="14" fill="#fff" stroke="#b5b3ad" stroke-width="2"/>
-  <text x="220" y="340" font-size="27" text-anchor="middle" class="mono">ret = If(x &gt; 0, 1, 2)</text>
+  <!-- two inputs to the query -->
+  <line x1="150" y1="72" x2="150" y2="100" stroke="#52514e" stroke-width="2.5" marker-end="url(#s1a)"/>
+  <text x="162" y="91" font-size="14" class="muted">symbolic execution</text>
+  <rect x="2" y="104" width="292" height="122" rx="10" fill="#fff" stroke="#b5b3ad" stroke-width="1.5"/>
+  <text x="14" y="126" font-size="13" font-weight="700" letter-spacing="0.5" class="muted">CODE AS A FORMULA (SIMPLIFIED)</text>
+  <text x="14" y="152" font-size="15" class="mono">result = If(month = 2,</text>
+  <text x="14" y="174" font-size="15" class="mono">  If(leap399(year), 29, 28),</text>
+  <text x="14" y="196" font-size="15" class="mono">  …)</text>
+  <text x="14" y="217" font-size="13" class="muted">If(c, a, b): a when c holds, else b</text>
 
-  <!-- converge into query -->
-  <line x1="220" y1="370" x2="220" y2="432" stroke="#52514e" stroke-width="3" marker-end="url(#s1a)"/>
-  <line x1="655" y1="210" x2="655" y2="432" stroke="#52514e" stroke-width="3" marker-end="url(#s1a)"/>
-  <text x="671" y="330" font-size="22" class="muted">negate post</text>
-  <rect x="10" y="440" width="855" height="120" rx="14" fill="#0b0b0b"/>
-  <text x="34" y="482" font-size="20" font-weight="700" letter-spacing="1.5" style="fill:#d9d8d3">Z3 QUERY: IS THIS SATISFIABLE?</text>
-  <text x="437" y="532" font-size="27" text-anchor="middle" class="mono" style="fill:#fcfcfb">pre(x) ∧ ret = If(x&gt;0, 1, 2) ∧ ¬post(x, ret)</text>
+  <rect x="306" y="104" width="292" height="122" rx="10" fill="#fdeee7"/>
+  <text x="318" y="126" font-size="13" font-weight="700" letter-spacing="0.5" style="fill:#eb6834">REQUIREMENT (LLM WRITES IT)</text>
+  <text x="318" y="152" font-size="15" class="mono">post: result ==</text>
+  <text x="318" y="174" font-size="15" class="mono">  expected_days(month, year)</text>
+  <text x="318" y="200" font-size="13" class="muted">written from the docstring,</text>
+  <text x="318" y="217" font-size="13" class="muted">so it uses the 400 rule</text>
+
+  <line x1="150" y1="226" x2="150" y2="252" stroke="#52514e" stroke-width="2.5" marker-end="url(#s1a)"/>
+  <line x1="452" y1="226" x2="452" y2="252" stroke="#52514e" stroke-width="2.5" marker-end="url(#s1a)"/>
+  <text x="464" y="245" font-size="14" class="muted">negate</text>
+
+  <!-- the query -->
+  <rect x="2" y="256" width="596" height="82" rx="10" fill="#0b0b0b"/>
+  <text x="16" y="278" font-size="13" font-weight="700" letter-spacing="1" style="fill:#d9d8d3">Z3: IS THERE AN INPUT WHERE BOTH HOLD?</text>
+  <text x="300" y="304" font-size="15" text-anchor="middle" class="mono" style="fill:#fcfcfb">in the domain ∧ result = code(month, year)</text>
+  <text x="300" y="327" font-size="15" text-anchor="middle" class="mono" style="fill:#fcfcfb">∧ not post(month, year, result)</text>
 
   <!-- outcomes -->
-  <path d="M437 560 V590 H220 V622" fill="none" stroke="#52514e" stroke-width="3" marker-end="url(#s1a)"/>
-  <path d="M437 590 H655 V622" fill="none" stroke="#52514e" stroke-width="3" marker-end="url(#s1a)"/>
-  <rect x="10" y="630" width="420" height="140" rx="14" fill="#ffffff" stroke="#0b0b0b" stroke-width="2"/>
-  <text x="220" y="676" font-size="24" font-weight="700" text-anchor="middle">SAT</text>
-  <text x="220" y="716" font-size="27" font-weight="700" text-anchor="middle" class="mono">x = 0</text>
-  <text x="220" y="752" font-size="21" text-anchor="middle" class="muted">failing input, re-run in Python</text>
-  <rect x="445" y="630" width="420" height="140" rx="14" fill="#f4f3f0"/>
-  <text x="655" y="676" font-size="24" font-weight="700" text-anchor="middle" class="muted">UNSAT</text>
-  <text x="655" y="716" font-size="23" text-anchor="middle">no failing input</text>
-  <text x="655" y="752" font-size="21" text-anchor="middle" class="muted">code ⊨ spec (within loop bounds)</text>
+  <path d="M300 338 V350 H150 V364" fill="none" stroke="#52514e" stroke-width="2.5" marker-end="url(#s1a)"/>
+  <path d="M300 350 H452 V364" fill="none" stroke="#52514e" stroke-width="2.5" marker-end="url(#s1a)"/>
+  <rect x="2" y="368" width="292" height="90" rx="10" fill="#fff" stroke="#0b0b0b" stroke-width="2"/>
+  <text x="148" y="390" font-size="15" font-weight="700" text-anchor="middle">Satisfiable: a failing input</text>
+  <text x="148" y="414" font-size="15" font-weight="700" text-anchor="middle" class="mono">month = 2, year = 2400</text>
+  <text x="148" y="434" font-size="13" text-anchor="middle">the code says 28, the docstring 29</text>
+  <text x="148" y="451" font-size="12" text-anchor="middle" class="muted">re-run in Python to confirm</text>
+  <rect x="306" y="368" width="292" height="90" rx="10" fill="#f4f3f0"/>
+  <text x="452" y="390" font-size="15" font-weight="700" text-anchor="middle" class="muted">Unsatisfiable</text>
+  <text x="452" y="416" font-size="14" text-anchor="middle">no failing input</text>
+  <text x="452" y="436" font-size="13" text-anchor="middle" class="muted">within the bounds</text>
 </svg>
 </div>
 </figure>

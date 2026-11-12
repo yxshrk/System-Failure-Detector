@@ -117,9 +117,9 @@ const B = t => ({ text: t, options: { bold: true } });
 // 4. The two arms (§1, §4 scoring)
 {
   const s = base(1, "Direct: the LLM searches. Translate: a solver searches", "Two arms, same input, same exact scoring. The only difference is who searches for the failure.");
-  s.addImage({ path: `${D}/method.png`, x: 0.908, y: 1.3, w: 8.185, h: 3.5, altText: "Direct: the LLM reads the code or design and outputs a witness. Translate: the LLM writes a formal specification, a solver searches, and errors are fed back for repair. Both witnesses are replayed on the gold reference." });
-  takeaway(s, [B("system ⊨ spec"), { text: "  iff  " }, B("system ∧ ¬spec"), { text: " is unsatisfiable, so any satisfying assignment is a failure witness." }]);
-  s.addNotes("We find witnesses in two ways, which we call arms. Direct: the LLM reads the code or design and outputs the failure itself. Translate: the LLM writes a formal specification, a solver searches, and errors go back for repair. Both arms are scored the same way: a witness counts only if it replays on the gold reference. The logic underneath: the system meets the spec exactly when system and not-spec is unsatisfiable.");
+  s.addImage({ path: `${D}/method.png`, x: 0.908, y: 1.3, w: 8.185, h: 3.5, altText: "Direct: the LLM searches for the failure itself. Translate: the LLM writes the problem formally as a specification and a solver searches, with errors fed back for repair. Both witnesses are replayed on the reference." });
+  takeaway(s, "Both arms are scored the same way: a witness counts only if it replays on the gold reference.");
+  s.addNotes("We find witnesses in two ways, which we call arms. Direct: the LLM searches for the failure itself. Translate: the LLM writes the problem formally as a specification, a solver searches, and errors go back for repair. Both arms are scored the same way: a witness counts only if it replays on the gold reference.");
 }
 
 // 5. Research questions (§1)
@@ -143,7 +143,7 @@ const B = t => ({ text: t, options: { bold: true } });
 // 6. Worked example (§1)
 {
   const s = base(1, "Worked example: a bug random testing misses", "One mutated constant. Only 7 of the 36,000 valid inputs (0.02%) expose it.");
-  s.addImage({ path: `${D}/worked_example.png`, x: 0.556, y: 1.32, w: 8.888, h: 3.45, altText: "days_in_month with 399 instead of 400: random testing finds it 18% of the time with 1,000 inputs; Opus 5.5 Direct answers February 2000; Opus 5.5 Translate writes a spec and Z3 returns February 2400." });
+  s.addImage({ path: `${D}/worked_example.png`, x: 0.85, y: 1.3, w: 8.3, h: 3.451, altText: "days_in_month with 399 instead of 400: random testing finds it 18% of the time with 1,000 inputs; Opus 5.5 Direct answers February 2000; Opus 5.5 Translate writes a spec and Z3 returns February 2400." });
   takeaway(s, "Gold check: the reference returns 29 and the mutant 28 on both inputs, so both arms found a valid witness.");
   s.addNotes("Here is one bug through both arms. One mutated constant, 400 to 399. Only 7 of 36,000 inputs fail, so 1,000 random tests catch it 18% of the time. Opus Direct reasons its way to February 2000. Opus Translate writes the spec from the docstring and Z3 finds February 2400 in 0.01 s. Both are confirmed against the reference.");
 }
@@ -152,19 +152,20 @@ const B = t => ({ text: t, options: { bold: true } });
 {
   const s = base(2, "SP1 as a CSP: a solution is a failing input", "A constraint satisfaction problem (CSP), solved by an SMT solver (Z3)");
   table(s, [
-    [hcell(""), hcell("In general"), hcell("In the example")],
-    [lab("Variables"), "the function's inputs", "x"],
-    [lab("Domains"), "the stated input ranges", "−100 ≤ x ≤ 100"],
-    [lab("Constraint"), "the code returns r, and r breaks the requirement", "ret = If(x > 0, 1, 2) and not post(x, ret)"],
-  ], { x: X, y: 1.3, w: 5.0, colW: [1.05, 1.95, 2.0], rowH: [0.3, 0.3, 0.3, 0.55] });
+    [hcell(""), hcell("In general"), hcell("In the leap-year example")],
+    [lab("Variables"), "the function's inputs", "month, year"],
+    [lab("Domains"), "the stated input ranges", "1 ≤ month ≤ 12, 1 ≤ year ≤ 3000 (36,000 inputs)"],
+    [lab("Constraint"), "the code's result breaks the requirement", "result = code(month, year) and not post(month, year, result)"],
+  ], { x: X, y: 1.3, w: 4.8, colW: [0.95, 1.6, 2.25], rowH: [0.3, 0.3, 0.46, 0.62], fontSize: 10.5 });
   bullets(s, [
     "Bounded symbolic execution turns the code into one formula covering every path, with loops unrolled k times",
-    "A solution is an input on which the code breaks its requirement; here, x = 0",
+    "A solution is an input on which the code breaks its requirement. Here: month = 2, year = 2400, one of 7",
     "No solution means no such input exists within the bounds",
-  ], { x: X, y: 3.0, w: 5.0, h: 1.75, fontSize: 12.5, paraSpaceAfter: 6 });
-  s.addImage({ path: `${D}/sp1_formulation.png`, x: 5.75, y: 1.3, w: 3.875, h: 3.454, altText: "SP1 on a toy function: the code becomes ret = If(x > 0, 1, 2), conjoined with not post, and Z3 returns x = 0" });
-  takeaway(s, "In Translate, the LLM writes the requirement (pre and post) and Z3 searches. Every answer is re-run in Python.");
-  s.addNotes("How does Translate turn this into a solver problem? SP1 is constraint satisfaction: the inputs are variables with finite domains, and the constraint is that the code's output breaks the requirement. Our bounded symbolic executor turns the Python into one formula over all paths. A solution is a failing input, here x equals 0, and no solution means none exists within the bounds.");
+  ], { x: X, y: 3.15, w: 4.8, h: 1.6, fontSize: 12, paraSpaceAfter: 6 });
+  T(s, "How Translate builds and solves the problem", { x: 5.425, y: 1.28, w: 4.2, h: 0.2, fontSize: 10, bold: true, color: INK2 });
+  s.addImage({ path: `${D}/sp1_formulation.png`, x: 5.425, y: 1.5, w: 4.2, h: 3.22, altText: "SP1 on the leap-year bug: symbolic execution turns the code into one formula, the LLM writes the requirement from the docstring, and Z3 searches for an input where the code's result breaks it. Satisfiable: month 2, year 2400, re-run in Python. Unsatisfiable: no failing input within the bounds." });
+  takeaway(s, [{ text: "The code meets its requirement (" }, B("code ⊨ requirement"), { text: ") exactly when " }, B("code ∧ ¬requirement"), { text: " is unsatisfiable, so any solution is a failure witness." }]);
+  s.addNotes("How does Translate turn this into a solver problem? SP1 is constraint satisfaction: month and year are variables with finite domains, and the constraint is that the code's result breaks the requirement. Symbolic execution turns the code into one formula; the LLM writes the requirement from the docstring, and Z3 searches for an input where both hold. Here it finds February 2400. Underneath is entailment: the code meets its requirement exactly when code and not requirement is unsatisfiable.");
 }
 
 // 8. SP2 formulation (§2.2)
@@ -182,7 +183,8 @@ const B = t => ({ text: t, options: { bold: true } });
     [{ text: "SATPlan finds a shortest such trace; greedy best-first search (GBFS) with h" }, sub("FF"), { text: " proves that none exists" }],
   ], { x: X, y: 3.5, w: 5.4, h: 1.25, fontSize: 12, paraSpaceAfter: 6 });
   T(s, "Shortest failure trace found by SATPlan (8 events)", { x: 6.05, y: 1.3, w: 3.575, h: 0.22, fontSize: 10, bold: true, color: INK2 });
-  s.addImage({ path: `${D}/sp2_trace.png`, x: 6.05, y: 1.58, w: 3.575, h: 3.187, altText: "Shortest failure trace for payments-subtle-1: eight events ending in charged-twice" });
+  T(s, "a0 is the first attempt and a1 the retry, for order o1. Highlighted: both attempts pass the duplicate check.", { x: 6.05, y: 1.53, w: 3.575, h: 0.34, fontSize: 9.5, color: INK2 });
+  s.addImage({ path: `${D}/sp2_trace.png`, x: 6.239, y: 1.9, w: 3.197, h: 2.85, altText: "Shortest failure trace for payments-subtle-1: eight events ending in charged-twice" });
   takeaway(s, "Both arms are given the actions. In Translate, the LLM writes only the initial state.");
   s.addNotes("SP2 is classical planning. Facts describe the state, actions are the events including failures, the initial state encodes the design, and the goal is the violation. The planner chooses every event, so a plan is a counterexample: planning used as model checking of a safety property. In this trace the retry passes the duplicate check because the record is written only after charging, so the card is charged twice.");
 }
