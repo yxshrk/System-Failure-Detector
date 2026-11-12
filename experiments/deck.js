@@ -23,7 +23,7 @@ function base(step, title, sub) {
     runs.push({ text: `${i + 1}  ${n.toUpperCase()}`, options: { color: on ? INK : MUTED, bold: on } });
     if (i < STEPS.length - 1) runs.push({ text: "    ›    ", options: { color: MUTED } });
   });
-  T(s, runs, { x: X, y: 0.16, w: W, h: 0.2, fontSize: 8, charSpacing: 1 });
+  T(s, runs, { x: X, y: 0.14, w: W, h: 0.22, fontSize: 9, charSpacing: 1 });
   T(s, title, { x: X, y: 0.4, w: W, h: 0.42, fontSize: 20, bold: true });
   if (sub) T(s, sub, { x: X, y: 0.84, w: W, h: 0.3, fontSize: 12, color: INK2 });
   return s;
@@ -111,7 +111,7 @@ const B = t => ({ text: t, options: { bold: true } });
     ["Example:", "a timed-out payment is retried before the first attempt is recorded, and the card is charged twice."],
   ]);
   takeaway(s, "In both tasks the answer is a witness: something anyone can replay and check.");
-  s.addNotes("To answer it, we need tasks where the answer can be checked. SP1: given a Python function and its docstring, find an input that breaks the docstring, like a leap-year rule with 400 typed as 399. SP2: given a design document and the events that can occur, find an order of events that breaks a safety property, like a retried payment charged twice. Either way, the answer is a witness anyone can replay.");
+  s.addNotes("To answer it, we need tasks whose answers can be checked. SP1 asks for an input that breaks a function's docstring; SP2 asks for an order of events that breaks a design's safety property. Either way, the answer is a witness anyone can replay.");
 }
 
 // 4. The two arms (§1, §4 scoring)
@@ -137,7 +137,7 @@ const B = t => ({ text: t, options: { bold: true } });
   q(3.45, "SP3", "Also: how good are the translations?",
     "We score each one against our gold version, to tell a translation error from a solver error.");
   takeaway(s, "First, one bug through both arms.");
-  s.addNotes("With the arms defined, here is what we measure. RQ1: which arm finds more valid witnesses, and does the gap widen as failures get harder to reach, meaning rarer failing inputs or longer failure traces? RQ2: which arm invents failures on correct functions and designs? And SP3 scores the translations themselves, so we can tell a translation error from a solver error.");
+  s.addNotes("With the arms defined, here is what we measure. RQ1 asks whether one arm finds more real failures, especially the hard-to-reach ones. RQ2 asks which arm invents failures that are not there. SP3 checks the translations themselves.");
 }
 
 // 6. Worked example (§1)
@@ -207,7 +207,7 @@ const B = t => ({ text: t, options: { bold: true } });
       sup("PSPACE-complete; each SATPlan call is NP-complete. Up to 2", "218", " states at size 8")],
   ], { x: X, y: 1.28, w: W, colW: [2.05, 3.5, 3.7], rowH: [0.28, 0.6, 0.48, 0.6, 0.6, 0.48] });
   takeaway(s, [{ text: "h" }, sub("FF"), { text: " only prunes dead ends, which is safe because ignoring deletes only adds behaviour. Every witness is replayed on the real code or gold problem before it counts." }]);
-  s.addNotes("Why should we trust a solver's answer? For SP1 we show the encoding matches Python on every input within the loop bounds, so every Z3 answer is an input that breaks the spec, and unsatisfiable means no failure within those bounds. For SP2, our SATPlan clauses are equivalent to the successor-state axioms, so the first satisfiable horizon gives a shortest trace. To certify safety, greedy best-first search runs until its queue is empty. Planning is PSPACE-complete, so this is where the tools can run out.");
+  s.addNotes("Why should we trust a solver's answer? For SP1 we show the encoding matches Python on every input within the loop bounds, and test it on 25 random inputs per function, so every Z3 answer is an input that breaks the spec, and unsatisfiable means no failure within those bounds. For SP2, our SATPlan clauses are equivalent to the successor-state axioms, so the first satisfiable horizon gives a shortest trace. To certify safety, greedy best-first search runs until its queue is empty. Planning is PSPACE-complete, so this is where the tools can run out.");
 }
 
 // 10. Problem instances (§3)
@@ -217,7 +217,7 @@ const B = t => ({ text: t, options: { bold: true } });
     card(s, x, 1.3, 4.5, 3.45);
     T(s, head, { x: x + 0.28, y: 1.43, w: 3.95, h: 0.3, fontSize: 14, bold: true });
     T(s, big, { x: x + 0.28, y: 1.72, w: 3.95, h: 0.55, fontSize: 32, bold: true });
-    bullets(s, lines, { x: x + 0.28, y: 2.38, w: 3.95, h: 2.3, fontSize: 11.5, paraSpaceAfter: 5 });
+    bullets(s, lines, { x: x + 0.28, y: 2.38, w: 3.95, h: 2.3, fontSize: 12.5, paraSpaceAfter: 6 });
   };
   col(X, "Functions (SP1)", "174", [
     "37 Python functions, renamed and with rewritten docstrings, to limit memorisation",
@@ -254,7 +254,7 @@ const B = t => ({ text: t, options: { bold: true } });
 // 12. Scoreboard (§5 overview)
 {
   const s = base(4, "Strong models are near-perfect; Haiku and Llama are not", "Every model and arm at a glance. Darker cells are worse: bugs missed, or false alarms raised.");
-  s.addImage({ path: `${D}/scoreboard.png`, x: X, y: 1.25, w: W, h: 3.55, altText: "Scoreboard of every model and arm on bugs found, false alarms, failure traces found and false alarms with names hidden" });
+  s.addImage({ path: `${D}/scoreboard.png`, x: X, y: 1.1, w: W, h: 3.55, altText: "Scoreboard of every model and arm on bugs found, false alarms, failure traces found and false alarms with names hidden" });
   takeaway(s, "Now each research question in turn.");
   s.addNotes("Now the results, first at a glance. The 5.5 models and Qwen are near-perfect on the sets they ran, with zero false alarms. Haiku is fine on functions but struggles on designs, especially false alarms with names hidden. Llama fails everywhere: in Direct it fabricates, with 45 false alarms on 59 correct functions.");
 }
@@ -263,7 +263,7 @@ const B = t => ({ text: t, options: { bold: true } });
 {
   const s = base(4, "Strong models find nearly every failure, even the hardest", "RQ1. Which arm finds more valid witnesses, and does the gap widen as failures get harder to reach?");
   s.addImage({ path: `${D}/hardness_panel.png`, x: X, y: 1.28, w: W, h: 3.45, altText: "Left: failures found vs how rare the failing input is, for random testing and both arms. Right: valid traces vs shortest failure trace length for Sonnet, Opus and Haiku" });
-  takeaway(s, "Rarity defeats random testing (5% of very rare bugs at 100 inputs), not the LLMs. Translate trails only on the rarest bugs: 29 of 32 model–bug pairs against 32 of 32.");
+  takeaway(s, "Rarity defeats random testing (5% of very rare bugs at 100 inputs) far more than the LLMs. Translate trails only on the rarest bugs: 29 of 32 model–bug pairs against 32 of 32.");
   s.addNotes("RQ1 first. Random testing falls off as bugs get rarer; Direct finds all of them, Translate 29 of 32 very rare pairs, two bugs, so only a hint. On designs, trace length from 6 to 51 events does not hurt Sonnet or Opus, and Haiku stays near 80% with no length trend. This looks like recognition rather than search.");
 }
 
@@ -278,7 +278,7 @@ const B = t => ({ text: t, options: { bold: true } });
 // 15. SP3 (§5, §5.3)
 {
   const s = base(4, "Translate fails through its specification or its tools", "SP3. How good were the translations?");
-  T(s, "Sonnet and Opus wrote the exact initial state in all 90 main and stress designs. Where translation failed, it failed in four ways:",
+  T(s, "Sonnet and Opus wrote the exact initial state in all 90 main and stress designs. Where Translate failed, it failed in four ways:",
     { x: X, y: 1.28, w: W, h: 0.42, fontSize: 12 });
   table(s, [
     [hcell("What goes wrong"), hcell("What we saw")],
@@ -309,7 +309,7 @@ const B = t => ({ text: t, options: { bold: true } });
   a(3.58, "3", "Only the tools can certify \"no failure\", and that is where they run out",
     "Inventory's safe design from size 8: Translate is undecided, while Sonnet and Opus Direct answer correctly, without proof.");
   takeaway(s, "So which arm to use depends on the model, and on whether the answer must be proved.");
-  s.addNotes("Putting the results together, the answer in brief. One: with a strong model the two arms nearly tie, consistent with recognising patterns rather than searching. Two: translation moves part of the error into the specification rather than removing it, so it helps only a model that writes the formal language reliably: Haiku yes, Llama no. Three: only the tools can certify that there is no failure, and that is exactly where they run out of budget.");
+  s.addNotes("Putting the results together. First, strong models nearly tie, consistent with recognising patterns rather than searching. Second, translation moves the error into the specification, so it helps only a model that writes the formal language reliably: Haiku yes, Llama no. Third, only the tools can certify no failure, and that is where they run out.");
 }
 
 // 17. Trade-offs and when to use which (§6)
