@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Pre-Mortems: presentation diagrams</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root { color-scheme: light; --surface:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e; --grid:#e4e3df; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #efeeea; color: var(--ink); font-family: Inter, system-ui, sans-serif; }
+  main { max-width: 1280px; margin: 0 auto; padding: 32px 24px 64px; }
+  header h1 { font-size: 22px; margin: 0 0 4px; }
+  header p { margin: 0 0 28px; color: var(--ink2); font-size: 15px; line-height: 1.5; }
+  figure { margin: 0 0 40px; }
+  .frame { background: var(--surface); aspect-ratio: 16 / 9; width: 100%; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+  svg { display: block; width: 100%; height: 100%; }
+  svg text { font-family: Inter, system-ui, sans-serif; fill: #0b0b0b; }
+  svg .mono { white-space: pre; font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; font-family: "JetBrains Mono", ui-monospace, monospace; }
+  svg .muted { fill: #52514e; }
+</style>
+</head>
+<body>
+<main>
+<header>
+  <h1>Presentation diagrams</h1>
+  <p>Each panel is a 16:9 slide on the same background as the chart PNGs in <code>results/figures/slides/</code>. Screenshot a panel, or drop it full-bleed onto a slide.</p>
+</header>
+
+<!-- ============================================================= -->
+<!-- 1. Direct vs Translate pipeline                                -->
+<!-- ============================================================= -->
+<figure>
+<div class="frame">
+<svg viewBox="0 0 1600 900" role="img" aria-label="Two pipelines. Direct: the LLM reads the code or design and outputs a witness. Translate: the LLM writes a formal spec, a solver searches for the witness, and solver errors are fed back for repair. Both witnesses are replayed on the gold model.">
+  <defs>
+    <marker id="a-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#52514e"/></marker>
+    <marker id="a-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#2a78d6"/></marker>
+    <marker id="a-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#eb6834"/></marker>
+  </defs>
+
+  <text x="60" y="88" font-size="46" font-weight="700">Two ways to run an AI pre-mortem</text>
+  <text x="60" y="132" font-size="24" class="muted">Same input, same exact scoring. The difference is who searches for the failure.</text>
+
+  <!-- input -->
+  <rect x="60" y="345" width="230" height="190" rx="14" fill="#fff" stroke="#b5b3ad" stroke-width="2"/>
+  <text x="175" y="390" font-size="22" font-weight="700" text-anchor="middle">Input</text>
+  <text x="175" y="430" font-size="19" text-anchor="middle">SP1: function</text>
+  <text x="175" y="456" font-size="19" text-anchor="middle">+ docstring</text>
+  <text x="175" y="494" font-size="19" text-anchor="middle">SP2: design doc</text>
+
+  <!-- DIRECT lane -->
+  <text x="390" y="198" font-size="20" font-weight="700" fill="#2a78d6" letter-spacing="2" style="fill:#2a78d6">DIRECT</text>
+  <path d="M290 400 H335 V265 H385" fill="none" stroke="#2a78d6" stroke-width="3" marker-end="url(#a-blue)"/>
+  <rect x="390" y="215" width="230" height="100" rx="14" fill="#eaf2fc" stroke="#2a78d6" stroke-width="2.5"/>
+  <text x="505" y="258" font-size="24" font-weight="700" text-anchor="middle">LLM</text>
+  <text x="505" y="290" font-size="18" text-anchor="middle" class="muted">reads and reasons</text>
+  <path d="M620 265 H1345 V365" fill="none" stroke="#2a78d6" stroke-width="3" marker-end="url(#a-blue)"/>
+  <text x="980" y="250" font-size="20" text-anchor="middle">witness: a failing input, or an event trace</text>
+
+  <!-- TRANSLATE lane -->
+  <text x="390" y="578" font-size="20" font-weight="700" letter-spacing="2" style="fill:#eb6834">TRANSLATE</text>
+  <path d="M290 480 H335 V645 H385" fill="none" stroke="#eb6834" stroke-width="3" marker-end="url(#a-orange)"/>
+  <rect x="390" y="595" width="230" height="100" rx="14" fill="#fdeee7" stroke="#eb6834" stroke-width="2.5"/>
+  <text x="505" y="638" font-size="24" font-weight="700" text-anchor="middle">LLM</text>
+  <text x="505" y="670" font-size="18" text-anchor="middle" class="muted">writes a formal model</text>
+
+  <path d="M620 645 H675" fill="none" stroke="#eb6834" stroke-width="3" marker-end="url(#a-orange)"/>
+  <rect x="680" y="595" width="250" height="100" rx="14" fill="#fff" stroke="#eb6834" stroke-width="2"/>
+  <text x="805" y="635" font-size="21" font-weight="700" text-anchor="middle">Formal spec</text>
+  <text x="805" y="665" font-size="17" text-anchor="middle" class="muted">SP1: pre / post conditions</text>
+  <text x="805" y="687" font-size="17" text-anchor="middle" class="muted">SP2: PDDL problem</text>
+
+  <path d="M930 645 H985" fill="none" stroke="#eb6834" stroke-width="3" marker-end="url(#a-orange)"/>
+  <text x="957" y="630" font-size="17" text-anchor="middle">¬spec</text>
+  <rect x="990" y="595" width="250" height="100" rx="14" fill="#fff" stroke="#eb6834" stroke-width="2"/>
+  <text x="1115" y="635" font-size="21" font-weight="700" text-anchor="middle">Solver searches</text>
+  <text x="1115" y="665" font-size="17" text-anchor="middle" class="muted">SP1: Z3 (SMT)</text>
+  <text x="1115" y="687" font-size="17" text-anchor="middle" class="muted">SP2: SATPlan, GBFS + h_FF</text>
+
+  <path d="M1240 645 H1345 V545" fill="none" stroke="#eb6834" stroke-width="3" marker-end="url(#a-orange)"/>
+  <text x="1355" y="610" font-size="20">witness</text>
+
+  <!-- repair loop -->
+  <path d="M1115 695 V770 H505 V700" fill="none" stroke="#eb6834" stroke-width="2.5" stroke-dasharray="9 7" marker-end="url(#a-orange)"/>
+  <text x="810" y="800" font-size="19" text-anchor="middle">parse / solver errors fed back for repair</text>
+
+  <!-- gold check -->
+  <rect x="1220" y="370" width="320" height="170" rx="14" fill="#0b0b0b"/>
+  <text x="1380" y="415" font-size="23" font-weight="700" text-anchor="middle" style="fill:#fcfcfb">Gold check</text>
+  <text x="1380" y="450" font-size="18" text-anchor="middle" style="fill:#d9d8d3">replay on the unmutated code</text>
+  <text x="1380" y="476" font-size="18" text-anchor="middle" style="fill:#d9d8d3">or the gold PDDL problem</text>
+
+  <line x1="1250" y1="494" x2="1510" y2="494" stroke="#3a3a38" stroke-width="1.5"/>
+  <text x="1300" y="524" font-size="19" font-weight="700" text-anchor="middle" style="fill:#5fd3a2">✓ valid</text>
+  <text x="1455" y="524" font-size="19" font-weight="700" text-anchor="middle" style="fill:#f59a70">✗ fabricated</text>
+
+  <!-- formula -->
+  <line x1="60" y1="830" x2="1540" y2="830" stroke="#e4e3df" stroke-width="2"/>
+  <text x="800" y="870" font-size="24" text-anchor="middle"><tspan font-weight="700">system ⊨ spec</tspan>  iff  <tspan font-weight="700">system ∧ ¬spec</tspan> is UNSAT, so any satisfying assignment is a failure witness</text>
+</svg>
+</div>
+</figure>
+
+<!-- ============================================================= -->
+<!-- 2. SP1 worked example                                          -->
+<!-- ============================================================= -->
+<figure>
+<div class="frame">
+<svg viewBox="0 0 1600 900" role="img" aria-label="Worked example. A days_in_month function whose leap-year check uses 399 instead of 400 fails on only 7 of 36,000 inputs. 1,000 random inputs find it 18% of the time. Opus 5.5 Direct answers February 2000; Opus 5.5 Translate writes a spec and Z3 returns February 2400. Both are confirmed against the reference.">
+  <text x="60" y="88" font-size="46" font-weight="700">Worked example: a bug random testing misses</text>
+  <text x="60" y="132" font-size="24" class="muted">One mutated constant. Only 7 of the 36,000 valid inputs (0.02%) expose it.</text>
+
+  <!-- code panel -->
+  <rect x="60" y="170" width="720" height="560" rx="14" fill="#f4f3f0"/>
+  <rect x="60" y="208" width="720" height="38" fill="#fbdccd"/>
+  <g class="mono" font-size="19">
+    <text x="84" y="202" class="mono">def leap(y):</text>
+    <text x="84" y="234" class="mono">    return y % 4 == 0 and (y % 100 != 0 or y % <tspan font-weight="700" style="fill:#c4501d">399</tspan> == 0)</text>
+    <text x="84" y="298" class="mono">def days_in_month(month, year):</text>
+    <text x="84" y="330" class="mono" style="fill:#52514e">    """... February has 29 days in leap</text>
+    <text x="84" y="362" class="mono" style="fill:#52514e">    years (divisible by 4, except years</text>
+    <text x="84" y="394" class="mono" style="fill:#52514e">    divisible by 100 unless also divisible</text>
+    <text x="84" y="426" class="mono" style="fill:#52514e">    by <tspan font-weight="700" style="fill:#2a78d6">400</tspan>) and 28 otherwise; ..."""</text>
+    <text x="84" y="458" class="mono">    if month == 2:</text>
+    <text x="84" y="490" class="mono">        return 29 if leap(year) else 28</text>
+    <text x="84" y="522" class="mono">    if month in (4, 6, 9, 11):</text>
+    <text x="84" y="554" class="mono">        return 30</text>
+    <text x="84" y="586" class="mono">    return 31</text>
+  </g>
+  <line x1="84" y1="630" x2="756" y2="630" stroke="#e4e3df" stroke-width="2"/>
+  <text x="84" y="668" font-size="20"><tspan font-weight="700">Mutation:</tspan> constant 400 → 399 in <tspan class="mono">leap</tspan></text>
+  <text x="84" y="702" font-size="20" class="muted">Docstring says 400, code says 399.</text>
+
+  <!-- card 1: random testing -->
+  <rect x="820" y="170" width="720" height="170" rx="14" fill="#fff" stroke="#e4e3df" stroke-width="2"/>
+  <rect x="820" y="170" width="10" height="170" rx="4" fill="#b5b3ad"/>
+  <text x="860" y="212" font-size="20" font-weight="700" letter-spacing="1.5" class="muted">RANDOM TESTING</text>
+  <text x="860" y="290" font-size="64" font-weight="700">18%</text>
+  <text x="1010" y="262" font-size="21">chance that 1,000 random inputs</text>
+  <text x="1010" y="292" font-size="21">hit a failing one</text>
+  <text x="1010" y="322" font-size="18" class="muted">(2% with 100 inputs)</text>
+
+  <!-- card 2: Direct -->
+  <rect x="820" y="365" width="720" height="170" rx="14" fill="#fff" stroke="#e4e3df" stroke-width="2"/>
+  <rect x="820" y="365" width="10" height="170" rx="4" fill="#2a78d6"/>
+  <text x="860" y="407" font-size="20" font-weight="700" letter-spacing="1.5" style="fill:#2a78d6">OPUS 5.5 · DIRECT</text>
+  <text x="860" y="455" font-size="28" font-weight="700" class="mono">month = 2, year = 2000</text>
+  <text x="860" y="492" font-size="19">Paraphrased: 2000 is divisible by 400, so February has 29 days,</text>
+  <text x="860" y="520" font-size="19">but 2000 % 399 is 5, so the code returns 28.</text>
+
+  <!-- card 3: Translate -->
+  <rect x="820" y="560" width="720" height="170" rx="14" fill="#fff" stroke="#e4e3df" stroke-width="2"/>
+  <rect x="820" y="560" width="10" height="170" rx="4" fill="#eb6834"/>
+  <text x="860" y="602" font-size="20" font-weight="700" letter-spacing="1.5" style="fill:#eb6834">OPUS 5.5 · TRANSLATE</text>
+  <text x="860" y="642" font-size="19">writes the spec</text>
+  <text x="1010" y="642" font-size="19" class="mono">post: result == expected_days(month, year)</text>
+  <text x="860" y="672" font-size="19" class="muted">(its own leap rule, using 400, straight from the docstring)</text>
+  <text x="860" y="712" font-size="19">Z3 returns</text>
+  <text x="975" y="712" font-size="24" font-weight="700" class="mono">month = 2, year = 2400</text>
+  <text x="1355" y="712" font-size="19" class="muted">in 0.01 s</text>
+
+  <!-- gold check band -->
+  <rect x="60" y="770" width="1480" height="80" rx="14" fill="#0b0b0b"/>
+  <text x="90" y="820" font-size="24" font-weight="700" style="fill:#fcfcfb">Gold check</text>
+  <text x="260" y="820" font-size="22" style="fill:#d9d8d3">reference returns <tspan font-weight="700" style="fill:#fcfcfb">29</tspan>, mutant returns <tspan font-weight="700" style="fill:#fcfcfb">28</tspan> on both inputs</text>
+  <text x="1510" y="820" font-size="24" font-weight="700" text-anchor="end" style="fill:#5fd3a2">✓ valid witness, both arms</text>
+</svg>
+</div>
+</figure>
+
+<!-- ============================================================= -->
+<!-- 3. Coldcard timeline (slide 2 slot, 4.375 x 1.55 in)           -->
+<!-- ============================================================= -->
+<figure>
+<div class="frame" style="aspect-ratio: 875 / 310; max-width: 875px">
+<svg viewBox="0 0 875 310" role="img" aria-label="Coldcard timeline: in March 2021 the bug ships, in July 2026 an AI-assisted review misses it (Coinkite's account), and in July to August 2026 wallets are drained, with reported losses from US$38 million to over US$114 million.">
+  <rect x="322" y="35" width="230" height="215" rx="16" fill="#fdeee7"/>
+  <line x1="40" y1="125" x2="835" y2="125" stroke="#b5b3ad" stroke-width="4"/>
+  <text x="241" y="108" font-size="21" text-anchor="middle" font-style="italic" class="muted">5 years</text>
+  <g text-anchor="middle">
+    <text x="160" y="72" font-size="30" font-weight="700">Mar 2021</text>
+    <circle cx="160" cy="125" r="16" fill="#52514e" stroke="#fcfcfb" stroke-width="4"/>
+    <text x="160" y="182" font-size="25">Bug ships</text>
+    <text x="160" y="216" font-size="22" class="muted">(seed not truly random)</text>
+
+    <text x="437" y="72" font-size="30" font-weight="700" style="fill:#c4501d">Jul 2026</text>
+    <circle cx="437" cy="125" r="16" fill="#eb6834" stroke="#fdeee7" stroke-width="4"/>
+    <text x="437" y="182" font-size="25">AI-assisted review</text>
+    <text x="437" y="216" font-size="25" font-weight="700" style="fill:#c4501d">missed it</text>
+    <text x="437" y="244" font-size="18" class="muted">(Coinkite's account)</text>
+
+    <text x="715" y="72" font-size="30" font-weight="700">Jul–Aug 2026</text>
+    <circle cx="715" cy="125" r="16" fill="#0b0b0b" stroke="#fcfcfb" stroke-width="4"/>
+    <text x="715" y="182" font-size="25">Wallets drained</text>
+    <text x="715" y="216" font-size="25" font-weight="700">US$38M to 114M+</text>
+    <text x="715" y="244" font-size="18" class="muted">(reported, varies by outlet)</text>
+  </g>
+</svg>
+</div>
+</figure>
+
+<!-- ============================================================= -->
+<!-- 4. SP1 formulation (slide 4 slot, 4.375 x 3.9 in)              -->
+<!-- ============================================================= -->
+<figure>
+<div class="frame" style="aspect-ratio: 875 / 780; max-width: 875px">
+<svg viewBox="0 0 875 780" role="img" aria-label="SP1 pipeline on a toy function: the code is turned into the formula ret = If(x > 0, 1, 2) by symbolic execution, conjoined with the negated spec, and Z3 returns x = 0, a failing input that is re-run in Python.">
+  <defs>
+    <marker id="s1a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#52514e"/></marker>
+  </defs>
+  <!-- code -->
+  <rect x="10" y="10" width="420" height="200" rx="14" fill="#f4f3f0"/>
+  <text x="32" y="48" font-size="20" font-weight="700" letter-spacing="1.5" class="muted">CODE</text>
+  <g font-size="26">
+    <text x="32" y="92" class="mono">def f(x):</text>
+    <text x="32" y="128" class="mono">    if x <tspan font-weight="700" style="fill:#c4501d">&gt;</tspan> 0:</text>
+    <text x="32" y="164" class="mono">        return 1</text>
+    <text x="32" y="200" class="mono">    return 2</text>
+  </g>
+  <!-- spec -->
+  <rect x="445" y="10" width="420" height="200" rx="14" fill="#fdeee7"/>
+  <text x="467" y="48" font-size="20" font-weight="700" letter-spacing="1.5" style="fill:#eb6834">SPEC (LLM writes it)</text>
+  <g font-size="26">
+    <text x="467" y="92" class="mono">pre:  -100 ≤ x ≤ 100</text>
+    <text x="467" y="128" class="mono">post: ret == 1 if</text>
+    <text x="467" y="164" class="mono">      x <tspan font-weight="700" style="fill:#2a78d6">&gt;=</tspan> 0 else 2</text>
+  </g>
+
+  <!-- symbolic execution -->
+  <line x1="220" y1="210" x2="220" y2="282" stroke="#52514e" stroke-width="3" marker-end="url(#s1a)"/>
+  <text x="236" y="254" font-size="22" class="muted">symbolic execution</text>
+  <rect x="10" y="290" width="420" height="80" rx="14" fill="#fff" stroke="#b5b3ad" stroke-width="2"/>
+  <text x="220" y="340" font-size="27" text-anchor="middle" class="mono">ret = If(x &gt; 0, 1, 2)</text>
+
+  <!-- converge into query -->
+  <line x1="220" y1="370" x2="220" y2="432" stroke="#52514e" stroke-width="3" marker-end="url(#s1a)"/>
+  <line x1="655" y1="210" x2="655" y2="432" stroke="#52514e" stroke-width="3" marker-end="url(#s1a)"/>
+  <text x="671" y="330" font-size="22" class="muted">negate post</text>
+  <rect x="10" y="440" width="855" height="120" rx="14" fill="#0b0b0b"/>
+  <text x="34" y="482" font-size="20" font-weight="700" letter-spacing="1.5" style="fill:#d9d8d3">Z3 QUERY: IS THIS SATISFIABLE?</text>
+  <text x="437" y="532" font-size="27" text-anchor="middle" class="mono" style="fill:#fcfcfb">pre(x) ∧ ret = If(x&gt;0, 1, 2) ∧ ¬post(x, ret)</text>
+
+  <!-- outcomes -->
+  <path d="M437 560 V590 H220 V622" fill="none" stroke="#52514e" stroke-width="3" marker-end="url(#s1a)"/>
+  <path d="M437 590 H655 V622" fill="none" stroke="#52514e" stroke-width="3" marker-end="url(#s1a)"/>
+  <rect x="10" y="630" width="420" height="140" rx="14" fill="#e3f6ee"/>
+  <text x="220" y="676" font-size="24" font-weight="700" text-anchor="middle" style="fill:#14805a">SAT</text>
+  <text x="220" y="716" font-size="27" font-weight="700" text-anchor="middle" class="mono">x = 0</text>
+  <text x="220" y="752" font-size="21" text-anchor="middle" class="muted">failing input, re-run in Python</text>
+  <rect x="445" y="630" width="420" height="140" rx="14" fill="#f4f3f0"/>
+  <text x="655" y="676" font-size="24" font-weight="700" text-anchor="middle" class="muted">UNSAT</text>
+  <text x="655" y="716" font-size="23" text-anchor="middle">no failing input</text>
+  <text x="655" y="752" font-size="21" text-anchor="middle" class="muted">code ⊨ spec (within loop bounds)</text>
+</svg>
+</div>
+</figure>
+
+<!-- ============================================================= -->
+<!-- 5. SP2 formulation (slide 5 slot, 4.375 x 3.9 in)              -->
+<!-- ============================================================= -->
+<figure>
+<div class="frame" style="aspect-ratio: 875 / 780; max-width: 875px">
+<svg viewBox="0 0 875 780" role="img" aria-label="SATPlan's shortest failure trace for payments-subtle-1: eight events in which a timed-out charge is retried, both attempts pass the racy duplicate check, and the card is charged twice.">
+  <text x="10" y="36" font-size="20" font-weight="700" letter-spacing="1.5" class="muted">INITIAL STATE I</text>
+  <text x="10" y="74" font-size="24" class="mono"><tspan font-weight="700" style="fill:#c4501d">(dedup-racy)</tspan> (no-record o1) (ready o1 a0) …</text>
+  <line x1="10" y1="100" x2="865" y2="100" stroke="#e4e3df" stroke-width="2"/>
+  <circle cx="44" cy="150" r="19" fill="#52514e"/><text x="44" y="158" font-size="21" font-weight="700" text-anchor="middle" style="fill:#fff">1</text>
+  <text x="80" y="159" font-size="25" class="mono">send a0</text>
+  <text x="440" y="158" font-size="23" class="muted">client sends attempt a0</text>
+  <rect x="10" y="192" width="855" height="62" rx="12" fill="#fdeee7"/>
+  <circle cx="44" cy="222" r="19" fill="#eb6834"/><text x="44" y="230" font-size="21" font-weight="700" text-anchor="middle" style="fill:#fff">2</text>
+  <text x="80" y="231" font-size="25" class="mono">accept-new-racy a0</text>
+  <text x="440" y="230" font-size="23" style="fill:#c4501d">no record yet, so approved</text>
+  <circle cx="44" cy="294" r="19" fill="#52514e"/><text x="44" y="302" font-size="21" font-weight="700" text-anchor="middle" style="fill:#fff">3</text>
+  <text x="80" y="303" font-size="25" class="mono">tick t0 → t1</text>
+  <text x="440" y="302" font-size="23" class="muted">the client's timer runs out</text>
+  <circle cx="44" cy="366" r="19" fill="#52514e"/><text x="44" y="374" font-size="21" font-weight="700" text-anchor="middle" style="fill:#fff">4</text>
+  <text x="80" y="375" font-size="25" class="mono">time-out-and-retry</text>
+  <text x="440" y="374" font-size="23" class="muted">client gives up, retries as a1</text>
+  <circle cx="44" cy="438" r="19" fill="#52514e"/><text x="44" y="446" font-size="21" font-weight="700" text-anchor="middle" style="fill:#fff">5</text>
+  <text x="80" y="447" font-size="25" class="mono">send a1</text>
+  <text x="440" y="446" font-size="23" class="muted">retry sent</text>
+  <rect x="10" y="480" width="855" height="62" rx="12" fill="#fdeee7"/>
+  <circle cx="44" cy="510" r="19" fill="#eb6834"/><text x="44" y="518" font-size="21" font-weight="700" text-anchor="middle" style="fill:#fff">6</text>
+  <text x="80" y="519" font-size="25" class="mono">accept-new-racy a1</text>
+  <text x="440" y="518" font-size="23" style="fill:#c4501d">still no record: approved again</text>
+  <circle cx="44" cy="582" r="19" fill="#52514e"/><text x="44" y="590" font-size="21" font-weight="700" text-anchor="middle" style="fill:#fff">7</text>
+  <text x="80" y="591" font-size="25" class="mono">charge a1</text>
+  <text x="440" y="590" font-size="23" class="muted">a1 charged, record written</text>
+  <rect x="10" y="624" width="855" height="62" rx="12" fill="#0b0b0b"/>
+  <circle cx="44" cy="654" r="19" fill="#eb6834"/><text x="44" y="662" font-size="21" font-weight="700" text-anchor="middle" style="fill:#fff">8</text>
+  <text x="80" y="663" font-size="25" class="mono" style="fill:#fcfcfb">charge-again a0</text>
+  <text x="440" y="662" font-size="23" style="fill:#f59a70">a0 charged too</text>
+  <text x="10" y="745" font-size="22"><tspan font-weight="700">Goal G reached:</tspan> <tspan class="mono">(charged-twice o1)</tspan></text>
+  <text x="865" y="745" font-size="20" text-anchor="end" class="muted">SATPlan: T = 8, 332 vars, 1,016 clauses</text>
+</svg>
+</div>
+</figure>
+</main>
+</body>
+</html>
