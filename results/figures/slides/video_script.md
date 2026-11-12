@@ -55,17 +55,17 @@ Say these abbreviations, names and numbers the same way across all three parts.
 
 We're Group 19: Yash, Joshua and Hein. Our question: can an LLM act as a pre-mortem reviewer, finding how a function or a system design will fail before it ships? We compare two ways of using it, Direct and Translate, on functions and on designs. Our short answer: it depends on how strong the model is.
 
-### Slide 2 · The failures that matter are the ones review misses
+### Slide 2 · AI code reviews
 
 *Starts at 0:26 · 69 words · On screen: the bullets on the left; point to the timeline as you mention the disclosure.*
 
 In July 2026 Coinkite disclosed that since 2021 its Coldcard wallets had generated seed phrases from a predictable fallback; by its own account, an AI-assisted review missed it. Real failures are rare and deep, like DynamoDB's 35-step trace that passed every review. So an AI reviewer helps only if it gives a checkable witness and never invents failures. Should it find the failure directly, or translate for a solver?
 
-### Slide 3 · Two tasks: how a function fails, and how a design fails
+### Slide 3 · Subproblems
 
-*Starts at 0:58 · 44 words · On screen: the two cards, SP1 on the left and SP2 on the right.*
+*Starts at 0:58 · 44 words · On screen: the SP1 example on the left, then the SP2 example on the right; end on the two black result bars.*
 
-To answer it, we need tasks whose answers can be checked. SP1 asks for an input that breaks a function's docstring; SP2 asks for an order of events that breaks a design's safety property. Either way, the answer is a witness anyone can replay.
+Two kinds of review. For a function, the AI must find an input that breaks it: February 2000 gets 28 days, not 29. For a system design, an order of events that breaks it: here, a card charged twice. Either way, we replay it.
 
 ### Slide 4 · Direct: the LLM answers itself. Translate: a solver searches
 

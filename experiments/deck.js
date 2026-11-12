@@ -75,43 +75,24 @@ const B = t => ({ text: t, options: { bold: true } });
 
 // 2. Motivation (§1)
 {
-  const s = base(1, "The failures that matter are the ones review misses", "A pre-mortem asks how something will fail, before it ships.");
+  const s = base(1, "AI code reviews");
   bullets(s, [
-    "Real failures hide behind rare inputs or long orders of events",
-    "Coldcard wallets, disclosed July 2026: a five-year-old randomness bug. By the maker's account, an AI-assisted review missed it",
-    "AWS DynamoDB: a 35-step data-loss trace passed design review, code review and testing",
-    "So an AI reviewer helps only if it shows a witness (a concrete failing input or event trace) and never invents a failure on correct code",
+    "Coinkite hardware wallet had a security breach on July 30, 2026 resulting in the theft of over $116 million worth of Bitcoin",
+    "On their internal investigation they revealed their AI-assisted security reviews had failed to flag the vulnerability before the attack",
   ], { x: X, y: 1.3, w: 4.6, h: 3.45, fontSize: 13.5, paraSpaceAfter: 7 });
   s.addImage({ path: `${D}/img/coldcard_q_mk5.png`, x: 5.3, y: 1.3, w: 1.95, h: 1.78, altText: "Coldcard Q and Mk5 hardware bitcoin wallets made by Coinkite" });
   T(s, [{ text: "Coldcard Q and Mk5 hardware wallets, made by Coinkite", options: { breakLine: true } }, { text: "Image: coldcard.com", options: { fontSize: 9 } }],
     { x: 7.4, y: 1.35, w: 2.225, h: 0.8, fontSize: 11, color: INK2, paraSpaceAfter: 4 });
   T(s, "Sources: Decrypt (Aug 2026); Coinkite, \"Entropy technical backgrounder\"; Unchained (Aug 2026)", { x: 7.4, y: 2.35, w: 2.225, h: 0.7, fontSize: 8, color: INK2 });
   s.addImage({ path: `${D}/coldcard_timeline.png`, x: 5.25, y: 3.2, w: 4.375, h: 1.55, altText: "Timeline: Mar 2021 bug ships, Jul 2026 AI-assisted review misses it (Coinkite's account), Jul to Aug 2026 wallets drained, reported US$38M to over US$114M" });
-  takeaway(s, "The course question: should the LLM find the failure directly, or translate the problem for a solver? And will that change?");
   s.addNotes("In July 2026 Coinkite disclosed that since 2021 its Coldcard wallets had generated seed phrases from a predictable fallback; by its own account, an AI-assisted review missed it. Real failures are rare and deep, like DynamoDB's 35-step trace that passed every review. So an AI reviewer helps only if it gives a checkable witness and never invents failures. Should it find the failure directly, or translate for a solver?");
 }
 
-// 3. The two tasks (§1)
+// 3. The two sub-problems, one worked example each (§1)
 {
-  const s = base(1, "Two tasks: how a function fails, and how a design fails", "We test the question on two kinds of review");
-  const task = (x, head, lines) => {
-    card(s, x, 1.3, 4.5, 3.4);
-    T(s, head, { x: x + 0.28, y: 1.48, w: 3.95, h: 0.32, fontSize: 15, bold: true });
-    T(s, lines.flatMap(([k, v], i) => [B(k + "  "), { text: v, options: { breakLine: i < lines.length - 1 } }]),
-      { x: x + 0.28, y: 1.98, w: 3.95, h: 2.65, fontSize: 14, paraSpaceAfter: 14 });
-  };
-  task(X, "SP1: function review", [
-    ["Given:", "a Python function and a docstring saying what it must do."],
-    ["Find:", "an input that breaks the docstring."],
-    ["Example:", "a leap-year rule with 400 typed as 399. February 2000 gets 28 days."],
-  ]);
-  task(5.125, "SP2: design review", [
-    ["Given:", "a design document for a service, and the events that can occur."],
-    ["Find:", "an order of timeouts, retries, lost messages and crashes that breaks a safety property."],
-    ["Example:", "a timed-out payment is retried before the first attempt is recorded, and the card is charged twice."],
-  ]);
-  takeaway(s, "In both tasks the answer is a witness: something anyone can replay and check.");
-  s.addNotes("To answer it, we need tasks whose answers can be checked. SP1 asks for an input that breaks a function's docstring; SP2 asks for an order of events that breaks a design's safety property. Either way, the answer is a witness anyone can replay.");
+  const s = base(1, "Subproblems");
+  s.addImage({ path: `${D}/two_tasks.png`, x: X, y: 1.0, w: W, h: W * 400 / 925, altText: "SP1, a function: the AI finds month 2, year 2000, and days_in_month returns 28 instead of 29. SP2, a payments design: the AI finds five events in which a timed-out payment is retried, both attempts are approved before either is recorded, and the card is charged twice." });
+  s.addNotes("Two kinds of review. For a function, the AI must find an input that breaks it: February 2000 gets 28 days, not 29. For a system design, an order of events that breaks it: here, a card charged twice. Either way, we replay it.");
 }
 
 // 4. The two arms (§1, §4 scoring)
