@@ -61,7 +61,7 @@ const B = t => ({ text: t, options: { bold: true } });
   T(s, "CS3263 Foundations of AI  ·  Project Group 19", { x: 0.6, y: 0.8, w: 8.8, h: 0.35, fontSize: 14, color: INK2 });
   T(s, "AI Pre-Mortems", { x: 0.6, y: 1.25, w: 8.8, h: 0.8, fontSize: 44, bold: true });
   T(s, "Can frontier models predict how code and systems fail?", { x: 0.6, y: 2.05, w: 8.8, h: 0.5, fontSize: 22 });
-  T(s, "Two review tasks: Python functions (SP1) and distributed-system designs (SP2)", { x: 0.6, y: 2.6, w: 8.8, h: 0.35, fontSize: 15, color: INK2 });
+  T(s, "Two review sub-problems: Python functions (SP1) and distributed-system designs (SP2)", { x: 0.6, y: 2.6, w: 8.8, h: 0.35, fontSize: 15, color: INK2 });
   s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 0.6, y: 3.15, w: 1.15, h: 0.38, rectRadius: 0.08, fill: { color: "EAF2FC" }, line: { color: BLUE, width: 1.25 } });
   T(s, "Direct", { x: 0.6, y: 3.15, w: 1.15, h: 0.38, fontSize: 14, bold: true, color: BLUE, align: "center", valign: "middle" });
   T(s, "vs", { x: 1.8, y: 3.15, w: 0.4, h: 0.38, fontSize: 14, color: INK2, align: "center", valign: "middle" });
@@ -70,7 +70,7 @@ const B = t => ({ text: t, options: { bold: true } });
   T(s, [{ text: "Yash Raj Khandelwal", options: { breakLine: true } }, { text: "Joshua Tan Yu Jie", options: { breakLine: true } }, { text: "Hein Htet Zaw" }],
     { x: 0.6, y: 3.95, w: 6, h: 1.1, fontSize: 18, paraSpaceAfter: 4 });
   T(s, "Semester 1, AY2026/27", { x: 6.4, y: 4.7, w: 3.0, h: 0.35, fontSize: 14, color: INK2, align: "right" });
-  s.addNotes("Introduce the team. Our question: can an LLM act as a pre-mortem reviewer, finding how a function or a system design will fail before it ships? We compare two ways of using it, Direct and Translate, on functions and on designs. Our headline: translation's value depends on the model. It adds no accuracy for strong models, cuts false alarms for a mid-tier one, and cannot rescue a weak one.");
+  s.addNotes("Introduce the team. Our question: can an LLM act as a pre-mortem reviewer, finding how a function or a system design will fail before it ships? We compare two ways of using it, Direct and Translate, on functions and on designs. Our short answer: it depends on how strong the model is.");
 }
 
 // 2. Motivation (§1)
@@ -88,7 +88,7 @@ const B = t => ({ text: t, options: { bold: true } });
   T(s, "Sources: Decrypt (Aug 2026); Coinkite, \"Entropy technical backgrounder\"; Unchained (Aug 2026)", { x: 7.4, y: 2.35, w: 2.225, h: 0.7, fontSize: 8, color: INK2 });
   s.addImage({ path: `${D}/coldcard_timeline.png`, x: 5.25, y: 3.2, w: 4.375, h: 1.55, altText: "Timeline: Mar 2021 bug ships, Jul 2026 AI-assisted review misses it (Coinkite's account), Jul to Aug 2026 wallets drained, reported US$38M to over US$114M" });
   takeaway(s, "The course question: should the LLM find the failure directly, or translate the problem for a solver? And will that change?");
-  s.addNotes("In July 2026 Coinkite disclosed that since 2021 its Coldcard wallets had generated seed phrases from a predictable software fallback. By Coinkite's own account, an AI-assisted review of that firmware missed it. Real failures are rare and deep, like the 35-step DynamoDB trace that passed every review. So an AI reviewer helps only if it gives a concrete, checkable witness and never invents failures. That raises the course question: find the failure directly, or translate for a solver? Sources: Decrypt (decrypt.co/374766), Coinkite's entropy technical backgrounder (blog.coinkite.com/entropy-technical-backgrounder), Unchained (unchainedcrypto.com).");
+  s.addNotes("In July 2026 Coinkite disclosed that since 2021 its Coldcard wallets had generated seed phrases from a predictable fallback; by its own account, an AI-assisted review missed it. Real failures are rare and deep, like DynamoDB's 35-step trace that passed every review. So an AI reviewer helps only if it gives a checkable witness and never invents failures. Should it find the failure directly, or translate for a solver? Sources: Decrypt (decrypt.co/374766), Coinkite's entropy technical backgrounder (blog.coinkite.com/entropy-technical-backgrounder), Unchained (unchainedcrypto.com).");
 }
 
 // 3. The two tasks (§1)
@@ -124,7 +124,7 @@ const B = t => ({ text: t, options: { bold: true } });
 
 // 5. Research questions (§1)
 {
-  const s = base(1, "Two research questions", "What we measure for each arm");
+  const s = base(1, "Two research questions, and one check", "What we measure for each arm");
   const q = (y, label, head, body) => {
     s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: X, y, w: 0.85, h: 0.42, rectRadius: 0.08, fill: { color: HEAD }, line: { color: HEAD } });
     T(s, label, { x: X, y, w: 0.85, h: 0.42, fontSize: 13, bold: true, align: "center", valign: "middle" });
@@ -186,7 +186,7 @@ const B = t => ({ text: t, options: { bold: true } });
   T(s, "a0 is the first attempt and a1 the retry, for order o1. Highlighted: both attempts pass the duplicate check.", { x: 6.05, y: 1.53, w: 3.575, h: 0.34, fontSize: 9.5, color: INK2 });
   s.addImage({ path: `${D}/sp2_trace.png`, x: 6.239, y: 1.9, w: 3.197, h: 2.85, altText: "Shortest failure trace for payments-subtle-1: eight events ending in charged-twice" });
   takeaway(s, "Both arms are given the actions. In Translate, the LLM writes only the initial state.");
-  s.addNotes("SP2 is classical planning. Facts describe the state, actions are the events including failures, the initial state encodes the design, and the goal is the violation. The planner chooses every event, so a plan is a counterexample: planning used as model checking of a safety property. In this trace the retry passes the duplicate check because the record is written only after charging, so the card is charged twice.");
+  s.addNotes("SP2 is classical planning: facts are the state, actions are events including failures, the initial state encodes the design, and the goal is the violation. The planner chooses every event, so a plan is a counterexample: planning as model checking. Here the retry passes the duplicate check because the record is written only after charging. Both arms are given these actions; in Translate the model writes only the initial state. Names like dedup-racy give the mechanism away, so one set replaces them.");
 }
 
 // 9. Guarantees and complexity (§2)
@@ -207,7 +207,7 @@ const B = t => ({ text: t, options: { bold: true } });
       sup("PSPACE-complete; each SATPlan call is NP-complete. Up to 2", "218", " states at size 8")],
   ], { x: X, y: 1.28, w: W, colW: [2.05, 3.5, 3.7], rowH: [0.28, 0.6, 0.48, 0.6, 0.6, 0.48] });
   takeaway(s, [{ text: "h" }, sub("FF"), { text: " only prunes dead ends, which is safe because ignoring deletes only adds behaviour. Every witness is replayed on the real code or gold problem before it counts." }]);
-  s.addNotes("Why should we trust a solver's answer? For SP1 we show the encoding matches Python on every input within the loop bounds, and test it on 25 random inputs per function, so every Z3 answer is an input that breaks the spec, and unsatisfiable means no failure within those bounds. For SP2, our SATPlan clauses are equivalent to the successor-state axioms, so the first satisfiable horizon gives a shortest trace. To certify safety, greedy best-first search runs until its queue is empty. Planning is PSPACE-complete, so this is where the tools can run out.");
+  s.addNotes("Why should we trust a solver's answer? For SP1 we show the encoding matches Python on every input within the loop bounds, and test it on 25 random inputs per function, so every Z3 answer is an input that breaks the spec, and unsatisfiable means no failure within those bounds. For SP2, our SATPlan clauses are equivalent to the successor-state axioms, so the first satisfiable horizon gives a shortest trace. To certify safety, greedy best-first search runs until its queue is empty.");
 }
 
 // 10. Problem instances (§3)
@@ -217,7 +217,7 @@ const B = t => ({ text: t, options: { bold: true } });
     card(s, x, 1.3, 4.5, 3.45);
     T(s, head, { x: x + 0.28, y: 1.43, w: 3.95, h: 0.3, fontSize: 14, bold: true });
     T(s, big, { x: x + 0.28, y: 1.72, w: 3.95, h: 0.55, fontSize: 32, bold: true });
-    bullets(s, lines, { x: x + 0.28, y: 2.38, w: 3.95, h: 2.3, fontSize: 12.5, paraSpaceAfter: 6 });
+    bullets(s, lines, { x: x + 0.28, y: 2.38, w: 3.95, h: 2.3, fontSize: 11.5, paraSpaceAfter: 5 });
   };
   col(X, "Functions (SP1)", "174", [
     "37 Python functions, renamed and with rewritten docstrings, to limit memorisation",
@@ -227,10 +227,11 @@ const B = t => ({ text: t, options: { bold: true } });
   col(5.125, "Designs (SP2)", "162", [
     "Five services: payments, inventory, lock, queue, cache",
     "Three versions of each: flawed, subtle (a fix that does not work) and fixed (safe; the control)",
-    "60 main designs at sizes 1 to 4. Also 30 stress designs (traces of 17 to 27 events), 60 opaque (the main set with revealing names replaced) and 12 long (30 to 51 events)",
+    "Size scales a timer or a capacity, so the shortest failure gets longer",
+    "Main: 60 designs at sizes 1 to 4. Stress: 30 at sizes 6 and 8 (17 to 27 events). Opaque: the main 60 with revealing names replaced. Long: 12 at sizes 12 and 16 (30 to 51 events)",
   ]);
   takeaway(s, "Ground truth comes from our own solvers, plus one hand proof for the largest inventory designs.");
-  s.addNotes("Now the experiment, starting with what we tested. SP1 has 174 instances from 37 functions: bugs from common to very rare triggers, plus controls, including equivalent mutants that look buggy but are not. SP2 has five services, each flawed, subtle or fixed, at several sizes, plus stress, opaque and long sets. Every instance has a known answer.");
+  s.addNotes("Now the experiment, starting with what we tested. SP1 has 174 instances from 37 functions: bugs from common to very rare triggers, plus controls, including equivalent mutants that look buggy but are not. SP2 has five services, each flawed, subtle or fixed; size scales a timer or capacity, so failures get longer. Our solvers supply the ground truth, so what Translate tests is the translation.");
 }
 
 // 11. Method (§4)
@@ -246,7 +247,8 @@ const B = t => ({ text: t, options: { bold: true } });
     [B("Direct: "), { text: "the model answers with a verdict and a witness. All tools are disabled, so it cannot run the code." }],
     [B("Translate: "), { text: "the model writes the specification or initial state, and the solver searches. Errors are fed back for up to two repairs." }],
     [B("Scoring: "), { text: "each answer gets one label: valid witness (it replays on the gold reference), fabricated (an invalid witness, or a false alarm on a control), miss, correct no-failure, or undecided (the tool ran out of budget or could not decide)." }],
-  ], { x: X, y: 2.65, w: W, h: 2.1, fontSize: 13, paraSpaceAfter: 8 });
+    [B("Runs and budgets: "), { text: "one run per instance. Planner search stops at 3 million states or 5 minutes; each Z3 query at 60 seconds." }],
+  ], { x: X, y: 2.72, w: W, h: 2.1, fontSize: 12.5, paraSpaceAfter: 7 });
   takeaway(s, "Undecided is never counted as \"no failure\".");
   s.addNotes("Then how we ran it. Five models in three tiers: strong, mid-tier Haiku, and weak Llama. Direct runs with all tools disabled, so it must reason rather than execute. Translate gets up to two repairs. Every answer gets exactly one label, and a tool that runs out of budget is undecided, never no failure.");
 }
@@ -256,7 +258,7 @@ const B = t => ({ text: t, options: { bold: true } });
   const s = base(4, "Strong models are near-perfect; Haiku and Llama are not", "Every model and arm at a glance. Darker cells are worse: bugs missed, or false alarms raised.");
   s.addImage({ path: `${D}/scoreboard.png`, x: X, y: 1.1, w: W, h: 3.55, altText: "Scoreboard of every model and arm on bugs found, false alarms, failure traces found and false alarms with names hidden" });
   takeaway(s, "Now each research question in turn.");
-  s.addNotes("Now the results, first at a glance. The 5.5 models and Qwen are near-perfect on the sets they ran, with zero false alarms. Haiku is fine on functions but struggles on designs, especially false alarms with names hidden. Llama fails everywhere: in Direct it fabricates, with 45 false alarms on 59 correct functions.");
+  s.addNotes("Now the results, first at a glance. The 5.5 models and Qwen are near-perfect on the sets they ran, with zero false alarms; Qwen's three missed designs in Direct were format slips, not misreadings. Haiku is fine on functions but struggles on designs, especially false alarms with names hidden. Llama fails everywhere: in Direct it fabricates, with 45 false alarms on 59 correct functions.");
 }
 
 // 13. RQ1 (§5.1-5.2)
@@ -264,7 +266,7 @@ const B = t => ({ text: t, options: { bold: true } });
   const s = base(4, "Strong models find nearly every failure, even the hardest", "RQ1. Which arm finds more valid witnesses, and does the gap widen as failures get harder to reach?");
   s.addImage({ path: `${D}/hardness_panel.png`, x: X, y: 1.28, w: W, h: 3.45, altText: "Left: failures found vs how rare the failing input is, for random testing and both arms. Right: valid traces vs shortest failure trace length for Sonnet, Opus and Haiku" });
   takeaway(s, "Rarity defeats random testing (5% of very rare bugs at 100 inputs) far more than the LLMs. Translate trails only on the rarest bugs: 29 of 32 model–bug pairs against 32 of 32.");
-  s.addNotes("RQ1 first. Random testing falls off as bugs get rarer; Direct finds all of them, Translate 29 of 32 very rare pairs, two bugs, so only a hint. On designs, trace length from 6 to 51 events does not hurt Sonnet or Opus, and Haiku stays near 80% with no length trend. This looks like recognition rather than search.");
+  s.addNotes("RQ1 first. Random testing falls off as bugs get rarer; Direct finds all of them, and Translate misses three of 32 very rare pairs, all from two bugs. On designs, trace length from 6 to 51 events does not hurt Sonnet or Opus, and Haiku stays near 80% with no length trend. This looks like recognition rather than search.");
 }
 
 // 14. RQ2 (§5.1-5.2)
@@ -272,7 +274,7 @@ const B = t => ({ text: t, options: { bold: true } });
   const s = base(4, "Translation cuts the mid-tier model's false alarms", "RQ2. Which arm invents more failures where there are none? Here: false alarms on the 20 correct designs.");
   s.addImage({ path: `${D}/false_alarms.png`, x: X, y: 1.28, w: W, h: 3.45, altText: "False alarms on correct designs, Direct vs Translate: Haiku 12 to 7 of 20 (19 to 9 with names hidden), Llama 14 to 2 (18 to 8), Sonnet, Opus and Qwen 0 in both arms" });
   takeaway(s, "The strong models raise none in either arm. Llama's drop is silence, not skill: its files left out facts, so the planner found nothing.");
-  s.addNotes("RQ2. On functions only Llama raised false alarms. On correct designs, translation helps the mid-tier model: Haiku's false alarms fall from 12 to 7 of 20, and from 19 to 9 with names hidden. The strong models stay at zero. Llama's drop is not better reasoning: its problem files left out facts, so the planner found no violation.");
+  s.addNotes("RQ2. On correct designs, translation helps the mid-tier model: Haiku's false alarms fall from 12 to 7 of 20, and from 19 to 9 with names hidden. Why? Direct Haiku applies a familiar failure pattern to designs that rule it out; writing the initial state forces it to commit to the actual facts. It still raises 7, yet finds 34 of 40 failures, so this is not silence. Llama's drop is silence: its problem files left out facts, so the planner found no violation.");
 }
 
 // 15. SP3 (§5, §5.3)
@@ -289,7 +291,7 @@ const B = t => ({ text: t, options: { bold: true } });
   ], { x: X, y: 1.8, w: 6.15, colW: [1.95, 4.2], rowH: [0.28, 0.6, 0.6, 0.6, 0.6], fontSize: 10.5 });
   s.addImage({ path: `${D}/inventory_panel.png`, x: 6.75, y: 1.8, w: 2.875, h: 2.9, altText: "States expanded to prove safety vs design size: inventory explodes and exceeds the budget at size 8, the other designs stay small" });
   takeaway(s, "A Translate answer is only as good as the translation, so every witness is replayed on the real artefact.");
-  s.addNotes("SP3 asks how good the translations were. Sonnet and Opus wrote the exact initial state in all 90 main and stress designs, but translation is not free. The table shows the four ways it failed. Inventory explodes: 2.7 million states at size 6, and from size 8 the budget runs out. On its safe design Translate is then undecided, while Sonnet and Opus Direct still answer correctly, without proof. The standard remedies, symmetry reduction and inductive invariants, lie outside the course; we proved the inventory invariant by hand.");
+  s.addNotes("SP3 asks how good the translations were. Sonnet and Opus wrote the exact initial state in all 90 main and stress designs, but translation can fail four ways. A specification can copy the bug. A permissive problem file hands the planner shortcuts. Llama cannot write the formal language. And the solver can run out: inventory needs 2.7 million states at size 6 and exceeds the budget from size 8, where Translate is undecided on the safe design. The standard remedies, symmetry reduction and inductive invariants, lie outside the course.");
 }
 
 // 16. The answer in brief (§6 opening)
@@ -320,22 +322,23 @@ const B = t => ({ text: t, options: { bold: true } });
     [lab("Proof of absence"), "None", "Yes, with an audit trail, for the problem as translated and within the bounds"],
     [lab("Needs"), "The model (plus, in SP2, the same event rules)", "A solver, an encoder, and a model fluent in the specification language"],
     [lab("Fails by"), "Pattern-matching the wrong design", "A wrong specification, a loose problem file, or a timeout"],
-    [lab("Use when"), "The model is strong, the review small, the specification complete, and an answer without proof is fine",
-      "Absence must be certified or audited, or a mid-tier model misreads designs but writes the formal language well. Always replay the witness"],
-  ], { x: X, y: 1.28, w: W, colW: [1.6, 3.55, 4.1], rowH: [0.28, 0.42, 0.42, 0.42, 0.62], fontSize: 11.5 });
+    [lab("Use when"), "The model is strong, the review small, the specification complete, and no proof is needed",
+      "Absence must be certified or audited, or a mid-tier model misreads designs but writes the formal language well"],
+  ], { x: X, y: 1.25, w: W, colW: [1.5, 3.5, 4.25], rowH: [0.26, 0.4, 0.4, 0.26, 0.4], fontSize: 11 });
   T(s, [
     B("EU(arm) = −[ (1 − q) · P(false alarm) · c"), { text: "FA", options: { subscript: true, bold: true } },
     B(" + q · P(miss) · c"), { text: "miss", options: { subscript: true, bold: true } },
     B(" + P(undecided) · c"), { text: "rev", options: { subscript: true, bold: true } },
     B(" + c"), { text: "run", options: { subscript: true, bold: true } }, B(" ]"),
-  ], { x: X, y: 3.7, w: W, h: 0.32, fontSize: 13.5, align: "center" });
+  ], { x: X, y: 3.42, w: W, h: 0.3, fontSize: 13, align: "center" });
   T(s, "q is the share of flawed designs; the c terms are the costs of a false alarm, a miss, a manual review and a run.",
-    { x: X, y: 4.0, w: W, h: 0.26, fontSize: 10.5, color: INK2, align: "center" });
+    { x: X, y: 3.71, w: W, h: 0.24, fontSize: 10, color: INK2, align: "center" });
   bullets(s, [
-    "Haiku on designs: Translate has fewer false alarms (35% vs 60%), fewer misses (6 vs 9 of 40), nothing undecided and a lower cost (US$0.051 vs 0.062 per design)",
-  ], { x: X, y: 4.3, w: W, h: 0.5, fontSize: 12 });
-  takeaway(s, "So for Haiku, at these estimates, Translate wins whatever the mix of flawed and correct designs.");
-  s.addNotes("So which arm should you use? Choosing is a maximum-expected-utility decision: weigh the cost of a false alarm against the cost of a miss, a manual review and a run. For Haiku on designs, Translate has fewer false alarms, fewer misses and costs less, so it wins whatever the mix. Qwen nearly matched the 5.5 models where it ran, so an open-weight model can do this locally.");
+    [B("Haiku, readable names: "), { text: "Translate has fewer false alarms (35% vs 60%), fewer misses (6 vs 9 of 40), nothing undecided and a lower cost (US$0.051 vs 0.062 per design), so it is better on every term and wins at any costs." }],
+    [B("Haiku, names hidden: "), { text: "Translate finds 25 against 27 of 40 failures but raises 9 against 19 of 20 false alarms. At an even mix, counting errors alone, it wins while a miss costs less than 10 false alarms." }],
+  ], { x: X, y: 3.98, w: W, h: 0.82, fontSize: 11, paraSpaceAfter: 3 });
+  takeaway(s, "At these estimates, Translate wins for Haiku at any costs with readable names, and with names hidden unless a miss costs 10 false alarms or more.");
+  s.addNotes("So which arm should you use? Choosing is a maximum-expected-utility decision: weigh the cost of a false alarm against the cost of a miss. For Haiku with readable names, Translate is better on every term, so it wins at any costs. With names hidden it misses slightly more but raises half the false alarms, so at an even mix, counting errors alone, it wins while a miss costs under ten false alarms.");
 }
 
 // 18. Limitations and will this change (§6)
@@ -352,7 +355,7 @@ const B = t => ({ text: t, options: { bold: true } });
   T(s, "Direct will likely keep improving on small, recognisable problems (Haiku 4.5 to the 5.5 models), but worst-case hardness and the missing certificate remain.",
     { x: 0.6, y: 3.73, w: 8.8, h: 0.5, fontSize: 12 });
   takeaway(s, "Bottom line: translation's value depends on the model. It adds no accuracy for strong models, cuts false alarms for a mid-tier one, and cannot rescue a weak one.");
-  s.addNotes("Finally, what this does not show, and whether it will change. SP2 hands both arms the failure mechanisms as named events; writing the event model is untested. Most cells are at or near 100%, so we cannot rank the strongest models. Will this change? Direct will likely keep improving on small, recognisable problems, but worst-case hardness and the missing certificate remain. Bottom line: translation's value depends on the model. Thank you.");
+  s.addNotes("Finally, what this does not show, and whether it will change. SP2 hands both arms the failure mechanisms as named events; writing the event model is untested. Functions were chosen to be encodable, which favours Translate. Most cells are at or near 100%, so we cannot rank the strongest models. Will this change? Direct will likely keep improving on small, recognisable problems, but worst-case hardness and the missing certificate remain. Bottom line: translation's value depends on the model. Thank you.");
 }
 
 pres.writeFile({ fileName: `${D}/premortem_slides.pptx` }).then(f => console.log("wrote", f));

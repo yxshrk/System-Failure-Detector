@@ -257,8 +257,14 @@ def inventory_panel():
         d = sorted([i for i in inst if i["family"] == fam], key=lambda i: i["size"])
         xs, ys = [i["size"] for i in d], [max(i["gold"]["gbfs"]["expanded"], 1) for i in d]
         hot = fam == "inventory"
-        ax.plot(xs, ys, color=INK if hot else MUTED, linewidth=2.4 if hot else 1.4, marker="o",
-                markersize=5 if hot else 3.5, markeredgecolor=SURFACE, markeredgewidth=1.0, zorder=3 if hot else 2)
+        if hot:  # solid up to the last proof (size 6); dashed to size 8, where the budget ran out first
+            k = xs.index(6) + 1
+            ax.plot(xs[:k], ys[:k], color=INK, linewidth=2.4, marker="o", markersize=5,
+                    markeredgecolor=SURFACE, markeredgewidth=1.0, zorder=3)
+            ax.plot(xs[k - 1:], ys[k - 1:], color=INK, linewidth=1.8, linestyle=(0, (3, 2)), zorder=3)
+            continue
+        ax.plot(xs, ys, color=MUTED, linewidth=1.4, marker="o", markersize=3.5,
+                markeredgecolor=SURFACE, markeredgewidth=1.0, zorder=2)
     ax.annotate("2.7M", (6, 2685810), xytext=(-6, 6), textcoords="offset points", ha="right", fontsize=9, color=INK)
     # Size 8 exceeded the search budget before a proof: open marker, the true count is higher.
     ax.plot([8], [2637989], marker="o", markersize=7, markerfacecolor=SURFACE, markeredgecolor=INK, markeredgewidth=1.8, zorder=4)
@@ -271,7 +277,7 @@ def inventory_panel():
     ax.set_yticks([1, 100, 1e4, 1e6], ["1", "100", "10k", "1M"])
     ax.set_xticks([1, 2, 3, 4, 6, 8])
     ax.set_xlabel("design size", fontsize=9.5, color=INK2)
-    ax.set_ylabel("states expanded to prove safe", fontsize=9, color=INK2)
+    ax.set_ylabel("states expanded to prove safe\n(log scale)", fontsize=9, color=INK2)
     fig.tight_layout()
     save(fig, "inventory_panel.png")
 
