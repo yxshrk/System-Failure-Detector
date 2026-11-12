@@ -1,6 +1,6 @@
 # Pre-Mortems video script
 
-Read this slide by slide while recording: Joshua presents slides 1 to 6, Hein 7 to 12 and Yash 13 to 18. The words are the deck's checked speaker notes on main (035d7e0), about 1,200 words, roughly 9 minutes 15 seconds at 130 words a minute.
+Read this slide by slide while recording: Joshua presents slides 1 to 6, Hein 7 to 12 and Yash 13 to 18. The words are the deck's checked speaker notes, about 1,398 words, roughly 10:45 at 130 words a minute.
 
 ## Who presents what
 
@@ -10,14 +10,14 @@ Each of you reads six slides, and the handovers come after slides 6 and 12. Swap
 | --- | --- | --- | --- | --- |
 | Joshua | 1 to 6 | Question | 316 | 2:26 |
 | Hein | 7 to 12 | Formulation, Experiment | 427 | 3:17 |
-| Yash | 13 to 18 | Results, Answer | 457 | 3:31 |
-| All three | 18 | | 1,200 | 9:14 |
+| Yash | 13 to 18 | Results, Answer | 655 | 5:02 |
+| All three | 18 | | 1,398 | 10:45 |
 
-Times assume 130 words a minute. At 120 words a minute the total reaches 10:00, the limit, so keep a steady pace and do not pause long between slides.
+Times assume 130 words a minute. At 120 words a minute the total is 11:39, against the 10:00 limit, so keep a steady pace and do not pause long between slides.
 
 ## If the run-through goes past 9:30
 
-Cut these five sentences in this order, rather than improvising: each repeats what is already on screen, so no claim is lost. All five save 46 words, bringing the total to 1,154 words (8:53 at 130 words a minute, 9:37 at 120).
+Make these cuts in this order, rather than improvising: each drops a point that is already on screen, so no claim is lost. All six save 80 words, bringing the total to 1,318 words (10:08 at 130 words a minute, 10:59 at 120).
 
 | Order | Slide | Presenter | Cut | Words saved |
 | --- | --- | --- | --- | --- |
@@ -25,7 +25,8 @@ Cut these five sentences in this order, rather than improvising: each repeats wh
 | 2 | 2 | Joshua | "Should it find the failure directly, or translate for a solver?" | 11 |
 | 3 | 10 | Hein | "Our solvers supply the ground truth, so what Translate tests is the translation." | 13 |
 | 4 | 9 | Hein | "and test it on 25 random inputs per function" (and the comma before it) | 9 |
-| 5 | 18 | Yash | "Bottom line: translation's value depends on the model." | 8 |
+| 5 | 14 | Yash | "Llama's drop is not, because its problem files leave out facts, so the planner finds no violation in 29 of the 40 flawed designs." | 24 |
+| 6 | 16 | Yash | Say the three points more briefly, after "So what is our answer?": "With a strong model, both arms nearly tie. Translating doesn't remove errors; it moves them into the spec the LLM writes. And only a solver can prove there is no failure, but that proof is exactly where the tools run out." | 18 |
 
 ## Saying the terms
 
@@ -134,45 +135,45 @@ Now the results, first at a glance. The 5.5 models and Qwen are near-perfect on 
 
 ### Slide 13 · Strong models find nearly every failure, even the hardest
 
-*Starts at 5:43 · 59 words · On screen: the left panel (functions), then the right panel (designs).*
+*Starts at 5:43 · 101 words · On screen: the left panel (functions), then the right panel (designs); each line is labelled at its end.*
 
-RQ1 first. Random testing falls off as bugs get rarer; Direct finds all of them, and Translate misses three of 32 very rare pairs, all from two bugs. On designs, trace length from 6 to 51 events does not hurt Sonnet or Opus, and Haiku stays near 80% with no length trend. This looks like recognition rather than search.
+RQ1 asked whether harder-to-reach failures hurt either arm. On the left, random testing finds fewer bugs as they get rarer, because a rare bug needs a lucky input, yet both arms keep finding them. On the right, longer traces don't hurt Sonnet or Opus, and Haiku stays near 80%. That matters, because a search has to explore more states as traces get longer. But while the traces got several times longer, the answers from Sonnet and Opus grew by only about a quarter. That fits recognising a familiar bug pattern rather than searching, though we did not measure how they reasoned.
 
 ### Slide 14 · Translation cuts the mid-tier model's false alarms
 
-*Starts at 6:10 · 98 words · On screen: Haiku's solid line in each panel, then the interval line under the chart.*
+*Starts at 6:30 · 137 words · On screen: Haiku's solid line in each panel, then the two lines under the chart.*
 
-RQ2. On correct designs, translation helps the mid-tier model: Haiku's false alarms fall from 12 to 7 of 20, and from 19 to 9 with names hidden. Why? Sixteen of Haiku's Direct traces on the main set used an event from another design variant. It applies a familiar pattern to designs that rule it out. Writing the initial state forces it to commit to the actual facts. It still raises 7, yet finds 34 of 40 failures, so this is not silence. Llama's drop is silence: its problem files left out facts, so the planner found no violation.
+So the strong models find the failures. RQ2 asks the opposite: which arm invents failures that aren't there? On correct designs, translating cuts Haiku's false alarms from 12 to 7 of 20. Why? In Direct, Haiku recognises a famous failure, like the double charge on a retry, and reports it even when this design prevents it. In Translate, it must first write down this design's facts. Every event is a planning action with preconditions. So if the facts say this design prevents an event, the planner can never use it, and the false failure cannot be built. And the drop is a real gain, because Haiku still finds 34 of 40 real failures. Llama's drop is not, because its problem files leave out facts, so the planner finds no violation in 29 of the 40 flawed designs.
 
 ### Slide 15 · Translate fails through its specification or its tools
 
-*Starts at 6:55 · 89 words · On screen: the four table rows from top to bottom, then the inventory chart.*
+*Starts at 7:33 · 110 words · On screen: the four cards, then the inventory chart.*
 
-SP3 asks how good the translations were. Sonnet and Opus wrote the exact initial state in all 90 main and stress designs, but translation can fail four ways. A specification can copy the bug. A permissive problem file hands the planner shortcuts. Llama cannot write the formal language. And the solver can run out: inventory needs 2.7 million states at size 6 and exceeds the budget from size 8, where Translate is undecided on the safe design. The standard remedies, symmetry reduction and inductive invariants, lie outside the course.
+Translating helps Haiku, but it can also fail, and SP3 asks how. We saw four ways. First, if the LLM copies the buggy line into the requirement, code and requirement agree, so Z3 finds no failing input. Second, if the problem file allows things the real design doesn't, the planner finds a failure that exists only in that wrong problem. Third, a weak model can't write the formal language reliably, so the solver often gets no usable spec. Fourth, to prove a design safe, the planner must rule out every route to a violation. For inventory that means millions of states, so from size 8 it runs out of budget.
 
 ### Slide 16 · The answer in brief
 
-*Starts at 7:36 · 55 words · On screen: the three numbered cards.*
+*Starts at 8:24 · 64 words · On screen: the three numbered cards.*
 
-Putting the results together. First, strong models nearly tie, consistent with recognising patterns rather than searching. Second, translation moves the error into the specification, so it helps only a model that writes the formal language reliably: Haiku yes, Llama no. Third, only the tools can certify no failure, and that is where they run out.
+So what is our answer? One: with a strong model, both arms nearly tie. Two: translating doesn't remove errors; it moves them into the spec the LLM writes, so it helps only a model that writes the formal language well. Three: only a solver can prove there is no failure, but that proof needs exhaustive search, which is exactly where the tools run out.
 
 ### Slide 17 · Trade-offs, and when to use which arm
 
-*Starts at 8:02 · 76 words · On screen: the table, then the formula, then the two Haiku lines.*
+*Starts at 8:53 · 155 words · On screen: the two cards, then the formula, then the Haiku table.*
 
-So which arm should you use? Choosing is a maximum-expected-utility decision: weigh the cost of a false alarm against the cost of a miss. For Haiku with readable names, Translate is better on every term, so at these estimates it wins at any costs. With names hidden it finds slightly fewer failures but raises half the false alarms, so at an even mix, counting errors alone, it wins while a miss costs under ten false alarms.
+So which arm should you use? That is a maximum-expected-utility decision, as in the course: weigh what a false alarm costs against what a missed failure costs. Take Haiku. With readable names, Translate raises fewer false alarms, finds more failures and is cheaper to run, so at these estimates it wins whatever an error costs. We also ran the same designs with their revealing names replaced by neutral labels, so a name cannot give the flaw away. With names hidden, Translate finds two fewer failures but raises half the false alarms. On screen, that is 10 fewer false alarms on 20 correct designs, 19 down to 9, and 2 more misses on 40 flawed designs. With equal numbers of each, that is 20 fewer false alarms for 2 more misses, so each extra miss saves ten false alarms. Counting errors only, Translate therefore wins as long as a miss costs less than ten false alarms.
 
 ### Slide 18 · Limitations, and will this change?
 
-*Starts at 8:37 · 80 words · On screen: the four limitations, then the Will this change? card.*
+*Starts at 10:05 · 88 words · On screen: the two columns, then the Will this change? card.*
 
-Finally, what this does not show, and whether it will change. SP2 hands both arms the failure mechanisms as named events; writing the event model is untested. Functions were chosen to be encodable, which favours Translate. Most cells are at or near 100%, so we cannot rank the strongest models. Will this change? Direct will likely keep improving on small, recognisable problems, but worst-case hardness and the missing certificate remain. Bottom line: translation's value depends on the model. Thank you.
+Finally, how far can you trust this answer? Both arms were given the failure mechanisms as named events, so we have not tested a model writing the event model itself. We also chose functions that can be encoded, which favours Translate. Will the answer change? Direct will likely keep improving on small, recognisable problems. But it still cannot prove there is no failure, and for the solvers, search can still take exponential time in the worst case. So the value of translating depends on the model. Thank you.
 
-*End of the video, at about 9:14.*
+*End of the video, at about 10:45.*
 
 ## Before recording
 
-- [ ] Record from `results/figures/slides/premortem_slides.pptx` on main (035d7e0), opened once in PowerPoint to check nothing shifted
+- [ ] Record from `results/figures/slides/premortem_slides.pptx` on main, opened once in PowerPoint to check nothing shifted
 - [ ] Do one timed run-through with all three of you; stop at 10:00 at the latest
 - [ ] Record at 1080p or higher, so the 11 pt tables on slides 9 and 17 stay legible
 - [ ] Put the video, `report/report.pdf` and the source code in Group19.zip

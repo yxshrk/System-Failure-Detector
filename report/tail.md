@@ -26,7 +26,7 @@ decides, but its spec is still model-written (untested). Sending proprietary cod
 
 # 8. Division of work and use of AI tools
 
-**Contributions.** The work departed from the proposal's planned split.
+**Contributions.**
 
 * *Yash:* coordination; directed the build of the SP1 and SP2 pipelines; ran all Claude experiments; and drafted the report.
 * *Joshua:* the backend for the SoC open-weight models (`premortem/llm.py`) and the Qwen and Llama runs (§5–6).
