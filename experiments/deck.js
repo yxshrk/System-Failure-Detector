@@ -172,15 +172,10 @@ const B = t => ({ text: t, options: { bold: true } });
     [lab("Actions"), "events that can happen, including failures", "accept-new-racy, time-out-and-retry"],
     [lab("Initial state"), "the design, written as facts", "(dedup-racy): the record is written only after the charge"],
     [lab("Goal"), "the violation we look for", "(charged-twice o1)"],
-  ], { x: X, y: 1.3, w: 5.4, colW: [1.1, 1.95, 2.35], rowH: [0.3, 0.46, 0.46, 0.46, 0.3], fontSize: 10.5 });
-  bullets(s, [
-    "The planner chooses every event, including the failures, so a plan is an order of events that breaks the design",
-    [{ text: "SATPlan finds a shortest such trace; greedy best-first search (GBFS) with h" }, sub("FF"), { text: " proves that none exists" }],
-  ], { x: X, y: 3.5, w: 5.4, h: 1.25, fontSize: 12, paraSpaceAfter: 6 });
-  T(s, "Shortest failure trace found by SATPlan (8 events)", { x: 6.05, y: 1.3, w: 3.575, h: 0.22, fontSize: 10, bold: true, color: INK2 });
-  T(s, "a0 is the first attempt and a1 the retry, for order o1. Highlighted: both attempts pass the duplicate check.", { x: 6.05, y: 1.53, w: 3.575, h: 0.34, fontSize: 9.5, color: INK2 });
-  s.addImage({ path: `${D}/sp2_trace.png`, x: 6.239, y: 1.9, w: 3.197, h: 2.85, altText: "Shortest failure trace for payments-subtle-1: eight events ending in charged-twice" });
-  takeaway(s, "Both arms are given the actions. In Translate, the LLM writes only the initial state.");
+  ], { x: X, y: 1.3, w: 5.15, colW: [1.15, 1.75, 2.25], rowH: [0.4, 0.72, 0.72, 0.9, 0.5], fontSize: 12 });
+  T(s, "How Translate builds and solves the problem", { x: 5.815, y: 1.28, w: 3.81, h: 0.2, fontSize: 10, bold: true, color: INK2 });
+  s.addImage({ path: `${D}/sp2_formulation.png`, x: 5.815, y: 1.5, w: 3.81, h: 3.302, altText: "SP2 in Translate on the payments design: the LLM writes the initial state, including dedup-racy; the actions and goal are given; a planner searches. Plan found: an eight-event failure trace in which both attempts pass the duplicate check, replayed on the correct problem. No plan: GBFS searched every state, so the design is safe at this size." });
+  takeaway(s, "Both arms get the design and the actions. Direct writes the trace itself; Translate writes only the initial state, and the planner searches.");
   s.addNotes("SP2 is classical planning: facts are the state, actions are events including failures, the initial state encodes the design, and the goal is the violation. The planner chooses every event, so a plan is a counterexample: planning as model checking. Here the retry passes the duplicate check because the record is written only after charging. Both arms are given these actions; in Translate the model writes only the initial state. Names like dedup-racy give the mechanism away, so one set replaces them.");
 }
 

@@ -14,7 +14,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SLIDES = ROOT / "results" / "figures" / "slides"
 # Panel order in diagrams.html -> output name.
-NAMES = ["method", "worked_example", "coldcard_timeline", "sp1_formulation", "sp2_trace"]
+NAMES = ["method", "worked_example", "coldcard_timeline", "sp1_formulation", "sp2_formulation"]
 # Wide 16:9 panels are scaled to 2000 px wide; the narrower deck-slot panels are rendered at 2x.
 SCALE = {"method": 1.25, "worked_example": 1.25}
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
